@@ -5,7 +5,7 @@ services:
     container_name: Backend
     build:
       context: .
-      dockerfile: /src/api/Dockerfile
+      dockerfile: ./src/api/Dockerfile
     env_file:
       - .env
     environment:
@@ -31,9 +31,12 @@ services:
     image: nginx:stable
     build: 
       context: .
-      dockerfile: /containres/nginx/Dockerfile
+      dockerfile: ./containres/nginx/Dockerfile
     ports:
       - "8080:80"
+    depends_on:
+      - api
+      - frontend
     networks:
       - shop-2025
 

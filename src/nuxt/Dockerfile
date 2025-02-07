@@ -8,5 +8,7 @@ COPY /src/nuxt .
 
 RUN npm run build
 
+CMD ["node", ".output/server/index.mjs"]
+
 
 
