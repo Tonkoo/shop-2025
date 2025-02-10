@@ -1,12 +1,10 @@
-FROM node:latest
-WORKDIR /src/api
+FROM node:20.18.1
+WORKDIR /api
 
-COPY /src/api/package.json package.json
+RUN npm install -g nodemon
 
-RUN npm install
 
-COPY /src/api .
+#RUN npm run build
 
-RUN npm run build
-
-CMD [ "node", "dist/main.js" ]
+#CMD [ "node", "dist/main.js" ]
+CMD npm run start:dev

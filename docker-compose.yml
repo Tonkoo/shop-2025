@@ -4,41 +4,45 @@ services:
   api:
     container_name: Backend
     build:
-      context: .
-      dockerfile: ./src/api/Dockerfile
+      context: ./src/api
     env_file:
       - .env
-    environment:
-      BACKEND_PORT: ${BACKEND_PORT}
-    ports:
-      - "${BACKEND_PORT}:3000"
+#    ports:
+#      - "${BACKEND_PORT}:5173"
     networks:
       - shop-2025
+    volumes:
+      - ./src/api:/api
   
-  frontend:
-    build:
-      context: .
-      dockerfile: ./src/nuxt/Dockerfile
-    env_file:
-      - .env
-    environment:
-      FRONTEND_PORT: ${FRONTEND_PORT}
-    ports:
-      - "${FRONTEND_PORT}:5173"
-    networks:
-      - shop-2025
+#  frontend:
+#    build:
+#      context: .
+#      dockerfile: ./src/nuxt/Dockerfile
+#    env_file:
+#      - .env
+#    environment:
+#      FRONTEND_PORT: ${FRONTEND_PORT}
+#    ports:
+#      - "${FRONTEND_PORT}:3000"
+#    networks:
+#      - shop-2025
   nginx:
     image: nginx:stable
     build: 
-      context: .
-      dockerfile: ./containres/nginx/Dockerfile
+      context: ./containres/nginx
+    env_file:
+      - .env
     ports:
       - "8080:80"
+      - "${BACKEND_PORT}:5173"
     depends_on:
       - api
-      - frontend
+#      - frontend
     networks:
       - shop-2025
+    volumes:
+      - /etc/localtime:/etc/localtime/:ro
+      - ./logs/nginx/:/var/log/nginx
 
 networks:
   shop-2025:

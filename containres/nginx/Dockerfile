@@ -1,10 +1,10 @@
 FROM nginx:stable
 
-COPY ./src/nuxt/.output/public /usr/share/nginx/html
+#COPY ./src/nuxt/.output/server /usr/share/nginx/html
+#
+#RUN true
 
-RUN true
-
-COPY ./containres/nginx/rootfs/default.conf /etc/nginx/nginx.conf
+COPY rootfs/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
