@@ -4,7 +4,7 @@
     <!--    <NuxtWelcome />-->
     <p>Hello Word!</p>
     <p>{{ GetTest }}</p>
-    <button @click="testconnection()">Связь</button>
+    <button @click="testConnection()">Связь</button>
   </div>
 </template>
 <script>
@@ -16,7 +16,7 @@ export default {
     };
   },
   methods: {
-    testconnection() {
+    testConnection() {
       api
         .get("/test")
         .then((data) => {
