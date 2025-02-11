@@ -7,8 +7,8 @@ services:
       context: ./src/api
     env_file:
       - .env
-#    ports:
-#      - "${BACKEND_PORT}:5173"
+    ports:
+      - "${BACKEND_PORT}:5173"
     networks:
       - shop-2025
     volumes:
@@ -34,7 +34,7 @@ services:
       - .env
     ports:
       - "8080:80"
-      - "${BACKEND_PORT}:5173"
+#      - "${BACKEND_PORT}:5173"
     depends_on:
       - api
 #      - frontend
