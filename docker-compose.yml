@@ -42,6 +42,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime/:ro
       - ./logs/nginx/:/var/log/nginx
+    extra_hosts:
+      - host.docker.internal:host-gateway
   postgres:
     image: postgres:latest
     container_name: postgres_container
@@ -57,24 +59,24 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - shop-2025
-  swagger:
-    image: swaggerapi/swagger-ui
-    container_name: "swagger-ui"
-    ports:
-      - "5174:5174"
-    networks:
-      - shop-2025
-  elasticsearch:
-    image: elasticsearch:8.16.3
-    container_name: elasticsearch
-    restart: always
+#  swagger:
+#    image: swaggerapi/swagger-ui
+#    container_name: "swagger-ui"
+#    ports:
+#      - "5174:5174"
+#    networks:
+#      - shop-2025
+#  elasticsearch:
+#    image: elasticsearch:8.16.3
+#    container_name: elasticsearch
+#    restart: always
 #    volumes:
 #      - elastic_data:/usr/share/elasticsearch/data/
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    networks:
-      - shop-2025
+#    ports:
+#      - "9200:9200"
+#      - "9300:9300"
+#    networks:
+#      - shop-2025
 
 volumes:
   postgres_data:
