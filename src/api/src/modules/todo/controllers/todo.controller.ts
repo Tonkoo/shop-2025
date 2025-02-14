@@ -1,17 +1,24 @@
 import { Controller, Get } from '@nestjs/common';
-import * as path from 'path';
+import { ApiTags, ApiResponse, ApiProperty } from '@nestjs/swagger';
+
+class TestResponse {
+  @ApiProperty({
+    example: 'Hello from backend!',
+    description: 'Сообщение от сервера',
+  })
+  message: string;
+}
 
 @Controller('/test')
+@ApiTags('test')
 export class TodoController {
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: TestResponse,
+  })
   getTest(): object {
-    console.log(123123);
-    console.log('Current working directory:', process.cwd());
-    console.log('Current __dirname:', __dirname);
-    console.log(
-      'Resolved .env path:',
-      path.resolve(__dirname, '..', '..', '..', '..', '..', '..', '.env'),
-    );
-    return { message: process.env.TEST };
+    return { message: process.env.DB_NAME };
   }
 }

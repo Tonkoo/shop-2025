@@ -7,24 +7,18 @@ services:
       context: ./src/api
     env_file:
       - .env
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
     networks:
       - shop-2025
     volumes:
       - ./src/api:/api
     expose:
       - "5173"
-  #  frontend:
-#    build:
-#      context: .
-#      dockerfile: ./src/nuxt/Dockerfile
-#    env_file:
-#      - .env
-#    environment:
-#      FRONTEND_PORT: ${FRONTEND_PORT}
-#    ports:
-#      - "${FRONTEND_PORT}:3000"
-#    networks:
-#      - shop-2025
   nginx:
     image: nginx:stable
     build: 
@@ -36,7 +30,6 @@ services:
       - "${BACKEND_PORT}:5173"
     depends_on:
       - api
-#      - frontend
     networks:
       - shop-2025
     volumes:
@@ -59,13 +52,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - shop-2025
-#  swagger:
-#    image: swaggerapi/swagger-ui
-#    container_name: "swagger-ui"
-#    ports:
-#      - "5174:5174"
-#    networks:
-#      - shop-2025
+  swagger:
+    image: swaggerapi/swagger-ui
+
+    container_name: "swagger-ui"
+    ports:
+      - "5174:5174"
+    networks:
+      - shop-2025
 #  elasticsearch:
 #    image: elasticsearch:8.16.3
 #    container_name: elasticsearch
