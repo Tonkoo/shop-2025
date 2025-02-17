@@ -4,11 +4,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
-  JoinColumn,
+  OneToMany,
 } from 'typeorm';
+import { Products } from './products.entity';
 
 @Entity()
-export class sections {
+export class Sections {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,6 +28,9 @@ export class sections {
   @UpdateDateColumn()
   update_at: Date;
 
-  @JoinColumn({ name: 'id_parent' })
-  id_parent: sections;
+  @Column()
+  id_parent: number;
+
+  @OneToMany(() => Products, (product) => product.id)
+  products: Products[];
 }

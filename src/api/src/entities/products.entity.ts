@@ -4,13 +4,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
-  JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { sections } from './sections.entity';
+import { Sections } from './sections.entity';
 
 @Entity({})
-export class products {
+export class Products {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -32,9 +31,8 @@ export class products {
   @Column()
   description: string;
 
-  @ManyToOne(() => sections, { nullable: true })
-  @JoinColumn({ name: 'id_section' })
-  id_section: sections;
+  @ManyToOne(() => Sections, (Sections) => Sections.products)
+  section: Sections;
 
   @Column({ default: false })
   show_on_main: boolean;
