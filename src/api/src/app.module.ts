@@ -4,24 +4,12 @@ import { AppService } from './app.service';
 import { TodoModule } from './modules/todo/todo.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Admins } from './entities/admins.entity';
-import { Images } from './entities/images.entity';
-import { Products } from './entities/products.entity';
-import { Sections } from './entities/sections.entity';
+import { dataSourceOptions } from './config/db.config';
 
 @Module({
   imports: [
     TodoModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'postgres',
-      port: parseInt(process.env.DB_PORT ?? '5432', 10),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      entities: [Admins, Images, Products, Sections],
-      synchronize: false,
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     ConfigModule.forRoot({
       isGlobal: true,
     }),

@@ -22,15 +22,15 @@ export class Sections {
   @Column('simple-array')
   images: number[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'create_at' })
   create_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'update_at' })
   update_at: Date;
 
-  @Column()
+  @Column({ name: 'id_parent' })
   id_parent: number;
 
-  @OneToMany(() => Products, (product) => product.id)
+  @OneToMany(() => Products, (item) => item.id_section)
   products: Products[];
 }
