@@ -13,6 +13,10 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DB_PORT=${DB_PORT}
+      - URL_ELASTIC=${URL_ELASTIC}
+      - ELASTIC_URL=${ELASTIC_URL}
+      - ELASTIC_USER=${ELASTIC_USER}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     networks:
       - shop-2025
     volumes:
@@ -52,20 +56,26 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - shop-2025
-#  elasticsearch:
-#    image: elasticsearch:8.16.3
-#    container_name: elasticsearch
-#    restart: always
-#    volumes:
-#      - elastic_data:/usr/share/elasticsearch/data/
-#    ports:
-#      - "9200:9200"
-#      - "9300:9300"
-#    networks:
-#      - shop-2025
+  elasticsearch:
+    image: elasticsearch:8.16.4
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+    env_file:
+      - .env
+    environment:
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    networks:
+      - shop-2025
 
 volumes:
   postgres_data:
+  es-data:
 
 
 networks:
