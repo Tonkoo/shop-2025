@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { SectionDto } from './dto/section.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 @Controller('section')
 @ApiTags('section')
@@ -22,5 +23,10 @@ export class SectionsController {
   })
   create(@Body() data: CreateSectionDto) {
     return this.services.create(data);
+  }
+
+  @Put(':id')
+  updateById(@Param('id') id: number, @Body() data: UpdateSectionDto) {
+    return this.services.updateById(id, data);
   }
 }

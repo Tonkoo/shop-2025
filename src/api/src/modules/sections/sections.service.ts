@@ -4,6 +4,7 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { Sections } from '../../entities/sections.entity';
 import { Repository } from 'typeorm';
 import { SectionDto } from './dto/section.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
 
 @Injectable()
 export class SectionsService {
@@ -23,5 +24,23 @@ export class SectionsService {
     return section;
 
     return new SectionDto(res);
+  }
+
+  async updateById(id: number, data: UpdateSectionDto) {
+    await this.sectionsRepo
+      .update(
+        { id: id },
+        {
+          code: data.code,
+          name: data.name,
+          images: data.images,
+          id_parent: data.id_parent,
+        },
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return 'Успех';
   }
 }
