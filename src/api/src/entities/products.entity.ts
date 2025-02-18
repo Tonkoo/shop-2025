@@ -6,11 +6,12 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  BaseEntity,
 } from 'typeorm';
 import { Sections } from './sections.entity';
 
 @Entity({})
-export class Products {
+export class Products extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -34,7 +35,7 @@ export class Products {
 
   @ManyToOne(() => Sections, (item) => item.products)
   @JoinColumn({ name: 'id_section' })
-  id_section: Sections;
+  id_section: number;
 
   @Column({ default: false, name: 'show_on_main' })
   show_on_main: boolean;

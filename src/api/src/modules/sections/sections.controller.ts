@@ -26,6 +26,15 @@ export class SectionsController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Изменение данных раздела' })
+  @ApiBody({
+    description: 'Данные для изменения данных раздела',
+    type: UpdateSectionDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успеx',
+  })
   updateById(@Param('id') id: number, @Body() data: UpdateSectionDto) {
     return this.services.updateById(id, data);
   }
