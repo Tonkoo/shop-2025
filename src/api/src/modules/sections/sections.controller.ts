@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
 import { SectionDto } from './dto/section.dto';
@@ -13,6 +13,10 @@ import {
 export class SectionsController {
   constructor(private readonly services: SectionsService) {}
 
+  @Get()
+  getList() {
+    return this.services.getList();
+  }
   @Post()
   @ApiOperation({ summary: 'Создать новый раздел' })
   @ApiBody({

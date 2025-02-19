@@ -36,6 +36,12 @@ export class SectionsService {
     }
   }
 
+  async getList() {
+    const sections = await this.sectionsRepo.find();
+
+    return sections.map((item) => new SectionDto(item));
+  }
+
   async updateById(id: number, data: SectionDto) {
     try {
       {
