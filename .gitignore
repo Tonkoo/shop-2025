@@ -2,6 +2,7 @@
 **/dist
 **/node_modules
 /build
+Что нужно.txt*
 
 # Logs
 logs

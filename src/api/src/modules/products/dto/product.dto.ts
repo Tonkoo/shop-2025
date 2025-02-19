@@ -27,31 +27,31 @@ export class ProductDto {
     example: 2,
     description: 'ID раздела',
   })
-  id_section: number;
+  idSection: number;
 
   @ApiProperty({
     example: true,
     description: 'Признак вывода на главной странице',
   })
-  show_on_main: boolean;
+  showOnMain: boolean;
 
   @ApiProperty({
     example: false,
     description: 'Признак “Слайдер на главной”',
   })
-  main_slider: boolean;
+  mainSlider: boolean;
 
   @ApiProperty({
     example: '2023-10-10T12:00:00.000Z',
     description: 'Дата создания продукта',
   })
-  create_at: Date;
+  createAt: Date;
 
   @ApiProperty({
     example: '2023-10-11T12:00:00.000Z',
     description: 'Дата обновления продукта',
   })
-  update_at: Date;
+  updateAt: Date;
 
   constructor(ent: Products) {
     this.id = ent.id;
@@ -61,10 +61,10 @@ export class ProductDto {
     this.price = ent.price;
     this.color = ent.color;
     this.description = ent.description;
-    this.id_section = ent.id_section;
-    this.show_on_main = ent.show_on_main;
-    this.main_slider = ent.main_slider;
-    this.create_at = ent.create_at;
-    this.update_at = ent.update_at;
+    this.idSection = ent.id_section;
+    this.showOnMain = ent.show_on_main;
+    this.mainSlider = ent.main_slider;
+    this.createAt = ent.create_at;
+    this.updateAt = ent.update_at;
   }
 }

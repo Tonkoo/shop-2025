@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateProductDto } from './dto/create-product.dto';
 import { Sections } from '../../entities/sections.entity';
 import { Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { Products } from '../../entities/products.entity';
+import { logger } from '../../utils/logger/logger';
+import { ResponseHelper } from '../../utils/response.util';
 
 @Injectable()
 export class ProductsService {
@@ -15,50 +15,55 @@ export class ProductsService {
     @InjectRepository(Sections)
     private readonly sectionsRepo: Repository<Sections>,
   ) {}
-  async create(data: CreateProductDto) {
-    const section = await this.sectionsRepo
-      .findOne({
-        where: {
-          id: data.id_section,
-        },
-      })
-      .catch((err) => {
-        console.log(err);
-        return null;
+  async create(data: ProductDto) {
+    try {
+      const section = await this.sectionsRepo
+        .findOne({
+          where: {
+            id: data.idSection,
+          },
+        })
+        .catch(() => {
+          return null;
+        });
+
+      if (!section) throw new NotFoundException('Section not found');
+
+      await this.productsRepo.save({
+        code: data.code,
+        name: data.name,
+        images: data.images,
+        price: data.price,
+        color: data.color,
+        description: data.description,
+        id_section: section.id,
+        show_on_main: data.showOnMain,
+        main_slider: data.mainSlider,
       });
 
-    if (!section) throw new NotFoundException('Section not found');
-    const product = new Products();
-    product.code = data.code;
-    product.name = data.name;
-    product.images = data.images;
-    product.price = data.price;
-    product.color = data.color;
-    product.description = data.description;
-    product.id_section = section.id;
-    product.show_on_main = data.show_on_main;
-    product.main_slider = data.main_slider;
-
-    const res = await product.save();
-
-    return product;
-
-    return new ProductDto(res);
+      return ResponseHelper.createResponse(
+        HttpStatus.CREATED,
+        data,
+        'Successfully',
+      );
+    } catch (err) {
+      logger.error('Error adding product: ', err);
+      return ResponseHelper.createResponse(
+        HttpStatus.BAD_REQUEST,
+        data,
+        'Error',
+      );
+    }
   }
 
-  async updateById(id: number, data: UpdateProductDto) {
-    const section = await this.sectionsRepo
-      .findOne({
+  async updateById(id: number, data: ProductDto) {
+    try {
+      const section = await this.sectionsRepo.findOne({
         where: {
-          id: data.id_section,
+          id: data.idSection,
         },
-      })
-      .catch((err) => {
-        console.log(err);
-        return null;
       });
-    await this.productsRepo
-      .update(
+      await this.productsRepo.update(
         { id: id },
         {
           code: data.code,
@@ -67,14 +72,18 @@ export class ProductsService {
           color: data.color,
           description: data.description,
           id_section: section?.id,
-          show_on_main: data.show_on_main,
-          main_slider: data.main_slider,
+          show_on_main: data.showOnMain,
+          main_slider: data.mainSlider,
         },
-      )
-      .catch((err) => {
-        console.log(err);
-      });
-
-    return 'Успех';
+      );
+      return ResponseHelper.createResponse(HttpStatus.OK, data, 'Successfully');
+    } catch (err) {
+      logger.error('Error updating product: ', err);
+      return ResponseHelper.createResponse(
+        HttpStatus.BAD_REQUEST,
+        data,
+        'Error',
+      );
+    }
   }
 }

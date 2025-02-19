@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule as ESModule } from '@nestjs/elasticsearch';
 import { ElasticsearchService } from './elasticsearch.service';
-import * as process from 'node:process';
+import { ElasticController } from './elasticsearch.controller';
 
 @Module({
   imports: [
@@ -9,13 +9,14 @@ import * as process from 'node:process';
       useFactory: () => ({
         node: process.env.ELASTIC_URL || 'http://localhost:9200',
         auth: {
-          username: 'elastic',
+          username: process.env.ELASTIC_USER || 'elastic',
           password: process.env.ELASTIC_PASSWORD || 'elastic',
         },
       }),
     }),
   ],
-  controllers: [ElasticsearchService],
+  controllers: [ElasticController],
   providers: [ElasticsearchService],
+  exports: [ElasticsearchService],
 })
 export class ElasticsearchModule {}

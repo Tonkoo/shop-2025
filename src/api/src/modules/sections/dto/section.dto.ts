@@ -18,28 +18,28 @@ export class SectionDto {
     example: '2023-10-10T12:00:00.000Z',
     description: 'Дата создания раздела',
   })
-  create_at: Date;
+  createAt: Date;
 
   @ApiProperty({
     example: '2023-10-11T12:00:00.000Z',
     description: 'Дата обновления раздела',
   })
-  update_at: Date;
+  updateAt: Date;
 
   @ApiProperty({
     example: 0,
     description: 'ID родительского раздела',
     nullable: true,
   })
-  id_parent: number;
+  idParent: number;
 
   constructor(ent: Sections) {
     this.id = ent.id;
     this.code = ent.code;
     this.name = ent.name;
     this.images = ent.images;
-    this.create_at = ent.create_at;
-    this.update_at = ent.update_at;
-    this.id_parent = ent.id_parent;
+    this.createAt = ent.create_at;
+    this.updateAt = ent.update_at;
+    this.idParent = ent.id_parent;
   }
 }
