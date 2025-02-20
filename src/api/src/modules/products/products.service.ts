@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
 import { Repository } from 'typeorm';
@@ -11,6 +6,7 @@ import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ResponseHelper } from '../../utils/response.util';
+import { prepareData } from '../../utils/prepare.util';
 
 @Injectable()
 export class ProductsService {
@@ -34,17 +30,7 @@ export class ProductsService {
 
       if (!section) throw new NotFoundException('Section not found');
 
-      await this.productsRepo.save({
-        code: data.code,
-        name: data.name,
-        images: data.images,
-        price: data.price,
-        color: data.color,
-        description: data.description,
-        id_section: section.id,
-        show_on_main: data.showOnMain,
-        main_slider: data.mainSlider,
-      });
+      await this.productsRepo.save(prepareData(data, ['getProduct']));
 
       return ResponseHelper.createResponse(
         HttpStatus.CREATED,
@@ -70,25 +56,16 @@ export class ProductsService {
   async updateById(id: number, data: ProductDto) {
     try {
       // TODO: лишний запрос
-      const section = await this.sectionsRepo.findOne({
-        where: {
-          id: data.idSection,
-        },
-      });
+      // const section = await this.sectionsRepo.findOne({
+      //   where: {
+      //     id: data.idSection,
+      //   },
+      // });
 
       // TODO: передавать только те поля которые пришли в data
       await this.productsRepo.update(
         { id: id },
-        {
-          code: data.code,
-          name: data.name,
-          images: data.images,
-          color: data.color,
-          description: data.description,
-          id_section: section?.id,
-          show_on_main: data.showOnMain,
-          main_slider: data.mainSlider,
-        },
+        prepareData(data, ['getProduct']),
       );
       // throw new NotFoundException();
       return ResponseHelper.createResponse(

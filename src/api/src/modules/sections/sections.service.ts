@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { ResponseHelper } from '../../utils/response.util';
 import { SectionDto } from './dto/section.dto';
+import { prepareData } from '../../utils/prepare.util';
 // import { prepareData } from '../../utils/prepare.util';
 
 @Injectable()
@@ -15,16 +16,8 @@ export class SectionsService {
   ) {}
   async create(data: SectionDto) {
     try {
-      console.log(data.idParent);
-      // const newData = prepareData(data, ['getSections']);
-      // await this.sectionsRepo.save(newData);
-      await this.sectionsRepo.save({
-        code: data.code,
-        name: data.name,
-        images: data.images,
-        id_parent: data.idParent,
-      });
-
+      const newData = prepareData(data, ['getSections']);
+      await this.sectionsRepo.save(newData);
       return ResponseHelper.createResponse(
         HttpStatus.CREATED,
         data.getSections ? await this.getList() : data,
@@ -61,15 +54,8 @@ export class SectionsService {
   async updateById(id: number, data: SectionDto) {
     try {
       {
-        await this.sectionsRepo.update(
-          { id: id },
-          {
-            code: data.code,
-            name: data.name,
-            images: data.images,
-            id_parent: data.idParent,
-          },
-        );
+        const newData = prepareData(data, ['getSections']);
+        await this.sectionsRepo.update({ id: id }, newData);
 
         if (data.getSections) {
           return await this.getList();

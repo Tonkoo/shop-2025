@@ -20,27 +20,15 @@ export class ElasticsearchService {
 
   async createIndex() {
     try {
-      // Todo Удалять старый индекс
+      await this.elasticsearchService.indices.delete({ index: this.index });
+    } catch {
+      console.log('No index');
+    }
+    try {
       const products = await this.productRepository.find();
       const sections = await this.sectionsRepository.find();
 
       const documentsProduct = products.map((product) => ({
-        // id: product.id,
-        // type: 'product',
-        // code: product.code,
-        // name: product.name,
-        // image: {
-        //   alt: '1213',
-        //   src: '12312',
-        // },
-        // price: product.price,
-        // color: product.color,
-        // description: product.description,
-        // id_section: product.id_section,
-        // show_on_main: product.show_on_main ? 1 : 0,
-        // main_slider: product.main_slider ? 1 : 0,
-        // update_at: product.update_at,
-        // create_at: product.create_at,
         ...product,
         image: {
           alt: '1213',
@@ -49,26 +37,17 @@ export class ElasticsearchService {
         type: 'product',
       }));
       const documentsSection = sections.map((sections) => ({
-        id: sections.id,
+        ...sections,
         type: 'section',
-        code: sections.code,
-        name: sections.name,
         image: {
           alt: '1213',
           src: '12312',
         },
-        update_at: sections.update_at,
-        create_at: sections.create_at,
-        id_parent: '1321',
       }));
 
       const document = [...documentsProduct, ...documentsSection];
 
-      await this.bulkIndexDocuments('shop', document);
-
-      // console.log(JSON.stringify(document, null, 2), 'dsadsadasdasd');
-
-      // return;
+      await this.bulkIndexDocuments(this.index, document);
       return ResponseHelper.createResponse(
         HttpStatus.OK,
         { messages: 'Переадресация выполнена' },
