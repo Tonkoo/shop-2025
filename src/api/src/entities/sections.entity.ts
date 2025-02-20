@@ -34,7 +34,4 @@ export class Sections extends BaseEntity {
 
   @OneToMany(() => Products, (item) => item.id_section)
   products: Products[];
-
-  @Column({ default: false, name: 'get_Sections' })
-  get_Sections: boolean;
 }

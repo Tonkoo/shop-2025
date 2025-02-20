@@ -53,6 +53,8 @@ export class ProductDto {
   })
   updateAt: Date;
 
+  getProduct: boolean;
+
   constructor(ent: Products) {
     this.id = ent.id;
     this.code = ent.code;
@@ -66,5 +68,6 @@ export class ProductDto {
     this.mainSlider = ent.main_slider;
     this.createAt = ent.create_at;
     this.updateAt = ent.update_at;
+    this.getProduct = false;
   }
 }

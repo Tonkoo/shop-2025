@@ -48,7 +48,4 @@ export class Products extends BaseEntity {
 
   @CreateDateColumn({ name: 'create_at' })
   create_at: Date;
-
-  @Column({ default: false, name: 'get_Products' })
-  get_Products: boolean;
 }

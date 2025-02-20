@@ -43,7 +43,7 @@ export class ProductsService {
 
       return ResponseHelper.createResponse(
         HttpStatus.CREATED,
-        data,
+        data.getProduct ? await this.getList() : data,
         'Successfully',
       );
     } catch (err) {
@@ -54,6 +54,12 @@ export class ProductsService {
         'Error',
       );
     }
+  }
+
+  async getList() {
+    const products = await this.productsRepo.find();
+
+    return products.map((item) => new ProductDto(item));
   }
 
   async updateById(id: number, data: ProductDto) {
@@ -76,7 +82,11 @@ export class ProductsService {
           main_slider: data.mainSlider,
         },
       );
-      return ResponseHelper.createResponse(HttpStatus.OK, data, 'Successfully');
+      return ResponseHelper.createResponse(
+        HttpStatus.OK,
+        data.getProduct ? await this.getList() : data,
+        'Successfully',
+      );
     } catch (err) {
       logger.error('Error updating product: ', err);
       return ResponseHelper.createResponse(

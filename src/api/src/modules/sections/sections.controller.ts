@@ -7,12 +7,28 @@ import {
   ResponseHelperApiError,
   ResponseHelperApiOK,
 } from '../../utils/response.util';
+import { ProductDto } from '../products/dto/product.dto';
 
 @Controller('section')
 @ApiTags('section')
 export class SectionsController {
   constructor(private readonly services: SectionsService) {}
 
+  @ApiOperation({ summary: 'Вывод данных таблицы' })
+  @ApiBody({
+    description: 'Вывод данных таблицы',
+    type: ProductDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка',
+    type: ResponseHelperApiError,
+  })
   @Get()
   getList() {
     return this.services.getList();
@@ -54,9 +70,6 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   updateById(@Param('id') id: number, @Body() data: SectionDto) {
-    //Todo: Если приходит параметр getProducts: true, то мы сначала ожидем выполнения метода для обновления section.
-    //Todo: И в случае если section обновился, то вызываем метод для получения section
-    //Todo: Если параметер false, то делать тоько обновление
     return this.services.updateById(id, data);
   }
 }

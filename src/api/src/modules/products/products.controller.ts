@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/product.dto';
@@ -33,10 +33,30 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async create(@Body() data: ProductDto) {
-    await this.services.create(data);
+  create(@Body() data: ProductDto) {
+    return this.services.create(data);
 
     // return this.EsServices.addDocument('product', result.id.toString(), data);
+  }
+
+  @ApiOperation({ summary: 'Вывод данных таблицы' })
+  @ApiBody({
+    description: 'Вывод данных таблицы',
+    type: ProductDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка',
+    type: ResponseHelperApiError,
+  })
+  @Get()
+  getList() {
+    return this.services.getList();
   }
 
   @Put(':id')

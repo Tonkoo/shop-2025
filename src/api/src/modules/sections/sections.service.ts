@@ -14,6 +14,7 @@ export class SectionsService {
   ) {}
   async create(data: SectionDto) {
     try {
+      console.log(data.idParent);
       await this.sectionsRepo.save({
         code: data.code,
         name: data.name,
@@ -23,7 +24,7 @@ export class SectionsService {
 
       return ResponseHelper.createResponse(
         HttpStatus.CREATED,
-        data,
+        data.getSections ? await this.getList() : data,
         'Successfully',
       );
     } catch (err) {
@@ -56,7 +57,7 @@ export class SectionsService {
         );
         return ResponseHelper.createResponse(
           HttpStatus.OK,
-          data,
+          data.getSections ? await this.getList() : data,
           'Successfully',
         );
       }
