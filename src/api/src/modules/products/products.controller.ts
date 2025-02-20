@@ -1,9 +1,18 @@
-import { Body, Controller, Param, Post, Put, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Put,
+  Get,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/product.dto';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import {
+  ResponseHelper,
   ResponseHelperApiCreated,
   ResponseHelperApiError,
   ResponseHelperApiOK,
@@ -33,9 +42,11 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  create(@Body() data: ProductDto) {
-    return this.services.create(data);
+  async create(@Body() data: ProductDto) {
+    const result = await this.services.create(data);
+    return ResponseHelper.createResponse(HttpStatus.CREATED, result);
 
+    // return this.services.create(data);
     // return this.EsServices.addDocument('product', result.id.toString(), data);
   }
 
@@ -55,8 +66,10 @@ export class ProductsController {
     type: ResponseHelperApiError,
   })
   @Get()
-  getList() {
-    return this.services.getList();
+  async getList() {
+    const result = await this.services.getList();
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
+    // return this.services.getList();
   }
 
   @Put(':id')
@@ -75,7 +88,9 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  updateById(@Param('id') id: number, @Body() data: ProductDto) {
-    return this.services.updateById(id, data);
+  async updateById(@Param('id') id: number, @Body() data: ProductDto) {
+    const result = await this.services.updateById(id, data);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
+    // return this.services.updateById(id, data);
   }
 }

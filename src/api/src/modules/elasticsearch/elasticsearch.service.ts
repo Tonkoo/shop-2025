@@ -48,18 +48,11 @@ export class ElasticsearchService {
       const document = [...documentsProduct, ...documentsSection];
 
       await this.bulkIndexDocuments(this.index, document);
-      return ResponseHelper.createResponse(
-        HttpStatus.OK,
-        { messages: 'Переадресация выполнена' },
-        'Successful',
-      );
+      return ResponseHelper.createResponse(HttpStatus.OK, {
+        messages: 'Переадресация выполнена',
+      });
     } catch (err) {
       logger.error('Error adding index: ', err);
-      return ResponseHelper.createResponse(
-        HttpStatus.BAD_REQUEST,
-        { messages: 'Error' },
-        'Error',
-      );
     }
   }
 

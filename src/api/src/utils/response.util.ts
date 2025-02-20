@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseHelper {
-  static createResponse(statusCode: number, data: any, message: string) {
+  static createResponse(statusCode: number, data: any) {
     return {
       statusCode,
       data,
-      message,
     };
   }
 }
@@ -20,10 +19,6 @@ export class ResponseHelperApiCreated {
     example: { id: 1, name: 'Тест 1' },
   })
   data: any;
-  @ApiProperty({
-    example: 'successful',
-  })
-  message: string;
 }
 
 export class ResponseHelperApiOK {
@@ -36,10 +31,6 @@ export class ResponseHelperApiOK {
     example: { id: 1, name: 'Тест 1' },
   })
   data: any;
-  @ApiProperty({
-    example: 'successful',
-  })
-  message: string;
 }
 
 export class ResponseHelperApiError {
@@ -52,8 +43,4 @@ export class ResponseHelperApiError {
     example: { id: 1, name: 'Тест 1' },
   })
   data: any;
-  @ApiProperty({
-    example: 'Error',
-  })
-  message: string;
 }

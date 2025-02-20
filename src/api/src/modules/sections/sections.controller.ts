@@ -1,8 +1,17 @@
-import { Body, Controller, Param, Post, Put, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Put,
+  Get,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
 import { SectionDto } from './dto/section.dto';
 import {
+  ResponseHelper,
   ResponseHelperApiCreated,
   ResponseHelperApiError,
   ResponseHelperApiOK,
@@ -30,8 +39,10 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   @Get()
-  getList() {
-    return this.services.getList();
+  async getList() {
+    const result = await this.services.getList();
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
+    // return this.services.getList();
   }
   @Post()
   @ApiOperation({ summary: 'Создать новый раздел' })
@@ -49,9 +60,10 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  create(@Body() data: SectionDto) {
+  async create(@Body() data: SectionDto) {
     // TODO преобразование ответа вынести сюда
-    return this.services.create(data);
+    const result = await this.services.create(data);
+    return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
   @Put(':id')
@@ -70,13 +82,8 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  updateById(@Param('id') id: number, @Body() data: SectionDto) {
-    // const data = this.services.updateById(id, data);
-    // return ResponseHelper.createResponse(
-    //   HttpStatus.OK,
-    //   data,
-    //   'Successfully',
-    // );
-    return this.services.updateById(id, data);
+  async updateById(@Param('id') id: number, @Body() data: SectionDto) {
+    const result = await this.services.updateById(id, data);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

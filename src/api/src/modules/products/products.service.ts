@@ -30,58 +30,49 @@ export class ProductsService {
 
       if (!section) throw new NotFoundException('Section not found');
 
-      await this.productsRepo.save(prepareData(data, ['getProduct']));
+      const newData = prepareData(data, ['getProduct']);
 
-      return ResponseHelper.createResponse(
-        HttpStatus.CREATED,
-        data.getProduct ? await this.getList() : data,
-        'Successfully',
-      );
+      await this.productsRepo.save(newData);
+
+      if (data.getProduct) {
+        return await this.getList();
+      }
+      return newData;
+
+      // return ResponseHelper.createResponse(
+      //   HttpStatus.CREATED,
+      //   data.getProduct ? await this.getList() : data,
+      // );
     } catch (err) {
-      logger.error('Error adding product: ', err);
-      return ResponseHelper.createResponse(
-        HttpStatus.BAD_REQUEST,
-        data,
-        'Error',
-      );
+      logger.error('Error from product.create: ', err);
     }
   }
 
   async getList() {
-    const products = await this.productsRepo.find();
-
-    return products.map((item) => new ProductDto(item));
+    try {
+      return await this.productsRepo.find();
+    } catch (err) {
+      console.log('Error from products.getList: ', err);
+    }
   }
 
   async updateById(id: number, data: ProductDto) {
     try {
-      // TODO: лишний запрос
-      // const section = await this.sectionsRepo.findOne({
-      //   where: {
-      //     id: data.idSection,
-      //   },
-      // });
-
       // TODO: передавать только те поля которые пришли в data
-      await this.productsRepo.update(
-        { id: id },
-        prepareData(data, ['getProduct']),
-      );
+
+      const newData = prepareData(data, ['getProduct']);
+
+      await this.productsRepo.update({ id: id }, newData);
       // throw new NotFoundException();
-      return ResponseHelper.createResponse(
-        HttpStatus.OK,
-        data.getProduct ? await this.getList() : data,
-        'Successfully',
-      );
+
+      if (data.getProduct) {
+        return await this.getList();
+      }
+      return newData;
     } catch (err) {
       // TODO: если exception 404 throw NotFoundException, 400 throw BadRequestExecption
-      logger.error('Error updating product: ', err);
+      logger.error('Error from product.update: ', err);
       // throw new BadRequestException(err);
-      // return ResponseHelper.createResponse(
-      //   HttpStatus.BAD_REQUEST,
-      //   data,
-      //   'Error',
-      // );
     }
   }
 }
