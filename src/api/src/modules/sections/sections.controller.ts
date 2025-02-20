@@ -50,6 +50,7 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   create(@Body() data: SectionDto) {
+    // TODO преобразование ответа вынести сюда
     return this.services.create(data);
   }
 
@@ -70,6 +71,12 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   updateById(@Param('id') id: number, @Body() data: SectionDto) {
+    // const data = this.services.updateById(id, data);
+    // return ResponseHelper.createResponse(
+    //   HttpStatus.OK,
+    //   data,
+    //   'Successfully',
+    // );
     return this.services.updateById(id, data);
   }
 }

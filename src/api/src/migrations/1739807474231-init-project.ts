@@ -17,7 +17,13 @@ export class InitProject1739807474231 implements MigrationInterface {
       `CREATE TABLE "images" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "path" character varying NOT NULL, "type" character varying NOT NULL, CONSTRAINT "PK_1fe148074c6a1a91b63cb9ee3c9" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `ALTER TABLE "products" ADD CONSTRAINT "FK_d786803983b83d795ac411d3669" FOREIGN KEY ("id_section") REFERENCES "sections"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+      `ALTER TABLE "products" ADD CONSTRAINT "FK_d786803983b83d795ac411d3669" FOREIGN KEY ("id_section") REFERENCES "sections"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER SEQUENCE products_id_seq RESTART WITH 1 INCREMENT BY 2`,
+    );
+    await queryRunner.query(
+      `ALTER SEQUENCE sections_id_seq RESTART WITH 2 INCREMENT BY 2;`,
     );
   }
 

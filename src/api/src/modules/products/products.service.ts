@@ -1,4 +1,9 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
 import { Repository } from 'typeorm';
@@ -64,11 +69,14 @@ export class ProductsService {
 
   async updateById(id: number, data: ProductDto) {
     try {
+      // TODO: лишний запрос
       const section = await this.sectionsRepo.findOne({
         where: {
           id: data.idSection,
         },
       });
+
+      // TODO: передавать только те поля которые пришли в data
       await this.productsRepo.update(
         { id: id },
         {
@@ -82,18 +90,21 @@ export class ProductsService {
           main_slider: data.mainSlider,
         },
       );
+      // throw new NotFoundException();
       return ResponseHelper.createResponse(
         HttpStatus.OK,
         data.getProduct ? await this.getList() : data,
         'Successfully',
       );
     } catch (err) {
+      // TODO: если exception 404 throw NotFoundException, 400 throw BadRequestExecption
       logger.error('Error updating product: ', err);
-      return ResponseHelper.createResponse(
-        HttpStatus.BAD_REQUEST,
-        data,
-        'Error',
-      );
+      // throw new BadRequestException(err);
+      // return ResponseHelper.createResponse(
+      //   HttpStatus.BAD_REQUEST,
+      //   data,
+      //   'Error',
+      // );
     }
   }
 }

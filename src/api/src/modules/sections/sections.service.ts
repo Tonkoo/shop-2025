@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { ResponseHelper } from '../../utils/response.util';
 import { SectionDto } from './dto/section.dto';
+// import { prepareData } from '../../utils/prepare.util';
 
 @Injectable()
 export class SectionsService {
@@ -15,6 +16,8 @@ export class SectionsService {
   async create(data: SectionDto) {
     try {
       console.log(data.idParent);
+      // const newData = prepareData(data, ['getSections']);
+      // await this.sectionsRepo.save(newData);
       await this.sectionsRepo.save({
         code: data.code,
         name: data.name,
@@ -28,7 +31,8 @@ export class SectionsService {
         'Successfully',
       );
     } catch (err) {
-      logger.error('Error adding section: ', err);
+      logger.error('Error from sections.create: ', err);
+      // TODO: Exception
       return ResponseHelper.createResponse(
         HttpStatus.BAD_REQUEST,
         data,
@@ -43,6 +47,17 @@ export class SectionsService {
     return sections.map((item) => new SectionDto(item));
   }
 
+  async getListForClient() {
+    // TODO: обернуть в try catch
+    const list = await this.getList();
+
+    if (!list) {
+      // TODO: exeption с 404 ошибкой
+    }
+
+    return ResponseHelper.createResponse(HttpStatus.OK, list, 'Successfully');
+  }
+
   async updateById(id: number, data: SectionDto) {
     try {
       {
@@ -55,11 +70,17 @@ export class SectionsService {
             id_parent: data.idParent,
           },
         );
-        return ResponseHelper.createResponse(
-          HttpStatus.OK,
-          data.getSections ? await this.getList() : data,
-          'Successfully',
-        );
+
+        if (data.getSections) {
+          return await this.getList();
+        }
+
+        return true;
+        // return ResponseHelper.createResponse(
+        //   HttpStatus.OK,
+        //   data.getSections ? await this.getList() : data,
+        //   'Successfully',
+        // );
       }
     } catch (err) {
       logger.error('Error updating section: ', err);
