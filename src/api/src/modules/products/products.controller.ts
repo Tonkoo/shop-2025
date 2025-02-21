@@ -55,11 +55,10 @@ export class ProductsController {
     type: ResponseHelperApiError,
   })
   async create(@Body() data: ProductDto) {
-    const result = await this.services.create(data);
+    const result: any = await this.services.create(data);
+    // await this.EsServices.addDocument('shop', result.id.toString(), result);
+    // await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
-
-    // return this.services.create(data);
-    // return this.EsServices.addDocument('product', result.id.toString(), data);
   }
 
   @ApiOperation({ summary: 'Вывод данных таблицы' })
@@ -100,7 +99,9 @@ export class ProductsController {
     type: ResponseHelperApiError,
   })
   async updateById(@Param('id') id: number, @Body() data: ProductDto) {
-    const result = await this.services.updateById(id, data);
+    const result: any = await this.services.updateById(id, data);
+    // await this.EsServices.createIndex();
+    // await this.EsServices.updateDocument('shop', result.id.toString(), result);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -117,6 +118,7 @@ export class ProductsController {
   })
   async deleteById(@Param('id') id: number, @Body() data: ProductDto) {
     const result = await this.services.deleteById(id, data);
+    await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

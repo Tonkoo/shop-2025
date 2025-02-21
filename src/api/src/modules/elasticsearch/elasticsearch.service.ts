@@ -1,11 +1,10 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
 import { Repository } from 'typeorm';
 import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ResponseHelper } from '../../utils/response.util';
 
 @Injectable()
 export class ElasticsearchService {
@@ -39,7 +38,7 @@ export class ElasticsearchService {
       const documentsSection = sections.map((sections) => ({
         ...sections,
         type: 'section',
-        image: {
+        images: {
           alt: '1213',
           src: '12312',
         },
@@ -47,10 +46,14 @@ export class ElasticsearchService {
 
       const document = [...documentsProduct, ...documentsSection];
 
-      await this.bulkIndexDocuments(this.index, document);
+      await this.bulkIndexDocuments(
+        this.index,
+        // document.map(({ images, ...rest }) => rest),
+        document,
+      );
       return true;
     } catch (err) {
-      logger.error('Error adding index: ', err);
+      logger.error('Error from elastic.createIndex: ', err);
       throw new BadRequestException(
         'An error occurred while accepting document indexing.',
       );
@@ -70,12 +73,39 @@ export class ElasticsearchService {
     });
   }
 
-  // async addDocument(index: string, id: string, documnet: any) {
-  //   return this.elasticsearchService.index({
-  //     index,
-  //     id,
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //     body: documnet,
-  //   });
-  // }
+  async addDocument(index: string, id: string, documnet: any, type: any) {
+    try {
+      const result = await this.elasticsearchService.index({
+        index: index,
+        id: id,
+        body: {
+          ...documnet,
+          type,
+          images: {
+            alt: '1213',
+            src: '12312',
+          },
+        },
+      });
+      return result;
+    } catch (err) {
+      logger.error('Error from elastic.addDocument: ', err);
+      throw new BadRequestException('Error adding document');
+    }
+  }
+  async updateDocument(index: string, id: string, documnet: any, type: string) {
+    try {
+      await this.elasticsearchService.delete({
+        index: index,
+        id: id,
+      });
+      console.log(documnet);
+
+      const result = await this.addDocument(index, id, documnet, type);
+      return result;
+    } catch (err) {
+      logger.error('Error from elastic.updateDocument: ', err);
+      throw new BadRequestException('Error updating document');
+    }
+  }
 }

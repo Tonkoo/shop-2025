@@ -16,6 +16,7 @@ import {
   ApiProperty,
 } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
+import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { SectionDto } from './dto/section.dto';
 import {
   ResponseHelper,
@@ -33,7 +34,10 @@ class DeleteSectionDto {
 @Controller('section')
 @ApiTags('section')
 export class SectionsController {
-  constructor(private readonly services: SectionsService) {}
+  constructor(
+    private readonly services: SectionsService,
+    private readonly EsServices: ElasticsearchService,
+  ) {}
 
   @ApiOperation({ summary: 'Вывод данных таблицы' })
   @ApiBody({
@@ -74,6 +78,7 @@ export class SectionsController {
   })
   async create(@Body() data: SectionDto) {
     const result = await this.services.create(data);
+    await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
@@ -95,6 +100,7 @@ export class SectionsController {
   })
   async updateById(@Param('id') id: number, @Body() data: SectionDto) {
     const result = await this.services.updateById(id, data);
+    await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -111,6 +117,7 @@ export class SectionsController {
   })
   async deleteById(@Param('id') id: number, @Body() data: SectionDto) {
     const result = await this.services.deleteById(id, data);
+    await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

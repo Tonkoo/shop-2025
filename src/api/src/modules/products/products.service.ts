@@ -10,9 +10,8 @@ import { QueryFailedError, Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
-
+import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
-import { SectionDto } from '../sections/dto/section.dto';
 
 @Injectable()
 export class ProductsService {
@@ -21,6 +20,7 @@ export class ProductsService {
     private readonly productsRepo: Repository<Products>,
     @InjectRepository(Sections)
     private readonly sectionsRepo: Repository<Sections>,
+    private readonly EsServices: ElasticsearchService,
   ) {}
   async create(data: ProductDto) {
     try {
@@ -88,12 +88,28 @@ export class ProductsService {
 
       const newData = prepareData(data, ['getProduct']);
 
-      await this.productsRepo.update({ id: id }, newData);
+      return await this.productsRepo.manager.transaction(async () => {
+        await this.productsRepo.update({ id: id }, newData);
 
-      if (data.getProduct) {
-        return await this.getList();
-      }
-      return newData;
+        const updatedProduct = await this.productsRepo.findOne({
+          where: { id: id },
+        });
+
+        await this.EsServices.updateDocument(
+          'shop',
+          id.toString(),
+          updatedProduct,
+          'product',
+        );
+
+        if (data.getProduct) {
+          return await this.getList();
+        }
+        return newData;
+      });
+      // await this.productsRepo.update({ id: id }, newData);
+
+      // return newData;
     } catch (err) {
       // TODO: если exception 404 throw NotFoundException, 400 throw BadRequestExecption
       logger.error('Error from product.update: ', err);
