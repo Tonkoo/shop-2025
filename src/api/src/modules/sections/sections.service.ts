@@ -1,9 +1,13 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
-import { ResponseHelper } from '../../utils/response.util';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 
@@ -24,29 +28,38 @@ export class SectionsService {
       return newData;
     } catch (err) {
       logger.error('Error from sections.create: ', err);
-      // TODO: Exception
+      if (err instanceof QueryFailedError) {
+        // @ts-ignore
+        switch (err.code) {
+          case '23502':
+            throw new BadRequestException('Missing required field.');
+          case '42601':
+            throw new InternalServerErrorException(
+              'There is an error in the database query syntax.',
+            );
+          default:
+            throw err;
+        }
+      }
+
+      throw new BadRequestException(
+        'An error occurred while creating the section.',
+      );
     }
   }
 
   async getList() {
     try {
       const sections = await this.sectionsRepo.find();
+
+      if (!sections) throw new NotFoundException('Section not found');
+
       return sections;
     } catch (err) {
       console.log('Error for sections.getList: ', err);
+      throw err;
     }
   }
-
-  // async getListForClient() {
-  //   // TODO: обернуть в try catch
-  //   const list = await this.getList();
-  //
-  //   if (!list) {
-  //     // TODO: exeption с 404 ошибкой
-  //   }
-  //
-  //   return ResponseHelper.createResponse(HttpStatus.OK, list);
-  // }
 
   async updateById(id: number, data: SectionDto) {
     try {
@@ -61,6 +74,22 @@ export class SectionsService {
       }
     } catch (err) {
       logger.error('Error from sections.update : ', err);
+      if (err instanceof QueryFailedError) {
+        // @ts-ignore
+        switch (err.code) {
+          case '23505':
+            throw new BadRequestException(
+              'Duplicate entry: This value already exists.',
+            );
+          case '23502':
+            throw new BadRequestException('Missing required field.');
+          default:
+            throw err;
+        }
+      }
+      throw new BadRequestException(
+        'An error occurred while updating the section.',
+      );
     }
   }
 }

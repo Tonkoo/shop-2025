@@ -61,7 +61,6 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   async create(@Body() data: SectionDto) {
-    // TODO преобразование ответа вынести сюда
     const result = await this.services.create(data);
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }

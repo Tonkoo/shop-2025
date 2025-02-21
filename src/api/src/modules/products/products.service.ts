@@ -1,11 +1,16 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
-import { ResponseHelper } from '../../utils/response.util';
+
 import { prepareData } from '../../utils/prepare.util';
 
 @Injectable()
@@ -27,7 +32,6 @@ export class ProductsService {
         .catch(() => {
           return null;
         });
-
       if (!section) throw new NotFoundException('Section not found');
 
       const newData = prepareData(data, ['getProduct']);
@@ -38,21 +42,42 @@ export class ProductsService {
         return await this.getList();
       }
       return newData;
-
-      // return ResponseHelper.createResponse(
-      //   HttpStatus.CREATED,
-      //   data.getProduct ? await this.getList() : data,
-      // );
     } catch (err) {
       logger.error('Error from product.create: ', err);
+      if (err instanceof QueryFailedError) {
+        // @ts-ignore
+        switch (err.code) {
+          case '23503':
+            throw new BadRequestException(
+              'Invalid reference: Related entity does not exist.',
+            );
+          case '23502':
+            throw new BadRequestException('Missing required field.');
+          case '42601':
+            throw new InternalServerErrorException(
+              'There is an error in the database query syntax.',
+            );
+          default:
+            throw err;
+        }
+      }
+
+      throw new BadRequestException(
+        'An error occurred while creating the product.',
+      );
     }
   }
 
   async getList() {
     try {
-      return await this.productsRepo.find();
+      const products = await this.productsRepo.find();
+
+      if (!products) throw new NotFoundException('Products not found');
+
+      return products;
     } catch (err) {
       console.log('Error from products.getList: ', err);
+      throw err;
     }
   }
 
@@ -63,7 +88,6 @@ export class ProductsService {
       const newData = prepareData(data, ['getProduct']);
 
       await this.productsRepo.update({ id: id }, newData);
-      // throw new NotFoundException();
 
       if (data.getProduct) {
         return await this.getList();
@@ -72,7 +96,27 @@ export class ProductsService {
     } catch (err) {
       // TODO: если exception 404 throw NotFoundException, 400 throw BadRequestExecption
       logger.error('Error from product.update: ', err);
-      // throw new BadRequestException(err);
+      if (err instanceof QueryFailedError) {
+        // @ts-ignore
+        switch (err.code) {
+          case '23503':
+            throw new BadRequestException(
+              'Invalid reference: Related entity does not exist.',
+            );
+          case '23505':
+            throw new BadRequestException(
+              'Duplicate entry: This value already exists.',
+            );
+          case '23502':
+            throw new BadRequestException('Missing required field.');
+          default:
+            throw err;
+        }
+      }
+
+      throw new BadRequestException(
+        'An error occurred while updating the product.',
+      );
     }
   }
 }
