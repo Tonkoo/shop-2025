@@ -19,10 +19,10 @@ export class SectionsService {
   ) {}
   async create(data: SectionDto) {
     try {
-      const newData = prepareData(data, ['getSections']);
+      const newData = prepareData(data, ['getSection']);
       await this.sectionsRepo.save(newData);
 
-      if (data.getSections) {
+      if (data.getSection) {
         return await this.getList();
       }
       return newData;
@@ -64,10 +64,10 @@ export class SectionsService {
   async updateById(id: number, data: SectionDto) {
     try {
       {
-        const newData = prepareData(data, ['getSections']);
+        const newData = prepareData(data, ['getSection']);
         await this.sectionsRepo.update({ id: id }, newData);
 
-        if (data.getSections) {
+        if (data.getSection) {
           return await this.getList();
         }
         return newData;
@@ -87,6 +87,22 @@ export class SectionsService {
             throw err;
         }
       }
+      throw new BadRequestException(
+        'An error occurred while updating the section.',
+      );
+    }
+  }
+  async deleteById(id: number, data: SectionDto) {
+    try {
+      await this.sectionsRepo.delete(id);
+
+      if (data.getSection) {
+        return await this.getList();
+      }
+
+      return id;
+    } catch (err) {
+      logger.error('Error from sections.delete : ', err);
       throw new BadRequestException(
         'An error occurred while updating the section.',
       );

@@ -6,8 +6,15 @@ import {
   Put,
   Get,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiProperty,
+} from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
 import { SectionDto } from './dto/section.dto';
 import {
@@ -17,6 +24,11 @@ import {
   ResponseHelperApiOK,
 } from '../../utils/response.util';
 import { ProductDto } from '../products/dto/product.dto';
+
+class DeleteSectionDto {
+  @ApiProperty({ example: true, description: 'Признак обновления данных' })
+  getSection: boolean;
+}
 
 @Controller('section')
 @ApiTags('section')
@@ -83,6 +95,22 @@ export class SectionsController {
   })
   async updateById(@Param('id') id: number, @Body() data: SectionDto) {
     const result = await this.services.updateById(id, data);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Удаление раздела' })
+  @ApiBody({
+    description: 'Удаление раздела',
+    type: DeleteSectionDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
+  async deleteById(@Param('id') id: number, @Body() data: SectionDto) {
+    const result = await this.services.deleteById(id, data);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

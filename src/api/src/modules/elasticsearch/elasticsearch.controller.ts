@@ -1,7 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ResponseHelperApiOK } from '../../utils/response.util';
+import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
 
 @Controller('reindex')
 @ApiTags('elastic')
@@ -19,6 +19,9 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async createIndex(@Param() index: string) {
-    return await this.services.createIndex();
+    await this.services.createIndex();
+    return ResponseHelper.createResponse(HttpStatus.OK, {
+      messages: 'Переадресация выполнена',
+    });
   }
 }

@@ -12,6 +12,7 @@ import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 
 import { prepareData } from '../../utils/prepare.util';
+import { SectionDto } from '../sections/dto/section.dto';
 
 @Injectable()
 export class ProductsService {
@@ -114,6 +115,22 @@ export class ProductsService {
         }
       }
 
+      throw new BadRequestException(
+        'An error occurred while updating the product.',
+      );
+    }
+  }
+  async deleteById(id: number, data: ProductDto) {
+    try {
+      await this.productsRepo.delete(id);
+
+      if (data.getProduct) {
+        return await this.getList();
+      }
+
+      return id;
+    } catch (err) {
+      logger.error('Error from products.delete : ', err);
       throw new BadRequestException(
         'An error occurred while updating the product.',
       );

@@ -6,8 +6,15 @@ import {
   Put,
   Get,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiProperty,
+} from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/product.dto';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
@@ -17,6 +24,11 @@ import {
   ResponseHelperApiError,
   ResponseHelperApiOK,
 } from '../../utils/response.util';
+
+class DeleteProductDto {
+  @ApiProperty({ example: true, description: 'Признак обновления данных' })
+  getProduct: boolean;
+}
 
 @Controller('product')
 @ApiTags('product')
@@ -69,7 +81,6 @@ export class ProductsController {
   async getList() {
     const result = await this.services.getList();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
-    // return this.services.getList();
   }
 
   @Put(':id')
@@ -91,6 +102,21 @@ export class ProductsController {
   async updateById(@Param('id') id: number, @Body() data: ProductDto) {
     const result = await this.services.updateById(id, data);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
-    // return this.services.updateById(id, data);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Удаление продукта' })
+  @ApiBody({
+    description: 'Удаление продукта',
+    type: DeleteProductDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
+  async deleteById(@Param('id') id: number, @Body() data: ProductDto) {
+    const result = await this.services.deleteById(id, data);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

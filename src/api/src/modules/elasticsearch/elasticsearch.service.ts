@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
 import { Repository } from 'typeorm';
@@ -48,11 +48,12 @@ export class ElasticsearchService {
       const document = [...documentsProduct, ...documentsSection];
 
       await this.bulkIndexDocuments(this.index, document);
-      return ResponseHelper.createResponse(HttpStatus.OK, {
-        messages: 'Переадресация выполнена',
-      });
+      return true;
     } catch (err) {
       logger.error('Error adding index: ', err);
+      throw new BadRequestException(
+        'An error occurred while accepting document indexing.',
+      );
     }
   }
 
