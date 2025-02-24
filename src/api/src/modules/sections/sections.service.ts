@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { QueryFailedError, Repository, DataSource } from 'typeorm';
+import { QueryFailedError, Repository, DataSource, QueryRunner } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
-import { SectionDto, ImagesDto } from './dto/section.dto';
+import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { Images } from '../../entities/images.entity';
 
@@ -22,55 +22,75 @@ export class SectionsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async createImages(data: SectionDto) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+  async createImages(data: SectionDto, queryRunner: QueryRunner) {
+    const imagesSection: number[] = [];
 
     try {
+      // @ts-ignore
       for (const image of data.images) {
         const newImage = queryRunner.manager.create(Images, {
           name: image.imagesName,
           path: image.imagesPath,
           type: image.imagesType,
         });
-
         await queryRunner.manager.save(newImage);
+        imagesSection.push(newImage.id);
       }
+
       await queryRunner.commitTransaction();
-      return true;
+      return imagesSection;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.images.create: ', err);
+      if (err instanceof QueryFailedError) {
+        // @ts-ignore
+        switch (err.code) {
+          case '23502':
+            throw new BadRequestException('Missing required field.');
+          case '42601':
+            throw new InternalServerErrorException(
+              'There is an error in the database query syntax.',
+            );
+          default:
+            throw err;
+        }
+      }
+
+      throw new BadRequestException('An error occurred while adding the file.');
+    }
+  }
+
+  async saveSection(data) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const idImages = await this.createImages(data, queryRunner);
+      return await this.create(data, idImages);
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      logger.error('Error from sections.save: ', err);
       throw err;
     } finally {
       await queryRunner.release();
     }
   }
 
-  async saveSection(data) {
-    return this.sectionsRepo.manager.transaction(async () => {
-      await this.createImages(data);
-
-      await this.create(data);
-    });
-  }
-
-  async create(data: SectionDto) {
+  async create(data: SectionDto, idImages: number[]) {
     try {
       // const newData = prepareData(data, ['getSection']);
-
-      // await this.sectionsRepo.save({
-      //   code: data.code,
-      //   name: data.name,
-      //   images: data.images,
-      //   id_parent: data.idParent,
-      // });
+      const newData = await this.sectionsRepo.save({
+        code: data.code,
+        name: data.name,
+        id_parent: data.idParent,
+        images: idImages,
+      });
 
       if (data.getSection) {
         return await this.getList();
       }
-      // return newData;
+      return newData;
     } catch (err) {
       logger.error('Error from sections.create: ', err);
       if (err instanceof QueryFailedError) {
