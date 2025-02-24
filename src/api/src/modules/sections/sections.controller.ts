@@ -78,7 +78,7 @@ export class SectionsController {
   })
   async create(@Body() data) {
     const result = await this.services.saveSection(data);
-    await this.EsServices.createIndex();
+    // await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 

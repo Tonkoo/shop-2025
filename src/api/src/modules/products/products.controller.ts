@@ -57,7 +57,12 @@ export class ProductsController {
   async create(@Body() data: ProductDto) {
     const result: any = await this.services.saveProducts(data);
 
-    // await this.EsServices.addDocument('shop', result.id.toString(), result);
+    await this.EsServices.addDocument(
+      'shop',
+      result.id.toString(),
+      result,
+      'product',
+    );
     // await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }

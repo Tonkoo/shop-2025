@@ -90,19 +90,24 @@ export class ElasticsearchService {
     });
   }
 
-  async addDocument(index: string, id: string, documnet: any, type: any) {
+  async addDocument(index: string, id: string, document: any, type: any) {
     try {
+      const imageIds: any = document.images;
+      const images = await this.imagesRepository.findByIds(imageIds);
+      const imageData = images.map((image) => ({
+        alt: image.name,
+        src: image.path,
+      }));
+      const updatedDocument = {
+        ...document,
+        type,
+        images: imageData,
+      };
+
       const result = await this.elasticsearchService.index({
         index: index,
         id: id,
-        body: {
-          ...documnet,
-          type,
-          images: {
-            alt: '1213',
-            src: '12312',
-          },
-        },
+        body: updatedDocument,
       });
       return result;
     } catch (err) {
@@ -110,6 +115,7 @@ export class ElasticsearchService {
       throw new BadRequestException('Error adding document');
     }
   }
+
   async updateDocument(index: string, id: string, documnet: any, type: string) {
     try {
       await this.elasticsearchService.delete({
