@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Images } from '../../entities/images.entity';
 
 @Injectable()
 export class ElasticsearchService {
@@ -14,6 +15,8 @@ export class ElasticsearchService {
     private readonly productRepository: Repository<Products>,
     @InjectRepository(Sections)
     private readonly sectionsRepository: Repository<Sections>,
+    @InjectRepository(Images)
+    private readonly imagesRepository: Repository<Images>,
   ) {}
   private readonly index = 'shop';
 
@@ -27,30 +30,44 @@ export class ElasticsearchService {
       const products = await this.productRepository.find();
       const sections = await this.sectionsRepository.find();
 
-      const documentsProduct = products.map((product) => ({
-        ...product,
-        image: {
-          alt: '1213',
-          src: '12312',
-        },
-        type: 'product',
-      }));
-      const documentsSection = sections.map((sections) => ({
-        ...sections,
-        type: 'section',
-        images: {
-          alt: '1213',
-          src: '12312',
-        },
-      }));
+      const documentsProduct = await Promise.all(
+        products.map(async (product) => {
+          const imageIds = product.images;
+          const images = await this.imagesRepository.findByIds(imageIds);
+
+          const imageData = images.map((image) => ({
+            alt: image.name,
+            src: image.path,
+          }));
+
+          return {
+            ...product,
+            images: imageData,
+            type: 'product',
+          };
+        }),
+      );
+      const documentsSection = await Promise.all(
+        sections.map(async (section) => {
+          const imageIds = section.images;
+          const images = await this.imagesRepository.findByIds(imageIds);
+
+          const imageData = images.map((image) => ({
+            alt: image.name,
+            src: image.path,
+          }));
+
+          return {
+            ...section,
+            images: imageData,
+            type: 'section',
+          };
+        }),
+      );
 
       const document = [...documentsProduct, ...documentsSection];
 
-      await this.bulkIndexDocuments(
-        this.index,
-        // document.map(({ images, ...rest }) => rest),
-        document,
-      );
+      await this.bulkIndexDocuments(this.index, document);
       return true;
     } catch (err) {
       logger.error('Error from elastic.createIndex: ', err);

@@ -5,6 +5,7 @@ import { ElasticController } from './elasticsearch.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
+import { Images } from '../../entities/images.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { Sections } from '../../entities/sections.entity';
         },
       }),
     }),
-    TypeOrmModule.forFeature([Products, Sections]),
+    TypeOrmModule.forFeature([Products, Sections, Images]),
   ],
   controllers: [ElasticController],
   providers: [ElasticsearchService],
