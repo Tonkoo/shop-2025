@@ -21,7 +21,7 @@ export class Products extends BaseEntity {
   @Column()
   name: string;
 
-  @Column('simple-array')
+  @Column('int', { array: true })
   images: number[];
 
   @Column()

@@ -85,6 +85,7 @@ export class SectionsService {
         name: data.name,
         id_parent: data.idParent,
         images: idImages,
+        getSection: data.getSection,
       });
 
       if (data.getSection) {

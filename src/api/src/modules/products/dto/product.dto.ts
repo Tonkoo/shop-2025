@@ -12,7 +12,12 @@ export class ProductDto {
   name: string;
 
   @ApiProperty({ example: [1, 2, 3], description: 'Список ID изображений' })
-  images: number[];
+  images: {
+    id: number;
+    imagesName: string;
+    imagesPath: string;
+    imagesType: string;
+  };
 
   @ApiProperty({ example: '123.00', description: 'Цена продукта' })
   price: number;
@@ -59,7 +64,8 @@ export class ProductDto {
     this.id = ent.id;
     this.code = ent.code;
     this.name = ent.name;
-    this.images = ent.images;
+    // @ts-ignore
+    this.images.id = ent.images;
     this.price = ent.price;
     this.color = ent.color;
     this.description = ent.description;
