@@ -6,8 +6,11 @@ import {
   CreateDateColumn,
   OneToMany,
   BaseEntity,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Products } from './products.entity';
+import { Images } from './images.entity';
 
 @Entity()
 export class Sections extends BaseEntity {
@@ -20,8 +23,9 @@ export class Sections extends BaseEntity {
   @Column()
   name: string;
 
-  @Column('simple-array')
-  images: number[];
+  @ManyToOne(() => Images, (item) => item.sections)
+  @JoinColumn({ name: 'images' })
+  images: Images[];
 
   @CreateDateColumn({ name: 'create_at' })
   create_at: Date;

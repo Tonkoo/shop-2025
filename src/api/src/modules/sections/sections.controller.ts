@@ -76,9 +76,9 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async create(@Body() data: SectionDto) {
-    const result = await this.services.create(data);
-    await this.EsServices.createIndex();
+  async create(@Body() data) {
+    const result = await this.services.createImages(data);
+    // await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 

@@ -1,7 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  OneToMany,
+} from 'typeorm';
+import { Sections } from './sections.entity';
 
 @Entity()
-export class Images {
+export class Images extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,4 +20,7 @@ export class Images {
 
   @Column()
   type: string;
+
+  @OneToMany(() => Sections, (item) => item.images, { onDelete: 'CASCADE' })
+  sections: Sections[];
 }
