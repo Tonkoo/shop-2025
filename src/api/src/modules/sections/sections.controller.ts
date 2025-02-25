@@ -34,10 +34,7 @@ class DeleteSectionDto {
 @Controller('section')
 @ApiTags('section')
 export class SectionsController {
-  constructor(
-    private readonly services: SectionsService,
-    private readonly EsServices: ElasticsearchService,
-  ) {}
+  constructor(private readonly services: SectionsService) {}
 
   @ApiOperation({ summary: 'Вывод данных таблицы' })
   @ApiBody({
@@ -58,7 +55,6 @@ export class SectionsController {
   async getList() {
     const result = await this.services.getList();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
-    // return this.services.getList();
   }
   @Post()
   @ApiOperation({ summary: 'Создать новый раздел' })
@@ -76,9 +72,8 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async create(@Body() data) {
+  async create(@Body() data: SectionDto) {
     const result = await this.services.saveSection(data);
-    // await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
@@ -100,7 +95,6 @@ export class SectionsController {
   })
   async updateById(@Param('id') id: number, @Body() data: SectionDto) {
     const result = await this.services.updateById(id, data);
-    await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -117,7 +111,6 @@ export class SectionsController {
   })
   async deleteById(@Param('id') id: number, @Body() data: SectionDto) {
     const result = await this.services.deleteById(id, data);
-    await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

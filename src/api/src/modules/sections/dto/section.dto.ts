@@ -1,6 +1,5 @@
 import { Sections } from '../../../entities/sections.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Images } from '../../../entities/images.entity';
 
 export class SectionDto {
   @ApiProperty({ example: 1, description: 'ID раздела' })
@@ -13,12 +12,7 @@ export class SectionDto {
   name: string;
 
   @ApiProperty({ example: [1, 2, 3], description: 'Список изображений' })
-  images: {
-    id: number;
-    imagesName: string;
-    imagesPath: string;
-    imagesType: string;
-  };
+  images: Awaited<number>[];
 
   @ApiProperty({
     example: '2023-10-10T12:00:00.000Z',
@@ -45,8 +39,7 @@ export class SectionDto {
     this.id = ent.id;
     this.code = ent.code;
     this.name = ent.name;
-    // @ts-ignore
-    this.images.id = ent.images;
+    this.images = ent.images;
     this.createAt = ent.create_at;
     this.updateAt = ent.update_at;
     this.idParent = ent.id_parent;

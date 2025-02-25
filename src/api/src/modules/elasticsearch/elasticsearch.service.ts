@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,13 +18,16 @@ export class ElasticsearchService {
     @InjectRepository(Images)
     private readonly imagesRepository: Repository<Images>,
   ) {}
-  private readonly index = 'shop';
+  private readonly index = process.env.ELASTIC_INDEX;
 
-  async generateBlockImages(data: any[], type: string) {
+  async generateBlockImages(data: { images: string[] }[], type: string) {
     return await Promise.all(
-      data.map(async (product) => {
-        const imageIds: any = product.images;
-        const images = await this.imagesRepository.findByIds(imageIds);
+      data.map(async (data) => {
+        if (!Array.isArray(data.images)) {
+          throw new BadRequestException('Invalid images format');
+        }
+        const imageIds = data.images;
+        const images = await this.imagesRepository.findBy({ id: In(imageIds) });
 
         const imageData = images.map((image) => ({
           alt: image.name,
@@ -32,7 +35,7 @@ export class ElasticsearchService {
         }));
 
         return {
-          ...product,
+          ...data,
           images: imageData,
           type: type,
         };
@@ -42,7 +45,9 @@ export class ElasticsearchService {
 
   async createIndex() {
     try {
-      await this.elasticsearchService.indices.delete({ index: this.index });
+      await this.elasticsearchService.indices.delete({
+        index: this.index || 'shop',
+      });
     } catch {
       console.log('No index');
     }
@@ -50,18 +55,19 @@ export class ElasticsearchService {
       const products = await this.productRepository.find();
       const sections = await this.sectionsRepository.find();
 
-      const documentsProduct: any = await this.generateBlockImages(
-        products,
+      const documentsProduct = await this.generateBlockImages(
+        products.map((p) => ({ ...p, images: p.images.map(String) })),
         'product',
       );
-      const documentsSection: any = await this.generateBlockImages(
-        sections,
+
+      const documentsSection = await this.generateBlockImages(
+        sections.map((s) => ({ ...s, images: s.images.map(String) })),
         'section',
       );
 
       const document = [...documentsProduct, ...documentsSection];
 
-      await this.bulkIndexDocuments(this.index, document);
+      await this.bulkIndexDocuments(this.index || 'shop', document);
       return true;
     } catch (err) {
       logger.error('Error from elastic.createIndex: ', err);
@@ -83,16 +89,16 @@ export class ElasticsearchService {
       body,
     });
   }
-
-  async addDocument(index: string, id: string, document: any, type: any) {
+  async addDocument(index: string, id: string, document: any, type: string) {
     try {
-      console.log(document);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
       const imageIds = document.images;
-      const images = await this.imagesRepository.findByIds(imageIds);
+      const images = await this.imagesRepository.findBy({ id: In(imageIds) });
       const imageData = images.map((image) => ({
         alt: image.name,
         src: image.path,
       }));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const updatedDocument = {
         ...document,
         type,
@@ -102,6 +108,7 @@ export class ElasticsearchService {
       return await this.elasticsearchService.index({
         index: index,
         id: id,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         body: updatedDocument,
       });
     } catch (err) {
@@ -113,7 +120,6 @@ export class ElasticsearchService {
   async updateDocument(index: string, id: string, documnet: any, type: string) {
     try {
       await this.deleteDocument(index, id);
-      console.log(documnet);
 
       return await this.addDocument(index, id, documnet, type);
     } catch (err) {

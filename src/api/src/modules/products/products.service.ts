@@ -1,18 +1,23 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { QueryFailedError, Repository, DataSource, QueryRunner } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
 import { Images } from '../../entities/images.entity';
+
+interface ImageData {
+  imagesName: string;
+  imagesPath: string;
+  imagesType: string;
+}
 
 @Injectable()
 export class ProductsService {
@@ -24,65 +29,53 @@ export class ProductsService {
     private readonly EsServices: ElasticsearchService,
     private readonly dataSource: DataSource,
   ) {}
+  private readonly index = process.env.ELASTIC_INDEX;
 
   async createImages(data: ProductDto, queryRunner: QueryRunner) {
-    const imagesSection: number[] = [];
-
     try {
-      // @ts-ignore
-      for (const image of data.images) {
-        const newImage = queryRunner.manager.create(Images, {
-          name: image.imagesName,
-          path: image.imagesPath,
-          type: image.imagesType,
-        });
-        await queryRunner.manager.save(newImage);
-        imagesSection.push(newImage.id);
-      }
-
-      await queryRunner.commitTransaction();
-      return imagesSection;
+      const images = data.images as unknown as ImageData[];
+      const imagesProduct = await Promise.all(
+        images.map(async (image) => {
+          const newImage = queryRunner.manager.create(Images, {
+            name: image.imagesName,
+            path: image.imagesPath,
+            type: image.imagesType,
+          });
+          await queryRunner.manager.save(newImage);
+          return newImage.id;
+        }),
+      );
+      data.images = imagesProduct;
+      return imagesProduct;
     } catch (err) {
       await queryRunner.rollbackTransaction();
-      logger.error('Error from productss.images.create: ', err);
-      if (err instanceof QueryFailedError) {
-        // @ts-ignore
-        switch (err.code) {
-          case '23502':
-            throw new BadRequestException('Missing required field.');
-          case '42601':
-            throw new InternalServerErrorException(
-              'There is an error in the database query syntax.',
-            );
-          default:
-            throw err;
-        }
-      }
-
+      logger.error('Error from product.images.create: ', err);
       throw new BadRequestException('An error occurred while adding the file.');
     }
   }
 
-  async saveProducts(data) {
+  async saveProducts(data: ProductDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      const idImages = await this.createImages(data, queryRunner);
-      const result: any = await this.create(data, idImages);
-
+      await this.createImages(data, queryRunner);
+      const result = await this.create(data);
+      await queryRunner.commitTransaction();
       return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from products.save: ', err);
-      throw err;
+      throw new BadRequestException(
+        'An error occurred while saving the product.',
+      );
     } finally {
       await queryRunner.release();
     }
   }
 
-  async create(data: ProductDto, idImages: number[]) {
+  async create(data: ProductDto) {
     try {
       const section = await this.sectionsRepo
         .findOne({
@@ -95,52 +88,23 @@ export class ProductsService {
         });
       if (!section) throw new NotFoundException('Section not found');
 
-      // const newData = prepareData(data, ['getProduct']);
-
-      // await this.productsRepo.save(newData);
-      const newData = await this.productsRepo.save({
-        code: data.code,
-        name: data.name,
-        images: idImages,
-        price: data.price,
-        color: data.color,
-        description: data.description,
-        id_section: section.id,
-        show_on_main: data.showOnMain,
-        main_slider: data.mainSlider,
-      });
+      const result = await this.productsRepo.save(
+        prepareData(data, ['getProduct']),
+      );
 
       await this.EsServices.addDocument(
-        'shop',
-        newData.id.toString(),
-        newData,
+        this.index || 'shop',
+        result.id.toString(),
+        result,
         'product',
       );
 
       if (data.getProduct) {
         return await this.getList();
       }
-      return newData;
+      return result;
     } catch (err) {
       logger.error('Error from product.create: ', err);
-      if (err instanceof QueryFailedError) {
-        // @ts-ignore
-        switch (err.code) {
-          case '23503':
-            throw new BadRequestException(
-              'Invalid reference: Related entity does not exist.',
-            );
-          case '23502':
-            throw new BadRequestException('Missing required field.');
-          case '42601':
-            throw new InternalServerErrorException(
-              'There is an error in the database query syntax.',
-            );
-          default:
-            throw err;
-        }
-      }
-
       throw new BadRequestException(
         'An error occurred while creating the product.',
       );
@@ -156,59 +120,41 @@ export class ProductsService {
       return products;
     } catch (err) {
       console.log('Error from products.getList: ', err);
-      throw err;
+      throw new BadRequestException(
+        'An error occurred while outputting product data.',
+      );
     }
   }
 
   async updateById(id: number, data: ProductDto) {
     try {
-      // TODO: передавать только те поля которые пришли в data
+      const result = this.productsRepo.update(
+        { id: id },
+        prepareData(data, ['getProduct']),
+      );
 
-      const newData = prepareData(data, ['getProduct']);
-
-      return await this.productsRepo.manager.transaction(async () => {
-        await this.productsRepo.update({ id: id }, newData);
-
-        const updatedProduct = await this.productsRepo.findOne({
-          where: { id: id },
-        });
-
-        await this.EsServices.updateDocument(
-          'shop',
-          id.toString(),
-          updatedProduct,
-          'product',
+      if (result == null)
+        throw new BadRequestException(
+          'An error occurred while saving the product.',
         );
 
-        if (data.getProduct) {
-          return await this.getList();
-        }
-        return newData;
+      const updatedProduct = await this.productsRepo.findOne({
+        where: { id: id },
       });
-      // await this.productsRepo.update({ id: id }, newData);
 
-      // return newData;
-    } catch (err) {
-      // TODO: если exception 404 throw NotFoundException, 400 throw BadRequestExecption
-      logger.error('Error from product.update: ', err);
-      if (err instanceof QueryFailedError) {
-        // @ts-ignore
-        switch (err.code) {
-          case '23503':
-            throw new BadRequestException(
-              'Invalid reference: Related entity does not exist.',
-            );
-          case '23505':
-            throw new BadRequestException(
-              'Duplicate entry: This value already exists.',
-            );
-          case '23502':
-            throw new BadRequestException('Missing required field.');
-          default:
-            throw err;
-        }
+      await this.EsServices.updateDocument(
+        this.index || 'shop',
+        id.toString(),
+        updatedProduct,
+        'product',
+      );
+
+      if (data.getProduct) {
+        return await this.getList();
       }
-
+      return updatedProduct;
+    } catch (err) {
+      logger.error('Error from product.update: ', err);
       throw new BadRequestException(
         'An error occurred while updating the product.',
       );
@@ -216,7 +162,14 @@ export class ProductsService {
   }
   async deleteById(id: number, data: ProductDto) {
     try {
-      await this.productsRepo.delete(id);
+      const result = this.productsRepo.delete(id);
+
+      if (result == null)
+        throw new BadRequestException(
+          'An error occurred while deleting the product.',
+        );
+
+      await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
       if (data.getProduct) {
         return await this.getList();
@@ -224,9 +177,9 @@ export class ProductsService {
 
       return id;
     } catch (err) {
-      logger.error('Error from products.delete : ', err);
+      logger.error('Error from products.delete: ', err);
       throw new BadRequestException(
-        'An error occurred while updating the product.',
+        'An error occurred while deleting the product.',
       );
     }
   }

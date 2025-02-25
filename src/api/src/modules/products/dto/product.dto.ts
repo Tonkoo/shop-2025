@@ -12,12 +12,7 @@ export class ProductDto {
   name: string;
 
   @ApiProperty({ example: [1, 2, 3], description: 'Список ID изображений' })
-  images: {
-    id: number;
-    imagesName: string;
-    imagesPath: string;
-    imagesType: string;
-  };
+  images: Awaited<number>[];
 
   @ApiProperty({ example: '123.00', description: 'Цена продукта' })
   price: number;
