@@ -56,13 +56,13 @@ export class ProductsController {
   })
   async create(@Body() data: ProductDto) {
     const result: any = await this.services.saveProducts(data);
-
-    await this.EsServices.addDocument(
-      'shop',
-      result.id.toString(),
-      result,
-      'product',
-    );
+    //
+    // await this.EsServices.addDocument(
+    //   'shop',
+    //   result.id.toString(),
+    //   result,
+    //   'product',
+    // );
     // await this.EsServices.createIndex();
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
@@ -106,8 +106,6 @@ export class ProductsController {
   })
   async updateById(@Param('id') id: number, @Body() data: ProductDto) {
     const result: any = await this.services.updateById(id, data);
-    // await this.EsServices.createIndex();
-    // await this.EsServices.updateDocument('shop', result.id.toString(), result);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 

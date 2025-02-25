@@ -12,7 +12,6 @@ import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
-import { SectionDto } from '../sections/dto/section.dto';
 import { Images } from '../../entities/images.entity';
 
 @Injectable()
@@ -71,7 +70,9 @@ export class ProductsService {
 
     try {
       const idImages = await this.createImages(data, queryRunner);
-      return await this.create(data, idImages);
+      const result: any = await this.create(data, idImages);
+
+      return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from products.save: ', err);
@@ -107,8 +108,14 @@ export class ProductsService {
         id_section: section.id,
         show_on_main: data.showOnMain,
         main_slider: data.mainSlider,
-        getProduct: data.getProduct,
       });
+
+      await this.EsServices.addDocument(
+        'shop',
+        newData.id.toString(),
+        newData,
+        'product',
+      );
 
       if (data.getProduct) {
         return await this.getList();

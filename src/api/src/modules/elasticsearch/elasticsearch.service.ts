@@ -20,6 +20,26 @@ export class ElasticsearchService {
   ) {}
   private readonly index = 'shop';
 
+  async generateBlockImages(data: any[], type: string) {
+    return await Promise.all(
+      data.map(async (product) => {
+        const imageIds: any = product.images;
+        const images = await this.imagesRepository.findByIds(imageIds);
+
+        const imageData = images.map((image) => ({
+          alt: image.name,
+          src: image.path,
+        }));
+
+        return {
+          ...product,
+          images: imageData,
+          type: type,
+        };
+      }),
+    );
+  }
+
   async createIndex() {
     try {
       await this.elasticsearchService.indices.delete({ index: this.index });
@@ -30,39 +50,13 @@ export class ElasticsearchService {
       const products = await this.productRepository.find();
       const sections = await this.sectionsRepository.find();
 
-      const documentsProduct = await Promise.all(
-        products.map(async (product) => {
-          const imageIds = product.images;
-          const images = await this.imagesRepository.findByIds(imageIds);
-
-          const imageData = images.map((image) => ({
-            alt: image.name,
-            src: image.path,
-          }));
-
-          return {
-            ...product,
-            images: imageData,
-            type: 'product',
-          };
-        }),
+      const documentsProduct: any = await this.generateBlockImages(
+        products,
+        'product',
       );
-      const documentsSection = await Promise.all(
-        sections.map(async (section) => {
-          const imageIds = section.images;
-          const images = await this.imagesRepository.findByIds(imageIds);
-
-          const imageData = images.map((image) => ({
-            alt: image.name,
-            src: image.path,
-          }));
-
-          return {
-            ...section,
-            images: imageData,
-            type: 'section',
-          };
-        }),
+      const documentsSection: any = await this.generateBlockImages(
+        sections,
+        'section',
       );
 
       const document = [...documentsProduct, ...documentsSection];
@@ -92,7 +86,8 @@ export class ElasticsearchService {
 
   async addDocument(index: string, id: string, document: any, type: any) {
     try {
-      const imageIds: any = document.images;
+      console.log(document);
+      const imageIds = document.images;
       const images = await this.imagesRepository.findByIds(imageIds);
       const imageData = images.map((image) => ({
         alt: image.name,
@@ -104,12 +99,11 @@ export class ElasticsearchService {
         images: imageData,
       };
 
-      const result = await this.elasticsearchService.index({
+      return await this.elasticsearchService.index({
         index: index,
         id: id,
         body: updatedDocument,
       });
-      return result;
     } catch (err) {
       logger.error('Error from elastic.addDocument: ', err);
       throw new BadRequestException('Error adding document');
@@ -118,17 +112,25 @@ export class ElasticsearchService {
 
   async updateDocument(index: string, id: string, documnet: any, type: string) {
     try {
-      await this.elasticsearchService.delete({
-        index: index,
-        id: id,
-      });
+      await this.deleteDocument(index, id);
       console.log(documnet);
 
-      const result = await this.addDocument(index, id, documnet, type);
-      return result;
+      return await this.addDocument(index, id, documnet, type);
     } catch (err) {
       logger.error('Error from elastic.updateDocument: ', err);
       throw new BadRequestException('Error updating document');
+    }
+  }
+
+  async deleteDocument(index: string, id: string) {
+    try {
+      return await this.elasticsearchService.delete({
+        index: index,
+        id: id,
+      });
+    } catch (err) {
+      logger.error('Error from elastic.deleteDocument: ', err);
+      throw new BadRequestException('Error deleting document');
     }
   }
 }
