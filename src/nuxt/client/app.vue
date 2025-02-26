@@ -1,16 +1,16 @@
 <template>
   <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
+    <nuxt-page />
   </div>
 </template>
+
 <script>
 export default {
   data() {
     return {
-      GetTest: "",
-    };
+      GetTest: '',
+    }
   },
   methods: {},
-};
+}
 </script>
