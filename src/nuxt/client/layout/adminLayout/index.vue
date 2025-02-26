@@ -3,6 +3,7 @@ import LayoutHeader from '~/layout/adminLayout/components/LayoutHeader.vue'
 import LayoutSearch from '~/layout/adminLayout/components/LayoutSearch.vue'
 import LayoutToggle from '~/layout/adminLayout/components/LayoutToggle.vue'
 import LayoutTable from '~/layout/adminLayout/components/LayoutTable.vue'
+import LayoutDialog from '~/layout/adminLayout/components/LayoutDialog.vue'
 </script>
 
 <template>
@@ -15,6 +16,7 @@ import LayoutTable from '~/layout/adminLayout/components/LayoutTable.vue'
         <LayoutSearch />
         <layoutToggle />
         <LayoutTable />
+        <LayoutDialog />
       </main>
     </q-page-container>
   </q-layout>
