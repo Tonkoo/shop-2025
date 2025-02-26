@@ -3,11 +3,7 @@ import ModuleHeader from '~/modules/adminModules/components/ModuleHeader.vue'
 </script>
 
 <template>
-  <q-layout>
-    <q-header class="bg-white text-black">
-      <ModuleHeader />
-    </q-header>
-  </q-layout>
+  <ModuleHeader />
 </template>
 
 <style scoped></style>

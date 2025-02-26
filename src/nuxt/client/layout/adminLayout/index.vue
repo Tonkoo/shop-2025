@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import LayoutHeader from '~/layout/adminLayout/components/LayoutHeader.vue'
+import LayoutSearch from '~/layout/adminLayout/components/LayoutSearch.vue'
 </script>
 
 <template>
-  <LayoutHeader />
+  <q-layout>
+    <q-header class="bg-white text-black">
+      <LayoutHeader />
+    </q-header>
+    <q-page-container style="padding-top: 100px">
+      <main>
+        <LayoutSearch />
+      </main>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <style scoped></style>
