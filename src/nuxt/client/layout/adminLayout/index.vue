@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import LayoutHeader from '~/layout/adminLayout/components/LayoutHeader.vue'
 import LayoutSearch from '~/layout/adminLayout/components/LayoutSearch.vue'
+import LayoutToggle from '~/layout/adminLayout/components/LayoutToggle.vue'
+import LayoutTable from '~/layout/adminLayout/components/LayoutTable.vue'
 </script>
 
 <template>
@@ -11,6 +13,8 @@ import LayoutSearch from '~/layout/adminLayout/components/LayoutSearch.vue'
     <q-page-container style="padding-top: 100px">
       <main>
         <LayoutSearch />
+        <layoutToggle />
+        <LayoutTable />
       </main>
     </q-page-container>
   </q-layout>
