@@ -7,6 +7,12 @@ import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
 
+interface Document {
+  id?: string | number; // id теперь необязательное поле
+  images: { alt: string; src: string }[];
+  type: string;
+}
+
 @Injectable()
 export class ElasticsearchService {
   constructor(
@@ -77,28 +83,33 @@ export class ElasticsearchService {
     }
   }
 
-  async bulkIndexDocuments(index: string, documents: any[]) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  async bulkIndexDocuments(
+    index: string,
+    documents: Document[],
+  ): Promise<void> {
     const body = documents.flatMap((doc) => [
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
       { index: { _index: index, _id: doc.id } },
       doc,
     ]);
 
-    return this.elasticsearchService.bulk({
-      body,
-    });
+    await this.elasticsearchService.bulk({ body });
   }
-  async addDocument(index: string, id: string, document: any, type: string) {
+
+  async addDocument(
+    index: string,
+    id: string,
+    document: { images: number[]; [key: string]: any },
+    type: string,
+  ) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-      const imageIds = document.images;
-      const images = await this.imagesRepository.findBy({ id: In(imageIds) });
+      const imageIds: number[] = document.images;
+      const images = await this.imagesRepository.findBy({
+        id: In(imageIds),
+      });
       const imageData = images.map((image) => ({
         alt: image.name,
         src: image.path,
       }));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const updatedDocument = {
         ...document,
         type,
@@ -108,7 +119,6 @@ export class ElasticsearchService {
       return await this.elasticsearchService.index({
         index: index,
         id: id,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         body: updatedDocument,
       });
     } catch (err) {

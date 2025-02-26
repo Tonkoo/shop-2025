@@ -59,8 +59,7 @@ export class SectionsService {
 
     try {
       await this.createImages(data, queryRunner);
-      const result = await this.create(data);
-      await queryRunner.commitTransaction();
+      const result = await this.create(data, queryRunner);
       return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -73,7 +72,7 @@ export class SectionsService {
     }
   }
 
-  async create(data: SectionDto) {
+  async create(data: SectionDto, queryRunner: QueryRunner) {
     try {
       const result = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
@@ -83,6 +82,7 @@ export class SectionsService {
         throw new BadRequestException(
           'An error occurred while create the partition.',
         );
+      await queryRunner.commitTransaction();
       await this.EsServices.addDocument(
         this.index || 'shop',
         result.id.toString(),

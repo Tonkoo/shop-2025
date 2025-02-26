@@ -61,8 +61,8 @@ export class ProductsService {
 
     try {
       await this.createImages(data, queryRunner);
-      const result = await this.create(data);
-      await queryRunner.commitTransaction();
+      const result = await this.create(data, queryRunner);
+
       return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -75,7 +75,7 @@ export class ProductsService {
     }
   }
 
-  async create(data: ProductDto) {
+  async create(data: ProductDto, queryRunner: QueryRunner) {
     try {
       const section = await this.sectionsRepo
         .findOne({
@@ -91,6 +91,7 @@ export class ProductsService {
       const result = await this.productsRepo.save(
         prepareData(data, ['getProduct']),
       );
+      await queryRunner.commitTransaction();
 
       await this.EsServices.addDocument(
         this.index || 'shop',

@@ -59,8 +59,7 @@ export class ProductDto {
     this.id = ent.id;
     this.code = ent.code;
     this.name = ent.name;
-    // @ts-ignore
-    this.images.id = ent.images;
+    this.images = ent.images;
     this.price = ent.price;
     this.color = ent.color;
     this.description = ent.description;
