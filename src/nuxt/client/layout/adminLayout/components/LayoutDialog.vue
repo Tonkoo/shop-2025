@@ -3,7 +3,9 @@ import ModuleDialog from '~/modules/adminModules/components/ModuleDialog.vue'
 </script>
 
 <template>
-  <ModuleDialog />
+  <div class="q-pa-md q-gutter-sm">
+    <ModuleDialog />
+  </div>
 </template>
 
 <style scoped></style>

@@ -153,18 +153,16 @@ export default {
 </script>
 
 <template>
-  <div class="q-pa-md">
-    <p>Результатов: 10</p>
-    <q-table
-      class="my-sticky-header-table full-height"
-      flat
-      bordered
-      :rows="rows"
-      :columns="columns"
-      :pagination="pagination"
-      row-key="name"
-    />
-  </div>
+  <p>Результатов: 10</p>
+  <q-table
+    class="my-sticky-header-table full-height"
+    flat
+    bordered
+    :rows="rows"
+    :columns="columns"
+    :pagination="pagination"
+    row-key="name"
+  />
 </template>
 
 <style lang="sass"></style>

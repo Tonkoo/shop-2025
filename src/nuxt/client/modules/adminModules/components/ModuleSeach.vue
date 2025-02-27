@@ -5,7 +5,22 @@
     <div class="q-pa-md example-row-equal-width">
       <div class="row">
         <div class="col-5">
-          <q-input square v-model="text" outlined label="Поиск" />
+          <q-select
+            square
+            outlined
+            label="Поиск"
+            :model-value="search"
+            use-input
+            hide-selected
+            fill-input
+            input-debounce="0"
+          >
+            <template>
+              <q-item>
+                <q-item-section class="text-grey"> No result </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </div>
         <div class="col-5">
           <q-select square outlined v-model="model" label="Тип" />

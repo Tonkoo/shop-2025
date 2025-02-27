@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import ModuleToggle from '~/modules/adminModules/components/ModuleToggle.vue'
 import ModuleTable from '~/modules/adminModules/components/ModuleTable.vue'
 </script>
 
 <template>
-  <ModuleTable />
+  <div class="q-pa-md">
+    <ModuleTable />
+  </div>
 </template>
 
 <style scoped></style>
