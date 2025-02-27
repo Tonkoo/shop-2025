@@ -1,40 +1,40 @@
 <script lang="ts">
-const columns = [
-  {
-    name: 'name',
-    required: true,
-    label: 'Dessert (100g serving)',
-    align: 'left',
-    field: (row) => row.name,
-    format: (val) => `${val}`,
-    sortable: true,
-  },
-  {
-    name: 'calories',
-    align: 'center',
-    label: 'Calories',
-    field: 'calories',
-    sortable: true,
-  },
-  { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-  { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-  {
-    name: 'calcium',
-    label: 'Calcium (%)',
-    field: 'calcium',
-    sortable: true,
-    sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-  },
-  {
-    name: 'iron',
-    label: 'Iron (%)',
-    field: 'iron',
-    sortable: true,
-    sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
-  },
-]
+// const columns = [
+//   {
+//     name: 'name',
+//     required: true,
+//     label: 'Dessert (100g serving)',
+//     align: 'left',
+//     field: (row) => row.name,
+//     format: (val) => `${val}`,
+//     sortable: true,
+//   },
+//   {
+//     name: 'calories',
+//     align: 'center',
+//     label: 'Calories',
+//     field: 'calories',
+//     sortable: true,
+//   },
+//   { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
+//   { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
+//   { name: 'protein', label: 'Protein (g)', field: 'protein' },
+//   { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
+//   {
+//     name: 'calcium',
+//     label: 'Calcium (%)',
+//     field: 'calcium',
+//     sortable: true,
+//     sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+//   },
+//   {
+//     name: 'iron',
+//     label: 'Iron (%)',
+//     field: 'iron',
+//     sortable: true,
+//     sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+//   },
+// ]
 
 const rows = [
   {
@@ -153,8 +153,8 @@ export default {
     const pagination = {
       rowsPerPage: 10,
     }
+    // columns,
     return {
-      columns,
       rows,
       pagination: pagination,
       rowsPerPageOptions: [10, 20, 30, 40, 50, 0],
@@ -163,7 +163,7 @@ export default {
   },
 }
 </script>
-
+<!--:columns="columns"-->
 <template>
   <p style="color: #818181">Результатов: 10</p>
   <q-table
@@ -171,7 +171,6 @@ export default {
     flat
     bordered
     :hide-pagination="true"
-    :columns="columns"
     :rows="rows"
     :pagination="pagination"
     row-key="name"
@@ -179,17 +178,23 @@ export default {
   />
 </template>
 
-<style lang="sass">
-.my-sticky-header-table
-
+<style lang="scss">
+.my-sticky-header-table {
   .q-table__top,
-  thead tr:first-child th
-    background-color: #c1c1c1
-    border-right: #818181 solid
+  thead tr:first-child th {
+    background-color: getColor('yellow', 1);
+    border-right: 1px #818181 solid;
+  }
+  thead tr th:last-child {
+    border-right: none;
+  }
 
-  thead tr th
-    position: sticky
-    z-index: 1
-  thead tr:first-child th
-    top: 0
+  thead tr th {
+    position: sticky;
+    z-index: 1;
+  }
+  thead tr:first-child th {
+    top: 0;
+  }
+}
 </style>

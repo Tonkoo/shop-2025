@@ -1,4 +1,13 @@
-<script setup lang="ts"></script>
+<script lang="ts">
+export default {
+  setup() {
+    return {
+      search: ref(),
+      model: ref(),
+    }
+  },
+}
+</script>
 
 <template>
   <q-form>

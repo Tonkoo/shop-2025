@@ -1,7 +1,6 @@
 <script lang="ts">
 import LayoutHeader from '~/layout/adminLayout/components/LayoutHeader.vue'
 import LayoutSearch from '~/layout/adminLayout/components/LayoutSearch.vue'
-import LayoutToggle from '~/layout/adminLayout/components/LayoutToggle.vue'
 import LayoutTable from '~/layout/adminLayout/components/LayoutTable.vue'
 import LayoutPagination from '~/layout/adminLayout/components/LayoutPagination.vue'
 import LayoutDialog from '~/layout/adminLayout/components/LayoutDialog.vue'
@@ -11,7 +10,6 @@ export default {
   components: {
     LayoutDialog,
     LayoutTable,
-    LayoutToggle,
     LayoutHeader,
     LayoutSearch,
     LayoutPagination,
@@ -36,7 +34,6 @@ export default {
     <q-page-container style="padding-top: 100px">
       <main>
         <LayoutSearch />
-        <layoutToggle />
         <LayoutTable />
         <LayoutPagination />
         <LayoutDialog />

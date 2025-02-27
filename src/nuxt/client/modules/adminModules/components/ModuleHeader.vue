@@ -3,7 +3,7 @@ import { inject } from 'vue'
 
 export default {
   setup() {
-    const openDialog = inject('openDialog')
+    const openDialog = inject<Ref<() => void>>('openDialog')
     return {
       openDialog,
     }

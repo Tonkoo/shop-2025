@@ -1,17 +1,10 @@
 export default defineNuxtConfig({
   modules: ['nuxt-quasar-ui'],
-
   // runtimeConfig: {
   //   urlApi: process.env.NUXT_API_URL,
   // },
   ssr: false,
   devtools: { enabled: true },
-  srcDir: 'client',
-  devServer: {
-    port: 3000,
-    host: '0.0.0.0',
-  },
-  compatibilityDate: '2024-11-01',
   app: {
     head: {
       link: [
@@ -22,4 +15,11 @@ export default defineNuxtConfig({
       ],
     },
   },
+  // css: ['/client/commonUI/assets/sass/index.scss'],
+  srcDir: 'client',
+  devServer: {
+    port: 3000,
+    host: '0.0.0.0',
+  },
+  compatibilityDate: '2024-11-01',
 })
