@@ -3,6 +3,7 @@ import LayoutHeader from '~/layout/adminLayout/components/LayoutHeader.vue'
 import LayoutSearch from '~/layout/adminLayout/components/LayoutSearch.vue'
 import LayoutToggle from '~/layout/adminLayout/components/LayoutToggle.vue'
 import LayoutTable from '~/layout/adminLayout/components/LayoutTable.vue'
+import LayoutPagination from '~/layout/adminLayout/components/LayoutPagination.vue'
 import LayoutDialog from '~/layout/adminLayout/components/LayoutDialog.vue'
 import { useDialog } from '~/modules/adminModules/composables/UseDialog'
 
@@ -13,6 +14,7 @@ export default {
     LayoutToggle,
     LayoutHeader,
     LayoutSearch,
+    LayoutPagination,
   },
   setup() {
     const { dialog, openDialog, closeDialog } = useDialog()
@@ -36,6 +38,7 @@ export default {
         <LayoutSearch />
         <layoutToggle />
         <LayoutTable />
+        <LayoutPagination />
         <LayoutDialog />
       </main>
     </q-page-container>

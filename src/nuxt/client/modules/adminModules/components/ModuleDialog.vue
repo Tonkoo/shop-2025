@@ -20,8 +20,8 @@ export default {
       color: ref(),
       description: ref(),
       Section: ref(),
-      showOnMain: ref(),
-      mainSlider: ref(),
+      showOnMain: ref(false),
+      mainSlider: ref(false),
     }
   },
 }

@@ -98,6 +98,16 @@ const rows = [
     iron: '0%',
   },
   {
+    name: 'Jelly bean',
+    calories: 375,
+    fat: 0.0,
+    carbs: 94,
+    protein: 0.0,
+    sodium: 50,
+    calcium: '0%',
+    iron: '0%',
+  },
+  {
     name: 'Lollipop',
     calories: 392,
     fat: 0.2,
@@ -138,31 +148,48 @@ const rows = [
     iron: '6%',
   },
 ]
-const minRows = 10
 export default {
   setup() {
+    const pagination = {
+      rowsPerPage: 10,
+    }
     return {
       columns,
       rows,
-      pagination: {
-        rowsPerPage: minRows,
-      },
+      pagination: pagination,
+      rowsPerPageOptions: [10, 20, 30, 40, 50, 0],
+      current: ref(),
     }
   },
 }
 </script>
 
 <template>
-  <p>Результатов: 10</p>
+  <p style="color: #818181">Результатов: 10</p>
   <q-table
     class="my-sticky-header-table full-height"
     flat
     bordered
-    :rows="rows"
+    :hide-pagination="true"
     :columns="columns"
+    :rows="rows"
     :pagination="pagination"
     row-key="name"
+    :rows-per-page-options="rowsPerPageOptions"
   />
 </template>
 
-<style lang="sass"></style>
+<style lang="sass">
+.my-sticky-header-table
+
+  .q-table__top,
+  thead tr:first-child th
+    background-color: #c1c1c1
+    border-right: #818181 solid
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+</style>

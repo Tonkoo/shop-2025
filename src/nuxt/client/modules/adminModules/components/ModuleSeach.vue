@@ -14,6 +14,7 @@
             hide-selected
             fill-input
             input-debounce="0"
+            style="background: white"
           >
             <template>
               <q-item>
@@ -23,12 +24,18 @@
           </q-select>
         </div>
         <div class="col-5">
-          <q-select square outlined v-model="model" label="Тип" />
+          <q-select
+            square
+            outlined
+            style="background: white"
+            v-model="model"
+            label="Тип"
+          />
         </div>
         <div class="col-1">
           <q-btn
-            outline
-            style="color: black"
+            square
+            style="color: black; background: white"
             label="Поиск"
             icon="search"
             class="full-height full-width"
@@ -36,8 +43,8 @@
         </div>
         <div class="col-1">
           <q-btn
-            flat
-            style="color: #4e4e4e"
+            square
+            style="color: black; background: white"
             label="Очистить"
             icon="close"
             class="full-height full-width"
