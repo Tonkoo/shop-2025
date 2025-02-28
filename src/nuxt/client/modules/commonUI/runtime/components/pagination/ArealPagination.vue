@@ -1,10 +1,10 @@
 <template>
-  <q-select
+  <q-pagination
     :model-value="modelValue"
-    :label="label"
-    outlined
-    :options="option"
-    class="q-mb-md"
+    color="black"
+    :max="10"
+    :max-pages="6"
+    boundary-numbers
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
@@ -13,21 +13,15 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'ArealSelect',
+  name: 'ArealPagination',
   props: {
     modelValue: {
-      type: String,
-      required: false,
-      default: null,
+      type: Number,
+      required: true,
     },
     label: {
       type: String,
-      default: 'Изображения',
-    },
-    option: {
-      type: Array,
-      required: false,
-      default: null,
+      default: 'Название',
     },
   },
   emits: ['update:modelValue'],

@@ -1,11 +1,9 @@
-<script setup lang="ts">
-import ModuleSeach from '~/modules/adminModules/components/ModuleSeach.vue'
-</script>
-
 <template>
-  <div style="padding: 10px; margin: 0 20px; background: #a3a2a2">
-    <module-seach />
-  </div>
+  <module-search />
 </template>
 
-<style scoped></style>
+<script setup lang="ts">
+import ModuleSearch from '~/modules/adminModules/components/ModuleSearch.vue';
+</script>
+
+<style></style>

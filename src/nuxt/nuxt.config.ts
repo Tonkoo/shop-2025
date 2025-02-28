@@ -15,7 +15,6 @@ export default defineNuxtConfig({
       ],
     },
   },
-  // css: ['/client/commonUI/assets/sass/index.scss'],
   srcDir: 'client',
   devServer: {
     port: 3000,

@@ -2,18 +2,20 @@
   <q-select
     :model-value="modelValue"
     :label="label"
+    square
     outlined
-    :options="option"
-    class="q-mb-md"
+    class="select"
     @update:model-value="$emit('update:modelValue', $event)"
-  />
+  >
+    <slot />
+  </q-select>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'ArealSelect',
+  name: 'ArealSelectSearch',
   props: {
     modelValue: {
       type: String,
@@ -22,7 +24,7 @@ export default defineComponent({
     },
     label: {
       type: String,
-      default: 'Изображения',
+      default: '',
     },
     option: {
       type: Array,
@@ -34,4 +36,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.select {
+  background: getColor('white', 1);
+}
+</style>

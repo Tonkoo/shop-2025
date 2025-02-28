@@ -1,3 +1,14 @@
+<template>
+  <areal-pagination v-model="current" />
+  <q-space />
+  <areal-select
+    v-model="countColumn"
+    :option="options"
+    class="pagination__select"
+    label="На странице"
+  />
+</template>
+
 <script lang="ts">
 export default {
   setup() {
@@ -5,27 +16,13 @@ export default {
       current: ref(1),
       countColumn: ref('10'),
       options: ['10', '20', '30', '40', '50'],
-    }
+    };
   },
-}
+};
 </script>
 
-<template>
-  <q-pagination
-    v-model="current"
-    color="black"
-    :max="10"
-    :max-pages="6"
-    boundary-numbers
-  />
-  <q-space />
-  <q-select
-    v-model="countColumn"
-    filled
-    :options="options"
-    label="На странице"
-    style="width: 8%"
-  />
-</template>
-
-<style scoped></style>
+<style scoped>
+.pagination__select {
+  width: 8%;
+}
+</style>
