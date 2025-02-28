@@ -1,12 +1,9 @@
 <template>
-  <q-btn-toggle
+  <q-select
     :model-value="modelValue"
-    toggle-color="black"
-    spread
-    no-caps
-    color="white"
-    text-color="black"
-    :options="options"
+    :label="label"
+    outlined
+    class="q-mb-md"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
@@ -14,21 +11,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-interface Option {
-  label: string
-  value: string
-}
-
 export default defineComponent({
-  name: 'ArealBtnToggle',
+  name: 'ArealSelect',
   props: {
     modelValue: {
-      type: String,
-      required: true,
+      type: Object,
+      required: false,
     },
-    options: {
-      type: Array as () => Option[],
-      required: true,
+    label: {
+      type: String,
+      default: 'Изображения',
     },
   },
   emits: ['update:modelValue'],

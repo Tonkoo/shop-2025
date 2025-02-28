@@ -1,9 +1,8 @@
 <template>
-  <q-input
-    outlined
+  <q-checkbox
     :model-value="modelValue"
+    color="black"
     :label="label"
-    class="custom-input q-mb-md"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
@@ -12,15 +11,15 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'CustomInput',
+  name: 'ArealInput',
   props: {
     modelValue: {
-      type: String,
+      type: Boolean,
       required: true,
     },
     label: {
       type: String,
-      default: 'Название',
+      default: 'Выводить на главную страницу',
     },
   },
   emits: ['update:modelValue'],

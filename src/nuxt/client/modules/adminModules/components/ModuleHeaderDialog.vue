@@ -6,22 +6,24 @@
       <q-btn flat round icon="close" @click="closeDialog" />
     </q-toolbar>
   </q-card-section>
-  <ArealBtnToggle v-model="typeItem" :options="options" class="q-mb-md" />
+  <areal-btn-toggle v-model="typeItem" :options="options" class="q-mb-md" />
 </template>
 
 <script lang="ts">
-import { inject } from 'vue'
+import { inject, provide, ref } from 'vue'
 
 export default {
   setup() {
     const closeDialog = inject<() => void>('closeDialog')
+    const typeItem = useState('typeItem', () => 'section')
+    // provide('typeItem', typeItem)
     return {
       closeDialog,
       options: [
         { label: 'Раздел', value: 'section' },
         { label: 'Продукт', value: 'product' },
       ],
-      typeItem: ref('section'),
+      typeItem,
     }
   },
 }

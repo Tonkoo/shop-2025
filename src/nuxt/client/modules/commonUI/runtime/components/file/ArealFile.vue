@@ -1,12 +1,12 @@
 <template>
-  <q-btn-toggle
+  <q-file
     :model-value="modelValue"
-    toggle-color="black"
-    spread
-    no-caps
-    color="white"
-    text-color="black"
-    :options="options"
+    filled
+    multiple
+    use-chips
+    append
+    :label="label"
+    class="q-mb-md"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
@@ -14,21 +14,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-interface Option {
-  label: string
-  value: string
-}
-
 export default defineComponent({
-  name: 'ArealBtnToggle',
+  name: 'ArealFile',
   props: {
     modelValue: {
-      type: String,
-      required: true,
+      type: File as PropType<File | null | undefined>,
+      required: false,
+      default: null,
     },
-    options: {
-      type: Array as () => Option[],
-      required: true,
+    label: {
+      type: String,
+      default: 'Изображения',
     },
   },
   emits: ['update:modelValue'],

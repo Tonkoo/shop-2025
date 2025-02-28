@@ -1,10 +1,10 @@
 <template>
   <div class="q-pa-md q-gutter-sm dialog">
-    <!--    <ModuleDialog />-->
     <ArealDialog :model-value="dialog">
       <q-card class="dialog__card">
         <ModuleHeaderDialog />
-        <ModuleFormSectionDialog />
+        <ModuleFormSectionDialog v-if="typeItem == 'section'" />
+        <ModuleDialogFormProduct v-if="typeItem == 'product'" />
         <ModuleFooterDialog />
       </q-card>
     </ArealDialog>
@@ -13,24 +13,26 @@
 
 <script lang="ts">
 import { inject } from 'vue'
-import ModuleDialog from '~/modules/adminModules/components/ModuleDialog.vue'
 import ArealDialog from '~/modules/commonUI/runtime/components/dialog/ArealDialog.vue'
 import ModuleHeaderDialog from '~/modules/adminModules/components/ModuleHeaderDialog.vue'
 import ModuleFooterDialog from '~/modules/adminModules/components/ModuleFooterDialog.vue'
-import ModuleFormSectionDialog from '~/modules/adminModules/components/ModuleFormSectionDialog.vue'
+import ModuleDialogFormSection from '~/modules/adminModules/components/ModuleDialogFormSection.vue'
+import ModuleDialogFormProduct from '~/modules/adminModules/components/ModuleDialogFormProduct.vue'
 
 export default {
   components: {
-    ModuleDialog,
+    ModuleDialogFormProduct,
     ModuleHeaderDialog,
     ArealDialog,
     ModuleFooterDialog,
-    ModuleFormSectionDialog,
+    ModuleFormSectionDialog: ModuleDialogFormSection,
   },
   setup() {
     const dialog = inject<Ref<boolean>>('dialog', ref(false))
+    const typeItem = useState('typeItem')
     return {
       dialog,
+      typeItem,
     }
   },
 }
