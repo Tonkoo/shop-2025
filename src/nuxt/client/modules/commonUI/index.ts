@@ -1,5 +1,5 @@
-import { addComponentsDir, createResolver, defineNuxtModule } from '@nuxt/kit'
-import type { ModuleOptions } from 'rollup'
+import { addComponentsDir, createResolver, defineNuxtModule } from '@nuxt/kit';
+import type { ModuleOptions } from 'rollup';
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -11,12 +11,12 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup(options, nuxt) {
     // Module: Transpile the runtime and vuetify package
-    const { resolve } = createResolver(import.meta.url)
-    const runtimeDir = resolve('./runtime')
-    nuxt.options.imports.autoImport = true
-    nuxt.options.components = true
+    const { resolve } = createResolver(import.meta.url);
+    const runtimeDir = resolve('./runtime');
+    nuxt.options.imports.autoImport = true;
+    nuxt.options.components = true;
 
-    nuxt.options.appConfig.commonUi = options
+    nuxt.options.appConfig.commonUi = options;
 
     // await installModule(
     //   'nuxt-svg-icon-sprite',
@@ -40,13 +40,12 @@ export default defineNuxtModule<ModuleOptions>({
       path: resolve('./runtime/components'),
       global: true,
       pathPrefix: false,
-    })
+    });
 
     nuxt.options.css = [
       resolve('./assets/sass/index.scss'),
       ...nuxt.options.css,
-    ]
-    console.log(nuxt.options.css)
+    ];
     nuxt.options.vite = {
       ...nuxt.options.vite,
       css: {
@@ -58,10 +57,10 @@ export default defineNuxtModule<ModuleOptions>({
           },
         },
       },
-    }
+    };
 
-    nuxt.options.typescript.typeCheck = true
+    nuxt.options.typescript.typeCheck = true;
 
-    console.log('Successfully added module Common Ui')
+    console.log('Successfully added module Common Ui');
   },
-})
+});

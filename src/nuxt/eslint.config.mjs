@@ -1,14 +1,15 @@
-import { createConfigForNuxt } from '@nuxt/eslint-config'
-import prettierConfig from 'eslint-config-prettier'
+// @ts-check
+import withNuxt from './.nuxt/eslint.config.mjs';
 
-export default createConfigForNuxt({
-  features: {
-    stylistic: true,
+export default withNuxt([
+  {
+    rules: {
+      'no-console': 'warn',
+      'no-unused-vars': 'warn',
+      'vue/multi-word-component-names': 'off',
+    },
   },
-  extends: ['plugin:prettier/recommended', prettierConfig],
-  plugins: ['prettier'],
-  rules: {
-    'prettier/prettier': 'error',
-    'vue/max-attributes-per-line': 'off',
+  {
+    ignores: ['node_modules/', 'dist/', '.nuxt/'],
   },
-})
+]);

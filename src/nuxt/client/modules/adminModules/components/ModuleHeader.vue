@@ -15,7 +15,12 @@ export default {
   <q-toolbar class="q-pa-md">
     <q-toolbar-title>Администрирование</q-toolbar-title>
     <q-space />
-    <q-btn outline label="Добавить" icon="add" @click="openDialog" />
+    <q-btn
+      outline
+      label="Добавить"
+      icon="add"
+      @click="openDialog"
+    />
   </q-toolbar>
 </template>
 

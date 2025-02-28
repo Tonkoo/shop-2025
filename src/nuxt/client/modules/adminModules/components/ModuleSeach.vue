@@ -27,17 +27,19 @@ export default {
           >
             <template>
               <q-item>
-                <q-item-section class="text-grey"> No result </q-item-section>
+                <q-item-section class="text-grey">
+                  No result
+                </q-item-section>
               </q-item>
             </template>
           </q-select>
         </div>
         <div class="col-5">
           <q-select
+            v-model="model"
             square
             outlined
             style="background: white"
-            v-model="model"
             label="Тип"
           />
         </div>

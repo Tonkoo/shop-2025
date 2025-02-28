@@ -1,17 +1,33 @@
+@use 'sass:color';
 
-@use "sass:color";
+$white: (
+  1: #ffffff,
+);
+$black: (
+  1: #3a3a3a,
+  2: #282828,
+);
+$grey: (
+  1: #fafafa,
+  2: #f8f8f8,
+  3: #f1f1f1,
+  4: #ebeef0,
+  5: #e0e0eb,
+  6: #a0a0b1,
+  7: #8d8d8d,
+  8: #767676,
+  9: #cacad2,
+  10: #5a5a5a,
+  11: #dedede,
+);
 
-$white: (1: #FFFFFF);
-$black: (1: #3A3A3A, 2: #282828);
-$grey: (1: #FAFAFA, 2: #F8F8F8, 3: #F1F1F1, 4: #EBEEF0, 5: #E0E0EB, 6: #A0A0B1, 7: #8D8D8D, 8: #767676, 9: #CACAD2, 10: #5A5A5A, 11: #DEDEDE);
-$red: (1: #E30613, 2: #C5000C);
-$green: (1: #CBE7D1, 2: #69C47D, 3: #498356, 4: #45C461, 5: #3CAB54);
-$blue: (1: #0055FF);
-$yellow: (1: #F59C15);
-$blue-grey-12: #6392ff;
 
-$colors:('white':$white, 'grey':$grey, 'black':$black, 'red':$red, 'green':$green, 'blue':$blue, 'yellow':$yellow);
+$colors: (
+  'white': $white,
+  'grey': $grey,
+  'black': $black
+);
 
-@function getColor($color:'black', $subColor:1){
-  @return map-get(map-get($colors,$color),$subColor)
+@function getColor($color: 'black', $subColor: 1) {
+  @return map-get(map-get($colors, $color), $subColor);
 }

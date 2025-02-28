@@ -39,11 +39,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.dialog {
-  .dialog__card {
-    width: 600px;
-    display: flex;
-    flex-direction: column;
+  .dialog {
+    .dialog__card {
+      width: 600px;
+      display: flex;
+      flex-direction: column;
+    }
   }
-}
 </style>

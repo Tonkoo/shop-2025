@@ -20,8 +20,8 @@ export default {
   />
   <q-space />
   <q-select
-    filled
     v-model="countColumn"
+    filled
     :options="options"
     label="На странице"
     style="width: 8%"

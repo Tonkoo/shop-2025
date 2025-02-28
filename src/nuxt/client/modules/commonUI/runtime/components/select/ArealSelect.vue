@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ArealSelect',
@@ -17,6 +17,7 @@ export default defineComponent({
     modelValue: {
       type: Object,
       required: false,
+      default: null,
     },
     label: {
       type: String,
@@ -24,7 +25,7 @@ export default defineComponent({
     },
   },
   emits: ['update:modelValue'],
-})
+});
 </script>
 
 <style scoped></style>

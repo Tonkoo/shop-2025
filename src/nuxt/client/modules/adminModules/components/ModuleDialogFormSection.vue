@@ -1,8 +1,17 @@
 <template>
   <areal-form>
-    <areal-input v-model="name" label="Название" />
-    <areal-file v-model="FilesImages" label="Изображение" />
-    <areal-select v-model="parentSection" label="Родительский отдел" />
+    <areal-input
+      v-model="name"
+      label="Название"
+    />
+    <areal-file
+      v-model="FilesImages"
+      label="Изображение"
+    />
+    <areal-select
+      v-model="parentSection"
+      label="Родительский отдел"
+    />
   </areal-form>
 </template>
 

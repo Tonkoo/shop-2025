@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['nuxt-quasar-ui'],
+  modules: ['nuxt-quasar-ui', '@nuxt/eslint'],
   // runtimeConfig: {
   //   urlApi: process.env.NUXT_API_URL,
   // },
@@ -22,4 +22,4 @@ export default defineNuxtConfig({
     host: '0.0.0.0',
   },
   compatibilityDate: '2024-11-01',
-})
+});
