@@ -86,7 +86,10 @@ export class ProductsService {
         .catch(() => {
           return null;
         });
-      if (!section) throw new NotFoundException('Section not found');
+
+      if (!section) {
+        throw new NotFoundException('Section not found');
+      }
 
       const result = await this.productsRepo.save(
         prepareData(data, ['getProduct']),

@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import ModuleSearch from '~/modules/adminModules/components/ModuleSearch.vue';
+import ModuleSearch from '~/modules/admin/components/ModuleSearch.vue';
 </script>
 
 <style></style>

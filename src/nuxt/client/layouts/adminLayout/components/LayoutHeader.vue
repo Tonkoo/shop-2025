@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import ModuleHeader from '~/modules/adminModules/components/ModuleHeader.vue';
+import ModuleHeader from '~/modules/admin/components/ModuleHeader.vue';
 </script>
 
 <style scoped></style>

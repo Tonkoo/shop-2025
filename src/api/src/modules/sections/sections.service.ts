@@ -79,10 +79,12 @@ export class SectionsService {
         prepareData(data, ['getSection']),
       );
 
-      if (!result)
+      if (!result) {
         throw new BadRequestException(
           'An error occurred while create the partition.',
         );
+      }
+
       await queryRunner.commitTransaction();
       await this.EsServices.addDocument(
         this.index || 'shop',
@@ -102,13 +104,18 @@ export class SectionsService {
       );
     }
   }
+  //TODO: задать интерфейс
+  //TODO: продумать логику параметров для пагинации и сортировки
 
   async getList() {
     try {
       const sections = await this.sectionsRepo.find();
 
-      if (!sections) throw new NotFoundException('Section not found');
+      if (!sections) {
+        throw new NotFoundException('Section not found');
+      }
 
+      //TODO: Вынести в utils
       return sections.map((section) => ({
         ...section,
         create_at: format(new Date(section.create_at), 'dd.MM.yyyy HH:mm'),
@@ -130,10 +137,11 @@ export class SectionsService {
           prepareData(data, ['getSection']),
         );
 
-        if (!result)
+        if (!result) {
           throw new BadRequestException(
             'An error occurred while saving the partition.',
           );
+        }
 
         const updatedSection = await this.sectionsRepo.findOne({
           where: { id: id },
@@ -162,10 +170,11 @@ export class SectionsService {
     try {
       const result = await this.sectionsRepo.delete(id);
 
-      if (!result)
+      if (!result) {
         throw new BadRequestException(
           'An error occurred while deleting the partition.',
         );
+      }
 
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 

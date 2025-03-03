@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { getSection } from '~/modules/adminModules/composables/ApiSection';
+import { getSection } from '~/modules/admin/api';
 
 interface TableRow {
   name: string;

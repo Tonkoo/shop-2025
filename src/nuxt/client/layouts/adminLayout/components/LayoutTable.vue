@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import ModuleTable from '~/modules/adminModules/components/ModuleTable.vue';
+import ModuleTable from '~/modules/admin/components/ModuleTable.vue';
 </script>
 
 <style scoped></style>

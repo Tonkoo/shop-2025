@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['nuxt-quasar-ui', '@nuxt/eslint'],
+  modules: ['nuxt-quasar-ui', '@nuxt/eslint', '@pinia/nuxt'],
   // runtimeConfig: {
   //   urlApi: process.env.NUXT_API_URL,
   // },

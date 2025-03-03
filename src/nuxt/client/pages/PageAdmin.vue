@@ -1,13 +1,8 @@
-<script setup lang="ts">
-import LayoutAdmin from '@/layout/adminLayout/index.vue'
-
-definePageMeta({
-  alias: '/admin',
-})
-</script>
-
 <template>
-  <layout-admin />
+  <!--  <layout-admin />-->
+  <WgAdminContainer />
 </template>
+
+<script setup lang="ts"></script>
 
 <style scoped></style>

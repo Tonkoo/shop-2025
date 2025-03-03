@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import ModulePagination from '~/modules/adminModules/components/ModulePagination.vue';
+import ModulePagination from '~/modules/admin/components/ModulePagination.vue';
 
 export default {
   components: { ModulePagination },
