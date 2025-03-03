@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { getSection } from '~/modules/admin/api';
+import { useAdminModule } from '~/modules/admin/global';
 
 interface TableRow {
   name: string;
@@ -57,6 +57,20 @@ const columns = [
 ];
 
 const rows = ref<TableRow[]>([]);
+
+const adminModule = useAdminModule();
+
+const fetchSection = async () => {
+  try {
+    rows.value = await adminModule.getSection();
+  } catch (error) {
+    console.error('Ошибка при загрузке данных:', error);
+  }
+};
+
+onMounted(() => {
+  fetchSection();
+});
 
 // export default {
 //   setup() {
