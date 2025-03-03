@@ -16,7 +16,6 @@ import {
   ApiProperty,
 } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
-import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { SectionDto } from './dto/section.dto';
 import {
   ResponseHelper,

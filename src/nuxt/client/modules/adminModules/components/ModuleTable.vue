@@ -6,6 +6,13 @@
 <script lang="ts">
 import { getSection } from '~/modules/adminModules/composables/ApiSection';
 
+interface TableRow {
+  name: string;
+  code: string | number;
+  create_at: string | number;
+  update_at: string | number;
+}
+
 const columns = [
   {
     name: 'name',
@@ -24,19 +31,19 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'createAt',
+    name: 'create_at',
     required: true,
     label: 'Дата создания',
     align: 'left' as const,
-    field: 'createAt',
+    field: 'create_at',
     sortable: true,
   },
   {
-    name: 'updateAt',
+    name: 'update_at',
     required: true,
     label: 'Дата редактирования',
     align: 'left' as const,
-    field: 'updateAt',
+    field: 'update_at',
     sortable: true,
   },
   {
@@ -48,16 +55,10 @@ const columns = [
     sortable: true,
   },
 ];
-let rows = [
-  {
-    name: 'Frozen Yogurt',
-    code: 159,
-    createAt: 6.0,
-    updateAt: 24,
-  },
-];
+
 export default {
   setup() {
+    const rows = ref<TableRow[]>([]);
     return {
       rows,
       columns,
@@ -68,8 +69,7 @@ export default {
   },
   methods: {
     async fetchSection() {
-      rows = await getSection();
-      console.log(rows.data);
+      this.rows = await getSection();
     },
   },
 };
