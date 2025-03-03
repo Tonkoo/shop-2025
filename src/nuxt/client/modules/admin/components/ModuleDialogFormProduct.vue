@@ -41,24 +41,17 @@
   </areal-form>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import ArealInput from '~/modules/commonUI/runtime/components/input/ArealFormInput.vue'
 
-export default {
-  components: { ArealInput },
-  setup() {
-    return {
-      FilesImages: ref(),
-      price: ref(''),
-      name: ref(''),
-      color: ref(''),
-      description: ref(''),
-      showOnMain: ref(false),
-      mainSlider: ref(false),
-      section: ref(),
-    }
-  },
-}
+const FilesImages = ref();
+const price = ref('');
+const name = ref('');
+const color = ref('');
+const description = ref('');
+const showOnMain = ref(false);
+const mainSlider = ref(false);
+const section = ref();
 </script>
 
 <style scoped></style>

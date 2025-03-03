@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 import type { AdminState } from '~/modules/admin/types/types';
+
 export const useAdminStore = defineStore('admin-store', {
   state: (): AdminState => ({
     sectionItems: [],
     viewModal: false,
+    typeItem: 'section',
   }),
   actions: {
     // setItems(data: TapeFashions[]) {
@@ -11,7 +13,9 @@ export const useAdminStore = defineStore('admin-store', {
     // },
     setViewModal(value: boolean) {
       this.viewModal = value;
-      console.log(this.viewModal);
+    },
+    setTypeItem(value: string) {
+      this.typeItem = value;
     },
   },
 });

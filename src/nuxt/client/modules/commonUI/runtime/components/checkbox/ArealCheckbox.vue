@@ -7,23 +7,18 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ArealCheckbox',
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
-    label: {
-      type: String,
-      default: 'Выводить на главную страницу',
-    },
+<script setup lang="ts">
+defineProps({
+  modelValue: {
+    type: Boolean,
+    required: true,
   },
-  emits: ['update:modelValue'],
+  label: {
+    type: String,
+    default: 'Выводить на главную страницу',
+  },
 });
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped></style>

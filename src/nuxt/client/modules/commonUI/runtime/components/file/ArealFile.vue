@@ -11,24 +11,20 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'ArealFile',
-  props: {
-    modelValue: {
-      type: File as PropType<File | null | undefined>,
-      required: false,
-      default: null,
-    },
-    label: {
-      type: String,
-      default: 'Изображения',
-    },
+<script setup lang="ts">
+defineProps({
+  modelValue: {
+    type: File as PropType<File | null | undefined>,
+    required: false,
+    default: null,
   },
-  emits: ['update:modelValue'],
-})
+  label: {
+    type: String,
+    default: 'Изображения',
+  },
+});
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped></style>

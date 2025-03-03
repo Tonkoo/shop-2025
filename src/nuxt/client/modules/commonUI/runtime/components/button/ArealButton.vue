@@ -2,19 +2,15 @@
   <q-btn :label="label" class="button" />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ArealButton',
-  props: {
-    label: {
-      type: String,
-      default: 'Название',
-    },
+<script setup lang="ts">
+defineProps({
+  label: {
+    type: String,
+    default: 'Название',
   },
-  emits: ['update:modelValue'],
 });
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped lang="scss">

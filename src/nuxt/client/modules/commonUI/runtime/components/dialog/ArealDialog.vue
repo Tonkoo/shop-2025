@@ -10,19 +10,15 @@
   </q-dialog>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'ArealDialog',
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
+<script setup lang="ts">
+defineProps({
+  modelValue: {
+    type: Boolean,
+    required: true,
   },
-  emits: ['update:modelValue'],
-})
+});
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped></style>

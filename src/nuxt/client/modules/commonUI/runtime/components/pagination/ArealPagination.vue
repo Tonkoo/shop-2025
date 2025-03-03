@@ -9,23 +9,19 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ArealPagination',
-  props: {
-    modelValue: {
-      type: Number,
-      required: true,
-    },
-    label: {
-      type: String,
-      default: 'Название',
-    },
+<script setup lang="ts">
+defineProps({
+  modelValue: {
+    type: Number,
+    required: true,
   },
-  emits: ['update:modelValue'],
+  label: {
+    type: String,
+    default: 'Название',
+  },
 });
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped></style>

@@ -4,13 +4,13 @@
   </NuxtLayout>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      GetTest: '',
-    };
-  },
-  methods: {},
-};
+<script setup lang="ts">
+// export default {
+//   data() {
+//     return {
+//       GetTest: '',
+//     };
+//   },
+//   methods: {},
+// };
 </script>

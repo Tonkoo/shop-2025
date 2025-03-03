@@ -6,19 +6,13 @@
   </areal-form>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import ArealInput from '~/modules/commonUI/runtime/components/input/ArealFormInput.vue';
 
-export default {
-  components: { ArealInput },
-  setup() {
-    return {
-      FilesImages: ref<File | undefined>(),
-      parentSection: ref(),
-      name: ref(''),
-    };
-  },
-};
+const FilesImages = ref<File | undefined>()
+const parentSection = ref()
+const name = ref('')
+
 </script>
 
 <style scoped></style>

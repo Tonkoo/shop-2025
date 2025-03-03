@@ -20,34 +20,26 @@
   </q-table>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import type { QTableColumn } from 'quasar';
 
-export default {
-  name: 'ArealTable',
-  props: {
-    rows: {
-      type: Array,
-      required: false,
-      default: null,
-    },
-    columns: {
-      type: Array as () => QTableColumn[],
-      required: false,
-      default: () => [] as QTableColumn[],
-    },
+defineProps({
+  rows: {
+    type: Array,
+    required: false,
+    default: null,
   },
-  setup() {
-    const pagination = {
-      rowsPerPage: 10,
-    };
-    return {
-      pagination: pagination,
-      rowsPerPageOptions: [10, 20, 30, 40, 50, 0],
-      current: ref(),
-    };
+  columns: {
+    type: Array as () => QTableColumn[],
+    required: false,
+    default: () => [] as QTableColumn[],
   },
+});
+
+const pagination = {
+  rowsPerPage: 10,
 };
+const rowsPerPageOptions = [10, 20, 30, 40, 50, 0];
 </script>
 
 <style lang="scss">

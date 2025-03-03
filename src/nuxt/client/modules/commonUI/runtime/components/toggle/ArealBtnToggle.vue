@@ -11,28 +11,24 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
+<script setup lang="ts">
 interface Option {
-  label: string
-  value: string
+  label: string;
+  value: string;
 }
 
-export default defineComponent({
-  name: 'ArealBtnToggle',
-  props: {
-    modelValue: {
-      type: String,
-      required: true,
-    },
-    options: {
-      type: Array as () => Option[],
-      required: true,
-    },
+defineProps({
+  modelValue: {
+    type: String,
+    required: true,
   },
-  emits: ['update:modelValue'],
-})
+  options: {
+    type: Array as () => Option[],
+    required: true,
+  },
+});
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped></style>

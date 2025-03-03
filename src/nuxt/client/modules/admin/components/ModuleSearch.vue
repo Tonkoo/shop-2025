@@ -40,15 +40,11 @@
   </q-form>
 </template>
 
-<script lang="ts">
-export default {
-  setup() {
-    return {
-      search: ref(),
-      model: ref(),
-    };
-  },
-};
+<script setup lang="ts">
+
+const search = ref()
+const model = ref()
+
 </script>
 
 <style scoped></style>

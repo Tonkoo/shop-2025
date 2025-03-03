@@ -3,7 +3,7 @@
   <areal-table :rows="rows" :columns="columns" />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { getSection } from '~/modules/admin/api';
 
 interface TableRow {
@@ -56,23 +56,25 @@ const columns = [
   },
 ];
 
-export default {
-  setup() {
-    const rows = ref<TableRow[]>([]);
-    return {
-      rows,
-      columns,
-    };
-  },
-  mounted() {
-    this.fetchSection();
-  },
-  methods: {
-    async fetchSection() {
-      this.rows = await getSection();
-    },
-  },
-};
+const rows = ref<TableRow[]>([]);
+
+// export default {
+//   setup() {
+//     const rows = ref<TableRow[]>([]);
+//     return {
+//       rows,
+//       columns,
+//     };
+//   },
+//   mounted() {
+//     this.fetchSection();
+//   },
+//   methods: {
+//     async fetchSection() {
+//       this.rows = await getSection();
+//     },
+//   },
+// };
 </script>
 
 <style lang="scss"></style>

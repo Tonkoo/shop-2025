@@ -9,29 +9,25 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ArealSelect',
-  props: {
-    modelValue: {
-      type: String,
-      required: false,
-      default: null,
-    },
-    label: {
-      type: String,
-      default: 'Изображения',
-    },
-    option: {
-      type: Array,
-      required: false,
-      default: null,
-    },
+<script setup lang="ts">
+defineProps({
+  modelValue: {
+    type: String,
+    required: false,
+    default: null,
   },
-  emits: ['update:modelValue'],
+  label: {
+    type: String,
+    default: 'Изображения',
+  },
+  option: {
+    type: Array,
+    required: false,
+    default: null,
+  },
 });
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped></style>

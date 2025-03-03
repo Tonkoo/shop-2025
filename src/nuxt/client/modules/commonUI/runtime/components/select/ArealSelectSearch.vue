@@ -11,29 +11,25 @@
   </q-select>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ArealSelectSearch',
-  props: {
-    modelValue: {
-      type: String,
-      required: false,
-      default: null,
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    option: {
-      type: Array,
-      required: false,
-      default: null,
-    },
+<script setup lang="ts">
+defineProps({
+  modelValue: {
+    type: String,
+    required: false,
+    default: null,
   },
-  emits: ['update:modelValue'],
+  label: {
+    type: String,
+    default: '',
+  },
+  option: {
+    type: Array,
+    required: false,
+    default: null,
+  },
 });
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped lang="scss">

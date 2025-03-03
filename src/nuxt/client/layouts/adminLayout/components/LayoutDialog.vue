@@ -3,15 +3,15 @@
     <ArealDialog :model-value="dialog">
       <q-card class="dialog__card">
         <ModuleHeaderDialog />
-        <ModuleFormSectionDialog />
-        <!--        <ModuleDialogFormProduct v-if="typeItem == 'product'" />-->
+        <ModuleDialogFormSection v-if="typeItem == 'section'" />
+        <ModuleDialogFormProduct v-if="typeItem == 'product'" />
         <ModuleFooterDialog />
       </q-card>
     </ArealDialog>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import ArealDialog from '~/modules/commonUI/runtime/components/dialog/ArealDialog.vue';
 import ModuleHeaderDialog from '~/modules/admin/components/ModuleHeaderDialog.vue';
@@ -19,26 +19,9 @@ import ModuleFooterDialog from '~/modules/admin/components/ModuleFooterDialog.vu
 import ModuleDialogFormSection from '~/modules/admin/components/ModuleDialogFormSection.vue';
 import ModuleDialogFormProduct from '~/modules/admin/components/ModuleDialogFormProduct.vue';
 
-export default {
-  components: {
-    ModuleDialogFormProduct,
-    ModuleHeaderDialog,
-    ArealDialog,
-    ModuleFooterDialog,
-    ModuleFormSectionDialog: ModuleDialogFormSection,
-  },
-
-  setup() {
-    const adminStore = useAdminStore();
-
-    const dialog = computed(() => adminStore.viewModal);
-
-    console.log(dialog);
-    return {
-      dialog,
-    };
-  },
-};
+const adminStore = useAdminStore();
+const dialog = computed(() => adminStore.viewModal);
+const typeItem = computed(() => adminStore.typeItem);
 </script>
 
 <style scoped lang="scss">

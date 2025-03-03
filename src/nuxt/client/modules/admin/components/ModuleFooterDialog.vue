@@ -1,21 +1,18 @@
 <template>
   <q-card-actions align="left" class="dialog__card__footer">
     <areal-button label="Добавить" color="black" icon="save" />
-    <areal-button outline label="Отмена" @click="closeDialog" />
+    <areal-button
+      outline
+      label="Отмена"
+      @click="adminStore.setViewModal(false)"
+    />
   </q-card-actions>
 </template>
 
-<script lang="ts">
-import { inject } from 'vue';
+<script setup lang="ts">
+import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
-export default {
-  setup() {
-    const closeDialog = inject<() => void>('closeDialog');
-    return {
-      closeDialog,
-    };
-  },
-};
+const adminStore = useAdminStore();
 </script>
 
 <style scoped lang="scss">

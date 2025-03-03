@@ -9,16 +9,12 @@
   />
 </template>
 
-<script lang="ts">
-export default {
-  setup() {
-    return {
-      current: ref(1),
-      countColumn: ref('10'),
-      options: ['10', '20', '30', '40', '50'],
-    };
-  },
-};
+<script setup lang="ts">
+
+const current = ref(1)
+const countColumn = ref('10')
+const options = ['10', '20', '30', '40', '50']
+
 </script>
 
 <style scoped>
