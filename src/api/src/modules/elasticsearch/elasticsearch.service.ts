@@ -6,6 +6,7 @@ import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
+import * as process from 'node:process';
 
 interface Document {
   id?: string | number; // id теперь необязательное поле
@@ -148,5 +149,22 @@ export class ElasticsearchService {
       logger.error('Error from elastic.deleteDocument: ', err);
       throw new BadRequestException('Error deleting document');
     }
+  }
+
+  async getShopByElastic(type: string, from: number, size: number) {
+    const result = await this.elasticsearchService.search({
+      index: process.env.ELASTIC_INDEX,
+      body: {
+        query: {
+          match: {
+            type: type,
+          },
+        },
+        from: from,
+        size: size,
+      },
+    });
+
+    return result.hits.hits.map((item) => item._source);
   }
 }

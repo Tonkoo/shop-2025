@@ -1,14 +1,14 @@
-import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
 
-@Controller('reindex')
+@Controller('elastic')
 @ApiTags('elastic')
 export class ElasticController {
   constructor(private readonly services: ElasticsearchService) {}
 
-  @Get()
+  @Get('reindex')
   @ApiOperation({ summary: 'Первичная индексация всех докментов' })
   @ApiBody({
     description: 'Все данные из базы данных отпрпавляются в поисковый индекс',
@@ -18,10 +18,16 @@ export class ElasticController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
-  async createIndex(@Param() index: string) {
+  async createIndex() {
     await this.services.createIndex();
     return ResponseHelper.createResponse(HttpStatus.OK, {
-      messages: 'Переадресация выполнена',
+      messages: 'Переиндексация выполнена',
     });
+  }
+
+  @Get('admin')
+  async getSection(@Query('type') type: string) {
+    const result = await this.services.getShopByElastic(type, 0, 10);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

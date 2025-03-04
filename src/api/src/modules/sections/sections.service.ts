@@ -11,7 +11,7 @@ import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { Images } from '../../entities/images.entity';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
-import { format } from 'date-fns';
+// import { convertTime } from '../../utils/convertTime.util';
 
 interface ImageData {
   imagesName: string;
@@ -104,10 +104,9 @@ export class SectionsService {
       );
     }
   }
-  //TODO: задать интерфейс
   //TODO: продумать логику параметров для пагинации и сортировки
 
-  async getList() {
+  async getList(): Promise<Sections[]> {
     try {
       const sections = await this.sectionsRepo.find();
 
@@ -115,12 +114,8 @@ export class SectionsService {
         throw new NotFoundException('Section not found');
       }
 
-      //TODO: Вынести в utils
-      return sections.map((section) => ({
-        ...section,
-        create_at: format(new Date(section.create_at), 'dd.MM.yyyy HH:mm'),
-        update_at: format(new Date(section.update_at), 'dd.MM.yyyy HH:mm'),
-      }));
+      // return convertTime(sections);
+      return sections;
     } catch (err) {
       console.log('Error for sections.getList: ', err);
       throw new BadRequestException(
