@@ -37,4 +37,9 @@ export class ElasticController {
     const result = await this.services.getShopByElastic(type, from, size);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
+  @Get('admin/count')
+  async getCountSection(@Query('type') type: string) {
+    const result = await this.services.getCountShopByElastic(type);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
+  }
 }

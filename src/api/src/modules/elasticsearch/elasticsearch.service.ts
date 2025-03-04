@@ -14,6 +14,20 @@ interface Document {
   type: string;
 }
 
+interface ElasticsearchResponse {
+  hits: {
+    total?:
+      | {
+          value: number;
+          relation: string;
+        }
+      | number;
+    hits: Array<{
+      _source: any;
+    }>;
+  };
+}
+
 @Injectable()
 export class ElasticsearchService {
   constructor(
@@ -166,5 +180,26 @@ export class ElasticsearchService {
     });
 
     return result.hits.hits.map((item) => item._source);
+  }
+
+  async getCountShopByElastic(type: string) {
+    const result =
+      await this.elasticsearchService.search<ElasticsearchResponse>({
+        index: process.env.ELASTIC_INDEX,
+        body: {
+          query: {
+            match: {
+              type: type,
+            },
+          },
+          size: 0,
+        },
+      });
+
+    const total = result.hits.total;
+
+    if (typeof total === 'object' && total !== null && 'value' in total) {
+      return total.value;
+    }
   }
 }

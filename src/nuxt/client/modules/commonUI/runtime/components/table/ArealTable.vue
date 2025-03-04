@@ -7,7 +7,7 @@
     :pagination="pagination"
     :rows="rows"
     :columns="columns"
-    row-key="name"
+    row-key="id"
   >
     <template #body-cell-actions="props">
       <q-td :props="props">

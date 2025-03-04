@@ -11,6 +11,8 @@ export const useAdminStore = defineStore('admin-store', {
     viewModal: false,
     typeItem: 'section',
     countColumn: 10,
+    currentPage: 1,
+    AllCount: 0,
   }),
   actions: {
     setViewModal(value: boolean) {
@@ -26,9 +28,24 @@ export const useAdminStore = defineStore('admin-store', {
         this.getSectionItems();
       }
     },
+    setCurrentPage(value: number) {
+      this.currentPage = value;
+      this.getSectionItems();
+    },
     async getSectionItems() {
       try {
         this.sectionItems = (await adminModule.getSection()) as Section[];
+        this.getCountSectionItems();
+      } catch (err) {
+        console.error(
+          'Error when receiving "Sections" data from the server:',
+          err
+        );
+      }
+    },
+    async getCountSectionItems() {
+      try {
+        this.AllCount = await adminModule.getAllCountColumn('section');
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',

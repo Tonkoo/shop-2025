@@ -1,5 +1,5 @@
 <template>
-  <p style="color: #818181">Результатов: 10</p>
+  <p>Результатов: {{ rows.length }} из {{ adminStore.countColumn }}</p>
   <areal-table :rows="rows" :columns="columns" />
 </template>
 
@@ -66,4 +66,8 @@ watch(
 );
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+p {
+  color: getColor('grey', 10);
+}
+</style>
