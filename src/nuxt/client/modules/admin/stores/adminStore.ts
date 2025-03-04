@@ -10,6 +10,7 @@ export const useAdminStore = defineStore('admin-store', {
     sectionItems: [],
     viewModal: false,
     typeItem: 'section',
+    countColumn: 10,
   }),
   actions: {
     setViewModal(value: boolean) {
@@ -17,6 +18,13 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setTypeItem(value: string) {
       this.typeItem = value;
+    },
+    setCountColumn(value: string) {
+      const newCount = parseInt(value);
+      if (this.countColumn !== newCount) {
+        this.countColumn = newCount;
+        this.getSectionItems();
+      }
     },
     async getSectionItems() {
       try {

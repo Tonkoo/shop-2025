@@ -8,7 +8,6 @@
     :rows="rows"
     :columns="columns"
     row-key="name"
-    :rows-per-page-options="rowsPerPageOptions"
   >
     <template #body-cell-actions="props">
       <q-td :props="props">
@@ -37,9 +36,8 @@ defineProps({
 });
 
 const pagination = {
-  rowsPerPage: 10,
+  rowsPerPage: 0,
 };
-const rowsPerPageOptions = [10, 20, 30, 40, 50, 0];
 </script>
 
 <style lang="scss">

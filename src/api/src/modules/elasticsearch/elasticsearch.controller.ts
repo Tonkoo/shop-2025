@@ -26,8 +26,15 @@ export class ElasticController {
   }
 
   @Get('admin')
-  async getSection(@Query('type') type: string) {
-    const result = await this.services.getShopByElastic(type, 0, 10);
+  async getSection(
+    @Query('type') type: string,
+    @Query('from') from: number,
+    @Query('size') size: number,
+  ) {
+    console.log('type:' + type);
+    console.log('from:' + from);
+    console.log('size:' + size);
+    const result = await this.services.getShopByElastic(type, from, size);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

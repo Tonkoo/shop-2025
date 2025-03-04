@@ -5,6 +5,7 @@ type AdminState = {
   sectionItems: Section[];
   viewModal: boolean;
   typeItem: string;
+  countColumn: number;
 };
 
 export type { AdminState };

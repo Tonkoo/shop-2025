@@ -4,9 +4,8 @@
 </template>
 
 <script setup lang="ts">
-import type {Section} from "~/interfaces/global";
-import { useAdminStore } from "~/modules/admin/stores/adminStore";
-
+import type { Section } from '~/interfaces/global';
+import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
 const adminStore = useAdminStore();
 
@@ -55,11 +54,16 @@ const columns = [
 
 const rows = ref<Section[]>([]);
 
-onMounted(async () =>{
+onMounted(async () => {
   await adminStore.getSectionItems();
-  rows.value = adminStore.sectionItems;
-})
+});
 
+watch(
+  () => adminStore.sectionItems,
+  (newItems) => {
+    rows.value = newItems;
+  }
+);
 </script>
 
 <style lang="scss"></style>

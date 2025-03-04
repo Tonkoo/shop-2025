@@ -6,15 +6,21 @@
     :option="options"
     class="pagination__select"
     label="На странице"
+    @update:model-value="adminStore.setCountColumn"
   />
 </template>
 
 <script setup lang="ts">
+import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
-const current = ref(1)
-const countColumn = ref('10')
-const options = ['10', '20', '30', '40', '50']
+const adminStore = useAdminStore();
+const current = ref(1);
+const countColumn = ref(adminStore.countColumn.toString());
 
+watch(countColumn, (newValue) => {
+  adminStore.setCountColumn(newValue);
+});
+const options = ['10', '20', '30', '40', '50'];
 </script>
 
 <style scoped>
