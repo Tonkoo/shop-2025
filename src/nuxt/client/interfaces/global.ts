@@ -6,7 +6,7 @@ type Section = {
   images: number[];
   create_at: string;
   update_at: string;
-  id_parent: number;
+  id_parent: number | null;
 };
 
 export type { Section };

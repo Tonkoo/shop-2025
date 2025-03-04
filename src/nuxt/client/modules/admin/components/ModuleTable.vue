@@ -4,14 +4,11 @@
 </template>
 
 <script setup lang="ts">
-import { useAdminModule } from '~/modules/admin/global';
+import type {Section} from "~/interfaces/global";
+import { useAdminStore } from "~/modules/admin/stores/adminStore";
 
-interface TableRow {
-  name: string;
-  code: string | number;
-  create_at: string | number;
-  update_at: string | number;
-}
+
+const adminStore = useAdminStore();
 
 const columns = [
   {
@@ -56,39 +53,13 @@ const columns = [
   },
 ];
 
-const rows = ref<TableRow[]>([]);
+const rows = ref<Section[]>([]);
 
-const adminModule = useAdminModule();
+onMounted(async () =>{
+  await adminStore.getSectionItems();
+  rows.value = adminStore.sectionItems;
+})
 
-const fetchSection = async () => {
-  try {
-    rows.value = await adminModule.getSection();
-  } catch (error) {
-    console.error('Ошибка при загрузке данных:', error);
-  }
-};
-
-onMounted(() => {
-  fetchSection();
-});
-
-// export default {
-//   setup() {
-//     const rows = ref<TableRow[]>([]);
-//     return {
-//       rows,
-//       columns,
-//     };
-//   },
-//   mounted() {
-//     this.fetchSection();
-//   },
-//   methods: {
-//     async fetchSection() {
-//       this.rows = await getSection();
-//     },
-//   },
-// };
 </script>
 
 <style lang="scss"></style>

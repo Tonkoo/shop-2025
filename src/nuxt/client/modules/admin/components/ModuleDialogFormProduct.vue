@@ -1,6 +1,6 @@
 <template>
   <areal-form>
-    <areal-input
+    <areal-form-input
       v-model="name"
       label="Название"
     />
@@ -8,7 +8,7 @@
       v-model="FilesImages"
       label="Изображение"
     />
-    <areal-input
+    <areal-form-input
       v-model="price"
       label="Цена"
       mask="#.##"
@@ -16,11 +16,11 @@
       reverse-fill-mask
       hint="Пример: 1.23"
     />
-    <areal-input
+    <areal-form-input
       v-model="color"
       label="Цвет"
     />
-    <areal-input
+    <areal-form-input
       v-model="description"
       label="Описание"
       type="textarea"
@@ -42,7 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import ArealInput from '~/modules/commonUI/runtime/components/input/ArealFormInput.vue'
 
 const FilesImages = ref();
 const price = ref('');
