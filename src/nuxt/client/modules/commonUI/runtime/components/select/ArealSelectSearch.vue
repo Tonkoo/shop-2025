@@ -2,9 +2,12 @@
   <q-select
     :model-value="modelValue"
     :label="label"
+    :options="option"
     square
     outlined
     class="select"
+    option-value="value"
+    option-label="label"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <slot />

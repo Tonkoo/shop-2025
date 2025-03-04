@@ -2,11 +2,11 @@ import { api } from '#shared/api/axios.js';
 import type { Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
-export async function getSection(): Promise<Section[]> {
+export async function getColumn(type: string): Promise<Section[]> {
   const adminStore = useAdminStore();
   try {
     const params = {
-      type: 'section',
+      type: type,
       from: (adminStore.currentPage - 1) * adminStore.countColumn,
       size: adminStore.countColumn,
     };

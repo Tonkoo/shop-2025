@@ -19,7 +19,11 @@
           </areal-select-search>
         </div>
         <div class="col-5">
-          <areal-select-search v-model="model" label="Тип" />
+          <areal-select-search
+            v-model="typeSearch"
+            label="Тип"
+            :options="options"
+          />
         </div>
         <div class="col-1">
           <areal-button
@@ -41,10 +45,15 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 
-const search = ref()
-const model = ref()
+const options = [
+  { label: 'Разделы', value: 'section' },
+  { label: 'Продукты', value: 'product' },
+];
 
+const search = ref();
+const typeSearch = ref('section');
 </script>
 
 <style scoped></style>

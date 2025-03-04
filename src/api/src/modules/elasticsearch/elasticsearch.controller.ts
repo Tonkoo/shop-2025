@@ -31,9 +31,6 @@ export class ElasticController {
     @Query('from') from: number,
     @Query('size') size: number,
   ) {
-    console.log('type:' + type);
-    console.log('from:' + from);
-    console.log('size:' + size);
     const result = await this.services.getShopByElastic(type, from, size);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }

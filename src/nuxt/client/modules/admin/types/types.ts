@@ -6,7 +6,8 @@ type AdminState = {
   typeItem: string;
   countColumn: number;
   currentPage: number;
-  AllCount: number;
+  allCount: number;
+  typeSearch: string;
 };
 
 export type { AdminState };

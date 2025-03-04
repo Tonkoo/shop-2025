@@ -26,7 +26,7 @@ watch(countColumn, (newValue) => {
 });
 
 const totalPages = computed(() => {
-  const allCount = adminStore.AllCount;
+  const allCount = adminStore.allCount;
   const perPage = parseInt(countColumn.value);
   return Math.ceil(allCount / perPage);
 });
