@@ -1,19 +1,21 @@
 import { api } from '#shared/api/axios.js';
-import type { Section } from '~/interfaces/global';
+import type { Product, Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
-export async function getColumn(type: string): Promise<Section[]> {
+export async function getColumn(): Promise<Section[] | Product[]> {
   const adminStore = useAdminStore();
   try {
     const params = {
-      type: type,
+      type: adminStore.typeSearch.value,
       from: (adminStore.currentPage - 1) * adminStore.countColumn,
       size: adminStore.countColumn,
     };
-    //TODO: Exception
-    const response = await api.get<{ data: Section[] }>('/elastic/admin', {
-      params,
-    });
+    const response = await api.get<{ data: Section[] | Product[] }>(
+      '/elastic/admin',
+      {
+        params,
+      }
+    );
     return response.data.data;
   } catch (err) {
     console.error('Failed to fetch data from the server ' + err);
@@ -21,15 +23,15 @@ export async function getColumn(type: string): Promise<Section[]> {
   }
 }
 
-export async function getAllCountColumn(type: string) {
+export async function getAllCountColumn() {
+  const adminStore = useAdminStore();
   try {
     const params = {
-      type: type,
+      type: adminStore.typeSearch.value,
     };
     const response = await api.get('/elastic/admin/count', {
       params,
     });
-    console.log(response.data.data);
     return response.data.data;
   } catch (err) {
     console.error(err);

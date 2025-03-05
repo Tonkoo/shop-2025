@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
-import type { Section } from '~/interfaces/global';
+import type { Product, Section, TypeSearch } from '~/interfaces/global';
 
 const adminModule = useAdminModule();
 
@@ -13,7 +13,7 @@ export const useAdminStore = defineStore('admin-store', {
     countColumn: 10,
     currentPage: 1,
     allCount: 0,
-    typeSearch: 'section',
+    typeSearch: { label: 'Разделы', value: 'section' },
   }),
   actions: {
     setViewModal(value: boolean) {
@@ -26,23 +26,22 @@ export const useAdminStore = defineStore('admin-store', {
       const newCount = parseInt(value);
       if (this.countColumn !== newCount) {
         this.countColumn = newCount;
-        this.getSectionItems();
+        this.getItems();
       }
     },
     setCurrentPage(value: number) {
       this.currentPage = value;
-      this.getSectionItems();
+      this.getItems();
     },
-    setTypeSearch(value: string) {
+    setTypeSearch(value: TypeSearch) {
       this.typeSearch = value;
-      console.log(this.typeSearch);
     },
-    async getSectionItems() {
+    async getItems() {
       try {
-        this.sectionItems = (await adminModule.getColumn(
-          'section'
-        )) as Section[];
-        this.getCountSectionItems();
+        this.sectionItems = (await adminModule.getColumn()) as
+          | Section[]
+          | Product[];
+        this.getCountItems();
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',
@@ -50,9 +49,9 @@ export const useAdminStore = defineStore('admin-store', {
         );
       }
     },
-    async getCountSectionItems() {
+    async getCountItems() {
       try {
-        this.allCount = await adminModule.getAllCountColumn('section');
+        this.allCount = await adminModule.getAllCountColumn();
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',

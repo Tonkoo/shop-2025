@@ -22,7 +22,10 @@
           <areal-select-search
             v-model="typeSearch"
             label="Тип"
-            :options="options"
+            :options="optionsTip"
+            option-value="value"
+            option-label="label"
+            @update:model-value="adminStore.setTypeSearch"
           />
         </div>
         <div class="col-1">
@@ -30,6 +33,7 @@
             label="Поиск"
             icon="search"
             class="full-height full-width"
+            @click="SerachTable"
           />
         </div>
         <div class="col-1">
@@ -45,15 +49,26 @@
 </template>
 
 <script setup lang="ts">
+import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { ref } from 'vue';
 
-const options = [
+const adminStore = useAdminStore();
+
+const optionsTip = [
   { label: 'Разделы', value: 'section' },
   { label: 'Продукты', value: 'product' },
 ];
 
 const search = ref();
-const typeSearch = ref('section');
+const typeSearch = ref(adminStore.typeSearch);
+
+async function SerachTable() {
+  try {
+    adminStore.getItems();
+  } catch (err) {
+    console.error('Error when receiving "Sections" data from the server:', err);
+  }
+}
 </script>
 
 <style scoped></style>

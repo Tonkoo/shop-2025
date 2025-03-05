@@ -6,8 +6,6 @@
     square
     outlined
     class="select"
-    option-value="value"
-    option-label="label"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <slot />
@@ -17,7 +15,7 @@
 <script setup lang="ts">
 defineProps({
   modelValue: {
-    type: String,
+    type: Object,
     required: false,
     default: null,
   },
@@ -28,7 +26,7 @@ defineProps({
   option: {
     type: Array,
     required: false,
-    default: null,
+    default: () => [],
   },
 });
 

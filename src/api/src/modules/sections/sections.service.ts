@@ -104,7 +104,6 @@ export class SectionsService {
       );
     }
   }
-  //TODO: продумать логику параметров для пагинации и сортировки
 
   async getList(): Promise<Sections[]> {
     try {
