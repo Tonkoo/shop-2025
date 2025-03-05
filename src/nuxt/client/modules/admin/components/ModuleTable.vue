@@ -59,7 +59,7 @@ onMounted(async () => {
 });
 
 watch(
-  () => adminStore.sectionItems,
+  () => adminStore.items,
   (newItems) => {
     rows.value = newItems;
   }

@@ -202,4 +202,20 @@ export class ElasticsearchService {
       return total.value;
     }
   }
+
+  async getNameShopByElastic(type: string) {
+    const result = await this.elasticsearchService.search({
+      index: process.env.ELASTIC_INDEX,
+      body: {
+        _source: ['name'],
+        query: {
+          match: {
+            type: type,
+          },
+        },
+        size: 1000,
+      },
+    });
+    return result.hits.hits.map((item) => item._source);
+  }
 }

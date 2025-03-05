@@ -26,7 +26,7 @@ export class ElasticController {
   }
 
   @Get('admin')
-  async getSection(
+  async getItems(
     @Query('type') type: string,
     @Query('from') from: number,
     @Query('size') size: number,
@@ -35,8 +35,13 @@ export class ElasticController {
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Get('admin/count')
-  async getCountSection(@Query('type') type: string) {
+  async getCountColumn(@Query('type') type: string) {
     const result = await this.services.getCountShopByElastic(type);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
+  }
+  @Get('admin/name')
+  async getNameItems(@Query('type') type: string) {
+    const result = await this.services.getNameShopByElastic(type);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

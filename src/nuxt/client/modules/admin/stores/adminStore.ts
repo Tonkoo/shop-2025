@@ -7,13 +7,15 @@ const adminModule = useAdminModule();
 
 export const useAdminStore = defineStore('admin-store', {
   state: (): AdminState => ({
-    sectionItems: [],
+    items: [],
     viewModal: false,
     typeItem: 'section',
     countColumn: 10,
     currentPage: 1,
     allCount: 0,
     typeSearch: { label: 'Разделы', value: 'section' },
+    allName: [],
+    searchName: { name: '' },
   }),
   actions: {
     setViewModal(value: boolean) {
@@ -22,26 +24,29 @@ export const useAdminStore = defineStore('admin-store', {
     setTypeItem(value: string) {
       this.typeItem = value;
     },
-    setCountColumn(value: string) {
+    async setCountColumn(value: string) {
       const newCount = parseInt(value);
       if (this.countColumn !== newCount) {
         this.countColumn = newCount;
-        this.getItems();
+        await this.getItems();
       }
     },
-    setCurrentPage(value: number) {
+    async setCurrentPage(value: number) {
       this.currentPage = value;
-      this.getItems();
+      await this.getItems();
     },
     setTypeSearch(value: TypeSearch) {
       this.typeSearch = value;
     },
+    setSearchName(value: string) {
+      this.searchName = { name: value };
+      console.log(this.searchName);
+    },
     async getItems() {
       try {
-        this.sectionItems = (await adminModule.getColumn()) as
-          | Section[]
-          | Product[];
-        this.getCountItems();
+        this.items = (await adminModule.getColumn()) as Section[] | Product[];
+        await this.getCountItems();
+        await this.getNameItems();
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',
@@ -52,6 +57,16 @@ export const useAdminStore = defineStore('admin-store', {
     async getCountItems() {
       try {
         this.allCount = await adminModule.getAllCountColumn();
+      } catch (err) {
+        console.error(
+          'Error when receiving "Sections" data from the server:',
+          err
+        );
+      }
+    },
+    async getNameItems() {
+      try {
+        this.allName = await adminModule.getAllNameColumn();
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',

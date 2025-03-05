@@ -37,3 +37,18 @@ export async function getAllCountColumn() {
     console.error(err);
   }
 }
+
+export async function getAllNameColumn() {
+  const adminStore = useAdminStore();
+  try {
+    const params = {
+      type: adminStore.typeSearch.value,
+    };
+    const response = await api.get('/elastic/admin/name', {
+      params,
+    });
+    return response.data.data;
+  } catch (err) {
+    console.error(err);
+  }
+}

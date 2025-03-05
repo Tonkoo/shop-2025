@@ -1,4 +1,4 @@
-import { getColumn, getAllCountColumn } from '../api';
+import { getColumn, getAllCountColumn, getAllNameColumn } from '../api';
 export function useAdminModule() {
-  return { getColumn, getAllCountColumn };
+  return { getColumn, getAllCountColumn, getAllNameColumn };
 }

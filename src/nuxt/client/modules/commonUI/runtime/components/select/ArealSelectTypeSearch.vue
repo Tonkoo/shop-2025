@@ -7,20 +7,15 @@
     outlined
     class="select"
     @update:model-value="$emit('update:modelValue', $event)"
-    @filter="handleFilter"
   >
-    <template v-slot:no-option>
-      <q-item>
-        <q-item-section class="text-grey"> No result </q-item-section>
-      </q-item>
-    </template>
+    <slot />
   </q-select>
 </template>
 
 <script setup lang="ts">
 defineProps({
   modelValue: {
-    type: String,
+    type: Object,
     required: false,
     default: null,
   },
@@ -34,11 +29,8 @@ defineProps({
     default: () => [],
   },
 });
-const emit = defineEmits(['update:modelValue', 'filter']);
-const handleFilter = (val: string, update: (callback: () => void) => void) => {
-  emit('filter', val);
-  update(() => {});
-};
+
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped lang="scss">

@@ -33,4 +33,8 @@ interface TypeSearch {
   value: string;
 }
 
-export type { Section, TypeSearch, Product };
+interface Search {
+  name: string;
+}
+
+export type { Section, TypeSearch, Product, Search };
