@@ -71,7 +71,7 @@ watch(
   { immediate: true }
 );
 
-const search = ref(adminStore.searchName.name || '');
+const search = ref(adminStore.searchName);
 const typeSearch = ref(adminStore.typeSearch);
 
 const filterOptions = (val: string) => {

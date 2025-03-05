@@ -9,7 +9,9 @@ export async function getColumn(): Promise<Section[] | Product[]> {
       type: adminStore.typeSearch.value,
       from: (adminStore.currentPage - 1) * adminStore.countColumn,
       size: adminStore.countColumn,
+      name: adminStore.searchName.name,
     };
+    console.log(params);
     const response = await api.get<{ data: Section[] | Product[] }>(
       '/elastic/admin',
       {

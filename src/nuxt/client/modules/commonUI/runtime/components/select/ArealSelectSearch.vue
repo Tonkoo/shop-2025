@@ -20,7 +20,7 @@
 <script setup lang="ts">
 defineProps({
   modelValue: {
-    type: String,
+    type: Object,
     required: false,
     default: null,
   },

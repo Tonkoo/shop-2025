@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
-import type { Product, Section, TypeSearch } from '~/interfaces/global';
+import type { Product, Search, Section, TypeSearch } from '~/interfaces/global';
 
 const adminModule = useAdminModule();
 
@@ -35,11 +35,12 @@ export const useAdminStore = defineStore('admin-store', {
       this.currentPage = value;
       await this.getItems();
     },
-    setTypeSearch(value: TypeSearch) {
+    async setTypeSearch(value: TypeSearch) {
       this.typeSearch = value;
+      await this.getNameItems();
     },
-    setSearchName(value: string) {
-      this.searchName = { name: value };
+    setSearchName(value: Search) {
+      this.searchName = value;
       console.log(this.searchName);
     },
     async getItems() {

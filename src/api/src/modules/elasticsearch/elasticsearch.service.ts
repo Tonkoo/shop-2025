@@ -165,13 +165,19 @@ export class ElasticsearchService {
     }
   }
 
-  async getShopByElastic(type: string, from: number, size: number) {
+  async getShopByElastic(
+    type: string,
+    from: number,
+    size: number,
+    name: string,
+  ) {
+    console.log(name);
     const result = await this.elasticsearchService.search({
       index: process.env.ELASTIC_INDEX,
       body: {
         query: {
-          match: {
-            type: type,
+          bool: {
+            should: [{ match: { type: type } }, { match: { name: name } }],
           },
         },
         from: from,

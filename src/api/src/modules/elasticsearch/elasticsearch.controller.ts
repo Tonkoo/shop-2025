@@ -30,8 +30,10 @@ export class ElasticController {
     @Query('type') type: string,
     @Query('from') from: number,
     @Query('size') size: number,
+    @Query('name') name: string,
   ) {
-    const result = await this.services.getShopByElastic(type, from, size);
+    console.log(name);
+    const result = await this.services.getShopByElastic(type, from, size, name);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Get('admin/count')
