@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { Repository, DataSource, QueryRunner } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { Images } from '../../entities/images.entity';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
-// import { convertTime } from '../../utils/convertTime.util';
+import { convertTime } from '../../utils/convertTime.util';
 
 interface ImageData {
   imagesName: string;
@@ -60,8 +60,7 @@ export class SectionsService {
 
     try {
       await this.createImages(data, queryRunner);
-      const result = await this.create(data, queryRunner);
-      return result;
+      return await this.create(data, queryRunner);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.save: ', err);
@@ -75,7 +74,7 @@ export class SectionsService {
 
   async create(data: SectionDto, queryRunner: QueryRunner) {
     try {
-      const result = await this.sectionsRepo.save(
+      const result: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
       );
 
@@ -84,12 +83,11 @@ export class SectionsService {
           'An error occurred while create the partition.',
         );
       }
-
       await queryRunner.commitTransaction();
       await this.EsServices.addDocument(
         this.index || 'shop',
         result.id.toString(),
-        result,
+        convertTime([result])[0],
         'section',
       );
 
@@ -112,8 +110,6 @@ export class SectionsService {
       if (!sections) {
         throw new NotFoundException('Section not found');
       }
-
-      // return convertTime(sections);
       return sections;
     } catch (err) {
       console.log('Error for sections.getList: ', err);
@@ -137,16 +133,20 @@ export class SectionsService {
           );
         }
 
-        const updatedSection = await this.sectionsRepo.findOne({
-          where: { id: id },
-        });
-
-        await this.EsServices.updateDocument(
-          this.index || 'shop',
-          id.toString(),
-          updatedSection,
-          'section',
+        const updatedSection: Sections | null = await this.sectionsRepo.findOne(
+          {
+            where: { id: id },
+          },
         );
+
+        if (updatedSection) {
+          await this.EsServices.updateDocument(
+            this.index || 'shop',
+            id.toString(),
+            convertTime([updatedSection])[0],
+            'section',
+          );
+        }
 
         if (data.getSection) {
           return await this.getList();

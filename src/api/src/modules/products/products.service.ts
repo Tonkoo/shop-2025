@@ -61,9 +61,7 @@ export class ProductsService {
 
     try {
       await this.createImages(data, queryRunner);
-      const result = await this.create(data, queryRunner);
-
-      return result;
+      return await this.create(data, queryRunner);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from products.save: ', err);
@@ -146,12 +144,14 @@ export class ProductsService {
         where: { id: id },
       });
 
-      await this.EsServices.updateDocument(
-        this.index || 'shop',
-        id.toString(),
-        updatedProduct,
-        'product',
-      );
+      if (updatedProduct) {
+        await this.EsServices.updateDocument(
+          this.index || 'shop',
+          id.toString(),
+          updatedProduct,
+          'product',
+        );
+      }
 
       if (data.getProduct) {
         return await this.getList();

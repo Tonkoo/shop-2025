@@ -7,26 +7,16 @@ import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
 import * as process from 'node:process';
-
-interface Document {
-  id?: string | number; // id теперь необязательное поле
-  images: { alt: string; src: string }[];
-  type: string;
-}
-
-interface ElasticsearchResponse {
-  hits: {
-    total?:
-      | {
-          value: number;
-          relation: string;
-        }
-      | number;
-    hits: Array<{
-      _source: any;
-    }>;
-  };
-}
+import { convertTime } from '../../utils/convertTime.util';
+import {
+  elasticsearchResponse,
+  imageData,
+  documentProduct,
+  documentSection,
+  ProductEntities,
+  SectionEntities,
+  elasticBody,
+} from '../../interfaces/global';
 
 @Injectable()
 export class ElasticsearchService {
@@ -39,32 +29,44 @@ export class ElasticsearchService {
     @InjectRepository(Images)
     private readonly imagesRepository: Repository<Images>,
   ) {}
-  private readonly index = process.env.ELASTIC_INDEX;
+  private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
-  async generateBlockImages(data: { images: string[] }[], type: string) {
+  async generateBlockImages(
+    data: (SectionEntities | ProductEntities)[],
+    type: string,
+  ): Promise<(documentSection | documentProduct)[]> {
     return await Promise.all(
-      data.map(async (data) => {
-        if (!Array.isArray(data.images)) {
-          throw new BadRequestException('Invalid images format');
-        }
-        const imageIds = data.images;
-        const images = await this.imagesRepository.findBy({ id: In(imageIds) });
+      data.map(
+        async (
+          item: SectionEntities | ProductEntities,
+        ): Promise<documentSection | documentProduct> => {
+          if (!Array.isArray(item.images)) {
+            throw new BadRequestException('Invalid images format');
+          }
 
-        const imageData = images.map((image) => ({
-          alt: image.name,
-          src: image.path,
-        }));
+          const imageIds: number[] = item.images;
+          const images: Images[] = await this.imagesRepository.findBy({
+            id: In(imageIds),
+          });
 
-        return {
-          ...data,
-          images: imageData,
-          type: type,
-        };
-      }),
+          const imageData: imageData[] = images.map(
+            (image: Images): imageData => ({
+              alt: image.name,
+              src: image.path,
+            }),
+          );
+
+          return {
+            ...item,
+            images: imageData,
+            type: type,
+          };
+        },
+      ),
     );
   }
 
-  async createIndex() {
+  async createIndex(): Promise<boolean> {
     try {
       await this.elasticsearchService.indices.delete({
         index: this.index || 'shop',
@@ -73,20 +75,37 @@ export class ElasticsearchService {
       console.log('No index');
     }
     try {
-      const products = await this.productRepository.find();
-      const sections = await this.sectionsRepository.find();
-
-      const documentsProduct = await this.generateBlockImages(
-        products.map((p) => ({ ...p, images: p.images.map(String) })),
-        'product',
+      const products: (Products | Sections)[] = convertTime(
+        await this.productRepository.find(),
+      );
+      const sections: (Products | Sections)[] = convertTime(
+        await this.sectionsRepository.find(),
       );
 
-      const documentsSection = await this.generateBlockImages(
-        sections.map((s) => ({ ...s, images: s.images.map(String) })),
-        'section',
-      );
+      const documentsProduct: (documentProduct | documentSection)[] =
+        await this.generateBlockImages(
+          products.map(
+            (p: Products): ProductEntities => ({
+              ...p,
+            }),
+          ),
+          'product',
+        );
 
-      const document = [...documentsProduct, ...documentsSection];
+      const documentsSection: (documentProduct | documentSection)[] =
+        await this.generateBlockImages(
+          sections.map(
+            (s: Sections): SectionEntities => ({
+              ...s,
+            }),
+          ),
+          'section',
+        );
+
+      const document: (documentSection | documentProduct)[] = [
+        ...documentsProduct,
+        ...documentsSection,
+      ];
 
       await this.bulkIndexDocuments(this.index || 'shop', document);
       return true;
@@ -100,36 +119,48 @@ export class ElasticsearchService {
 
   async bulkIndexDocuments(
     index: string,
-    documents: Document[],
+    documents: (documentSection | documentProduct)[],
   ): Promise<void> {
-    const body = documents.flatMap((doc) => [
-      { index: { _index: index, _id: doc.id } },
-      doc,
-    ]);
-
+    const body: elasticBody[] = documents.flatMap(
+      (doc: documentSection | documentProduct) => [
+        { index: { _index: index, _id: doc.id } },
+        doc,
+      ],
+    ) as elasticBody[];
     await this.elasticsearchService.bulk({ body });
   }
 
   async addDocument(
     index: string,
     id: string,
-    document: { images: number[]; [key: string]: any },
+    document: Sections | Products,
     type: string,
   ) {
     try {
+      console.log(document);
       const imageIds: number[] = document.images;
-      const images = await this.imagesRepository.findBy({
+      const images: Images[] = await this.imagesRepository.findBy({
         id: In(imageIds),
       });
-      const imageData = images.map((image) => ({
-        alt: image.name,
-        src: image.path,
-      }));
+      const imageData: imageData[] = images.map(
+        (image: Images): imageData => ({
+          alt: image.name,
+          src: image.path,
+        }),
+      );
       const updatedDocument = {
         ...document,
         type,
         images: imageData,
       };
+
+      console.log(
+        await this.elasticsearchService.index({
+          index: index,
+          id: id,
+          body: updatedDocument,
+        }),
+      );
 
       return await this.elasticsearchService.index({
         index: index,
@@ -142,11 +173,16 @@ export class ElasticsearchService {
     }
   }
 
-  async updateDocument(index: string, id: string, documnet: any, type: string) {
+  async updateDocument(
+    index: string,
+    id: string,
+    document: Sections | Products,
+    type: string,
+  ) {
     try {
       await this.deleteDocument(index, id);
 
-      return await this.addDocument(index, id, documnet, type);
+      return await this.addDocument(index, id, document, type);
     } catch (err) {
       logger.error('Error from elastic.updateDocument: ', err);
       throw new BadRequestException('Error updating document');
@@ -170,46 +206,18 @@ export class ElasticsearchService {
     from: number,
     size: number,
     name?: string,
-  ) {
+  ): Promise<(Sections | Products)[]> {
     const mustConditions: any[] = [];
     if (name) {
       mustConditions.push({
         term: { name: name },
       });
     }
-
     mustConditions.push({
       term: { type: type },
     });
-    const result = await this.elasticsearchService.search({
-      index: process.env.ELASTIC_INDEX,
-      body: {
-        query: {
-          bool: {
-            must: mustConditions,
-          },
-        },
-        from: from,
-        size: size,
-      },
-    });
-
-    return result.hits.hits.map((item) => item._source);
-  }
-
-  async getCountShopByElastic(type: string, name: string) {
-    const mustConditions: any[] = [];
-    if (name) {
-      mustConditions.push({
-        term: { name: name },
-      });
-    }
-
-    mustConditions.push({
-      term: { type: type },
-    });
-    const result =
-      await this.elasticsearchService.search<ElasticsearchResponse>({
+    try {
+      const result = await this.elasticsearchService.search({
         index: process.env.ELASTIC_INDEX,
         body: {
           query: {
@@ -217,30 +225,77 @@ export class ElasticsearchService {
               must: mustConditions,
             },
           },
-          size: 0,
+          from: from,
+          size: size,
         },
       });
 
-    const total = result.hits.total;
-
-    if (typeof total === 'object' && total !== null && 'value' in total) {
-      return total.value;
+      return result.hits.hits.map(
+        (item): Sections | Products => item._source as Sections | Products,
+      );
+    } catch (err) {
+      logger.error('Error from elastic.getShopByElastic: ', err);
+      throw new BadRequestException('Error while receiving data');
     }
   }
 
-  async getNameShopByElastic(type: string) {
-    const result = await this.elasticsearchService.search({
-      index: process.env.ELASTIC_INDEX,
-      body: {
-        _source: ['name'],
-        query: {
-          match: {
-            type: type,
-          },
-        },
-        size: 1000,
-      },
+  async getCountShopByElastic(
+    type: string,
+    name: string,
+  ): Promise<number | undefined> {
+    const mustConditions: any[] = [];
+    if (name) {
+      mustConditions.push({
+        term: { name: name },
+      });
+    }
+
+    mustConditions.push({
+      term: { type: type },
     });
-    return result.hits.hits.map((item) => item._source);
+    try {
+      const result =
+        await this.elasticsearchService.search<elasticsearchResponse>({
+          index: process.env.ELASTIC_INDEX,
+          body: {
+            query: {
+              bool: {
+                must: mustConditions,
+              },
+            },
+            size: 0,
+          },
+        });
+
+      const total = result.hits.total;
+
+      if (typeof total === 'object' && total !== null && 'value' in total) {
+        return total.value;
+      }
+    } catch (err) {
+      logger.error('Error from elastic.getCountShopByElastic: ', err);
+      throw new BadRequestException('Error getting number of records');
+    }
+  }
+
+  async getNameShopByElastic(type: string): Promise<string[]> {
+    try {
+      const result = await this.elasticsearchService.search({
+        index: process.env.ELASTIC_INDEX,
+        body: {
+          _source: ['name'],
+          query: {
+            match: {
+              type: type,
+            },
+          },
+          size: 1000,
+        },
+      });
+      return result.hits.hits.map((item) => item._source) as string[];
+    } catch (err) {
+      logger.error('Error from elastic.getNameShopByElastic: ', err);
+      throw new BadRequestException('Error getting name');
+    }
   }
 }

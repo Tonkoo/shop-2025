@@ -94,7 +94,7 @@ export class SectionsController {
   })
   async updateById(@Param('id') id: number, @Body() data: SectionDto) {
     const result = await this.services.updateById(id, data);
-    return ResponseHelper.createResponse(HttpStatus.OK, result);
+    // return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
   @Delete(':id')
