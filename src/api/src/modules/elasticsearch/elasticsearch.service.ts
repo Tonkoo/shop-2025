@@ -169,15 +169,24 @@ export class ElasticsearchService {
     type: string,
     from: number,
     size: number,
-    name: string,
+    name?: string,
   ) {
-    console.log(name);
+    const mustConditions: any[] = [];
+    if (name) {
+      mustConditions.push({
+        term: { name: name },
+      });
+    }
+
+    mustConditions.push({
+      term: { type: type },
+    });
     const result = await this.elasticsearchService.search({
       index: process.env.ELASTIC_INDEX,
       body: {
         query: {
           bool: {
-            should: [{ match: { type: type } }, { match: { name: name } }],
+            must: mustConditions,
           },
         },
         from: from,
@@ -188,14 +197,24 @@ export class ElasticsearchService {
     return result.hits.hits.map((item) => item._source);
   }
 
-  async getCountShopByElastic(type: string) {
+  async getCountShopByElastic(type: string, name: string) {
+    const mustConditions: any[] = [];
+    if (name) {
+      mustConditions.push({
+        term: { name: name },
+      });
+    }
+
+    mustConditions.push({
+      term: { type: type },
+    });
     const result =
       await this.elasticsearchService.search<ElasticsearchResponse>({
         index: process.env.ELASTIC_INDEX,
         body: {
           query: {
-            match: {
-              type: type,
+            bool: {
+              must: mustConditions,
             },
           },
           size: 0,

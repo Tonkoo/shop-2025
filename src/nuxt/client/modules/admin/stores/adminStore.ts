@@ -41,7 +41,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setSearchName(value: Search) {
       this.searchName = value;
-      console.log(this.searchName);
     },
     async getItems() {
       try {

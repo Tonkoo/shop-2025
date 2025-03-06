@@ -1,5 +1,9 @@
 <template>
   <q-select
+    use-input
+    hide-selected
+    fill-input
+    input-debounce="0"
     :model-value="modelValue"
     :label="label"
     :options="option"

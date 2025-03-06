@@ -3,21 +3,6 @@
     <div class="q-pa-md example-row-equal-width">
       <div class="row">
         <div class="col-5">
-          <areal-select-search
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            :model-value="search"
-            :options="filteredOptions"
-            option-value="name"
-            option-label="name"
-            label="Поиск"
-            @update:model-value="adminStore.setSearchName"
-            @filter="filterOptions"
-          />
-        </div>
-        <div class="col-5">
           <areal-select-type-search
             v-model="typeSearch"
             label="Тип"
@@ -25,6 +10,17 @@
             option-value="value"
             option-label="label"
             @update:model-value="adminStore.setTypeSearch"
+          />
+        </div>
+        <div class="col-5">
+          <areal-select-search
+            :model-value="search"
+            :options="filteredOptions"
+            option-value="name"
+            option-label="name"
+            label="Поиск"
+            @update:model-value="adminStore.setSearchName"
+            @filter="filterOptions"
           />
         </div>
         <div class="col-1">
@@ -40,6 +36,7 @@
             label="Очистить"
             icon="close"
             class="full-height full-width"
+            @click="ClearSearch"
           />
         </div>
       </div>
@@ -72,7 +69,7 @@ watch(
 );
 
 const search = ref(adminStore.searchName);
-const typeSearch = ref(adminStore.typeSearch);
+let typeSearch = ref(adminStore.typeSearch);
 
 const filterOptions = (val: string) => {
   const needle = val.toLowerCase();
@@ -87,6 +84,16 @@ const filterOptions = (val: string) => {
 
 async function SerachTable() {
   try {
+    await adminStore.getItems();
+  } catch (err) {
+    console.error('Error when receiving "Sections" data from the server:', err);
+  }
+}
+async function ClearSearch() {
+  try {
+    await adminStore.setTypeSearch({ label: 'Разделы', value: 'section' });
+    typeSearch = ref(adminStore.typeSearch);
+    adminStore.setSearchName({ name: '' });
     await adminStore.getItems();
   } catch (err) {
     console.error('Error when receiving "Sections" data from the server:', err);
