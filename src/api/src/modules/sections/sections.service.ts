@@ -9,15 +9,9 @@ import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
-import { Images } from '../../entities/images.entity';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTime } from '../../utils/convertTime.util';
-
-interface ImageData {
-  imagesName: string;
-  imagesPath: string;
-  imagesType: string;
-}
+import { createImages } from '../../utils/createImages.util';
 
 @Injectable()
 export class SectionsService {
@@ -27,39 +21,15 @@ export class SectionsService {
     private readonly dataSource: DataSource,
     private readonly EsServices: ElasticsearchService,
   ) {}
-  private readonly index = process.env.ELASTIC_INDEX;
+  private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
-  async createImages(data: SectionDto, queryRunner: QueryRunner) {
-    try {
-      const images = data.images as unknown as ImageData[];
-      const imagesSection = await Promise.all(
-        images.map(async (image) => {
-          const newImage = queryRunner.manager.create(Images, {
-            name: image.imagesName,
-            path: image.imagesPath,
-            type: image.imagesType,
-          });
-          await queryRunner.manager.save(newImage);
-          return newImage.id;
-        }),
-      );
-
-      data.images = imagesSection;
-      return imagesSection;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      logger.error('Error from sections.images.create: ', err);
-      throw new BadRequestException('An error occurred while adding the file.');
-    }
-  }
-
-  async saveSection(data: SectionDto) {
+  async saveSection(data: SectionDto): Promise<Sections | Sections[]> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      await this.createImages(data, queryRunner);
+      await createImages(data, queryRunner);
       return await this.create(data, queryRunner);
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -72,7 +42,10 @@ export class SectionsService {
     }
   }
 
-  async create(data: SectionDto, queryRunner: QueryRunner) {
+  async create(
+    data: SectionDto,
+    queryRunner: QueryRunner,
+  ): Promise<Sections | Sections[]> {
     try {
       const result: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
@@ -105,7 +78,7 @@ export class SectionsService {
 
   async getList(): Promise<Sections[]> {
     try {
-      const sections = await this.sectionsRepo.find();
+      const sections: Sections[] = await this.sectionsRepo.find();
 
       if (!sections) {
         throw new NotFoundException('Section not found');
@@ -119,7 +92,10 @@ export class SectionsService {
     }
   }
 
-  async updateById(id: number, data: SectionDto) {
+  async updateById(
+    id: number,
+    data: SectionDto,
+  ): Promise<Sections | Sections[]> {
     try {
       {
         const result = await this.sectionsRepo.update(
@@ -146,6 +122,8 @@ export class SectionsService {
             convertTime([updatedSection])[0],
             'section',
           );
+        } else {
+          throw new NotFoundException('Section not found');
         }
 
         if (data.getSection) {
@@ -160,7 +138,7 @@ export class SectionsService {
       );
     }
   }
-  async deleteById(id: number, data: SectionDto) {
+  async deleteById(id: number, data: SectionDto): Promise<number | Sections[]> {
     try {
       const result = await this.sectionsRepo.delete(id);
 

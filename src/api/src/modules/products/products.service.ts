@@ -11,13 +11,7 @@ import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
-import { Images } from '../../entities/images.entity';
-
-interface ImageData {
-  imagesName: string;
-  imagesPath: string;
-  imagesType: string;
-}
+import { createImages } from '../../utils/createImages.util';
 
 @Injectable()
 export class ProductsService {
@@ -29,38 +23,15 @@ export class ProductsService {
     private readonly EsServices: ElasticsearchService,
     private readonly dataSource: DataSource,
   ) {}
-  private readonly index = process.env.ELASTIC_INDEX;
+  private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
-  async createImages(data: ProductDto, queryRunner: QueryRunner) {
-    try {
-      const images = data.images as unknown as ImageData[];
-      const imagesProduct = await Promise.all(
-        images.map(async (image) => {
-          const newImage = queryRunner.manager.create(Images, {
-            name: image.imagesName,
-            path: image.imagesPath,
-            type: image.imagesType,
-          });
-          await queryRunner.manager.save(newImage);
-          return newImage.id;
-        }),
-      );
-      data.images = imagesProduct;
-      return imagesProduct;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      logger.error('Error from product.images.create: ', err);
-      throw new BadRequestException('An error occurred while adding the file.');
-    }
-  }
-
-  async saveProducts(data: ProductDto) {
+  async saveProducts(data: ProductDto): Promise<Products | Products[]> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      await this.createImages(data, queryRunner);
+      await createImages(data, queryRunner);
       return await this.create(data, queryRunner);
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -73,9 +44,12 @@ export class ProductsService {
     }
   }
 
-  async create(data: ProductDto, queryRunner: QueryRunner) {
+  async create(
+    data: ProductDto,
+    queryRunner: QueryRunner,
+  ): Promise<Products | Products[]> {
     try {
-      const section = await this.sectionsRepo
+      const section: Sections | null = await this.sectionsRepo
         .findOne({
           where: {
             id: data.idSection,
@@ -89,7 +63,7 @@ export class ProductsService {
         throw new NotFoundException('Section not found');
       }
 
-      const result = await this.productsRepo.save(
+      const result: Products = await this.productsRepo.save(
         prepareData(data, ['getProduct']),
       );
       await queryRunner.commitTransaction();
@@ -113,9 +87,9 @@ export class ProductsService {
     }
   }
 
-  async getList() {
+  async getList(): Promise<Products[]> {
     try {
-      const products = await this.productsRepo.find();
+      const products: Products[] = await this.productsRepo.find();
 
       if (!products) throw new NotFoundException('Products not found');
 
@@ -128,7 +102,10 @@ export class ProductsService {
     }
   }
 
-  async updateById(id: number, data: ProductDto) {
+  async updateById(
+    id: number,
+    data: ProductDto,
+  ): Promise<Products | Products[]> {
     try {
       const result = this.productsRepo.update(
         { id: id },
@@ -151,6 +128,8 @@ export class ProductsService {
           updatedProduct,
           'product',
         );
+      } else {
+        throw new NotFoundException('Product not found');
       }
 
       if (data.getProduct) {
@@ -164,7 +143,7 @@ export class ProductsService {
       );
     }
   }
-  async deleteById(id: number, data: ProductDto) {
+  async deleteById(id: number, data: ProductDto): Promise<number | Products[]> {
     try {
       const result = this.productsRepo.delete(id);
 

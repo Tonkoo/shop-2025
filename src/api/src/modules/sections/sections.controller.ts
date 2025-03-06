@@ -24,6 +24,8 @@ import {
   ResponseHelperApiOK,
 } from '../../utils/response.util';
 import { ProductDto } from '../products/dto/product.dto';
+import { response } from '../../interfaces/global';
+import { Sections } from '../../entities/sections.entity';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -51,8 +53,8 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   @Get()
-  async getList() {
-    const result = await this.services.getList();
+  async getList(): Promise<response> {
+    const result: Sections[] = await this.services.getList();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Post()
@@ -71,8 +73,8 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async create(@Body() data: SectionDto) {
-    const result = await this.services.saveSection(data);
+  async create(@Body() data: SectionDto): Promise<response> {
+    const result: Sections | Sections[] = await this.services.saveSection(data);
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
@@ -92,9 +94,15 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async updateById(@Param('id') id: number, @Body() data: SectionDto) {
-    const result = await this.services.updateById(id, data);
-    // return ResponseHelper.createResponse(HttpStatus.OK, result);
+  async updateById(
+    @Param('id') id: number,
+    @Body() data: SectionDto,
+  ): Promise<response> {
+    const result: Sections | Sections[] = await this.services.updateById(
+      id,
+      data,
+    );
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
   @Delete(':id')
@@ -108,8 +116,14 @@ export class SectionsController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
-  async deleteById(@Param('id') id: number, @Body() data: SectionDto) {
-    const result = await this.services.deleteById(id, data);
+  async deleteById(
+    @Param('id') id: number,
+    @Body() data: SectionDto,
+  ): Promise<response> {
+    const result: number | Sections[] = await this.services.deleteById(
+      id,
+      data,
+    );
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

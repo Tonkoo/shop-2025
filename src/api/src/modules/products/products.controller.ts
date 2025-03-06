@@ -24,6 +24,8 @@ import {
   ResponseHelperApiError,
   ResponseHelperApiOK,
 } from '../../utils/response.util';
+import { response } from '../../interfaces/global';
+import { Products } from '../../entities/products.entity';
 
 class DeleteProductDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -54,8 +56,9 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async create(@Body() data: ProductDto) {
-    const result: any = await this.services.saveProducts(data);
+  async create(@Body() data: ProductDto): Promise<response> {
+    const result: Products | Products[] =
+      await this.services.saveProducts(data);
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
@@ -75,8 +78,8 @@ export class ProductsController {
     type: ResponseHelperApiError,
   })
   @Get()
-  async getList() {
-    const result = await this.services.getList();
+  async getList(): Promise<response> {
+    const result: Products[] = await this.services.getList();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -97,7 +100,10 @@ export class ProductsController {
     type: ResponseHelperApiError,
   })
   async updateById(@Param('id') id: number, @Body() data: ProductDto) {
-    const result: any = await this.services.updateById(id, data);
+    const result: Products | Products[] = await this.services.updateById(
+      id,
+      data,
+    );
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -113,7 +119,10 @@ export class ProductsController {
     type: ResponseHelperApiOK,
   })
   async deleteById(@Param('id') id: number, @Body() data: ProductDto) {
-    const result = await this.services.deleteById(id, data);
+    const result: number | Products[] = await this.services.deleteById(
+      id,
+      data,
+    );
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }
