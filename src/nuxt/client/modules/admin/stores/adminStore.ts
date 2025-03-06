@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia';
 import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
-import type { Product, Search, Section, TypeSearch } from '~/interfaces/global';
+import type {
+  formParentSection,
+  Product,
+  Search,
+  Section,
+  TypeSearch,
+} from '~/interfaces/global';
 
 const adminModule = useAdminModule();
 
@@ -16,6 +22,9 @@ export const useAdminStore = defineStore('admin-store', {
     typeSearch: { label: 'Разделы', value: 'section' },
     allName: [],
     searchName: { name: '' },
+    formNameSection: '',
+    formParentSection: { id: 0, name: '' },
+    formFile: [],
   }),
   actions: {
     setViewModal(value: boolean) {
@@ -41,6 +50,16 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setSearchName(value: Search) {
       this.searchName = value;
+    },
+    setFormNameSection(value: string) {
+      this.formNameSection = value;
+    },
+    setFormParentSection(value: formParentSection) {
+      this.formParentSection = value;
+    },
+    setFormFile(value: File[]) {
+      this.formFile = value;
+      console.log(this.formFile);
     },
     async getItems() {
       try {

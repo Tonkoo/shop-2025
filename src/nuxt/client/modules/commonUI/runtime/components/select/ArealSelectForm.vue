@@ -1,11 +1,9 @@
 <template>
-  <q-file
+  <q-select
     :model-value="modelValue"
-    filled
-    multiple
-    use-chips
-    append
     :label="label"
+    outlined
+    :options="option"
     class="q-mb-md"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -14,13 +12,18 @@
 <script setup lang="ts">
 defineProps({
   modelValue: {
-    type: Array as PropType<File[]>,
+    type: Object,
     required: false,
     default: null,
   },
   label: {
     type: String,
     default: 'Изображения',
+  },
+  option: {
+    type: Array,
+    required: false,
+    default: null,
   },
 });
 

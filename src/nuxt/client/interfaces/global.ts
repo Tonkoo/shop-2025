@@ -37,4 +37,9 @@ interface Search {
   name: string;
 }
 
-export type { Section, TypeSearch, Product, Search };
+type formParentSection = {
+  id: number;
+  name: string;
+};
+
+export type { Section, TypeSearch, Product, Search, formParentSection };

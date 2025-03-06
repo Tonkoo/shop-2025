@@ -54,3 +54,28 @@ export async function getAllNameColumn() {
     console.error(err);
   }
 }
+
+export async function addSection() {
+  const adminStore = useAdminStore();
+  try {
+    const formData = new FormData();
+
+    formData.append('name', adminStore.formNameSection);
+    formData.append('idParent', adminStore.formParentSection.id.toString());
+    formData.append('getSection', 'true');
+
+    adminStore.formFile.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    const response = await api.post('/section', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}

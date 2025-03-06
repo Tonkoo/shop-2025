@@ -1,4 +1,9 @@
-import type { Search, Product, Section } from '~/interfaces/global';
+import type {
+  Search,
+  Product,
+  Section,
+  formParentSection,
+} from '~/interfaces/global';
 import type { TypeSearch } from '~/interfaces/global';
 
 type AdminState = {
@@ -11,6 +16,9 @@ type AdminState = {
   typeSearch: TypeSearch;
   allName: Search[];
   searchName: Search;
+  formNameSection: string;
+  formParentSection: formParentSection;
+  formFile: Array<File>;
 };
 
 export type { AdminState };

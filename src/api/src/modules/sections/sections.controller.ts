@@ -7,7 +7,10 @@ import {
   Get,
   HttpStatus,
   Delete,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
+
 import {
   ApiTags,
   ApiOperation,
@@ -26,6 +29,8 @@ import {
 import { ProductDto } from '../products/dto/product.dto';
 import { response } from '../../interfaces/global';
 import { Sections } from '../../entities/sections.entity';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { getMulterOptions } from '../../config/multer.config';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -58,6 +63,12 @@ export class SectionsController {
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Post()
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [{ name: 'files', maxCount: 10 }],
+      getMulterOptions('section'),
+    ),
+  )
   @ApiOperation({ summary: 'Создать новый раздел' })
   @ApiBody({
     description: 'Данные для создания нового раздела',
@@ -73,9 +84,20 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async create(@Body() data: SectionDto): Promise<response> {
-    const result: Sections | Sections[] = await this.services.saveSection(data);
-    return ResponseHelper.createResponse(HttpStatus.CREATED, result);
+  async create(
+    @Body() data: SectionDto,
+    @UploadedFiles() files: { files: Express.Multer.File[] },
+  ) {
+    files.files.forEach((file) => {
+      console.log('Путь к файлу:', file.path);
+    });
+
+    return {
+      message: 'Файлы успешно загружены!',
+      files: files.files.map((file) => file.path),
+    };
+    // const result: Sections | Sections[] = await this.services.saveSection(data);
+    // return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
   @Put(':id')
