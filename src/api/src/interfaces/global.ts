@@ -1,3 +1,12 @@
+type item = {
+  id: number;
+  code: string;
+  name: string;
+  images: number[];
+  update_at: Date;
+  create_at: Date;
+};
+
 type ProductEntities = {
   id: number;
   code: string;

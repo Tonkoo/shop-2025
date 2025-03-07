@@ -71,19 +71,18 @@ export class ElasticsearchService {
       await this.elasticsearchService.indices.delete({
         index: this.index || 'shop',
       });
-    } catch {
-      console.log('No index');
-    }
-    try {
+
       const products: (Products | Sections)[] = convertTime(
         await this.productRepository.find(),
       );
+      // TODO:  сначала запрос потом изменение данных внутри запроса.
       const sections: (Products | Sections)[] = convertTime(
         await this.sectionsRepository.find(),
       );
 
       const documentsProduct: (documentProduct | documentSection)[] =
         await this.generateBlockImages(
+          // TODO: products.map убрать
           products.map(
             (p: Products): ProductEntities => ({
               ...p,
@@ -94,6 +93,7 @@ export class ElasticsearchService {
 
       const documentsSection: (documentProduct | documentSection)[] =
         await this.generateBlockImages(
+          // TODO: sections.map убрать
           sections.map(
             (s: Sections): SectionEntities => ({
               ...s,
@@ -201,28 +201,40 @@ export class ElasticsearchService {
     }
   }
 
+  getFilter(type: string, name?: string): any[] {
+    const filter: any[] = [
+      {
+        term: { type: type },
+      },
+    ];
+
+    if (name) {
+      filter.push({
+        term: { name: name },
+      });
+    }
+
+    return filter;
+  }
+
+  // TODO: наименование метода getItems
   async getShopByElastic(
     type: string,
     from: number,
     size: number,
     name?: string,
   ): Promise<(Sections | Products)[]> {
-    const mustConditions: any[] = [];
-    if (name) {
-      mustConditions.push({
-        term: { name: name },
-      });
-    }
-    mustConditions.push({
-      term: { type: type },
-    });
     try {
+      // TODO: для поиска разделов написать отдельный метод
+      const filter = this.getFilter(type, name);
+      // TODO: для поиска данных в эластике написать общий метод
+      // TODO: написать метод для получения общего количества записей, взять из result
       const result = await this.elasticsearchService.search({
         index: process.env.ELASTIC_INDEX,
         body: {
           query: {
             bool: {
-              must: mustConditions,
+              filter: filter,
             },
           },
           from: from,
@@ -230,6 +242,12 @@ export class ElasticsearchService {
         },
       });
 
+      if (!result?.hits?.hits) {
+        // 404
+      }
+
+      // TODO: написать метод для перевода полей в camelCase
+      // TODO стукртура ответа { items: [], total: null   result.hits.total }
       return result.hits.hits.map(
         (item): Sections | Products => item._source as Sections | Products,
       );
@@ -284,6 +302,7 @@ export class ElasticsearchService {
         index: process.env.ELASTIC_INDEX,
         body: {
           _source: ['name'],
+          //  TODO: добавить query для поиска по совпадению
           query: {
             match: {
               type: type,

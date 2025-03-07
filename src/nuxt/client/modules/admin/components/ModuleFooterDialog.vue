@@ -12,13 +12,34 @@
 <script setup lang="ts">
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
+import { useQuasar } from 'quasar';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
+const quasar = useQuasar();
 
 async function AddItem() {
   if (adminStore.typeItem == 'section') {
-    await adminModule.addSection();
+    await adminModule
+      .addSection()
+      .then((response) => {
+        adminStore.items = response;
+        adminStore.setViewModal(false);
+        quasar.notify({
+          type: 'positive',
+          message: 'Элемент успешно добавлен',
+          position: 'top-right',
+          timeout: 2500,
+        });
+      })
+      .catch((err) => {
+        quasar.notify({
+          type: 'negative',
+          message: 'Ошибка при добавлении элемента' + err,
+          position: 'top',
+          timeout: 2500,
+        });
+      });
   }
 }
 </script>

@@ -96,18 +96,23 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
+    // TODO: переместить внутрь createImages
     const fileData = files.files.map((file) => ({
       originalName: file.originalname,
       fileName: file.filename,
       path: file.path,
       mimeType: file.mimetype,
     }));
+
+    // TODO: транзакции засунуть внутрь create
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      // TODO: перенести в create
       data.images = await createImages(fileData, queryRunner);
       data.code = tr(data.name, { replace: { ' ': '-' } });
+      // TODO: сначала создаем запись. потом создаем картинки, потом обновляем запись
       const result: Sections | Sections[] = await this.services.create(
         data,
         queryRunner,

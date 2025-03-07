@@ -8,6 +8,7 @@ import type {
   Section,
   TypeSearch,
 } from '~/interfaces/global';
+import { useQuasar } from 'quasar';
 
 const adminModule = useAdminModule();
 

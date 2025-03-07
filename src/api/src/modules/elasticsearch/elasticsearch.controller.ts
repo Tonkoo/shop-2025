@@ -72,6 +72,9 @@ export class ElasticController {
     description: 'Успешный ответ с массивом документов.',
     type: ResponseHelperApiOK,
   })
+
+  // TODO: создать dto для запроса
+  // TODO: payload - все входные параметры
   async getItems(
     @Query('type') type: string,
     @Query('from') from: number,
@@ -83,6 +86,7 @@ export class ElasticController {
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
+  // TODO: убрать метод
   @Get('admin/count')
   @ApiOperation({
     summary: 'Получение количества документов в индексе Elasticsearch',
@@ -114,6 +118,7 @@ export class ElasticController {
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
+  // TODO: написать отдельный метод для получения совпадении наименовании разделов getNames
   @Get('admin/name')
   @ApiOperation({
     summary: 'Получение списка названий документов из Elasticsearch',

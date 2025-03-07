@@ -1,5 +1,11 @@
 export default defineNuxtConfig({
   modules: ['nuxt-quasar-ui', '@nuxt/eslint', '@pinia/nuxt'],
+  quasar: {
+    plugins: ['Notify'],
+    config: {
+      notify: {},
+    },
+  },
   // runtimeConfig: {
   //   urlApi: process.env.NUXT_API_URL,
   // },
