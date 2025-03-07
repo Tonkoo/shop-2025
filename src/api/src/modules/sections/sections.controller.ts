@@ -9,6 +9,7 @@ import {
   Delete,
   UploadedFiles,
   UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
 
 import {
@@ -31,6 +32,10 @@ import { response } from '../../interfaces/global';
 import { Sections } from '../../entities/sections.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
+import { createImages } from '../../utils/createImages.util';
+import { DataSource } from 'typeorm';
+import { logger } from '../../utils/logger/logger';
+import { transliterate as tr } from 'transliteration';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -40,7 +45,10 @@ class DeleteSectionDto {
 @Controller('section')
 @ApiTags('section')
 export class SectionsController {
-  constructor(private readonly services: SectionsService) {}
+  constructor(
+    private readonly services: SectionsService,
+    private readonly dataSource: DataSource,
+  ) {}
 
   @ApiOperation({ summary: 'Вывод данных таблицы' })
   @ApiBody({
@@ -88,16 +96,33 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
-    files.files.forEach((file) => {
-      console.log('Путь к файлу:', file.path);
-    });
-
-    return {
-      message: 'Файлы успешно загружены!',
-      files: files.files.map((file) => file.path),
-    };
-    // const result: Sections | Sections[] = await this.services.saveSection(data);
-    // return ResponseHelper.createResponse(HttpStatus.CREATED, result);
+    const fileData = files.files.map((file) => ({
+      originalName: file.originalname,
+      fileName: file.filename,
+      path: file.path,
+      mimeType: file.mimetype,
+    }));
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      data.images = await createImages(fileData, queryRunner);
+      data.code = tr(data.name, { replace: { ' ': '-' } });
+      const result: Sections | Sections[] = await this.services.create(
+        data,
+        queryRunner,
+      );
+      await queryRunner.commitTransaction();
+      return ResponseHelper.createResponse(HttpStatus.CREATED, result);
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      logger.error('Error from sections.save: ', err);
+      throw new BadRequestException(
+        'An error occurred while saving the partition.',
+      );
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   @Put(':id')

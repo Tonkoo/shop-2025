@@ -11,7 +11,6 @@ import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTime } from '../../utils/convertTime.util';
-import { createImages } from '../../utils/createImages.util';
 
 @Injectable()
 export class SectionsService {
@@ -22,25 +21,6 @@ export class SectionsService {
     private readonly EsServices: ElasticsearchService,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
-
-  async saveSection(data: SectionDto): Promise<Sections | Sections[]> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      await createImages(data, queryRunner);
-      return await this.create(data, queryRunner);
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      logger.error('Error from sections.save: ', err);
-      throw new BadRequestException(
-        'An error occurred while saving the partition.',
-      );
-    } finally {
-      await queryRunner.release();
-    }
-  }
 
   async create(
     data: SectionDto,
@@ -56,7 +36,6 @@ export class SectionsService {
           'An error occurred while create the partition.',
         );
       }
-      await queryRunner.commitTransaction();
       await this.EsServices.addDocument(
         this.index || 'shop',
         result.id.toString(),
@@ -69,6 +48,7 @@ export class SectionsService {
       }
       return result;
     } catch (err) {
+      await queryRunner.rollbackTransaction();
       logger.error('Error from sections.create: ', err);
       throw new BadRequestException(
         'An error occurred while creating the section.',
