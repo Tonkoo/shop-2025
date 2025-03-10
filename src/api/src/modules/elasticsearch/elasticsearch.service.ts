@@ -274,21 +274,27 @@ export class ElasticsearchService {
     }
   }
 
-  async getNameShopByElastic(type: string): Promise<string[]> {
+  async getNameShopByElastic(type: string, name: string): Promise<string[]> {
     try {
+      if (!name.trim()) {
+        return [];
+      }
       const result = await this.elasticsearchService.search({
         index: process.env.ELASTIC_INDEX,
         body: {
           _source: ['name'],
           //  TODO: добавить query для поиска по совпадению
           query: {
-            match: {
-              type: type,
+            bool: {
+              must: [{ match: { type: type } }],
+              should: [{ wildcard: { name: `*${name}*` } }],
+              minimum_should_match: 1,
             },
           },
-          size: 1000,
+          size: 10,
         },
       });
+      console.log(result);
       return result.hits.hits.map((item) => item._source) as string[];
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);

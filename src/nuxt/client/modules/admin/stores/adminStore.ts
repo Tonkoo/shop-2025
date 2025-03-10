@@ -67,8 +67,7 @@ export const useAdminStore = defineStore('admin-store', {
     async getItems() {
       try {
         this.items = (await adminModule.getColumn()) as Section[] | Product[];
-        console.log(this.items);
-        // await this.getNameItems();
+        await this.getNameItems();
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',
@@ -78,6 +77,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async getNameItems() {
       try {
+        this.allName = [];
         this.allName = await adminModule.getAllNameColumn();
       } catch (err) {
         console.error(

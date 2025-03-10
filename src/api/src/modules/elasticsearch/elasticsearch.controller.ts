@@ -3,9 +3,7 @@ import { ElasticsearchService } from './elasticsearch.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
 import { response, resultItems } from '../../interfaces/global';
-import { Sections } from '../../entities/sections.entity';
-import { Products } from '../../entities/products.entity';
-
+import { payLoad } from './dto/elasticsearch.dto';
 @Controller('elastic')
 @ApiTags('elastic')
 export class ElasticController {
@@ -69,19 +67,14 @@ export class ElasticController {
 
   // TODO: создать dto для запроса
   // TODO: payload - все входные параметры
-  async getItems(
-    @Query('type') type: string,
-    @Query('from') from: number,
-    @Query('size') size: number,
-    @Query('name') name: string,
-  ): Promise<response> {
+  async getItems(@Query() payLoad: payLoad): Promise<response> {
+    const { type, from, size, name } = payLoad;
     const result: resultItems[] = await this.services.getItemsFilter(
       type,
       from,
       size,
       name,
     );
-    // console.log(result);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -103,8 +96,15 @@ export class ElasticController {
     description: 'Успешный ответ с массивом названий документов.',
     type: ResponseHelperApiOK,
   })
-  async getNameItems(@Query('type') type: string): Promise<response> {
-    const result: unknown[] = await this.services.getNameShopByElastic(type);
+  async getNameItems(
+    @Query('name') name: string,
+    @Query('type') type: string,
+  ): Promise<response> {
+    console.log(name);
+    const result: unknown[] = await this.services.getNameShopByElastic(
+      type,
+      name,
+    );
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

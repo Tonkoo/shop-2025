@@ -15,12 +15,12 @@
         <div class="col-5">
           <areal-select-search
             :model-value="search"
-            :options="filteredOptions"
+            :option="autocompleteOptions"
             option-value="name"
             option-label="name"
             label="Поиск"
-            @update:model-value="adminStore.setSearchName"
-            @filter="filterOptions"
+            @input-value="onSearchInput"
+            @update:model-value="onSearchInput"
           />
         </div>
         <div class="col-1">
@@ -28,7 +28,7 @@
             label="Поиск"
             icon="search"
             class="full-height full-width"
-            @click="SerachTable"
+            @click="SearchTable"
           />
         </div>
         <div class="col-1">
@@ -47,42 +47,29 @@
 <script setup lang="ts">
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { ref } from 'vue';
+import { debounce } from 'quasar';
 import type { Search } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
+
+const search = ref(adminStore.searchName);
+const autocompleteOptions = ref([] as Search[]);
+
+const onSearchInput = debounce(async (value) => {
+  adminStore.setSearchName(value);
+  await adminStore.getNameItems();
+  autocompleteOptions.value = adminStore.allName;
+  // SearchTable();
+}, 300);
 
 const optionsTip = [
   { label: 'Разделы', value: 'section' },
   { label: 'Продукты', value: 'product' },
 ];
 
-const optionsName = ref<Search[]>([]);
-const filteredOptions = ref<Search[]>([]);
-
-watch(
-  () => adminStore.allName,
-  (newValue) => {
-    optionsName.value = newValue;
-    filteredOptions.value = newValue;
-  },
-  { immediate: true }
-);
-
-const search = ref(adminStore.searchName);
 let typeSearch = ref(adminStore.typeSearch);
 
-const filterOptions = (val: string) => {
-  const needle = val.toLowerCase();
-  if (needle.length >= 3) {
-    filteredOptions.value = optionsName.value
-      .filter((option: Search) => option.name.toLowerCase().includes(needle))
-      .slice(0, 5);
-  } else {
-    filteredOptions.value = optionsName.value;
-  }
-};
-
-async function SerachTable() {
+async function SearchTable() {
   try {
     await adminStore.getItems();
   } catch (err) {

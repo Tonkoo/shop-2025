@@ -28,10 +28,12 @@ export async function getAllNameColumn() {
   try {
     const params = {
       type: adminStore.typeSearch.value,
+      name: adminStore.searchName,
     };
     const response = await api.get('/elastic/admin/name', {
       params,
     });
+    console.log(response.data.data);
     return response.data.data;
   } catch (err) {
     console.error(err);
