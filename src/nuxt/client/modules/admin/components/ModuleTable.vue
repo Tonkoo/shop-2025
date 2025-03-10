@@ -27,19 +27,19 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'create_at',
+    name: 'createAt',
     required: true,
     label: 'Дата создания',
     align: 'left' as const,
-    field: 'create_at',
+    field: 'createAt',
     sortable: true,
   },
   {
-    name: 'update_at',
+    name: 'updateAt',
     required: true,
     label: 'Дата редактирования',
     align: 'left' as const,
-    field: 'update_at',
+    field: 'updateAt',
     sortable: true,
   },
   {

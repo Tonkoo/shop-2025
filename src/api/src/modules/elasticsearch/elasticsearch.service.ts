@@ -22,6 +22,7 @@ import {
   elasticBody,
   resultItems,
 } from '../../interfaces/global';
+import { camelCaseConverter } from '../../utils/toCamelCase.util';
 
 @Injectable()
 export class ElasticsearchService {
@@ -214,10 +215,10 @@ export class ElasticsearchService {
         throw new NotFoundException('Not found items');
       }
 
-      // TODO: написать метод для перевода полей в camelCase
-      // TODO структура ответа { items: [], total: null   result.hits.total }
-      return result.hits.hits.map(
-        (item): Sections | Products => item._source as Sections | Products,
+      return camelCaseConverter(
+        result.hits.hits.map(
+          (item): Sections | Products => item._source as Sections | Products,
+        ),
       );
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
@@ -251,21 +252,21 @@ export class ElasticsearchService {
       if (!items?.hits?.hits) {
         throw new NotFoundException('Not found items');
       }
-      const result: resultItems[] = [];
 
+      const result: resultItems[] = [];
       const total = items.hits.total;
       if (typeof total === 'object' && total !== null && 'value' in total) {
         result.push({
-          items: items.hits.hits.map(
-            (items): Sections | Products =>
-              items._source as Sections | Products,
+          items: camelCaseConverter(
+            items.hits.hits.map(
+              (items): Sections | Products =>
+                items._source as Sections | Products,
+            ),
           ),
           total: total.value,
         });
       }
 
-      // TODO: написать метод для перевода полей в camelCase
-      // TODO структура ответа { items: [], total: null   result.hits.total }
       return result;
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
