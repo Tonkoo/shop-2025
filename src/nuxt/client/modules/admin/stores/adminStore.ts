@@ -8,7 +8,6 @@ import type {
   Section,
   TypeSearch,
 } from '~/interfaces/global';
-import { useQuasar } from 'quasar';
 
 const adminModule = useAdminModule();
 
@@ -62,21 +61,14 @@ export const useAdminStore = defineStore('admin-store', {
       this.formFile = value;
       console.log(this.formFile);
     },
+    setAllCount(value: number) {
+      this.allCount = value;
+    },
     async getItems() {
       try {
         this.items = (await adminModule.getColumn()) as Section[] | Product[];
-        await this.getCountItems();
-        await this.getNameItems();
-      } catch (err) {
-        console.error(
-          'Error when receiving "Sections" data from the server:',
-          err
-        );
-      }
-    },
-    async getCountItems() {
-      try {
-        this.allCount = await adminModule.getAllCountColumn();
+        console.log(this.items);
+        // await this.getNameItems();
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',

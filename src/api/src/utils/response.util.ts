@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { response } from '../interfaces/global';
+import { response, resultItems } from '../interfaces/global';
 
 export class ResponseHelper {
   static createResponse(
     statusCode: number,
-    data: object | number | undefined,
+    data: object | number | undefined | resultItems,
   ): response {
     return {
       statusCode,

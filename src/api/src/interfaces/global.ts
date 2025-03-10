@@ -1,3 +1,6 @@
+import { Sections } from '../entities/sections.entity';
+import { Products } from '../entities/products.entity';
+
 type item = {
   id: number;
   code: string;
@@ -89,6 +92,10 @@ type elasticBody = {
   };
   data: documentProduct | documentSection;
 };
+type resultItems = {
+  items: (Sections | Products)[];
+  total: number;
+};
 
 export {
   response,
@@ -99,4 +106,5 @@ export {
   ProductEntities,
   SectionEntities,
   elasticBody,
+  resultItems,
 };

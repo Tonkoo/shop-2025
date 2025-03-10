@@ -42,4 +42,16 @@ type formParentSection = {
   name: string;
 };
 
-export type { Section, TypeSearch, Product, Search, formParentSection };
+type resultItems = {
+  items: Section[] | Product[];
+  total: number;
+};
+
+export type {
+  Section,
+  TypeSearch,
+  Product,
+  Search,
+  formParentSection,
+  resultItems,
+};

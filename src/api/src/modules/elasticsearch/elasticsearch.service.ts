@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
 import { In, Repository } from 'typeorm';
@@ -16,6 +20,7 @@ import {
   ProductEntities,
   SectionEntities,
   elasticBody,
+  resultItems,
 } from '../../interfaces/global';
 
 @Injectable()
@@ -71,36 +76,22 @@ export class ElasticsearchService {
       await this.elasticsearchService.indices.delete({
         index: this.index || 'shop',
       });
-
+    } catch {
+      console.log('No index');
+    }
+    try {
       const products: (Products | Sections)[] = convertTime(
         await this.productRepository.find(),
       );
-      // TODO:  сначала запрос потом изменение данных внутри запроса.
       const sections: (Products | Sections)[] = convertTime(
         await this.sectionsRepository.find(),
       );
 
       const documentsProduct: (documentProduct | documentSection)[] =
-        await this.generateBlockImages(
-          // TODO: products.map убрать
-          products.map(
-            (p: Products): ProductEntities => ({
-              ...p,
-            }),
-          ),
-          'product',
-        );
+        await this.generateBlockImages(products, 'product');
 
       const documentsSection: (documentProduct | documentSection)[] =
-        await this.generateBlockImages(
-          // TODO: sections.map убрать
-          sections.map(
-            (s: Sections): SectionEntities => ({
-              ...s,
-            }),
-          ),
-          'section',
-        );
+        await this.generateBlockImages(sections, 'section');
 
       const document: (documentSection | documentProduct)[] = [
         ...documentsProduct,
@@ -137,7 +128,6 @@ export class ElasticsearchService {
     type: string,
   ) {
     try {
-      console.log(document);
       const imageIds: number[] = document.images;
       const images: Images[] = await this.imagesRepository.findBy({
         id: In(imageIds),
@@ -153,14 +143,6 @@ export class ElasticsearchService {
         type,
         images: imageData,
       };
-
-      console.log(
-        await this.elasticsearchService.index({
-          index: index,
-          id: id,
-          body: updatedDocument,
-        }),
-      );
 
       return await this.elasticsearchService.index({
         index: index,
@@ -217,19 +199,44 @@ export class ElasticsearchService {
     return filter;
   }
 
-  // TODO: наименование метода getItems
-  async getShopByElastic(
+  async getItems(): Promise<(Sections | Products)[]> {
+    try {
+      const result = await this.elasticsearchService.search({
+        index: process.env.ELASTIC_INDEX,
+        body: {
+          query: {
+            match_all: {},
+          },
+        },
+      });
+
+      if (!result?.hits?.hits) {
+        throw new NotFoundException('Not found items');
+      }
+
+      // TODO: написать метод для перевода полей в camelCase
+      // TODO структура ответа { items: [], total: null   result.hits.total }
+      return result.hits.hits.map(
+        (item): Sections | Products => item._source as Sections | Products,
+      );
+    } catch (err) {
+      logger.error('Error from elastic.getShopByElastic: ', err);
+      throw new BadRequestException('Error while receiving data');
+    }
+  }
+
+  async getItemsFilter(
     type: string,
     from: number,
     size: number,
     name?: string,
-  ): Promise<(Sections | Products)[]> {
+  ): Promise<resultItems[]> {
     try {
       // TODO: для поиска разделов написать отдельный метод
       const filter = this.getFilter(type, name);
       // TODO: для поиска данных в эластике написать общий метод
       // TODO: написать метод для получения общего количества записей, взять из result
-      const result = await this.elasticsearchService.search({
+      const items = await this.elasticsearchService.search({
         index: process.env.ELASTIC_INDEX,
         body: {
           query: {
@@ -241,58 +248,28 @@ export class ElasticsearchService {
           size: size,
         },
       });
+      if (!items?.hits?.hits) {
+        throw new NotFoundException('Not found items');
+      }
+      const result: resultItems[] = [];
 
-      if (!result?.hits?.hits) {
-        // 404
+      const total = items.hits.total;
+      if (typeof total === 'object' && total !== null && 'value' in total) {
+        result.push({
+          items: items.hits.hits.map(
+            (items): Sections | Products =>
+              items._source as Sections | Products,
+          ),
+          total: total.value,
+        });
       }
 
       // TODO: написать метод для перевода полей в camelCase
-      // TODO стукртура ответа { items: [], total: null   result.hits.total }
-      return result.hits.hits.map(
-        (item): Sections | Products => item._source as Sections | Products,
-      );
+      // TODO структура ответа { items: [], total: null   result.hits.total }
+      return result;
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
       throw new BadRequestException('Error while receiving data');
-    }
-  }
-
-  async getCountShopByElastic(
-    type: string,
-    name: string,
-  ): Promise<number | undefined> {
-    const mustConditions: any[] = [];
-    if (name) {
-      mustConditions.push({
-        term: { name: name },
-      });
-    }
-
-    mustConditions.push({
-      term: { type: type },
-    });
-    try {
-      const result =
-        await this.elasticsearchService.search<elasticsearchResponse>({
-          index: process.env.ELASTIC_INDEX,
-          body: {
-            query: {
-              bool: {
-                must: mustConditions,
-              },
-            },
-            size: 0,
-          },
-        });
-
-      const total = result.hits.total;
-
-      if (typeof total === 'object' && total !== null && 'value' in total) {
-        return total.value;
-      }
-    } catch (err) {
-      logger.error('Error from elastic.getCountShopByElastic: ', err);
-      throw new BadRequestException('Error getting number of records');
     }
   }
 
