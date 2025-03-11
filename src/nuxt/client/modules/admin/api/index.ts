@@ -34,7 +34,6 @@ export async function getAllNameColumn() {
     const response = await api.get('/elastic/admin/name', {
       params,
     });
-    console.log(response.data.data);
     return response.data.data;
   } catch (err) {
     console.error(err);

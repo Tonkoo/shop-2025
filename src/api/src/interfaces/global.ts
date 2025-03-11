@@ -49,7 +49,7 @@ type elasticsearchResponse = {
         }
       | number;
     hits: Array<{
-      _source: any;
+      _source?: any;
     }>;
   };
 };

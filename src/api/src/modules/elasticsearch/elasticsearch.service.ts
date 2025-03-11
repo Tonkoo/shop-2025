@@ -22,6 +22,7 @@ import {
 } from '../../interfaces/global';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { payLoad } from './dto/elasticsearch.dto';
+import { formatResults } from '../../utils/formatResults.util';
 
 @Injectable()
 export class ElasticsearchService {
@@ -251,21 +252,7 @@ export class ElasticsearchService {
         throw new NotFoundException('Not found items');
       }
 
-      const result: resultItems[] = [];
-      const total = items.hits.total;
-      if (typeof total === 'object' && total !== null && 'value' in total) {
-        result.push({
-          items: camelCaseConverter(
-            items.hits.hits.map(
-              (items): Sections | Products =>
-                items._source as Sections | Products,
-            ),
-          ),
-          total: total.value,
-        });
-      }
-
-      return result;
+      return formatResults(items);
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
       throw new BadRequestException('Error while receiving data');
@@ -295,20 +282,7 @@ export class ElasticsearchService {
       if (!items?.hits?.hits) {
         throw new NotFoundException('Not found items');
       }
-      const result: resultItems[] = [];
-      const total = items.hits.total;
-      if (typeof total === 'object' && total !== null && 'value' in total) {
-        result.push({
-          items: camelCaseConverter(
-            items.hits.hits.map(
-              (items): Sections | Products =>
-                items._source as Sections | Products,
-            ),
-          ),
-          total: total.value,
-        });
-      }
-      return result;
+      return formatResults(items);
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
       throw new BadRequestException('Error while receiving data');
