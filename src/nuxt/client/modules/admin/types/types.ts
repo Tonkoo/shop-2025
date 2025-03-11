@@ -15,7 +15,7 @@ type AdminState = {
   allCount: number;
   typeSearch: TypeSearch;
   allName: Search[];
-  searchName: Search;
+  searchName: string;
   formNameSection: string;
   formParentSection: formParentSection;
   formFile: Array<File>;

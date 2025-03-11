@@ -35,6 +35,14 @@ export class SectionDto {
 
   getSection: boolean;
 
+  type: string;
+
+  from: string;
+
+  size: string;
+
+  searchName: string;
+
   constructor(ent: Sections) {
     this.id = ent.id;
     this.code = ent.code;

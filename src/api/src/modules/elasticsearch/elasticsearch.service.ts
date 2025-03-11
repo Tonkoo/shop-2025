@@ -147,7 +147,13 @@ export class ElasticsearchService {
         type,
         images: imageData,
       };
-
+      console.log(
+        await this.elasticsearchService.index({
+          index: index,
+          id: id,
+          body: updatedDocument,
+        }),
+      );
       return await this.elasticsearchService.index({
         index: index,
         id: id,
@@ -231,9 +237,9 @@ export class ElasticsearchService {
 
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
-      const { type, from, size, name } = payLoad;
+      const { type, from, size, searchName } = payLoad;
       // TODO: для поиска разделов написать отдельный метод
-      const filter = this.getFilter(type, name);
+      const filter = this.getFilter(type, searchName);
       // TODO: для поиска данных в эластике написать общий метод
       // TODO: написать метод для получения общего количества записей, взять из result
       const items = await this.elasticsearchService.search({

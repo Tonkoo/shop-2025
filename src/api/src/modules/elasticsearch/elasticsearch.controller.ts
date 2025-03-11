@@ -94,6 +94,7 @@ export class ElasticController {
     @Query('name') name: string,
     @Query('type') type: string,
   ): Promise<response> {
+    console.log(name);
     const result: unknown[] = await this.services.getNameShopByElastic(
       type,
       name,

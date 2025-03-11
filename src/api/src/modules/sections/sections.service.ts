@@ -14,6 +14,7 @@ import { convertTime } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
 import { resultItems } from '../../interfaces/global';
+import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 
 @Injectable()
 export class SectionsService {
@@ -33,6 +34,12 @@ export class SectionsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
       data.code = tr(data.name, { replace: { ' ': '-' } });
       const result: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),

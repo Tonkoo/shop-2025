@@ -9,7 +9,7 @@ export async function getColumn(): Promise<Section[] | Product[]> {
       type: adminStore.typeSearch.value,
       from: (adminStore.currentPage - 1) * adminStore.countColumn,
       size: adminStore.countColumn,
-      name: adminStore.searchName.name,
+      searchName: adminStore.searchName,
     };
     const response = await api.get<{ data: resultItems[] }>('/elastic/admin', {
       params,
@@ -26,7 +26,6 @@ export async function getColumn(): Promise<Section[] | Product[]> {
 export async function getAllNameColumn() {
   const adminStore = useAdminStore();
   try {
-    console.log(adminStore.searchName);
     const params = {
       type: adminStore.typeSearch.value,
       name: adminStore.searchName,
@@ -48,6 +47,13 @@ export async function addSection() {
     formData.append('name', adminStore.formNameSection);
     formData.append('idParent', adminStore.formParentSection.id.toString());
     formData.append('getSection', 'true');
+    formData.append('type', adminStore.typeSearch.value);
+    formData.append(
+      'from',
+      ((adminStore.currentPage - 1) * adminStore.countColumn).toString()
+    );
+    formData.append('size', adminStore.countColumn.toString());
+    formData.append('searchName', adminStore.searchName);
 
     adminStore.formFile.forEach((file) => {
       formData.append('files', file);

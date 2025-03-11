@@ -5,5 +5,5 @@ export class payLoad {
 
   size: number;
 
-  name?: string;
+  searchName?: string;
 }

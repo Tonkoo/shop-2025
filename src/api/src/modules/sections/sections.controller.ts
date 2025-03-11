@@ -95,6 +95,7 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
     try {
+      console.log(data);
       const result: Sections | resultItems[] = await this.services.create(
         data,
         files,

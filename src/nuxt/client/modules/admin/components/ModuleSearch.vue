@@ -52,14 +52,17 @@ import type { Search } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
 
-const search = ref(adminStore.searchName);
+const search = ref({ name: '' });
 const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = debounce(async (value) => {
-  adminStore.setSearchName(value);
+  if (value && typeof value === 'object') {
+    adminStore.setSearchName(value.name);
+  } else {
+    adminStore.setSearchName(value);
+  }
   await adminStore.getNameItems();
   autocompleteOptions.value = adminStore.allName;
-  // SearchTable();
 }, 300);
 
 const optionsTip = [
@@ -80,7 +83,7 @@ async function ClearSearch() {
   try {
     await adminStore.setTypeSearch({ label: 'Разделы', value: 'section' });
     typeSearch = ref(adminStore.typeSearch);
-    adminStore.setSearchName({ name: '' });
+    adminStore.setSearchName('');
     await adminStore.getItems();
   } catch (err) {
     console.error('Error when receiving "Sections" data from the server:', err);

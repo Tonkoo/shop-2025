@@ -21,7 +21,7 @@ export const useAdminStore = defineStore('admin-store', {
     allCount: 0,
     typeSearch: { label: 'Разделы', value: 'section' },
     allName: [],
-    searchName: { name: '' },
+    searchName: '',
     formNameSection: '',
     formParentSection: { id: 0, name: '' },
     formFile: [],
@@ -47,7 +47,7 @@ export const useAdminStore = defineStore('admin-store', {
     async setTypeSearch(value: TypeSearch) {
       this.typeSearch = value;
     },
-    setSearchName(value: Search) {
+    setSearchName(value: string) {
       this.searchName = value;
     },
     setFormNameSection(value: string) {
