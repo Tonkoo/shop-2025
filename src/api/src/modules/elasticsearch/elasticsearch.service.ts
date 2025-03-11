@@ -46,6 +46,9 @@ export class ElasticsearchService {
         async (
           item: SectionEntities | ProductEntities,
         ): Promise<documentSection | documentProduct> => {
+          if (!item.images) {
+            item.images = [];
+          }
           if (!Array.isArray(item.images)) {
             throw new BadRequestException('Invalid images format');
           }
@@ -147,13 +150,6 @@ export class ElasticsearchService {
         type,
         images: imageData,
       };
-      console.log(
-        await this.elasticsearchService.index({
-          index: index,
-          id: id,
-          body: updatedDocument,
-        }),
-      );
       return await this.elasticsearchService.index({
         index: index,
         id: id,
@@ -265,35 +261,37 @@ export class ElasticsearchService {
     }
   }
 
-  async getItemsSection(): Promise<resultItems[]> {
-    try {
-      const items = await this.elasticsearchService.search({
-        index: process.env.ELASTIC_INDEX,
-        body: {
-          query: {
-            bool: {
-              filter: [
-                {
-                  term: {
-                    type: 'section',
-                  },
-                },
-              ],
-            },
-          },
-          from: 0,
-          size: 10,
-        },
-      });
-      if (!items?.hits?.hits) {
-        throw new NotFoundException('Not found items');
-      }
-      return formatResults(items);
-    } catch (err) {
-      logger.error('Error from elastic.getShopByElastic: ', err);
-      throw new BadRequestException('Error while receiving data');
-    }
-  }
+  // async getItemsSection(searchParams: payLoad): Promise<resultItems[]> {
+  //   try {
+  //     const { type, from, size, searchName } = searchParams;
+  //     const filter = this.getFilter(type, searchName);
+  //     const items = await this.elasticsearchService.search({
+  //       index: process.env.ELASTIC_INDEX,
+  //       body: {
+  //         query: {
+  //           bool: {
+  //             filter: [
+  //               {
+  //                 term: {
+  //                   type: 'section',
+  //                 },
+  //               },
+  //             ],
+  //           },
+  //         },
+  //         from: from,
+  //         size: size,
+  //       },
+  //     });
+  //     if (!items?.hits?.hits) {
+  //       throw new NotFoundException('Not found items');
+  //     }
+  //     return formatResults(items);
+  //   } catch (err) {
+  //     logger.error('Error from elastic.getShopByElastic: ', err);
+  //     throw new BadRequestException('Error while receiving data');
+  //   }
+  // }
 
   async getNameShopByElastic(type: string, name: string): Promise<string[]> {
     try {

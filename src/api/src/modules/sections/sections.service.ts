@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
@@ -41,34 +41,33 @@ export class SectionsService {
         searchName: data.searchName,
       };
       data.code = tr(data.name, { replace: { ' ': '-' } });
-      const result: Sections = await this.sectionsRepo.save(
+      const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
       );
-      if (files.files) {
-        data.images = await createImages(queryRunner, files);
-        await this.sectionsRepo.update(
-          { id: result.id },
-          { images: data.images },
-        );
-      }
-
-      if (!result) {
+      if (!newSection) {
         throw new BadRequestException(
           'An error occurred while create the partition.',
         );
       }
+      if (files.files) {
+        data.images = await createImages(queryRunner, files);
+        await this.sectionsRepo.update(
+          { id: newSection.id },
+          { images: data.images },
+        );
+      }
+
       await this.EsServices.addDocument(
         this.index || 'shop',
-        result.id.toString(),
-        convertTime([result])[0],
+        newSection.id.toString(),
+        convertTime([newSection])[0],
         'section',
       );
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = data.getSection
+        ? await this.EsServices.getItemsFilter(searchParams)
+        : newSection;
       await queryRunner.commitTransaction();
-      if (data.getSection) {
-        // return await this.getList();
-        // console.log(await this.EsServices.getItemsSection());
-        return await this.EsServices.getItemsSection();
-      }
       return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();

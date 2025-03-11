@@ -3,8 +3,8 @@ import type {
   Product,
   Section,
   formParentSection,
+  TypeSearch,
 } from '~/interfaces/global';
-import type { TypeSearch } from '~/interfaces/global';
 
 type AdminState = {
   items: Section[] | Product[];
