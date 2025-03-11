@@ -46,7 +46,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setTypeSearch(value: TypeSearch) {
       this.typeSearch = value;
-      await this.getNameItems();
     },
     setSearchName(value: Search) {
       this.searchName = value;
@@ -59,7 +58,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setFormFile(value: File[]) {
       this.formFile = value;
-      console.log(this.formFile);
     },
     setAllCount(value: number) {
       this.allCount = value;
@@ -67,7 +65,6 @@ export const useAdminStore = defineStore('admin-store', {
     async getItems() {
       try {
         this.items = (await adminModule.getColumn()) as Section[] | Product[];
-        await this.getNameItems();
       } catch (err) {
         console.error(
           'Error when receiving "Sections" data from the server:',
@@ -77,7 +74,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async getNameItems() {
       try {
-        this.allName = [];
         this.allName = await adminModule.getAllNameColumn();
       } catch (err) {
         console.error(
@@ -85,6 +81,12 @@ export const useAdminStore = defineStore('admin-store', {
           err
         );
       }
+    },
+    clearForms() {
+      this.setViewModal(false);
+      this.setFormNameSection('');
+      this.setFormFile([]);
+      this.setFormParentSection({ id: 0, name: '' });
     },
   },
 });

@@ -10,11 +10,16 @@ interface ImageData {
 }
 
 export async function createImages(
-  data: any,
   queryRunner: QueryRunner,
+  files: { files: Express.Multer.File[] },
 ): Promise<number[]> {
   try {
-    const images = data as unknown as ImageData[];
+    const images: ImageData[] = files.files.map((file) => ({
+      originalName: file.originalname,
+      fileName: file.filename,
+      path: file.path,
+      mimeType: file.mimetype,
+    }));
     return await Promise.all(
       images.map(async (image: ImageData): Promise<number> => {
         const newImage: Images = queryRunner.manager.create(Images, {

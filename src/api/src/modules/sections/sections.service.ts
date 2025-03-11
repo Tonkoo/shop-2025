@@ -11,6 +11,9 @@ import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTime } from '../../utils/convertTime.util';
+import { createImages } from '../../utils/createImages.util';
+import { transliterate as tr } from 'transliteration';
+import { resultItems } from '../../interfaces/global';
 
 @Injectable()
 export class SectionsService {
@@ -24,12 +27,23 @@ export class SectionsService {
 
   async create(
     data: SectionDto,
-    queryRunner: QueryRunner,
-  ): Promise<Sections | Sections[]> {
+    files: { files: Express.Multer.File[] },
+  ): Promise<Sections | resultItems[]> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
     try {
+      data.code = tr(data.name, { replace: { ' ': '-' } });
       const result: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
       );
+      if (files.files) {
+        data.images = await createImages(queryRunner, files);
+        await this.sectionsRepo.update(
+          { id: result.id },
+          { images: data.images },
+        );
+      }
 
       if (!result) {
         throw new BadRequestException(
@@ -42,9 +56,11 @@ export class SectionsService {
         convertTime([result])[0],
         'section',
       );
-
+      await queryRunner.commitTransaction();
       if (data.getSection) {
-        return await this.getList();
+        // return await this.getList();
+        // console.log(await this.EsServices.getItemsSection());
+        return await this.EsServices.getItemsSection();
       }
       return result;
     } catch (err) {
@@ -53,6 +69,8 @@ export class SectionsService {
       throw new BadRequestException(
         'An error occurred while creating the section.',
       );
+    } finally {
+      await queryRunner.release();
     }
   }
 

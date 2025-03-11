@@ -28,14 +28,12 @@ import {
   ResponseHelperApiOK,
 } from '../../utils/response.util';
 import { ProductDto } from '../products/dto/product.dto';
-import { response } from '../../interfaces/global';
+import { response, resultItems } from '../../interfaces/global';
 import { Sections } from '../../entities/sections.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
-import { createImages } from '../../utils/createImages.util';
 import { DataSource } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
-import { transliterate as tr } from 'transliteration';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -96,37 +94,17 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
-    // TODO: переместить внутрь createImages
-    const fileData = files.files.map((file) => ({
-      originalName: file.originalname,
-      fileName: file.filename,
-      path: file.path,
-      mimeType: file.mimetype,
-    }));
-
-    // TODO: транзакции засунуть внутрь create
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
     try {
-      // TODO: перенести в create
-      data.images = await createImages(fileData, queryRunner);
-      data.code = tr(data.name, { replace: { ' ': '-' } });
-      // TODO: сначала создаем запись. потом создаем картинки, потом обновляем запись
-      const result: Sections | Sections[] = await this.services.create(
+      const result: Sections | resultItems[] = await this.services.create(
         data,
-        queryRunner,
+        files,
       );
-      await queryRunner.commitTransaction();
       return ResponseHelper.createResponse(HttpStatus.CREATED, result);
     } catch (err) {
-      await queryRunner.rollbackTransaction();
       logger.error('Error from sections.save: ', err);
       throw new BadRequestException(
         'An error occurred while saving the partition.',
       );
-    } finally {
-      await queryRunner.release();
     }
   }
 

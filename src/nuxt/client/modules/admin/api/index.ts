@@ -26,6 +26,7 @@ export async function getColumn(): Promise<Section[] | Product[]> {
 export async function getAllNameColumn() {
   const adminStore = useAdminStore();
   try {
+    console.log(adminStore.searchName);
     const params = {
       type: adminStore.typeSearch.value,
       name: adminStore.searchName,
@@ -53,12 +54,18 @@ export async function addSection() {
       formData.append('files', file);
     });
 
-    const response = await api.post('/section', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data.data;
+    const response = await api.post<{ data: resultItems[] }>(
+      '/section',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    const { items, total } = response.data.data[0];
+    adminStore.setAllCount(total);
+    return items;
   } catch (err) {
     console.error(err);
     throw err;

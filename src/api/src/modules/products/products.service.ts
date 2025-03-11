@@ -31,7 +31,7 @@ export class ProductsService {
     await queryRunner.startTransaction();
 
     try {
-      await createImages(data, queryRunner);
+      // await createImages(data, queryRunner);
       return await this.create(data, queryRunner);
     } catch (err) {
       await queryRunner.rollbackTransaction();

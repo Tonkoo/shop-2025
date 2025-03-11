@@ -68,13 +68,7 @@ export class ElasticController {
   // TODO: создать dto для запроса
   // TODO: payload - все входные параметры
   async getItems(@Query() payLoad: payLoad): Promise<response> {
-    const { type, from, size, name } = payLoad;
-    const result: resultItems[] = await this.services.getItemsFilter(
-      type,
-      from,
-      size,
-      name,
-    );
+    const result: resultItems[] = await this.services.getItemsFilter(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -100,7 +94,6 @@ export class ElasticController {
     @Query('name') name: string,
     @Query('type') type: string,
   ): Promise<response> {
-    console.log(name);
     const result: unknown[] = await this.services.getNameShopByElastic(
       type,
       name,

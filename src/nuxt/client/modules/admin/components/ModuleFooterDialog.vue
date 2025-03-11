@@ -24,7 +24,7 @@ async function AddItem() {
       .addSection()
       .then((response) => {
         adminStore.items = response;
-        adminStore.setViewModal(false);
+        adminStore.clearForms();
         quasar.notify({
           type: 'positive',
           message: 'Элемент успешно добавлен',
@@ -35,7 +35,7 @@ async function AddItem() {
       .catch((err) => {
         quasar.notify({
           type: 'negative',
-          message: 'Ошибка при добавлении элемента' + err,
+          message: 'Ошибка при добавлении элемента: ' + err,
           position: 'top',
           timeout: 2500,
         });

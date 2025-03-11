@@ -10,10 +10,8 @@ import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
-import * as process from 'node:process';
 import { convertTime } from '../../utils/convertTime.util';
 import {
-  elasticsearchResponse,
   imageData,
   documentProduct,
   documentSection,
@@ -23,6 +21,7 @@ import {
   resultItems,
 } from '../../interfaces/global';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
+import { payLoad } from './dto/elasticsearch.dto';
 
 @Injectable()
 export class ElasticsearchService {
@@ -129,6 +128,9 @@ export class ElasticsearchService {
     type: string,
   ) {
     try {
+      if (document.images == undefined) {
+        document.images = [];
+      }
       const imageIds: number[] = document.images;
       const images: Images[] = await this.imagesRepository.findBy({
         id: In(imageIds),
@@ -226,13 +228,9 @@ export class ElasticsearchService {
     }
   }
 
-  async getItemsFilter(
-    type: string,
-    from: number,
-    size: number,
-    name?: string,
-  ): Promise<resultItems[]> {
+  async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
+      const { type, from, size, name } = payLoad;
       // TODO: для поиска разделов написать отдельный метод
       const filter = this.getFilter(type, name);
       // TODO: для поиска данных в эластике написать общий метод
@@ -274,6 +272,49 @@ export class ElasticsearchService {
     }
   }
 
+  async getItemsSection(): Promise<resultItems[]> {
+    try {
+      const items = await this.elasticsearchService.search({
+        index: process.env.ELASTIC_INDEX,
+        body: {
+          query: {
+            bool: {
+              filter: [
+                {
+                  term: {
+                    type: 'section',
+                  },
+                },
+              ],
+            },
+          },
+          from: 0,
+          size: 10,
+        },
+      });
+      if (!items?.hits?.hits) {
+        throw new NotFoundException('Not found items');
+      }
+      const result: resultItems[] = [];
+      const total = items.hits.total;
+      if (typeof total === 'object' && total !== null && 'value' in total) {
+        result.push({
+          items: camelCaseConverter(
+            items.hits.hits.map(
+              (items): Sections | Products =>
+                items._source as Sections | Products,
+            ),
+          ),
+          total: total.value,
+        });
+      }
+      return result;
+    } catch (err) {
+      logger.error('Error from elastic.getShopByElastic: ', err);
+      throw new BadRequestException('Error while receiving data');
+    }
+  }
+
   async getNameShopByElastic(type: string, name: string): Promise<string[]> {
     try {
       if (!name.trim()) {
@@ -294,7 +335,6 @@ export class ElasticsearchService {
           size: 10,
         },
       });
-      console.log(result);
       return result.hits.hits.map((item) => item._source) as string[];
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);
