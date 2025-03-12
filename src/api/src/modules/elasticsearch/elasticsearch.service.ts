@@ -90,7 +90,7 @@ export class ElasticsearchService {
     if (!items?.hits?.hits) {
       throw new NotFoundException('Not found items');
     }
-
+    console.log(items);
     return items;
   }
 
@@ -224,31 +224,31 @@ export class ElasticsearchService {
     return filter;
   }
 
-  async getItems(): Promise<(Sections | Products)[]> {
-    try {
-      const result = await this.elasticsearchService.search({
-        index: process.env.ELASTIC_INDEX,
-        body: {
-          query: {
-            match_all: {},
-          },
-        },
-      });
-
-      if (!result?.hits?.hits) {
-        throw new NotFoundException('Not found items');
-      }
-
-      return camelCaseConverter(
-        result.hits.hits.map(
-          (item): Sections | Products => item._source as Sections | Products,
-        ),
-      );
-    } catch (err) {
-      logger.error('Error from elastic.getShopByElastic: ', err);
-      throw new BadRequestException('Error while receiving data');
-    }
-  }
+  // async getItems(): Promise<(Sections | Products)[]> {
+  //   try {
+  //     const result = await this.elasticsearchService.search({
+  //       index: process.env.ELASTIC_INDEX,
+  //       body: {
+  //         query: {
+  //           match_all: {},
+  //         },
+  //       },
+  //     });
+  //
+  //     if (!result?.hits?.hits) {
+  //       throw new NotFoundException('Not found items');
+  //     }
+  //
+  //     return camelCaseConverter(
+  //       result.hits.hits.map(
+  //         (item): Sections | Products => item._source as Sections | Products,
+  //       ),
+  //     );
+  //   } catch (err) {
+  //     logger.error('Error from elastic.getShopByElastic: ', err);
+  //     throw new BadRequestException('Error while receiving data');
+  //   }
+  // }
 
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {

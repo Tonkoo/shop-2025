@@ -75,7 +75,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setSelectedSection(value: Section) {
       this.selectedSection = value;
-      console.log(this.selectedSection);
     },
     clearForms() {
       this.setViewModal(false);

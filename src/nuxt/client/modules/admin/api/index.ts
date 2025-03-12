@@ -32,7 +32,6 @@ export async function getAllNameColumn() {
     const response = await api.get('/elastic/admin/name', {
       params,
     });
-    console.log(response.data.data);
     adminStore.setNameItems(response.data.data);
     // return response.data.data;
   } catch (err) {
@@ -46,10 +45,15 @@ export async function addSection() {
     adminStore.setSearchName('');
     const formData = new FormData();
 
-    // const param ={
-    //   name: adminStore.formNameSection,
-    //   ...
-    // };
+    const param = {
+      name: adminStore.formNameSection,
+      idParent: adminStore.formParentSection.id.toString(),
+      getSection: true,
+      type: adminStore.typeSearch.value,
+      from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
+      size: adminStore.countColumn.toString(),
+      searchName: adminStore.searchName,
+    };
     //
     // Object.entries()
 
