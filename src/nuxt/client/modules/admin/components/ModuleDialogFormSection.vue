@@ -10,27 +10,49 @@
       label="Изображение"
       @update:model-value="adminStore.setFormFile"
     />
-    <areal-select-form
-      v-model="parentSection"
-      :option="option"
-      option-label="name"
+    <!--    <areal-select-form-->
+    <!--      v-model="parentSection"-->
+    <!--      :option="option"-->
+    <!--      option-label="name"-->
+    <!--      option-value="id"-->
+    <!--      label="Родительский отдел"-->
+    <!--      @update:model-value="adminStore.setFormParentSection"-->
+    <!--    />-->
+    <areal-select-search
+      :model-value="parentSection"
+      :option="autocompleteOptions"
       option-value="id"
+      option-label="name"
       label="Родительский отдел"
-      @update:model-value="adminStore.setFormParentSection"
+      @input-value="onSearchInput"
+      @update:model-value="onSearchInput"
     />
   </areal-form>
 </template>
 
 <script setup lang="ts">
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
+import { ref } from 'vue';
+import type { Search } from '~/interfaces/global';
+import { debounce } from 'quasar';
 
 const adminStore = useAdminStore();
 
-const FilesImages = ref(adminStore.formFile);
-const parentSection = ref(adminStore.formParentSection);
 const name = ref(adminStore.formNameSection);
+const FilesImages = ref(adminStore.formFile);
+const parentSection = ref({ name: '' });
+const autocompleteOptions = ref([] as Search[]);
 
-const option = adminStore.items;
+const onSearchInput = debounce(async (value) => {
+  if (value && typeof value === 'object') {
+    adminStore.setSearchName(value.name);
+  } else {
+    adminStore.setSearchName(value);
+  }
+  adminStore.setFormParentSection(value);
+  await adminStore.getNameItems();
+  autocompleteOptions.value = adminStore.allName;
+}, 300);
 </script>
 
 <style scoped></style>

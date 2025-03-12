@@ -64,7 +64,7 @@ export class SectionsService {
         'section',
       );
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const result = data.getSection
+      const result: Sections | resultItems[] = data.getSection
         ? await this.EsServices.getItemsFilter(searchParams)
         : newSection;
       await queryRunner.commitTransaction();

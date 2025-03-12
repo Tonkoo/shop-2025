@@ -42,6 +42,7 @@ export async function getAllNameColumn() {
 export async function addSection() {
   const adminStore = useAdminStore();
   try {
+    adminStore.setSearchName('');
     const formData = new FormData();
 
     formData.append('name', adminStore.formNameSection);

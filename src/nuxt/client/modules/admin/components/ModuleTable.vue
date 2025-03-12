@@ -6,6 +6,9 @@
 <script setup lang="ts">
 import type { Product, Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
+import { useQuasar } from 'quasar';
+
+const quasar = useQuasar();
 
 const adminStore = useAdminStore();
 
@@ -55,7 +58,14 @@ const columns = [
 const rows = ref<Section[] | Product[]>([]);
 
 onMounted(async () => {
-  await adminStore.getItems();
+  await adminStore.getItems().catch((err) => {
+    quasar.notify({
+      type: 'negative',
+      message: err,
+      position: 'top',
+      timeout: 2500,
+    });
+  });
 });
 
 watch(

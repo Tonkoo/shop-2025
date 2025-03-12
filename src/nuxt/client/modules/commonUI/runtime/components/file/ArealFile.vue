@@ -7,6 +7,7 @@
     append
     :label="label"
     class="q-mb-md"
+    accept=".jpg, image/*"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>

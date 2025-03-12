@@ -301,7 +301,7 @@ export class ElasticsearchService {
       const result = await this.elasticsearchService.search({
         index: process.env.ELASTIC_INDEX,
         body: {
-          _source: ['name'],
+          _source: ['id', 'name'],
           //  TODO: добавить query для поиска по совпадению
           query: {
             bool: {

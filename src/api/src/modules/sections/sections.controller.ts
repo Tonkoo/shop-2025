@@ -93,9 +93,8 @@ export class SectionsController {
   async create(
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
-  ) {
+  ): Promise<response> {
     try {
-      console.log(data);
       const result: Sections | resultItems[] = await this.services.create(
         data,
         files,

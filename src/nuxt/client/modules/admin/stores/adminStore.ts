@@ -4,7 +4,6 @@ import { useAdminModule } from '~/modules/admin/global';
 import type {
   formParentSection,
   Product,
-  Search,
   Section,
   TypeSearch,
 } from '~/interfaces/global';
@@ -34,7 +33,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.typeItem = value;
     },
     async setCountColumn(value: string) {
-      const newCount = parseInt(value);
+      const newCount: number = parseInt(value);
       if (this.countColumn !== newCount) {
         this.countColumn = newCount;
         await this.getItems();
@@ -70,6 +69,7 @@ export const useAdminStore = defineStore('admin-store', {
           'Error when receiving "Sections" data from the server:',
           err
         );
+        throw err;
       }
     },
     async getNameItems() {

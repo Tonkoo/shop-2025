@@ -23,7 +23,6 @@ async function AddItem() {
     await adminModule
       .addSection()
       .then((response) => {
-        console.log(response);
         adminStore.items = response;
         adminStore.clearForms();
         quasar.notify({

@@ -14,7 +14,6 @@
         </div>
         <div class="col-5">
           <areal-select-search
-            :model-value="search"
             :option="autocompleteOptions"
             option-value="name"
             option-label="name"
@@ -52,7 +51,7 @@ import type { Search } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
 
-const search = ref({ name: '' });
+// const search = ref({ name: '' });
 const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = debounce(async (value) => {
