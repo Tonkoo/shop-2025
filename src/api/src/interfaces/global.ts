@@ -97,6 +97,15 @@ type resultItems = {
   total: number;
 };
 
+type payLoadTest = {
+  source?: string[];
+  size: number;
+  from: number;
+  query: {
+    bool: any;
+  };
+};
+
 export {
   response,
   elasticsearchResponse,
@@ -107,4 +116,5 @@ export {
   SectionEntities,
   elasticBody,
   resultItems,
+  payLoadTest,
 };

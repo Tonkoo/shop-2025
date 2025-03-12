@@ -22,8 +22,7 @@ async function AddItem() {
   if (adminStore.typeItem == 'section') {
     await adminModule
       .addSection()
-      .then((response) => {
-        adminStore.items = response;
+      .then(() => {
         adminStore.clearForms();
         quasar.notify({
           type: 'positive',

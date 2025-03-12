@@ -4,6 +4,8 @@ import { useAdminModule } from '~/modules/admin/global';
 import type {
   formParentSection,
   Product,
+  resultItems,
+  Search,
   Section,
   TypeSearch,
 } from '~/interfaces/global';
@@ -24,6 +26,8 @@ export const useAdminStore = defineStore('admin-store', {
     formNameSection: '',
     formParentSection: { id: 0, name: '' },
     formFile: [],
+    selectedId: 0,
+    selectedSection: null,
   }),
   actions: {
     setViewModal(value: boolean) {
@@ -36,14 +40,14 @@ export const useAdminStore = defineStore('admin-store', {
       const newCount: number = parseInt(value);
       if (this.countColumn !== newCount) {
         this.countColumn = newCount;
-        await this.getItems();
+        await adminModule.getItems();
       }
     },
     async setCurrentPage(value: number) {
       this.currentPage = value;
-      await this.getItems();
+      await adminModule.getItems();
     },
-    async setTypeSearch(value: TypeSearch) {
+    setTypeSearch(value: TypeSearch) {
       this.typeSearch = value;
     },
     setSearchName(value: string) {
@@ -58,29 +62,20 @@ export const useAdminStore = defineStore('admin-store', {
     setFormFile(value: File[]) {
       this.formFile = value;
     },
-    setAllCount(value: number) {
-      this.allCount = value;
+    setDataItems(data: resultItems) {
+      this.items = data.items;
+      this.allCount = data.total;
     },
-    async getItems() {
-      try {
-        this.items = (await adminModule.getColumn()) as Section[] | Product[];
-      } catch (err) {
-        console.error(
-          'Error when receiving "Sections" data from the server:',
-          err
-        );
-        throw err;
-      }
+    async setSelectedId(value: number) {
+      this.selectedId = value;
+      await adminModule.getSection();
     },
-    async getNameItems() {
-      try {
-        this.allName = await adminModule.getAllNameColumn();
-      } catch (err) {
-        console.error(
-          'Error when receiving "Sections" data from the server:',
-          err
-        );
-      }
+    setNameItems(value: Search[]) {
+      this.allName = value;
+    },
+    setSelectedSection(value: Section) {
+      this.selectedSection = value;
+      console.log(this.selectedSection);
     },
     clearForms() {
       this.setViewModal(false);

@@ -19,6 +19,8 @@ type AdminState = {
   formNameSection: string;
   formParentSection: formParentSection;
   formFile: Array<File>;
+  selectedId: number;
+  selectedSection: Section | null;
 };
 
 export type { AdminState };

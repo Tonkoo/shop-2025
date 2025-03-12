@@ -11,7 +11,11 @@
   >
     <template #body-cell-actions="props">
       <q-td :props="props">
-        <areal-button outline label="Изменить" />
+        <areal-button
+          outline
+          label="Изменить"
+          @click="OpenDialog(props.row.id)"
+        />
 
         <areal-button outline label="Удалить" />
       </q-td>
@@ -21,6 +25,9 @@
 
 <script setup lang="ts">
 import type { QTableColumn } from 'quasar';
+import { useAdminStore } from '~/modules/admin/stores/adminStore';
+
+const adminStore = useAdminStore();
 
 defineProps({
   rows: {
@@ -35,6 +42,10 @@ defineProps({
   },
 });
 
+const OpenDialog = (id: number) => {
+  adminStore.setSelectedId(id);
+  adminStore.setViewModal(true);
+};
 const pagination = {
   rowsPerPage: 0,
 };

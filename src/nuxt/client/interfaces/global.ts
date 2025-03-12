@@ -34,6 +34,7 @@ interface TypeSearch {
 }
 
 interface Search {
+  id: number;
   name: string;
 }
 

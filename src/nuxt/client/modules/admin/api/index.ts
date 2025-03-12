@@ -2,7 +2,8 @@ import { api } from '#shared/api/axios.js';
 import type { Product, resultItems, Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
-export async function getColumn(): Promise<Section[] | Product[]> {
+// Promise<Section[] | Product[]>
+export async function getItems() {
   const adminStore = useAdminStore();
   try {
     const params = {
@@ -14,9 +15,7 @@ export async function getColumn(): Promise<Section[] | Product[]> {
     const response = await api.get<{ data: resultItems[] }>('/elastic/admin', {
       params,
     });
-    const { items, total } = response.data.data[0];
-    adminStore.setAllCount(total);
-    return items;
+    adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
     console.error('Failed to fetch data from the server ' + err);
     throw new Error('Error while fetching section data from the server.');
@@ -33,7 +32,9 @@ export async function getAllNameColumn() {
     const response = await api.get('/elastic/admin/name', {
       params,
     });
-    return response.data.data;
+    console.log(response.data.data);
+    adminStore.setNameItems(response.data.data);
+    // return response.data.data;
   } catch (err) {
     console.error(err);
   }
@@ -44,6 +45,13 @@ export async function addSection() {
   try {
     adminStore.setSearchName('');
     const formData = new FormData();
+
+    // const param ={
+    //   name: adminStore.formNameSection,
+    //   ...
+    // };
+    //
+    // Object.entries()
 
     formData.append('name', adminStore.formNameSection);
     formData.append('idParent', adminStore.formParentSection.id.toString());
@@ -69,9 +77,22 @@ export async function addSection() {
         },
       }
     );
-    const { items, total } = response.data.data[0];
-    adminStore.setAllCount(total);
-    return items;
+    adminStore.setDataItems(response.data.data[0]);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function getSection() {
+  const adminStore = useAdminStore();
+  const params = {
+    id: adminStore.selectedId,
+  };
+  try {
+    const response = await api.get('/section', { params: params });
+
+    adminStore.setSelectedSection(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;

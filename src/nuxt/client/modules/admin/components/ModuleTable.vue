@@ -7,10 +7,12 @@
 import type { Product, Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useQuasar } from 'quasar';
+import { useAdminModule } from '~/modules/admin/global';
 
 const quasar = useQuasar();
 
 const adminStore = useAdminStore();
+const adminModule = useAdminModule();
 
 const columns = [
   {
@@ -58,7 +60,7 @@ const columns = [
 const rows = ref<Section[] | Product[]>([]);
 
 onMounted(async () => {
-  await adminStore.getItems().catch((err) => {
+  await adminModule.getItems().catch((err) => {
     quasar.notify({
       type: 'negative',
       message: err,

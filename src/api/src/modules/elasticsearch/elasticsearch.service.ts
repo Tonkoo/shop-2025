@@ -19,6 +19,7 @@ import {
   SectionEntities,
   elasticBody,
   resultItems,
+  payLoadTest,
 } from '../../interfaces/global';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { payLoad } from './dto/elasticsearch.dto';
@@ -73,6 +74,24 @@ export class ElasticsearchService {
         },
       ),
     );
+  }
+  //TODO: описать возвращаемый тип (return items;)
+  async searchFromElastic(payLoad: payLoadTest) {
+    const { query, from, size, source } = payLoad;
+    const items = await this.elasticsearchService.search({
+      index: process.env.ELASTIC_INDEX,
+      body: {
+        _source: source,
+        query,
+        from,
+        size,
+      },
+    });
+    if (!items?.hits?.hits) {
+      throw new NotFoundException('Not found items');
+    }
+
+    return items;
   }
 
   async createIndex(): Promise<boolean> {
@@ -234,25 +253,16 @@ export class ElasticsearchService {
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
       const { type, from, size, searchName } = payLoad;
-      // TODO: для поиска разделов написать отдельный метод
       const filter = this.getFilter(type, searchName);
-      // TODO: для поиска данных в эластике написать общий метод
-      // TODO: написать метод для получения общего количества записей, взять из result
-      const items = await this.elasticsearchService.search({
-        index: process.env.ELASTIC_INDEX,
-        body: {
-          query: {
-            bool: {
-              filter: filter,
-            },
+      const items = await this.searchFromElastic({
+        size,
+        from,
+        query: {
+          bool: {
+            filter: filter,
           },
-          from: from,
-          size: size,
         },
       });
-      if (!items?.hits?.hits) {
-        throw new NotFoundException('Not found items');
-      }
 
       return formatResults(items);
     } catch (err) {
@@ -261,48 +271,17 @@ export class ElasticsearchService {
     }
   }
 
-  // async getItemsSection(searchParams: payLoad): Promise<resultItems[]> {
-  //   try {
-  //     const { type, from, size, searchName } = searchParams;
-  //     const filter = this.getFilter(type, searchName);
-  //     const items = await this.elasticsearchService.search({
-  //       index: process.env.ELASTIC_INDEX,
-  //       body: {
-  //         query: {
-  //           bool: {
-  //             filter: [
-  //               {
-  //                 term: {
-  //                   type: 'section',
-  //                 },
-  //               },
-  //             ],
-  //           },
-  //         },
-  //         from: from,
-  //         size: size,
-  //       },
-  //     });
-  //     if (!items?.hits?.hits) {
-  //       throw new NotFoundException('Not found items');
-  //     }
-  //     return formatResults(items);
-  //   } catch (err) {
-  //     logger.error('Error from elastic.getShopByElastic: ', err);
-  //     throw new BadRequestException('Error while receiving data');
-  //   }
-  // }
-
   async getNameShopByElastic(type: string, name: string): Promise<string[]> {
     try {
       if (!name.trim()) {
         return [];
       }
+
+      //TODO: вызвать запрос с помощью searchFromElastic. Sources не называть _sources
       const result = await this.elasticsearchService.search({
         index: process.env.ELASTIC_INDEX,
         body: {
           _source: ['id', 'name'],
-          //  TODO: добавить query для поиска по совпадению
           query: {
             bool: {
               must: [{ match: { type: type } }],

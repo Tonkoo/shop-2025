@@ -4,13 +4,13 @@
     hide-selected
     fill-input
     input-debounce="0"
-    :model-value="modelValue"
+    :model-value="model"
     :label="label"
     :options="option"
     square
     outlined
     class="select"
-    @update:model-value="$emit('update:modelValue', $event)"
+    @update:model-value="setModel"
     @filter="handleFilter"
   >
     <template v-slot:no-option>
@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 defineProps({
-  modelValue: {
-    type: Object,
+  value: {
+    type: String,
     required: false,
     default: null,
   },
@@ -38,10 +38,16 @@ defineProps({
     default: () => [],
   },
 });
+const model = ref('');
 const emit = defineEmits(['update:modelValue', 'filter']);
 const handleFilter = (val: string, update: (callback: () => void) => void) => {
   emit('filter', val);
   update(() => {});
+};
+
+const setModel = (val: string) => {
+  model.value = val;
+  emit('update:modelValue', val);
 };
 </script>
 

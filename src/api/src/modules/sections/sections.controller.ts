@@ -10,6 +10,7 @@ import {
   UploadedFiles,
   UseInterceptors,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 
 import {
@@ -64,8 +65,8 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   @Get()
-  async getList(): Promise<response> {
-    const result: Sections[] = await this.services.getList();
+  async getSection(@Query('id') id: number): Promise<response> {
+    const result: Sections = await this.services.getSectionById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Post()

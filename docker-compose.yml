@@ -20,6 +20,7 @@ services:
       - shop-2025
     volumes:
       - ./src/api:/api
+      - ./src/api/images:/api/images
     expose:
       - "5173"
   nginx:

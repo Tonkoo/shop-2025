@@ -10,16 +10,8 @@
       label="Изображение"
       @update:model-value="adminStore.setFormFile"
     />
-    <!--    <areal-select-form-->
-    <!--      v-model="parentSection"-->
-    <!--      :option="option"-->
-    <!--      option-label="name"-->
-    <!--      option-value="id"-->
-    <!--      label="Родительский отдел"-->
-    <!--      @update:model-value="adminStore.setFormParentSection"-->
-    <!--    />-->
     <areal-select-search
-      :model-value="parentSection"
+      :value="adminStore.searchName"
       :option="autocompleteOptions"
       option-value="id"
       option-label="name"
@@ -32,15 +24,16 @@
 
 <script setup lang="ts">
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
+import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
 import type { Search } from '~/interfaces/global';
 import { debounce } from 'quasar';
 
 const adminStore = useAdminStore();
+const adminModule = useAdminModule();
 
 const name = ref(adminStore.formNameSection);
 const FilesImages = ref(adminStore.formFile);
-const parentSection = ref({ name: '' });
 const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = debounce(async (value) => {
@@ -50,7 +43,7 @@ const onSearchInput = debounce(async (value) => {
     adminStore.setSearchName(value);
   }
   adminStore.setFormParentSection(value);
-  await adminStore.getNameItems();
+  await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;
 }, 300);
 </script>

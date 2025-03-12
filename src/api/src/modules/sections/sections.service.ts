@@ -80,9 +80,11 @@ export class SectionsService {
     }
   }
 
-  async getList(): Promise<Sections[]> {
+  async getSectionById(id: number): Promise<Sections> {
     try {
-      const sections: Sections[] = await this.sectionsRepo.find();
+      const sections: Sections | null = await this.sectionsRepo.findOneBy({
+        id: id,
+      });
 
       if (!sections) {
         throw new NotFoundException('Section not found');
@@ -130,9 +132,9 @@ export class SectionsService {
           throw new NotFoundException('Section not found');
         }
 
-        if (data.getSection) {
-          return await this.getList();
-        }
+        // if (data.getSection) {
+        //   return await this.getList();
+        // }
         return updatedSection;
       }
     } catch (err) {
@@ -154,9 +156,9 @@ export class SectionsService {
 
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
-      if (data.getSection) {
-        return await this.getList();
-      }
+      // if (data.getSection) {
+      //   return await this.getList();
+      // }
 
       return id;
     } catch (err) {
