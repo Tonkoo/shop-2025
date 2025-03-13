@@ -2,8 +2,8 @@ import type {
   Search,
   Product,
   Section,
-  ParentSection,
   TypeSearch,
+  SectionBack,
 } from '~/interfaces/global';
 
 type AdminState = {
@@ -17,12 +17,10 @@ type AdminState = {
   typeSearch: TypeSearch;
   allName: Search[];
   searchName: string;
-  formNameSection: string;
-  formParentSection: ParentSection;
-  formFile: Array<File>;
   selectedId: number;
   selectedSection: Section | null;
   section: Section;
+  sectionBackend: SectionBack;
 };
 
 export type { AdminState };

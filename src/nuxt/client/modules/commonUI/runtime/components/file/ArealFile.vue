@@ -13,6 +13,8 @@
 </template>
 
 <script setup lang="ts">
+import type { typeFile } from '~/interfaces/global';
+
 defineProps({
   modelValue: {
     type: Array as PropType<File[]>,

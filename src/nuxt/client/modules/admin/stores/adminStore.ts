@@ -6,6 +6,8 @@ import type {
   resultItems,
   Search,
   Section,
+  SectionBack,
+  typeFile,
   TypeSearch,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
@@ -24,12 +26,16 @@ export const useAdminStore = defineStore('admin-store', {
     typeSearch: { label: 'Разделы', value: 'section' },
     allName: [],
     searchName: '',
-    formNameSection: '',
-    formParentSection: { id: 0, name: '' },
-    formFile: [],
     selectedId: 0,
     selectedSection: null,
     section: {
+      id: 0,
+      code: '',
+      name: '',
+      images: [],
+      id_parent: null,
+    },
+    sectionBackend: {
       id: 0,
       code: '',
       name: '',
@@ -68,16 +74,6 @@ export const useAdminStore = defineStore('admin-store', {
     setSearchName(value: string) {
       this.searchName = value;
     },
-    setFormNameSection(value: string) {
-      this.formNameSection = value;
-    },
-    setFormParentSection(value: ParentSection) {
-      this.formParentSection = value;
-    },
-    setFormFile(value: File[]) {
-      this.formFile = value;
-      console.log(this.formFile);
-    },
     setDataItems(data: resultItems) {
       this.items = data.items;
       this.allCount = data.total;
@@ -90,24 +86,37 @@ export const useAdminStore = defineStore('admin-store', {
       this.allName = value;
     },
     async setSelectedSection(value: Section) {
-      this.setFormNameSection(value.name);
-      this.setFormParentSection(value.parent ?? { id: 0, name: '' });
+      this.setSectionName(value.name);
+      this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
     },
     clearForms() {
       this.setIsEdit(false);
-      this.setFormNameSection('');
-      this.setFormFile([]);
-      this.setFormParentSection({ id: 0, name: '' });
+      this.setSectionName('');
+      this.setSectionImages([]);
+      this.setSectionIdParent({ id: 0, name: '' });
     },
     setSectionName(value: string) {
       this.section.name = value;
     },
     setSectionImages(value: File[]) {
       this.section.images = value;
+      console.log(this.section.images);
+    },
+    setSectionIdParent(value: ParentSection) {
+      this.section.id_parent = value.id;
     },
     setSectionParent(value: ParentSection) {
-      this.section.id_parent = value.id;
+      if (this.section.parent) {
+        this.section.parent.id = value.id;
+        this.section.parent.name = value.name;
+      } else {
+        this.section.parent = { id: value.id, name: value.name };
+      }
+    },
+    setSectionBack(value: SectionBack) {
+      this.sectionBackend = value;
+      console.log(this.sectionBackend);
     },
   },
 });

@@ -1,7 +1,16 @@
 import { api } from '#shared/api/axios.js';
-import type { Product, resultItems, Section } from '~/interfaces/global';
+import type { resultItems, Section, SectionBack } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
+function compareObjects(frontData: Section, backData: SectionBack): boolean {
+  // Сравниваем только те поля, которые могут быть изменены
+  return (
+    frontData.code === backData.code &&
+    frontData.name === backData.name &&
+    frontData.images === backData.images &&
+    frontData.id_parent === backData.id_parent
+  );
+}
 // Promise<Section[] | Product[]>
 export async function getItems() {
   const adminStore = useAdminStore();
@@ -84,6 +93,62 @@ export async function addSection() {
 
 export async function editSection() {
   const adminStore = useAdminStore();
+  try {
+    adminStore.setSearchName('');
+    const formData = new FormData();
+
+    const hasChanges = !compareObjects(
+      adminStore.section,
+      adminStore.sectionBackend
+    );
+
+    if (hasChanges) {
+      Object.keys(adminStore.section).forEach((key) => {
+        const value = adminStore.section[key as keyof Section];
+        const backendValue =
+          adminStore.sectionBackend[key as keyof SectionBack];
+
+        if (value !== backendValue) {
+          if (key === 'images' && Array.isArray(value)) {
+            value.forEach((file, index) => {
+              formData.append(`images[${index}]`, file);
+            });
+          } else if (value !== undefined && value !== null) {
+            // Для остальных данных преобразуем их в строку
+            formData.append(key, String(value));
+          }
+        }
+      });
+
+      const param = {
+        type: adminStore.typeItem,
+        from: (
+          (adminStore.currentPage - 1) *
+          adminStore.countColumn
+        ).toString(),
+        size: adminStore.countColumn.toString(),
+        searchName: adminStore.searchName,
+        getSection: true,
+      };
+
+      const response = await api.put<{ data: resultItems[] }>(
+        '/section',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      adminStore.setDataItems(response.data.data[0]);
+    } else {
+      console.log('Нет изменений для отправки на сервер.');
+    }
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 export async function getSection() {
@@ -95,6 +160,7 @@ export async function getSection() {
     const response = await api.get('/section', { params: params });
 
     await adminStore.setSelectedSection(response.data.data);
+    adminStore.setSectionBack(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;

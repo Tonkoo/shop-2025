@@ -40,7 +40,7 @@ const onSearchInput = async (value: any) => {
   } else {
     adminStore.setSearchName(value);
   }
-  adminStore.setSectionParent(value);
+  adminStore.setSectionIdParent(value);
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;
 };

@@ -10,6 +10,7 @@ type Section = {
   imageObject?: imageObject[];
 };
 
+type SectionBack = Section;
 type Product = {
   id: number;
   code: string;
@@ -56,6 +57,12 @@ type imageObject = {
   type: string;
 };
 
+type typeFile = {
+  id?: number;
+  file: File;
+  del: boolean;
+};
+
 export type {
   Section,
   TypeSearch,
@@ -64,4 +71,6 @@ export type {
   ParentSection,
   resultItems,
   imageObject,
+  typeFile,
+  SectionBack,
 };
