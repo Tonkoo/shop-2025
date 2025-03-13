@@ -24,6 +24,7 @@ async function AddItem() {
       .addSection()
       .then(() => {
         adminStore.clearForms();
+        adminStore.setViewModal(false);
         quasar.notify({
           type: 'positive',
           message: 'Элемент успешно добавлен',

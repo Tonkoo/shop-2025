@@ -29,7 +29,7 @@ export class Sections extends BaseEntity {
   @UpdateDateColumn({ name: 'update_at' })
   update_at: Date;
 
-  @Column({ name: 'id_parent' })
+  @Column({ name: 'id_parent', nullable: true })
   id_parent: number;
 
   @OneToMany(() => Products, (item) => item.id_section, { onDelete: 'CASCADE' })

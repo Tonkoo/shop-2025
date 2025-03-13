@@ -3,12 +3,12 @@ import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
 import type {
   formParentSection,
-  Product,
   resultItems,
   Search,
   Section,
   TypeSearch,
 } from '~/interfaces/global';
+import { convertFile } from '~/modules/admin/utils/convertFile.util';
 
 const adminModule = useAdminModule();
 
@@ -32,6 +32,7 @@ export const useAdminStore = defineStore('admin-store', {
   actions: {
     setViewModal(value: boolean) {
       this.viewModal = value;
+      this.clearForms();
     },
     setTypeItem(value: string) {
       this.typeItem = value;
@@ -61,6 +62,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setFormFile(value: File[]) {
       this.formFile = value;
+      console.log(this.formFile);
     },
     setDataItems(data: resultItems) {
       this.items = data.items;
@@ -73,11 +75,12 @@ export const useAdminStore = defineStore('admin-store', {
     setNameItems(value: Search[]) {
       this.allName = value;
     },
-    setSelectedSection(value: Section) {
-      this.selectedSection = value;
+    async setSelectedSection(value: Section) {
+      this.setFormNameSection(value.name);
+      this.setFormParentSection(value.parent ?? { id: 0, name: '' });
+      await convertFile(value.imageObject);
     },
     clearForms() {
-      this.setViewModal(false);
       this.setFormNameSection('');
       this.setFormFile([]);
       this.setFormParentSection({ id: 0, name: '' });

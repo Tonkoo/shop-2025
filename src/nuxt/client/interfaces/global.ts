@@ -6,6 +6,8 @@ type Section = {
   create_at: string;
   update_at: string;
   id_parent: number | null;
+  parent?: Section;
+  imageObject?: imageObject[];
 };
 
 type Product = {
@@ -47,6 +49,12 @@ type resultItems = {
   items: Section[] | Product[];
   total: number;
 };
+type imageObject = {
+  id: number;
+  name: string;
+  path: string;
+  type: string;
+};
 
 export type {
   Section,
@@ -55,4 +63,5 @@ export type {
   Search,
   formParentSection,
   resultItems,
+  imageObject,
 };

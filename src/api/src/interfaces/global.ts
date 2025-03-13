@@ -1,14 +1,6 @@
 import { Sections } from '../entities/sections.entity';
 import { Products } from '../entities/products.entity';
-
-type item = {
-  id: number;
-  code: string;
-  name: string;
-  images: number[];
-  update_at: Date;
-  create_at: Date;
-};
+import { Images } from '../entities/images.entity';
 
 type ProductEntities = {
   id: number;
@@ -32,7 +24,9 @@ type SectionEntities = {
   images: number[];
   update_at: Date;
   create_at: Date;
-  id_parent: number;
+  id_parent: number | null;
+  parent?: Sections;
+  imageObject?: Images[];
 };
 
 type response = {
@@ -81,7 +75,7 @@ type documentSection = {
   images: imageData[];
   update_at: Date;
   create_at: Date;
-  id_parent: number;
+  id_parent: number | null;
   type: string;
 };
 
@@ -93,7 +87,7 @@ type elasticBody = {
   data: documentProduct | documentSection;
 };
 type resultItems = {
-  items: (Sections | Products)[];
+  items: Sections | Products | (Sections | Products)[];
   total?: number | undefined;
 };
 

@@ -1,6 +1,6 @@
-export function camelCaseConverter<T extends object>(data: T | T[]): T[] {
+export function camelCaseConverter<T extends object>(data: T | T[]): T | T[] {
   if (Array.isArray(data)) {
-    return data.map((item) => camelCaseConverter(item)[0]);
+    return data.map((item) => camelCaseConverter(item) as T);
   }
 
   const result = Object.keys(data).reduce(
@@ -12,7 +12,7 @@ export function camelCaseConverter<T extends object>(data: T | T[]): T[] {
     {} as Record<string, any>,
   );
 
-  return [result as T];
+  return result as T;
 }
 
 function toCamelCase(str: string): string {

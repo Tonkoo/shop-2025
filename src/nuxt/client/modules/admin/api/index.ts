@@ -34,7 +34,6 @@ export async function getAllNameColumn() {
       params,
     });
     adminStore.setNameItems(response.data.data);
-    // return response.data.data;
   } catch (err) {
     console.error(err);
   }
@@ -45,7 +44,6 @@ export async function addSection() {
   try {
     adminStore.setSearchName('');
     const formData = new FormData();
-    //TODO: Цикл
     const param = {
       name: adminStore.formNameSection,
       idParent: adminStore.formParentSection.id.toString(),
@@ -55,19 +53,9 @@ export async function addSection() {
       size: adminStore.countColumn.toString(),
       searchName: adminStore.searchName,
     };
-    //
-    // Object.entries()
-
-    formData.append('name', adminStore.formNameSection);
-    formData.append('idParent', adminStore.formParentSection.id.toString());
-    formData.append('getSection', 'true');
-    formData.append('type', adminStore.typeSearch.value);
-    formData.append(
-      'from',
-      ((adminStore.currentPage - 1) * adminStore.countColumn).toString()
-    );
-    formData.append('size', adminStore.countColumn.toString());
-    formData.append('searchName', adminStore.searchName);
+    Object.entries(param).forEach(([key, value]) => {
+      formData.append(key, String(value));
+    });
 
     adminStore.formFile.forEach((file) => {
       formData.append('files', file);

@@ -12,7 +12,7 @@ export class SectionDto {
   name: string;
 
   @ApiProperty({ example: [1, 2, 3], description: 'Список изображений' })
-  images: Awaited<number>[];
+  images: Awaited<number>[] | null;
 
   @ApiProperty({
     example: '2023-10-10T12:00:00.000Z',
@@ -31,7 +31,7 @@ export class SectionDto {
     description: 'ID родительского раздела',
     nullable: true,
   })
-  idParent: number;
+  idParent: number | null;
 
   getSection: boolean;
 

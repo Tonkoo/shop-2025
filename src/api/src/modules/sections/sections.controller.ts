@@ -29,7 +29,11 @@ import {
   ResponseHelperApiOK,
 } from '../../utils/response.util';
 import { ProductDto } from '../products/dto/product.dto';
-import { response, resultItems } from '../../interfaces/global';
+import {
+  response,
+  resultItems,
+  SectionEntities,
+} from '../../interfaces/global';
 import { Sections } from '../../entities/sections.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
@@ -66,7 +70,8 @@ export class SectionsController {
   })
   @Get()
   async getSection(@Query('id') id: number): Promise<response> {
-    const result: Sections = await this.services.getSectionById(id);
+    const result: SectionEntities | SectionEntities[] =
+      await this.services.getSectionById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Post()
