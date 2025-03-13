@@ -64,15 +64,11 @@ export class ElasticController {
     description: 'Успешный ответ с массивом документов.',
     type: ResponseHelperApiOK,
   })
-
-  // TODO: создать dto для запроса
-  // TODO: payload - все входные параметры
   async getItems(@Query() payLoad: payLoad): Promise<response> {
     const result: resultItems[] = await this.services.getItemsFilter(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
-  // TODO: написать отдельный метод для получения совпадении наименовании разделов getNames
   @Get('admin/name')
   @ApiOperation({
     summary: 'Получение списка названий документов из Elasticsearch',
@@ -90,14 +86,8 @@ export class ElasticController {
     description: 'Успешный ответ с массивом названий документов.',
     type: ResponseHelperApiOK,
   })
-  async getNameItems(
-    @Query('name') name: string,
-    @Query('type') type: string,
-  ): Promise<response> {
-    const result: unknown[] = await this.services.getNameShopByElastic(
-      type,
-      name,
-    );
+  async getNameItems(@Query() payLoad: payLoad): Promise<response> {
+    const result: unknown[] = await this.services.getNameShopByElastic(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

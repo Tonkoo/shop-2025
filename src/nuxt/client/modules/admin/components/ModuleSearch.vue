@@ -14,7 +14,7 @@
         </div>
         <div class="col-5">
           <areal-select-search
-            :value="adminStore.searchName"
+            v-model="adminStore.searchName"
             :option="autocompleteOptions"
             option-value="name"
             option-label="name"
@@ -24,7 +24,6 @@
           />
         </div>
         <div class="col-1">
-          <!--          -->
           <areal-button
             label="Поиск"
             icon="search"
@@ -49,7 +48,6 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
-import { debounce } from 'quasar';
 import type { Search } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
@@ -57,11 +55,15 @@ const adminModule = useAdminModule();
 
 const autocompleteOptions = ref([] as Search[]);
 
-const onSearchInput = debounce(async (value) => {
-  adminStore.setSearchName(value?.name || value);
+const onSearchInput = async (value: string | { name: string }) => {
+  if (typeof value === 'string') {
+    adminStore.setSearchName(value);
+  } else {
+    adminStore.setSearchName(value.name);
+  }
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;
-}, 300);
+};
 
 const optionsTip = [
   { label: 'Разделы', value: 'section' },

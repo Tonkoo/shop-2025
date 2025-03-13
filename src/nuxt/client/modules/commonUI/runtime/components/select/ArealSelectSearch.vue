@@ -3,7 +3,7 @@
     use-input
     hide-selected
     fill-input
-    input-debounce="0"
+    input-debounce="600"
     :model-value="model"
     :label="label"
     :options="option"

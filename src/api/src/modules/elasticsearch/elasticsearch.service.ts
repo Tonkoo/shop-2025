@@ -21,7 +21,6 @@ import {
   resultItems,
   payLoadTest,
 } from '../../interfaces/global';
-import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { payLoad } from './dto/elasticsearch.dto';
 import { formatResults } from '../../utils/formatResults.util';
 
@@ -75,7 +74,6 @@ export class ElasticsearchService {
       ),
     );
   }
-  //TODO: описать возвращаемый тип (return items;)
   async searchFromElastic(payLoad: payLoadTest) {
     const { query, from, size, source } = payLoad;
     const items = await this.elasticsearchService.search({
@@ -90,7 +88,6 @@ export class ElasticsearchService {
     if (!items?.hits?.hits) {
       throw new NotFoundException('Not found items');
     }
-    console.log(items);
     return items;
   }
 
@@ -224,36 +221,11 @@ export class ElasticsearchService {
     return filter;
   }
 
-  // async getItems(): Promise<(Sections | Products)[]> {
-  //   try {
-  //     const result = await this.elasticsearchService.search({
-  //       index: process.env.ELASTIC_INDEX,
-  //       body: {
-  //         query: {
-  //           match_all: {},
-  //         },
-  //       },
-  //     });
-  //
-  //     if (!result?.hits?.hits) {
-  //       throw new NotFoundException('Not found items');
-  //     }
-  //
-  //     return camelCaseConverter(
-  //       result.hits.hits.map(
-  //         (item): Sections | Products => item._source as Sections | Products,
-  //       ),
-  //     );
-  //   } catch (err) {
-  //     logger.error('Error from elastic.getShopByElastic: ', err);
-  //     throw new BadRequestException('Error while receiving data');
-  //   }
-  // }
-
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
       const { type, from, size, searchName } = payLoad;
       const filter = this.getFilter(type, searchName);
+
       const items = await this.searchFromElastic({
         size,
         from,
@@ -271,27 +243,24 @@ export class ElasticsearchService {
     }
   }
 
-  async getNameShopByElastic(type: string, name: string): Promise<string[]> {
+  async getNameShopByElastic(payLoad: payLoad): Promise<string[]> {
+    const { searchName, type, size } = payLoad;
     try {
-      if (!name.trim()) {
+      if (searchName == undefined) {
         return [];
       }
 
-      //TODO: вызвать запрос с помощью searchFromElastic. Sources не называть _sources
-      const result = await this.elasticsearchService.search({
-        index: process.env.ELASTIC_INDEX,
-        body: {
-          _source: ['id', 'name'],
-          query: {
-            bool: {
-              must: [{ match: { type: type } }],
-              should: [{ wildcard: { name: `*${name}*` } }],
-              minimum_should_match: 1,
-            },
+      const result = await this.searchFromElastic({
+        size,
+        query: {
+          bool: {
+            must: [{ match: { type: type } }],
+            should: [{ wildcard: { name: `*${searchName}*` } }],
+            minimum_should_match: 1,
           },
-          size: 10,
         },
       });
+
       return result.hits.hits.map((item) => item._source) as string[];
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);

@@ -27,7 +27,8 @@ export async function getAllNameColumn() {
   try {
     const params = {
       type: adminStore.typeSearch.value,
-      name: adminStore.searchName,
+      searchName: adminStore.searchName,
+      size: adminStore.countColumn,
     };
     const response = await api.get('/elastic/admin/name', {
       params,
@@ -44,7 +45,7 @@ export async function addSection() {
   try {
     adminStore.setSearchName('');
     const formData = new FormData();
-
+    //TODO: Цикл
     const param = {
       name: adminStore.formNameSection,
       idParent: adminStore.formParentSection.id.toString(),

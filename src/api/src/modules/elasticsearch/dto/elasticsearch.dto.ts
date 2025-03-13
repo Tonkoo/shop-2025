@@ -1,7 +1,7 @@
 export class payLoad {
   type: string;
 
-  from: number;
+  from?: number;
 
   size: number;
 

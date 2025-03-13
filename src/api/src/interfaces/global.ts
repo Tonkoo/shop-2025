@@ -94,13 +94,13 @@ type elasticBody = {
 };
 type resultItems = {
   items: (Sections | Products)[];
-  total: number;
+  total?: number | undefined;
 };
 
 type payLoadTest = {
   source?: string[];
   size: number;
-  from: number;
+  from?: number;
   query: {
     bool: any;
   };
