@@ -21,7 +21,7 @@ import {
   ApiProperty,
 } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
-import { SectionDto } from './dto/section.dto';
+import { SectionDto, TestSectionDto } from './dto/section.dto';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
@@ -100,6 +100,7 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
+    console.log(data);
     try {
       const result: Sections | resultItems[] = await this.services.create(
         data,

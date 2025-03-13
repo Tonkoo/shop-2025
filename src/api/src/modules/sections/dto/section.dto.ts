@@ -33,8 +33,6 @@ export class SectionDto {
   })
   idParent: number | null;
 
-  getSection: boolean;
-
   type: string;
 
   from: string;
@@ -42,6 +40,8 @@ export class SectionDto {
   size: string;
 
   searchName: string;
+
+  getSection: boolean;
 
   constructor(ent: Sections) {
     this.id = ent.id;
@@ -51,6 +51,9 @@ export class SectionDto {
     this.createAt = ent.create_at;
     this.updateAt = ent.update_at;
     this.idParent = ent.id_parent;
-    this.getSection = false;
   }
+}
+
+export class TestSectionDto {
+  section: SectionDto;
 }

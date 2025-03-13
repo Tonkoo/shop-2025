@@ -1,7 +1,9 @@
 <template>
   <q-card-section class="row items-center no-wrap">
     <q-toolbar>
-      <q-toolbar-title>Новая запись</q-toolbar-title>
+      <q-toolbar-title>{{
+        adminStore.isEdit ? 'Редактирование' : 'Новая запись'
+      }}</q-toolbar-title>
       <q-space />
       <q-btn flat round icon="close" @click="adminStore.setViewModal(false)" />
     </q-toolbar>

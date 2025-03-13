@@ -2,11 +2,12 @@ import type {
   Search,
   Product,
   Section,
-  formParentSection,
+  ParentSection,
   TypeSearch,
 } from '~/interfaces/global';
 
 type AdminState = {
+  isEdit: boolean;
   items: Section[] | Product[];
   viewModal: boolean;
   typeItem: string;
@@ -17,10 +18,11 @@ type AdminState = {
   allName: Search[];
   searchName: string;
   formNameSection: string;
-  formParentSection: formParentSection;
+  formParentSection: ParentSection;
   formFile: Array<File>;
   selectedId: number;
   selectedSection: Section | null;
+  section: Section;
 };
 
 export type { AdminState };

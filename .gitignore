@@ -4,6 +4,8 @@
 /build
 Что нужно.txt*
 
+**/src/api/images/
+
 # Logs
 logs
 *.log

@@ -1,17 +1,17 @@
 <template>
   <areal-form>
     <areal-form-input
-      v-model="adminStore.formNameSection"
+      v-model="adminStore.section.name"
       label="Название"
-      @update:model-value="adminStore.setFormNameSection"
+      @update:model-value="adminStore.setSectionName"
     />
     <areal-file
-      v-model="adminStore.formFile"
+      v-model="adminStore.section.images"
       label="Изображение"
-      @update:model-value="adminStore.setFormFile"
+      @update:model-value="adminStore.setSectionImages"
     />
     <areal-select-search
-      v-model="adminStore.formParentSection"
+      v-model="adminStore.section.parent"
       :value="adminStore.searchName"
       :option="autocompleteOptions"
       option-value="id"
@@ -27,7 +27,7 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
-import type { formParentSection, Search } from '~/interfaces/global';
+import type { ParentSection, Search } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
@@ -40,7 +40,7 @@ const onSearchInput = async (value: any) => {
   } else {
     adminStore.setSearchName(value);
   }
-  adminStore.setFormParentSection(value);
+  adminStore.setSectionParent(value);
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;
 };

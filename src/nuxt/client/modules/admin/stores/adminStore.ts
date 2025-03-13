@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
 import type {
-  formParentSection,
+  ParentSection,
   resultItems,
   Search,
   Section,
@@ -14,6 +14,7 @@ const adminModule = useAdminModule();
 
 export const useAdminStore = defineStore('admin-store', {
   state: (): AdminState => ({
+    isEdit: false,
     items: [],
     viewModal: false,
     typeItem: 'section',
@@ -28,11 +29,24 @@ export const useAdminStore = defineStore('admin-store', {
     formFile: [],
     selectedId: 0,
     selectedSection: null,
+    section: {
+      id: 0,
+      code: '',
+      name: '',
+      images: [],
+      id_parent: null,
+    },
   }),
   actions: {
+    setIsEdit(value: boolean) {
+      this.isEdit = value;
+    },
     setViewModal(value: boolean) {
+      if (!value) {
+        this.clearForms();
+      }
+
       this.viewModal = value;
-      this.clearForms();
     },
     setTypeItem(value: string) {
       this.typeItem = value;
@@ -57,7 +71,7 @@ export const useAdminStore = defineStore('admin-store', {
     setFormNameSection(value: string) {
       this.formNameSection = value;
     },
-    setFormParentSection(value: formParentSection) {
+    setFormParentSection(value: ParentSection) {
       this.formParentSection = value;
     },
     setFormFile(value: File[]) {
@@ -81,9 +95,19 @@ export const useAdminStore = defineStore('admin-store', {
       await convertFile(value.imageObject);
     },
     clearForms() {
+      this.setIsEdit(false);
       this.setFormNameSection('');
       this.setFormFile([]);
       this.setFormParentSection({ id: 0, name: '' });
+    },
+    setSectionName(value: string) {
+      this.section.name = value;
+    },
+    setSectionImages(value: File[]) {
+      this.section.images = value;
+    },
+    setSectionParent(value: ParentSection) {
+      this.section.id_parent = value.id;
     },
   },
 });

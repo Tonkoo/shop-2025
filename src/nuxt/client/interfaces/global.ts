@@ -2,11 +2,11 @@ type Section = {
   id: number;
   code: string;
   name: string;
-  images: ImageType[];
-  create_at: string;
-  update_at: string;
+  images: File[];
+  create_at?: string;
+  update_at?: string;
   id_parent: number | null;
-  parent?: Section;
+  parent?: ParentSection;
   imageObject?: imageObject[];
 };
 
@@ -40,7 +40,7 @@ interface Search {
   name: string;
 }
 
-type formParentSection = {
+type ParentSection = {
   id: number;
   name: string;
 };
@@ -61,7 +61,7 @@ export type {
   TypeSearch,
   Product,
   Search,
-  formParentSection,
+  ParentSection,
   resultItems,
   imageObject,
 };

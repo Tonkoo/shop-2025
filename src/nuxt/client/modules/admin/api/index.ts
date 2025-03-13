@@ -45,20 +45,25 @@ export async function addSection() {
     adminStore.setSearchName('');
     const formData = new FormData();
     const param = {
-      name: adminStore.formNameSection,
-      idParent: adminStore.formParentSection.id.toString(),
-      getSection: true,
-      type: adminStore.typeSearch.value,
+      type: adminStore.typeItem,
       from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       size: adminStore.countColumn.toString(),
       searchName: adminStore.searchName,
+      getSection: true,
     };
-    Object.entries(param).forEach(([key, value]) => {
-      formData.append(key, String(value));
+
+    Object.entries(adminStore.section).forEach(([key, value]) => {
+      if (key === 'images') {
+        (value as File[]).forEach((file) => {
+          formData.append('files', file);
+        });
+      } else {
+        formData.append(key, String(value));
+      }
     });
 
-    adminStore.formFile.forEach((file) => {
-      formData.append('files', file);
+    Object.entries(param).forEach(([key, value]) => {
+      formData.append(key, String(value));
     });
 
     const response = await api.post<{ data: resultItems[] }>(
@@ -77,6 +82,10 @@ export async function addSection() {
   }
 }
 
+export async function editSection() {
+  const adminStore = useAdminStore();
+}
+
 export async function getSection() {
   const adminStore = useAdminStore();
   const params = {
@@ -85,7 +94,7 @@ export async function getSection() {
   try {
     const response = await api.get('/section', { params: params });
 
-    adminStore.setSelectedSection(response.data.data);
+    await adminStore.setSelectedSection(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;

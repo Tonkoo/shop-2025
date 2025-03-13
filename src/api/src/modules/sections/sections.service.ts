@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
 import { DataSource, In, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
-import { SectionDto } from './dto/section.dto';
+import { SectionDto, TestSectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTime } from '../../utils/convertTime.util';

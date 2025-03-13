@@ -43,6 +43,7 @@ defineProps({
 });
 
 const OpenDialog = (id: number) => {
+  adminStore.setIsEdit(true);
   adminStore.setSelectedId(id);
   adminStore.setViewModal(true);
 };

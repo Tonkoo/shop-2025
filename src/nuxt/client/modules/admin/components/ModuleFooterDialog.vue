@@ -1,6 +1,11 @@
 <template>
   <q-card-actions align="left" class="dialog__card__footer">
-    <areal-button label="Добавить" color="black" icon="save" @click="AddItem" />
+    <areal-button
+      label="Сохранить"
+      color="black"
+      icon="save"
+      @click="adminStore.isEdit ? editItem() : AddItem()"
+    />
     <areal-button
       outline
       label="Отмена"
@@ -19,6 +24,31 @@ const adminModule = useAdminModule();
 const quasar = useQuasar();
 
 async function AddItem() {
+  if (adminStore.typeItem == 'section') {
+    await adminModule
+      .addSection()
+      .then(() => {
+        adminStore.clearForms();
+        adminStore.setViewModal(false);
+        quasar.notify({
+          type: 'positive',
+          message: 'Элемент успешно добавлен',
+          position: 'top-right',
+          timeout: 2500,
+        });
+      })
+      .catch((err) => {
+        quasar.notify({
+          type: 'negative',
+          message: 'Ошибка при добавлении элемента: ' + err,
+          position: 'top',
+          timeout: 2500,
+        });
+      });
+  }
+}
+
+async function editItem() {
   if (adminStore.typeItem == 'section') {
     await adminModule
       .addSection()
