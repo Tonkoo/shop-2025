@@ -10,13 +10,6 @@ function ComparisonValues(section: Section, oldSection: Section | null) {
   }
   if (!isEqual(section.images, oldSection?.images)) {
     resultSection.images = section.images;
-    // if (!oldSection?.images || oldSection.images.length === 0) {
-    //   resultSection.images = section.images;
-    // } else {
-    //   resultSection.images = section.images?.filter(
-    //     (image) => !oldSection.images?.includes(image)
-    //   );
-    // }
   }
   if (!isEqual(section.parent, oldSection?.parent)) {
     resultSection.id_parent = section.parent?.id;
@@ -145,6 +138,8 @@ export async function editSection() {
         },
       }
     );
+    console.log(response.data.data);
+    adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
     console.error(err);
     throw err;

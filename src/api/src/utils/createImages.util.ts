@@ -24,6 +24,12 @@ export async function createImages(
     }));
     return await Promise.all(
       images.map(async (image: ImageData): Promise<number> => {
+        const existingImage = await queryRunner.manager.findOne(Images, {
+          where: { name: image.fileName },
+        });
+        if (existingImage) {
+          return existingImage.id;
+        }
         const newImage: Images = queryRunner.manager.create(Images, {
           name: image.fileName,
           path: image.path,
