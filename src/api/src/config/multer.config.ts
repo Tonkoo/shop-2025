@@ -1,14 +1,21 @@
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
+import { existsSync } from 'fs';
 
 const getMulterOptions = (type: string) => {
+  const uploadDir = `./images/${type}`;
   return {
     storage: diskStorage({
-      destination: `./images/${type}`,
+      destination: uploadDir,
       filename: (req, file, callback) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const ext = extname(file.originalname);
-        callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        const originalFileName = file.originalname;
+        if (existsSync(join(uploadDir, originalFileName))) {
+          callback(null, originalFileName);
+        } else {
+          const fileName = `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+          callback(null, fileName);
+        }
       },
     }),
   };
