@@ -10,6 +10,13 @@ function ComparisonValues(section: Section, oldSection: Section | null) {
   }
   if (!isEqual(section.images, oldSection?.images)) {
     resultSection.images = section.images;
+    // if (!oldSection?.images || oldSection.images.length === 0) {
+    //   resultSection.images = section.images;
+    // } else {
+    //   resultSection.images = section.images?.filter(
+    //     (image) => !oldSection.images?.includes(image)
+    //   );
+    // }
   }
   if (!isEqual(section.parent, oldSection?.parent)) {
     resultSection.id_parent = section.parent?.id;
@@ -105,6 +112,7 @@ export async function editSection() {
       adminStore.section,
       adminStore.selectedSection
     );
+    console.log(editSection);
     const formData = new FormData();
     const param = {
       type: adminStore.typeItem,
@@ -113,7 +121,6 @@ export async function editSection() {
       searchName: adminStore.searchName,
       getSection: true,
     };
-    console.log(editSection);
     Object.entries(editSection).forEach(([key, value]) => {
       if (key === 'images' && Array.isArray(value)) {
         (value as File[]).forEach((file) => {
@@ -127,13 +134,10 @@ export async function editSection() {
     Object.entries(param).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-    adminStore.setSearchName('');
 
+    adminStore.setSearchName('');
     const response = await api.put<{ data: resultItems[] }>(
-      '/section',
+      `/section/${adminStore.selectedSection?.id}`,
       formData,
       {
         headers: {

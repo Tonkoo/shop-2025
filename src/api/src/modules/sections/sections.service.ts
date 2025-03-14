@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
 import { DataSource, In, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
-import { SectionDto, TestSectionDto } from './dto/section.dto';
+import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTime } from '../../utils/convertTime.util';
@@ -128,45 +128,50 @@ export class SectionsService {
       );
     }
   }
-
+  // : Promise<Sections | Sections[]>
   async updateById(
     id: number,
     data: SectionDto,
-  ): Promise<Sections | Sections[]> {
+    files: { files: Express.Multer.File[] },
+  ) {
     try {
       {
-        const result = await this.sectionsRepo.update(
-          { id: id },
-          prepareData(data, ['getSection']),
-        );
-
-        if (!result) {
-          throw new BadRequestException(
-            'An error occurred while saving the partition.',
-          );
+        if (files.files) {
+          console.log(files);
         }
 
-        const updatedSection: Sections | null = await this.sectionsRepo.findOne(
-          {
-            where: { id: id },
-          },
-        );
-
-        if (updatedSection) {
-          await this.EsServices.updateDocument(
-            this.index || 'shop',
-            id.toString(),
-            convertTime([updatedSection])[0],
-            'section',
-          );
-        } else {
-          throw new NotFoundException('Section not found');
-        }
+        // const result = await this.sectionsRepo.update(
+        //   { id: id },
+        //   prepareData(data, ['getSection']),
+        // );
+        //
+        // if (!result) {
+        //   throw new BadRequestException(
+        //     'An error occurred while saving the partition.',
+        //   );
+        // }
+        //
+        // const updatedSection: Sections | null = await this.sectionsRepo.findOne(
+        //   {
+        //     where: { id: id },
+        //   },
+        // );
+        //
+        // if (updatedSection) {
+        //   await this.EsServices.updateDocument(
+        //     this.index || 'shop',
+        //     id.toString(),
+        //     convertTime([updatedSection])[0],
+        //     'section',
+        //   );
+        // } else {
+        //   throw new NotFoundException('Section not found');
+        // }
 
         // if (data.getSection) {
         //   return await this.getList();
         // }
-        return updatedSection;
+        // return updatedSection;
       }
     } catch (err) {
       logger.error('Error from sections.update : ', err);

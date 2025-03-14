@@ -21,7 +21,7 @@ import {
   ApiProperty,
 } from '@nestjs/swagger';
 import { SectionsService } from './sections.service';
-import { SectionDto, TestSectionDto } from './dto/section.dto';
+import { SectionDto } from './dto/section.dto';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
@@ -101,7 +101,6 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
-    console.log(data);
     try {
       const result: Sections | resultItems[] = await this.services.create(
         data,
@@ -117,6 +116,12 @@ export class SectionsController {
   }
 
   @Put(':id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [{ name: 'files', maxCount: 10 }],
+      getMulterOptions('section'),
+    ),
+  )
   @ApiOperation({ summary: 'Изменение данных раздела' })
   @ApiBody({
     description: 'Данные для изменения данных раздела',
@@ -132,15 +137,16 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  // : Promise<response>
   async updateById(
     @Param('id') id: number,
     @Body() data: SectionDto,
-  ): Promise<response> {
-    const result: Sections | Sections[] = await this.services.updateById(
-      id,
-      data,
-    );
-    return ResponseHelper.createResponse(HttpStatus.OK, result);
+    @UploadedFiles() files: { files: Express.Multer.File[] },
+  ) {
+    // : Sections | Sections[]
+    console.log(files);
+    const result = await this.services.updateById(id, data, files);
+    // return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
   @Delete(':id')

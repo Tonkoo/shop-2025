@@ -2,6 +2,8 @@ import { QueryRunner } from 'typeorm';
 import { Images } from '../entities/images.entity';
 import { logger } from './logger/logger';
 import { BadRequestException } from '@nestjs/common';
+import { renameSync } from 'fs';
+import { join, dirname } from 'path';
 
 interface ImageData {
   fileName: string;
@@ -28,6 +30,16 @@ export async function createImages(
           type: image.mimeType,
         });
         await queryRunner.manager.save(newImage);
+
+        const imageId = newImage.id;
+        const newFileName = `${imageId}-${image.fileName}`;
+        const originalDir = dirname(image.path);
+        const newPath = join(originalDir, newFileName);
+        renameSync(image.path, newPath);
+        newImage.name = newFileName;
+        newImage.path = newPath;
+        await queryRunner.manager.save(newImage);
+
         return newImage.id;
       }),
     );

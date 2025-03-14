@@ -53,7 +53,3 @@ export class SectionDto {
     this.idParent = ent.id_parent;
   }
 }
-
-export class TestSectionDto {
-  section: SectionDto;
-}
