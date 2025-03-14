@@ -17,6 +17,7 @@ type AdminState = {
   typeSearch: TypeSearch;
   allName: Search[];
   searchName: string;
+  searchParentName: string;
   selectedId: number;
   selectedSection: Section | null;
   section: Section;

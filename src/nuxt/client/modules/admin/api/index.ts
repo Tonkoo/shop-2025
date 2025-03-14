@@ -36,7 +36,9 @@ export async function getAllNameColumn() {
   try {
     const params = {
       type: adminStore.typeSearch.value,
-      searchName: adminStore.searchName,
+      searchName: adminStore.searchName
+        ? adminStore.searchName
+        : adminStore.searchParentName,
       size: adminStore.countColumn,
     };
     const response = await api.get('/elastic/admin/name', {
@@ -102,49 +104,49 @@ export async function editSection() {
       adminStore.sectionBackend
     );
 
-    if (hasChanges) {
-      Object.keys(adminStore.section).forEach((key) => {
-        const value = adminStore.section[key as keyof Section];
-        const backendValue =
-          adminStore.sectionBackend[key as keyof SectionBack];
-
-        if (value !== backendValue) {
-          if (key === 'images' && Array.isArray(value)) {
-            value.forEach((file, index) => {
-              formData.append(`images[${index}]`, file);
-            });
-          } else if (value !== undefined && value !== null) {
-            // Для остальных данных преобразуем их в строку
-            formData.append(key, String(value));
-          }
-        }
-      });
-
-      const param = {
-        type: adminStore.typeItem,
-        from: (
-          (adminStore.currentPage - 1) *
-          adminStore.countColumn
-        ).toString(),
-        size: adminStore.countColumn.toString(),
-        searchName: adminStore.searchName,
-        getSection: true,
-      };
-
-      const response = await api.put<{ data: resultItems[] }>(
-        '/section',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      adminStore.setDataItems(response.data.data[0]);
-    } else {
-      console.log('Нет изменений для отправки на сервер.');
-    }
+    // if (hasChanges) {
+    //   Object.keys(adminStore.section).forEach((key) => {
+    //     const value = adminStore.section[key as keyof Section];
+    //     const backendValue =
+    //       adminStore.sectionBackend[key as keyof SectionBack];
+    //
+    //     if (value !== backendValue) {
+    //       if (key === 'images' && Array.isArray(value)) {
+    //         value.forEach((file, index) => {
+    //           formData.append(`images[${index}]`, file);
+    //         });
+    //       } else if (value !== undefined && value !== null) {
+    //         // Для остальных данных преобразуем их в строку
+    //         formData.append(key, String(value));
+    //       }
+    //     }
+    //   });
+    //
+    //   const param = {
+    //     type: adminStore.typeItem,
+    //     from: (
+    //       (adminStore.currentPage - 1) *
+    //       adminStore.countColumn
+    //     ).toString(),
+    //     size: adminStore.countColumn.toString(),
+    //     searchName: adminStore.searchName,
+    //     getSection: true,
+    //   };
+    //
+    //   const response = await api.put<{ data: resultItems[] }>(
+    //     '/section',
+    //     formData,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //     }
+    //   );
+    //
+    //   adminStore.setDataItems(response.data.data[0]);
+    // } else {
+    //   console.log('Нет изменений для отправки на сервер.');
+    // }
   } catch (err) {
     console.error(err);
     throw err;

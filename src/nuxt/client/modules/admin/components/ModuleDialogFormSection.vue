@@ -12,7 +12,7 @@
     />
     <areal-select-search
       v-model="adminStore.section.parent"
-      :value="adminStore.searchName"
+      :value="adminStore.searchParentName"
       :option="autocompleteOptions"
       option-value="id"
       option-label="name"
@@ -36,9 +36,9 @@ const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = async (value: any) => {
   if (value && typeof value === 'object') {
-    adminStore.setSearchName(value.name);
+    adminStore.setSearchParentName(value.name);
   } else {
-    adminStore.setSearchName(value);
+    adminStore.setSearchParentName(value);
   }
   adminStore.setSectionIdParent(value);
   await adminModule.getAllNameColumn();

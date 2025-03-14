@@ -26,6 +26,7 @@ export const useAdminStore = defineStore('admin-store', {
     typeSearch: { label: 'Разделы', value: 'section' },
     allName: [],
     searchName: '',
+    searchParentName: '',
     selectedId: 0,
     selectedSection: null,
     section: {
@@ -74,6 +75,9 @@ export const useAdminStore = defineStore('admin-store', {
     setSearchName(value: string) {
       this.searchName = value;
     },
+    setSearchParentName(value: string) {
+      this.searchParentName = value;
+    },
     setDataItems(data: resultItems) {
       this.items = data.items;
       this.allCount = data.total;
@@ -94,6 +98,11 @@ export const useAdminStore = defineStore('admin-store', {
       this.setIsEdit(false);
       this.setSectionName('');
       this.setSectionImages([]);
+      this.setSectionParent({
+        id: 0,
+        name: '',
+      });
+      this.setSearchParentName('');
       this.setSectionIdParent({ id: 0, name: '' });
     },
     setSectionName(value: string) {
@@ -116,7 +125,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setSectionBack(value: SectionBack) {
       this.sectionBackend = value;
-      console.log(this.sectionBackend);
     },
   },
 });
