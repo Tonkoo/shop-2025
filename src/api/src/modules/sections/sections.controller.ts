@@ -72,6 +72,7 @@ export class SectionsController {
   async getSection(@Query('id') id: number): Promise<response> {
     const result: SectionEntities | SectionEntities[] =
       await this.services.getSectionById(id);
+    console.log(result);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Post()

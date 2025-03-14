@@ -1,10 +1,4 @@
-import type {
-  Search,
-  Product,
-  Section,
-  TypeSearch,
-  SectionBack,
-} from '~/interfaces/global';
+import type { Search, Product, Section, TypeSearch } from '~/interfaces/global';
 
 type AdminState = {
   isEdit: boolean;
@@ -21,7 +15,6 @@ type AdminState = {
   selectedId: number;
   selectedSection: Section | null;
   section: Section;
-  sectionBackend: SectionBack;
 };
 
 export type { AdminState };

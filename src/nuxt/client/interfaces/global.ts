@@ -10,7 +10,6 @@ type Section = {
   imageObject?: imageObject[];
 };
 
-type SectionBack = Section;
 type Product = {
   id: number;
   code: string;
@@ -72,5 +71,4 @@ export type {
   resultItems,
   imageObject,
   typeFile,
-  SectionBack,
 };

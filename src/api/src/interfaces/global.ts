@@ -25,7 +25,7 @@ type SectionEntities = {
   update_at: Date;
   create_at: Date;
   id_parent: number | null;
-  parent?: Sections;
+  parent?: parentSection;
   imageObject?: Images[];
 };
 
@@ -100,6 +100,11 @@ type payLoadTest = {
   };
 };
 
+type parentSection = {
+  id: number;
+  name: string;
+};
+
 export {
   response,
   elasticsearchResponse,
@@ -111,4 +116,5 @@ export {
   elasticBody,
   resultItems,
   payLoadTest,
+  parentSection,
 };

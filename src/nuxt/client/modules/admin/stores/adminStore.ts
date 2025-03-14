@@ -6,8 +6,6 @@ import type {
   resultItems,
   Search,
   Section,
-  SectionBack,
-  typeFile,
   TypeSearch,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
@@ -30,13 +28,6 @@ export const useAdminStore = defineStore('admin-store', {
     selectedId: 0,
     selectedSection: null,
     section: {
-      id: 0,
-      code: '',
-      name: '',
-      images: [],
-      id_parent: null,
-    },
-    sectionBackend: {
       id: 0,
       code: '',
       name: '',
@@ -84,15 +75,18 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setSelectedId(value: number) {
       this.selectedId = value;
+      this.section.id = value;
       await adminModule.getSection();
     },
     setNameItems(value: Search[]) {
       this.allName = value;
     },
     async setSelectedSection(value: Section) {
+      this.selectedSection = value;
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
+      console.log(this.selectedSection);
     },
     clearForms() {
       this.setIsEdit(false);
@@ -110,21 +104,17 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setSectionImages(value: File[]) {
       this.section.images = value;
-      console.log(this.section.images);
     },
     setSectionIdParent(value: ParentSection) {
       this.section.id_parent = value.id;
     },
     setSectionParent(value: ParentSection) {
-      if (this.section.parent) {
-        this.section.parent.id = value.id;
-        this.section.parent.name = value.name;
-      } else {
-        this.section.parent = { id: value.id, name: value.name };
-      }
+      this.section.parent = { id: value.id, name: value.name };
     },
-    setSectionBack(value: SectionBack) {
-      this.sectionBackend = value;
+    setConvertSelectedSectionImages(value: File[]) {
+      if (this.selectedSection) {
+        this.selectedSection.images = value;
+      }
     },
   },
 });

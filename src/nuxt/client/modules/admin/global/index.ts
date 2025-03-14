@@ -1,4 +1,10 @@
-import { getItems, getAllNameColumn, addSection, getSection } from '../api';
+import {
+  getItems,
+  getAllNameColumn,
+  addSection,
+  getSection,
+  editSection,
+} from '../api';
 export function useAdminModule() {
-  return { getItems, getAllNameColumn, addSection, getSection };
+  return { getItems, getAllNameColumn, addSection, getSection, editSection };
 }

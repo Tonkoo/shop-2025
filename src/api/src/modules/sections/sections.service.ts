@@ -95,7 +95,6 @@ export class SectionsService {
       if (!sections) {
         throw new NotFoundException('Section not found');
       }
-      console.log(sections);
       if (sections.images) {
         const imageIds: number[] = sections.images;
         sections.imageObject = await this.imagesRepository.findBy({
@@ -109,7 +108,15 @@ export class SectionsService {
             id: sections.id_parent,
           });
         if (parentSection) {
-          sections.parent = parentSection;
+          if (sections.parent) {
+            sections.parent.id = parentSection.id;
+            sections.parent.name = parentSection.name;
+          } else {
+            sections.parent = {
+              id: parentSection.id,
+              name: parentSection.name,
+            };
+          }
         }
       }
 

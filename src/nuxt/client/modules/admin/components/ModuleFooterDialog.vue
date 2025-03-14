@@ -51,16 +51,16 @@ async function AddItem() {
 async function editItem() {
   if (adminStore.typeItem == 'section') {
     await adminModule
-      .addSection()
+      .editSection()
       .then(() => {
-        adminStore.clearForms();
-        adminStore.setViewModal(false);
-        quasar.notify({
-          type: 'positive',
-          message: 'Элемент успешно добавлен',
-          position: 'top-right',
-          timeout: 2500,
-        });
+        // adminStore.clearForms();
+        // adminStore.setViewModal(false);
+        // quasar.notify({
+        //   type: 'positive',
+        //   message: 'Элемент успешно добавлен',
+        //   position: 'top-right',
+        //   timeout: 2500,
+        // });
       })
       .catch((err) => {
         quasar.notify({

@@ -27,7 +27,7 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
-import type { ParentSection, Search } from '~/interfaces/global';
+import type { Search } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();

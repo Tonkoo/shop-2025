@@ -16,4 +16,5 @@ export async function convertFile(imageObject: imageObject[] | undefined) {
     })
   );
   adminStore.setSectionImages(filesWithId);
+  adminStore.setConvertSelectedSectionImages(filesWithId);
 }

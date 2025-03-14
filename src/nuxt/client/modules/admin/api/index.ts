@@ -1,17 +1,22 @@
 import { api } from '#shared/api/axios.js';
-import type { resultItems, Section, SectionBack } from '~/interfaces/global';
+import type { resultItems, Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
+import { isEqual } from 'lodash';
 
-function compareObjects(frontData: Section, backData: SectionBack): boolean {
-  // Сравниваем только те поля, которые могут быть изменены
-  return (
-    frontData.code === backData.code &&
-    frontData.name === backData.name &&
-    frontData.images === backData.images &&
-    frontData.id_parent === backData.id_parent
-  );
+function ComparisonValues(section: Section, oldSection: Section | null) {
+  const resultSection: Record<string, any> = {};
+  if (!isEqual(section.name, oldSection?.name)) {
+    resultSection.name = section.name;
+  }
+  if (!isEqual(section.images, oldSection?.images)) {
+    resultSection.images = section.images;
+  }
+  if (!isEqual(section.parent, oldSection?.parent)) {
+    resultSection.id_parent = section.parent?.id;
+  }
+  return resultSection;
 }
-// Promise<Section[] | Product[]>
+
 export async function getItems() {
   const adminStore = useAdminStore();
   try {
@@ -96,57 +101,46 @@ export async function addSection() {
 export async function editSection() {
   const adminStore = useAdminStore();
   try {
-    adminStore.setSearchName('');
-    const formData = new FormData();
-
-    const hasChanges = !compareObjects(
+    const editSection = ComparisonValues(
       adminStore.section,
-      adminStore.sectionBackend
+      adminStore.selectedSection
     );
+    const formData = new FormData();
+    const param = {
+      type: adminStore.typeItem,
+      from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
+      size: adminStore.countColumn.toString(),
+      searchName: adminStore.searchName,
+      getSection: true,
+    };
+    console.log(editSection);
+    Object.entries(editSection).forEach(([key, value]) => {
+      if (key === 'images' && Array.isArray(value)) {
+        (value as File[]).forEach((file) => {
+          formData.append('files', file);
+        });
+      } else {
+        formData.append(key, String(value));
+      }
+    });
 
-    // if (hasChanges) {
-    //   Object.keys(adminStore.section).forEach((key) => {
-    //     const value = adminStore.section[key as keyof Section];
-    //     const backendValue =
-    //       adminStore.sectionBackend[key as keyof SectionBack];
-    //
-    //     if (value !== backendValue) {
-    //       if (key === 'images' && Array.isArray(value)) {
-    //         value.forEach((file, index) => {
-    //           formData.append(`images[${index}]`, file);
-    //         });
-    //       } else if (value !== undefined && value !== null) {
-    //         // Для остальных данных преобразуем их в строку
-    //         formData.append(key, String(value));
-    //       }
-    //     }
-    //   });
-    //
-    //   const param = {
-    //     type: adminStore.typeItem,
-    //     from: (
-    //       (adminStore.currentPage - 1) *
-    //       adminStore.countColumn
-    //     ).toString(),
-    //     size: adminStore.countColumn.toString(),
-    //     searchName: adminStore.searchName,
-    //     getSection: true,
-    //   };
-    //
-    //   const response = await api.put<{ data: resultItems[] }>(
-    //     '/section',
-    //     formData,
-    //     {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //     }
-    //   );
-    //
-    //   adminStore.setDataItems(response.data.data[0]);
-    // } else {
-    //   console.log('Нет изменений для отправки на сервер.');
-    // }
+    Object.entries(param).forEach(([key, value]) => {
+      formData.append(key, String(value));
+    });
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    adminStore.setSearchName('');
+
+    const response = await api.put<{ data: resultItems[] }>(
+      '/section',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
   } catch (err) {
     console.error(err);
     throw err;
@@ -160,9 +154,7 @@ export async function getSection() {
   };
   try {
     const response = await api.get('/section', { params: params });
-
     await adminStore.setSelectedSection(response.data.data);
-    adminStore.setSectionBack(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;
