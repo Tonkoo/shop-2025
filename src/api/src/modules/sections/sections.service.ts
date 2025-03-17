@@ -48,7 +48,6 @@ export class SectionsService {
       const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
       );
-      console.log(prepareData(data, ['getSection']));
       if (!newSection) {
         throw new BadRequestException(
           'An error occurred while create the partition.',
@@ -60,8 +59,9 @@ export class SectionsService {
           { id: newSection.id },
           { images: data.images },
         );
+        newSection.images = data.images;
       }
-
+      await queryRunner.commitTransaction();
       await this.EsServices.addDocument(
         this.index || 'shop',
         newSection.id.toString(),
@@ -72,7 +72,6 @@ export class SectionsService {
       const result: Sections | resultItems[] = data.getSection
         ? await this.EsServices.getItemsFilter(searchParams)
         : newSection;
-      await queryRunner.commitTransaction();
       return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -146,7 +145,9 @@ export class SectionsService {
           size: Number(data.size),
           searchName: data.searchName,
         };
-        data.code = tr(data.name, { replace: { ' ': '-' } });
+        if (data.name) {
+          data.code = tr(data.name, { replace: { ' ': '-' } });
+        }
         if (files.files) {
           data.images = await createImages(queryRunner, files);
         }
@@ -172,7 +173,7 @@ export class SectionsService {
             where: { id: id },
           },
         );
-
+        await queryRunner.commitTransaction();
         if (updatedSection) {
           await this.EsServices.updateDocument(
             this.index || 'shop',
@@ -187,7 +188,7 @@ export class SectionsService {
         const result: resultItems[] | UpdateResult = data.getSection
           ? await this.EsServices.getItemsFilter(searchParams)
           : newSection;
-        await queryRunner.commitTransaction();
+
         return result;
       }
     } catch (err) {

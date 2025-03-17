@@ -144,6 +144,7 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
     // : Sections | Sections[]
+    console.log(data);
     const result = await this.services.updateById(id, data, files);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
