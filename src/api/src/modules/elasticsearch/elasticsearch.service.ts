@@ -151,12 +151,9 @@ export class ElasticsearchService {
       if (document.images == undefined) {
         document.images = [];
       }
-      // const imageIds: number[] = document.images;
-      // console.log(imageIds);
       const images: Images[] = await this.imagesRepository.findBy({
         id: In(document.images),
       });
-      console.log(images);
       const imageData: imageData[] = images.map(
         (image: Images): imageData => ({
           alt: image.name,

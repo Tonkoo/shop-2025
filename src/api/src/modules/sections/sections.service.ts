@@ -69,10 +69,9 @@ export class SectionsService {
         'section',
       );
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const result: Sections | resultItems[] = data.getSection
+      return data.getSection
         ? await this.EsServices.getItemsFilter(searchParams)
         : newSection;
-      return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.create: ', err);
@@ -145,12 +144,39 @@ export class SectionsService {
           size: Number(data.size),
           searchName: data.searchName,
         };
+
+        const currentSection = await this.sectionsRepo.findOne({
+          where: { id: id },
+        });
+
+        if (!currentSection) {
+          throw new NotFoundException('Section not found');
+        }
+
         if (data.name) {
           data.code = tr(data.name, { replace: { ' ': '-' } });
         }
+
         if (files.files) {
           data.images = await createImages(queryRunner, files);
         }
+
+        if (!Array.isArray(data.images)) {
+          data.images = [];
+        }
+
+        const currentImageIds = currentSection.images;
+
+        const newImageIds = data.images;
+
+        const imagesToDelete = currentImageIds.filter(
+          (id) => !newImageIds.includes(id),
+        );
+
+        if (imagesToDelete.length > 0) {
+          await this.imagesRepository.delete(imagesToDelete);
+        }
+
         const newSection = await this.sectionsRepo.update(
           { id: id },
           prepareData(data, [

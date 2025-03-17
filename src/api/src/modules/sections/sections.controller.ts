@@ -72,7 +72,7 @@ export class SectionsController {
   async getSection(@Query('id') id: number): Promise<response> {
     const result: SectionEntities | SectionEntities[] =
       await this.services.getSectionById(id);
-    console.log(result);
+    // console.log(result);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Post()
@@ -144,7 +144,7 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
     // : Sections | Sections[]
-    console.log(data);
+    // console.log(data);
     const result = await this.services.updateById(id, data, files);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }

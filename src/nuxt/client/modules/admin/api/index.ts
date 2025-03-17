@@ -105,7 +105,6 @@ export async function editSection() {
       adminStore.section,
       adminStore.selectedSection
     );
-    console.log(editSection);
     const formData = new FormData();
     const param = {
       type: adminStore.typeItem,
@@ -116,9 +115,13 @@ export async function editSection() {
     };
     Object.entries(editSection).forEach(([key, value]) => {
       if (key === 'images' && Array.isArray(value)) {
-        (value as File[]).forEach((file) => {
-          formData.append('files', file);
-        });
+        if (value.length === 0) {
+          formData.append(key, '');
+        } else {
+          (value as File[]).forEach((file) => {
+            formData.append('files', file);
+          });
+        }
       } else {
         formData.append(key, String(value));
       }
@@ -127,7 +130,9 @@ export async function editSection() {
     Object.entries(param).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
-
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
     adminStore.setSearchName('');
     const response = await api.put<{ data: resultItems[] }>(
       `/section/${adminStore.selectedSection?.id}`,
@@ -138,7 +143,6 @@ export async function editSection() {
         },
       }
     );
-    console.log(response.data.data);
     adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
     console.error(err);

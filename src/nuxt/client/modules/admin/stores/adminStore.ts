@@ -86,7 +86,6 @@ export const useAdminStore = defineStore('admin-store', {
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
-      console.log(this.selectedSection);
     },
     clearForms() {
       this.setIsEdit(false);

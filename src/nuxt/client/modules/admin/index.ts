@@ -17,7 +17,7 @@ export default defineNuxtModule({
     const widgetsPath = resolve('./widgets');
     const globalPath = resolve('./global');
     addImportsDir(globalPath);
-    await addComponentsDir({
+    addComponentsDir({
       path: widgetsPath,
       global: true,
       pathPrefix: false,
