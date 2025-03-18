@@ -3,7 +3,7 @@ import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
 import type {
   ParentSection,
-  resultItems,
+  ResultItems,
   Search,
   Section,
   TypeSearch,
@@ -34,6 +34,7 @@ export const useAdminStore = defineStore('admin-store', {
       images: [],
       id_parent: null,
     },
+    errors: { name: false },
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -69,7 +70,7 @@ export const useAdminStore = defineStore('admin-store', {
     setSearchParentName(value: string) {
       this.searchParentName = value;
     },
-    setDataItems(data: resultItems) {
+    setDataItems(data: ResultItems) {
       this.items = data.items;
       this.allCount = data.total;
     },
@@ -114,6 +115,9 @@ export const useAdminStore = defineStore('admin-store', {
       if (this.backSection) {
         this.backSection.images = value;
       }
+    },
+    setErrorName(value: boolean) {
+      this.errors.name = value;
     },
   },
 });

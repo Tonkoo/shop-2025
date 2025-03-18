@@ -1,5 +1,5 @@
 import { api } from '~~/shared/api/axios';
-import type { resultItems, param } from '~/interfaces/global';
+import type { ResultItems, Param } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
 import { headers } from '~/composables/customFetch';
@@ -14,7 +14,7 @@ export async function getItems() {
       size: adminStore.countColumn,
       searchName: adminStore.searchName,
     };
-    const response = await api.get<{ data: resultItems[] }>('/elastic/admin', {
+    const response = await api.get<{ data: ResultItems[] }>('/elastic/admin', {
       params,
     });
     adminStore.setDataItems(response.data.data[0]);
@@ -48,22 +48,28 @@ export async function addSection() {
   try {
     adminStore.setSearchName('');
     const formData = new FormData();
-    const param: param = {
+    const param: Param = {
       type: adminStore.typeItem,
       from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       size: adminStore.countColumn.toString(),
       searchName: adminStore.searchName,
       getSection: true,
     };
-
+    if (adminStore.frontSection.name == '') {
+      adminStore.setErrorName(true);
+      throw new Error('The form is filled in incorrectly');
+    }
+    adminStore.setErrorName(false);
     generateFormData(formData, adminStore.frontSection, param);
 
-    const response = await api.post<{ data: resultItems[] }>(
+    const response = await api.post<{ data: ResultItems[] }>(
       '/section',
       formData,
       headers
     );
-    //TODO: Сделать проверки на пустой responses и валидация
+    // if(!response){
+    //   throw new
+    // }
     adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
     console.error(err);
@@ -90,7 +96,7 @@ export async function editSection() {
     generateFormData(formData, editSection, param);
 
     adminStore.setSearchName('');
-    const response = await api.put<{ data: resultItems[] }>(
+    const response = await api.put<{ data: ResultItems[] }>(
       `/section/${adminStore.backSection?.id}`,
       formData,
       headers

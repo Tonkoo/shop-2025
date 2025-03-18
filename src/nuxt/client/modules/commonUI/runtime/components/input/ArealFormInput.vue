@@ -4,6 +4,8 @@
     :model-value="modelValue"
     :label="label"
     class="custom-input q-mb-md"
+    error-message="Поле обязательно для заполнения"
+    :error="errors"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
@@ -17,6 +19,10 @@ defineProps({
   label: {
     type: String,
     default: 'Название',
+  },
+  errors: {
+    type: Boolean,
+    default: false,
   },
 });
 

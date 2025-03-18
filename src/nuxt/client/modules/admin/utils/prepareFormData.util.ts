@@ -1,9 +1,9 @@
-import type { param, Section } from '~/interfaces/global';
+import type { Param, Section } from '~/interfaces/global';
 
 export function generateFormData(
   formData: FormData,
   data: Section | Record<string, any>,
-  param: param
+  param: Param
 ) {
   Object.entries(data).forEach(([key, value]) => {
     if (key === 'images' && Array.isArray(value)) {

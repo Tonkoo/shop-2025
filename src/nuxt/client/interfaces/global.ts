@@ -7,7 +7,7 @@ type Section = {
   update_at?: string;
   id_parent: number | null;
   parent?: ParentSection;
-  imageObject?: imageObject[];
+  imageObject?: ImageObject[];
 };
 
 type Product = {
@@ -45,29 +45,32 @@ type ParentSection = {
   name: string;
 };
 
-type resultItems = {
+type ResultItems = {
   items: Section[] | Product[];
   total: number;
 };
-type imageObject = {
+type ImageObject = {
   id: number;
   name: string;
   path: string;
   type: string;
 };
 
-type typeFile = {
+type TypeFile = {
   id?: number;
   file: File;
   del: boolean;
 };
 
-type param = {
+type Param = {
   type: string;
   from: string;
   size: string;
   searchName: string;
   getSection?: boolean;
+};
+type Err = {
+  name: boolean;
 };
 
 export type {
@@ -76,8 +79,9 @@ export type {
   Product,
   Search,
   ParentSection,
-  resultItems,
-  imageObject,
-  typeFile,
-  param,
+  ResultItems,
+  ImageObject,
+  TypeFile,
+  Param,
+  Err,
 };

@@ -1,7 +1,7 @@
-import type { imageObject, typeFile } from '~/interfaces/global';
+import type { ImageObject } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
-export async function convertFile(imageObject: imageObject[] | undefined) {
+export async function convertFile(imageObject: ImageObject[] | undefined) {
   const adminStore = useAdminStore();
   if (!imageObject) {
     return [];
