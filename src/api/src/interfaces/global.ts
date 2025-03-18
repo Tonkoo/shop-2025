@@ -2,32 +2,67 @@ import { Sections } from '../entities/sections.entity';
 import { Products } from '../entities/products.entity';
 import { Images } from '../entities/images.entity';
 
-type ProductEntities = {
+type Product = {
   id: number;
   code: string;
   name: string;
-  images: number[];
   price: number;
   color: string;
   description: string;
   id_section: number;
   show_on_main: boolean;
   main_slider: boolean;
+};
+
+type DateBase = {
   update_at: Date;
   create_at: Date;
 };
 
-type SectionEntities = {
+type DateClient = {
+  update_at: string;
+  create_at: string;
+};
+
+type ProductEntities = Product &
+  DateBase & {
+    images: number[];
+  };
+
+type DocumentProduct = Product &
+  DateBase & {
+    images: imageData[];
+    type: string;
+  };
+
+type ProductClient = Product &
+  DateClient & {
+    images: number[];
+  };
+
+type Section = {
   id: number;
   code: string;
   name: string;
-  images: number[];
-  update_at: Date;
-  create_at: Date;
   id_parent: number | null;
-  parent?: parentSection;
-  imageObject?: Images[];
 };
+
+type SectionEntities = Section &
+  DateBase & {
+    images: number[];
+    parent?: parentSection;
+    imageObject?: Images[];
+  };
+
+type DocumentSection = Sections &
+  DateBase & {
+    images: imageData[];
+    type: string;
+  };
+type SectionClient = Section &
+  DateClient & {
+    images: number[];
+  };
 
 type response = {
   statusCode: number;
@@ -53,38 +88,12 @@ type imageData = {
   src: string;
 };
 
-type documentProduct = {
-  id: number;
-  code: string;
-  name: string;
-  images: imageData[];
-  price: number;
-  color: string;
-  description: string;
-  show_on_main: boolean;
-  main_slider: boolean;
-  update_at: Date;
-  create_at: Date;
-  type: string;
-};
-
-type documentSection = {
-  id: number;
-  code: string;
-  name: string;
-  images: imageData[];
-  update_at: Date;
-  create_at: Date;
-  id_parent: number | null;
-  type: string;
-};
-
 type elasticBody = {
   index: {
     _index: string;
     _id: number;
   };
-  data: documentProduct | documentSection;
+  data: DocumentProduct | DocumentSection;
 };
 type resultItems = {
   items: Sections | Products | (Sections | Products)[];
@@ -109,12 +118,14 @@ export {
   response,
   elasticsearchResponse,
   imageData,
-  documentProduct,
-  documentSection,
+  DocumentProduct,
+  DocumentSection,
   ProductEntities,
   SectionEntities,
   elasticBody,
   resultItems,
   payLoadTest,
   parentSection,
+  ProductClient,
+  SectionClient,
 };

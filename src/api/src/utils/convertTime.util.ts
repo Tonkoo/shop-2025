@@ -1,8 +1,13 @@
 import { format } from 'date-fns';
+import { Products } from '../entities/products.entity';
+import { Sections } from '../entities/sections.entity';
+import { ProductClient, SectionClient } from '../interfaces/global';
 
 //TODO: Сделать интерфейс
 
-export function convertTimeObject(data: any): any {
+export function convertTimeObject(
+  data: Products | Sections,
+): ProductClient | SectionClient {
   console.log(data);
   return {
     ...data,
@@ -11,6 +16,10 @@ export function convertTimeObject(data: any): any {
   };
 }
 
-export function convertTimeArray(data: any[]): any[] {
-  return data.map((item): any => convertTimeObject(item));
+export function convertTimeArray(
+  data: (Products | Sections)[],
+): (SectionClient | ProductClient)[] {
+  return data.map((item): ProductClient | SectionClient =>
+    convertTimeObject(item),
+  );
 }

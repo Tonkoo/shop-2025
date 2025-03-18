@@ -2,7 +2,9 @@
   <q-card-section class="row items-center no-wrap">
     <q-toolbar>
       <q-toolbar-title>{{
-        adminStore.isEdit ? 'Редактирование' : 'Новая запись'
+        adminStore.isEdit
+          ? $t('admin.title.formEdit')
+          : $t('admin.title.formAdd')
       }}</q-toolbar-title>
       <q-space />
       <q-btn flat round icon="close" @click="adminStore.setViewModal(false)" />

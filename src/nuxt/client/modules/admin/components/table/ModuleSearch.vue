@@ -5,7 +5,7 @@
         <div class="col-5">
           <areal-select-type-search
             v-model="typeSearch"
-            label="Тип"
+            :label="$t('admin.label.type')"
             :options="optionsTip"
             option-value="value"
             option-label="label"
@@ -18,14 +18,14 @@
             :option="autocompleteOptions"
             option-value="name"
             option-label="name"
-            label="Поиск"
+            :label="$t('admin.label.search')"
             @input-value="onSearchInput"
             @update:model-value="onSearchInput"
           />
         </div>
         <div class="col-1">
           <areal-button
-            label="Поиск"
+            :label="$t('admin.label.search')"
             icon="search"
             class="full-height full-width"
             @click="adminModule.getItems()"
@@ -33,7 +33,7 @@
         </div>
         <div class="col-1">
           <areal-button
-            label="Очистить"
+            :label="$t('admin.label.clear')"
             icon="close"
             class="full-height full-width"
             @click="clearSearch"

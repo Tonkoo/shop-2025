@@ -1,48 +1,35 @@
 <template>
   <areal-form>
-    <areal-form-input
-      v-model="name"
-      label="Название"
-    />
-    <areal-file
-      v-model="FilesImages"
-      label="Изображение"
-    />
+    <areal-form-input v-model="name" :label="$t('admin.label.name')" />
+    <areal-file v-model="FilesImages" :label="$t('admin.label.image')" />
     <areal-form-input
       v-model="price"
-      label="Цена"
+      :label="$t('admin.label.price')"
       mask="#.##"
       fill-mask="0"
       reverse-fill-mask
-      hint="Пример: 1.23"
+      :hint="$t('admin.hint.price')"
     />
-    <areal-form-input
-      v-model="color"
-      label="Цвет"
-    />
+    <areal-form-input v-model="color" :label="$t('admin.label.color')" />
     <areal-form-input
       v-model="description"
-      label="Описание"
+      :label="$t('admin.label.description')"
       type="textarea"
     />
-    <areal-select
-      v-model="section"
-      label="Раздел"
-    />
+    <areal-select v-model="section" :label="$t('admin.label.section')" />
     <areal-checkbox
       v-model="showOnMain"
-      label="Выводить на главную страницу"
+      :label="$t('admin.label.showOnMain')"
     />
-    <br>
+    <br />
     <areal-checkbox
       v-model="mainSlider"
-      label="Выводить в слайдер"
+      :label="$t('admin.label.mainSlider')"
     />
   </areal-form>
 </template>
 
 <script setup lang="ts">
-
 const FilesImages = ref();
 const price = ref('');
 const name = ref('');

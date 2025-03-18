@@ -1,4 +1,5 @@
 <template>
+  <!--  TODO-->
   <p>Результатов: {{ rows.length }} из {{ adminStore.countColumn }}</p>
   <areal-table :rows="rows" :columns="columns" />
 </template>

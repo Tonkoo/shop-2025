@@ -1,14 +1,14 @@
 <template>
   <q-card-actions align="left" class="dialog__card__footer">
     <areal-button
-      label="Сохранить"
+      :label="$t('admin.label.save')"
       color="black"
       icon="save"
       @click="adminStore.isEdit ? editItem() : addItem()"
     />
     <areal-button
       outline
-      label="Отмена"
+      :label="$t('admin.label.cancel')"
       @click="adminStore.setViewModal(false)"
     />
   </q-card-actions>
@@ -36,7 +36,7 @@ async function addItem() {
       .catch((err) => {
         quasar.notify({
           ...notifyNegative,
-          message: 'Ошибка при добавлении элемента: ' + err,
+          message: 'Ошибка при сохранении данных: ' + err,
         });
       });
   }
@@ -54,7 +54,7 @@ async function editItem() {
       .catch((err) => {
         quasar.notify({
           ...notifyNegative,
-          message: 'Ошибка при сохранении элемента: ' + err,
+          message: 'Ошибка при сохранении данных: ' + err,
         });
       });
   }

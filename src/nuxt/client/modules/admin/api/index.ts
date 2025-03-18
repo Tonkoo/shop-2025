@@ -1,4 +1,4 @@
-import { api } from '#shared/api/axios.js';
+import { api } from '~~/shared/api/axios';
 import type { resultItems, param } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';

@@ -9,7 +9,7 @@
     v-model="countColumn"
     :option="options"
     class="pagination__select"
-    label="На странице"
+    :label="$t('admin.label.countColumn')"
     @update:model-value="adminStore.setCountColumn"
   />
 </template>

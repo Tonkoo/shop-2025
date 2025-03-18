@@ -13,13 +13,15 @@ import { Images } from '../../entities/images.entity';
 import { convertTimeArray } from '../../utils/convertTime.util';
 import {
   imageData,
-  documentProduct,
-  documentSection,
+  DocumentProduct,
+  DocumentSection,
   ProductEntities,
   SectionEntities,
   elasticBody,
   resultItems,
   payLoadTest,
+  ProductClient,
+  SectionClient,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 import { formatResults } from '../../utils/formatResults.util';
@@ -37,15 +39,17 @@ export class ElasticsearchService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
+  //TODO: доработать типы
+
   async generateBlockImages(
-    data: (SectionEntities | ProductEntities)[],
+    data: (SectionClient | ProductClient)[],
     type: string,
-  ): Promise<(documentSection | documentProduct)[]> {
+  ): Promise<(SectionClient | ProductClient)[]> {
     return await Promise.all(
       data.map(
         async (
-          item: SectionEntities | ProductEntities,
-        ): Promise<documentSection | documentProduct> => {
+          item: SectionClient | ProductClient,
+        ): Promise<SectionClient | ProductClient> => {
           if (!item.images) {
             item.images = [];
           }
@@ -108,20 +112,22 @@ export class ElasticsearchService {
         throw new NotFoundException('Products not found');
       }
 
-      const products: any[] = convertTimeArray(dbProduct);
+      const products: (ProductClient | SectionClient)[] =
+        convertTimeArray(dbProduct);
       const dbSection: Sections[] = await this.sectionsRepository.find();
       if (!dbSection) {
         throw new NotFoundException('Section not found');
       }
-      const sections: any[] = convertTimeArray(dbSection);
+      const sections: (ProductClient | SectionClient)[] =
+        convertTimeArray(dbSection);
 
-      const documentsProduct: (documentProduct | documentSection)[] =
+      const documentsProduct: (DocumentProduct | DocumentSection)[] =
         await this.generateBlockImages(products, 'product');
 
-      const documentsSection: (documentProduct | documentSection)[] =
+      const documentsSection: (DocumentProduct | DocumentSection)[] =
         await this.generateBlockImages(sections, 'section');
 
-      const document: (documentSection | documentProduct)[] = [
+      const document: (DocumentSection | DocumentProduct)[] = [
         ...documentsProduct,
         ...documentsSection,
       ];
@@ -138,10 +144,10 @@ export class ElasticsearchService {
 
   async bulkIndexDocuments(
     index: string,
-    documents: (documentSection | documentProduct)[],
+    documents: (DocumentSection | DocumentProduct)[],
   ): Promise<void> {
     const body: elasticBody[] = documents.flatMap(
-      (doc: documentSection | documentProduct) => [
+      (doc: DocumentSection | DocumentProduct) => [
         { index: { _index: index, _id: doc.id } },
         doc,
       ],
