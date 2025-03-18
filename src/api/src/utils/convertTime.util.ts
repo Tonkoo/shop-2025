@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 //TODO: Сделать интерфейс
 
 export function convertTimeObject(data: any): any {
+  console.log(data);
   return {
     ...data,
     create_at: format(new Date(data.create_at), 'dd.MM.yyyy HH:mm'),

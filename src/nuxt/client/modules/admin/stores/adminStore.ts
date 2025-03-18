@@ -26,8 +26,8 @@ export const useAdminStore = defineStore('admin-store', {
     searchName: '',
     searchParentName: '',
     selectedId: 0,
-    selectedSection: null,
-    section: {
+    backSection: null,
+    frontSection: {
       id: 0,
       code: '',
       name: '',
@@ -75,14 +75,14 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setSelectedId(value: number) {
       this.selectedId = value;
-      this.section.id = value;
+      this.frontSection.id = value;
       await adminModule.getSection();
     },
     setNameItems(value: Search[]) {
       this.allName = value;
     },
     async setSelectedSection(value: Section) {
-      this.selectedSection = value;
+      this.backSection = value;
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
@@ -99,20 +99,20 @@ export const useAdminStore = defineStore('admin-store', {
       this.setSectionIdParent({ id: 0, name: '' });
     },
     setSectionName(value: string) {
-      this.section.name = value;
+      this.frontSection.name = value;
     },
     setSectionImages(value: File[]) {
-      this.section.images = value;
+      this.frontSection.images = value;
     },
     setSectionIdParent(value: ParentSection) {
-      this.section.id_parent = value.id;
+      this.frontSection.id_parent = value.id;
     },
     setSectionParent(value: ParentSection) {
-      this.section.parent = { id: value.id, name: value.name };
+      this.frontSection.parent = { id: value.id, name: value.name };
     },
     setConvertSelectedSectionImages(value: File[]) {
-      if (this.selectedSection) {
-        this.selectedSection.images = value;
+      if (this.backSection) {
+        this.backSection.images = value;
       }
     },
   },

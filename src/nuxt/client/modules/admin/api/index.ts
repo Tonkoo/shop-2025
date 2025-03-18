@@ -1,21 +1,9 @@
 import { api } from '#shared/api/axios.js';
-import type { resultItems, Section } from '~/interfaces/global';
+import type { resultItems, param } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
-import { isEqual } from 'lodash';
-//TODO: Вынести в папку composables
-function ComparisonValues(section: Section, oldSection: Section | null) {
-  const resultSection: Record<string, any> = {};
-  if (!isEqual(section.name, oldSection?.name)) {
-    resultSection.name = section.name;
-  }
-  if (!isEqual(section.images, oldSection?.images)) {
-    resultSection.images = section.images;
-  }
-  if (!isEqual(section.parent, oldSection?.parent)) {
-    resultSection.id_parent = section.parent?.id;
-  }
-  return resultSection;
-}
+import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
+import { headers } from '~/composables/customFetch';
+import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 
 export async function getItems() {
   const adminStore = useAdminStore();
@@ -60,7 +48,7 @@ export async function addSection() {
   try {
     adminStore.setSearchName('');
     const formData = new FormData();
-    const param = {
+    const param: param = {
       type: adminStore.typeItem,
       from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       size: adminStore.countColumn.toString(),
@@ -68,30 +56,12 @@ export async function addSection() {
       getSection: true,
     };
 
-    //TODO: Вынести в отдельный файл
-    Object.entries(adminStore.section).forEach(([key, value]) => {
-      if (key === 'images') {
-        (value as File[]).forEach((file) => {
-          formData.append('files', file);
-        });
-      } else {
-        formData.append(key, String(value));
-      }
-    });
+    generateFormData(formData, adminStore.frontSection, param);
 
-    Object.entries(param).forEach(([key, value]) => {
-      formData.append(key, String(value));
-    });
-
-    //TODO: Вынести headers в отдельный метод
     const response = await api.post<{ data: resultItems[] }>(
       '/section',
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+      headers
     );
     //TODO: Сделать проверки на пустой responses и валидация
     adminStore.setDataItems(response.data.data[0]);
@@ -104,10 +74,9 @@ export async function addSection() {
 export async function editSection() {
   const adminStore = useAdminStore();
   try {
-    //TODO: переименовать переменные frontSection и backSection
-    const editSection = ComparisonValues(
-      adminStore.section,
-      adminStore.selectedSection
+    const editSection = comparisonValues(
+      adminStore.frontSection,
+      adminStore.backSection
     );
     const formData = new FormData();
     const param = {
@@ -117,33 +86,14 @@ export async function editSection() {
       searchName: adminStore.searchName,
       getSection: true,
     };
-    Object.entries(editSection).forEach(([key, value]) => {
-      if (key === 'images' && Array.isArray(value)) {
-        if (value.length === 0) {
-          formData.append(key, '');
-        } else {
-          (value as File[]).forEach((file) => {
-            formData.append('files', file);
-          });
-        }
-      } else {
-        formData.append(key, String(value));
-      }
-    });
 
-    Object.entries(param).forEach(([key, value]) => {
-      formData.append(key, String(value));
-    });
+    generateFormData(formData, editSection, param);
 
     adminStore.setSearchName('');
     const response = await api.put<{ data: resultItems[] }>(
-      `/section/${adminStore.selectedSection?.id}`,
+      `/section/${adminStore.backSection?.id}`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+      headers
     );
     adminStore.setDataItems(response.data.data[0]);
   } catch (err) {

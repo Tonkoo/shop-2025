@@ -62,6 +62,14 @@ type typeFile = {
   del: boolean;
 };
 
+type param = {
+  type: string;
+  from: string;
+  size: string;
+  searchName: string;
+  getSection?: boolean;
+};
+
 export type {
   Section,
   TypeSearch,
@@ -71,4 +79,5 @@ export type {
   resultItems,
   imageObject,
   typeFile,
+  param,
 };

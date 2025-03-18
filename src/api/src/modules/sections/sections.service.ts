@@ -45,6 +45,9 @@ export class SectionsService {
         searchName: data.searchName,
       };
       data.code = tr(data.name, { replace: { ' ': '-' } });
+      if (!Array.isArray(data.images)) {
+        data.images = [];
+      }
       const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
       );

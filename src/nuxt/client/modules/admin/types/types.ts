@@ -13,8 +13,8 @@ type AdminState = {
   searchName: string;
   searchParentName: string;
   selectedId: number;
-  selectedSection: Section | null;
-  section: Section;
+  backSection: Section | null;
+  frontSection: Section;
 };
 
 export type { AdminState };

@@ -19,11 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import Dialog from '~/modules/admin/components/Dialog.vue';
+import Dialog from '~/modules/admin/components/dialog/Dialog.vue';
 import ModuleHeader from '~/modules/admin/components/ModuleHeader.vue';
-import ModuleSearch from '~/modules/admin/components/ModuleSearch.vue';
-import ModulePagination from '~/modules/admin/components/ModulePagination.vue';
-import ModuleTable from '~/modules/admin/components/ModuleTable.vue';
+import ModuleSearch from '~/modules/admin/components/table/ModuleSearch.vue';
+import ModulePagination from '~/modules/admin/components/table/ModulePagination.vue';
+import ModuleTable from '~/modules/admin/components/table/ModuleTable.vue';
 </script>
 
 <style scoped></style>

@@ -7,6 +7,7 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useQuasar } from 'quasar';
 import { useAdminModule } from '~/modules/admin/global';
+import { notifyNegative } from '~/entities/notify.entites';
 
 const quasar = useQuasar();
 
@@ -59,10 +60,8 @@ const columns = [
 onMounted(async () => {
   await adminModule.getItems().catch((err) => {
     quasar.notify({
-      type: 'negative',
+      ...notifyNegative,
       message: err,
-      position: 'top',
-      timeout: 2500,
     });
   });
 });

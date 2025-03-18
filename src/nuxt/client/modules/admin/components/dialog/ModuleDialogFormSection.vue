@@ -1,17 +1,17 @@
 <template>
   <areal-form>
     <areal-form-input
-      v-model="adminStore.section.name"
+      v-model="adminStore.frontSection.name"
       label="Название"
       @update:model-value="adminStore.setSectionName"
     />
     <areal-file
-      v-model="adminStore.section.images"
+      v-model="adminStore.frontSection.images"
       label="Изображение"
       @update:model-value="adminStore.setSectionImages"
     />
     <areal-select-search
-      v-model="adminStore.section.parent"
+      v-model="adminStore.frontSection.parent"
       :value="adminStore.searchParentName"
       :option="autocompleteOptions"
       option-value="id"
@@ -35,11 +35,9 @@ const adminModule = useAdminModule();
 
 const autocompleteOptions = ref([] as Search[]);
 
-//TODO: также как и в moduleSearch
-//const name = typeof value === 'string' ? value : value.name;
-//adminStore.setSearchName(name);
 const onSearchInput = async (value: any) => {
-  adminStore.setSearchParentName(value.name || value);
+  const name = typeof value === 'string' ? value : value.name;
+  adminStore.setSearchParentName(name);
   adminStore.setSectionIdParent(value);
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;
