@@ -25,8 +25,9 @@ type DateClient = {
 };
 
 type ProductEntities = Product &
-  DateBase & {
-    images: number[];
+  DateClient & {
+    images: imageData[];
+    type: string;
   };
 
 type DocumentProduct = Product &
@@ -48,16 +49,18 @@ type Section = {
 };
 
 type SectionEntities = Section &
+  DateClient & {
+    images: imageData[];
+    parent?: parentSection;
+    imageObject?: Images[];
+    type: string;
+  };
+
+type SectionBase = Sections &
   DateBase & {
     images: number[];
     parent?: parentSection;
     imageObject?: Images[];
-  };
-
-type DocumentSection = Sections &
-  DateBase & {
-    images: imageData[];
-    type: string;
   };
 type SectionClient = Section &
   DateClient & {
@@ -93,7 +96,7 @@ type elasticBody = {
     _index: string;
     _id: number;
   };
-  data: DocumentProduct | DocumentSection;
+  data: DocumentProduct | SectionBase;
 };
 type resultItems = {
   items: Sections | Products | (Sections | Products)[];
@@ -119,7 +122,7 @@ export {
   elasticsearchResponse,
   imageData,
   DocumentProduct,
-  DocumentSection,
+  SectionBase,
   ProductEntities,
   SectionEntities,
   elasticBody,

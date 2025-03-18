@@ -11,7 +11,6 @@ import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
-import { createImages } from '../../utils/createImages.util';
 
 @Injectable()
 export class ProductsService {
@@ -68,12 +67,12 @@ export class ProductsService {
       );
       await queryRunner.commitTransaction();
 
-      await this.EsServices.addDocument(
-        this.index || 'shop',
-        result.id.toString(),
-        result,
-        'product',
-      );
+      // await this.EsServices.addDocument(
+      //   this.index || 'shop',
+      //   result.id.toString(),
+      //   result,
+      //   'product',
+      // );
 
       if (data.getProduct) {
         return await this.getList();
@@ -122,12 +121,12 @@ export class ProductsService {
       });
 
       if (updatedProduct) {
-        await this.EsServices.updateDocument(
-          this.index || 'shop',
-          id.toString(),
-          updatedProduct,
-          'product',
-        );
+        // await this.EsServices.updateDocument(
+        //   this.index || 'shop',
+        //   id.toString(),
+        //   updatedProduct,
+        //   'product',
+        // );
       } else {
         throw new NotFoundException('Product not found');
       }

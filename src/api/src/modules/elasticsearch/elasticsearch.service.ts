@@ -13,8 +13,6 @@ import { Images } from '../../entities/images.entity';
 import { convertTimeArray } from '../../utils/convertTime.util';
 import {
   imageData,
-  DocumentProduct,
-  DocumentSection,
   ProductEntities,
   SectionEntities,
   elasticBody,
@@ -44,12 +42,12 @@ export class ElasticsearchService {
   async generateBlockImages(
     data: (SectionClient | ProductClient)[],
     type: string,
-  ): Promise<(SectionClient | ProductClient)[]> {
+  ): Promise<(SectionEntities | ProductEntities)[]> {
     return await Promise.all(
       data.map(
         async (
           item: SectionClient | ProductClient,
-        ): Promise<SectionClient | ProductClient> => {
+        ): Promise<SectionEntities | ProductEntities> => {
           if (!item.images) {
             item.images = [];
           }
@@ -121,13 +119,13 @@ export class ElasticsearchService {
       const sections: (ProductClient | SectionClient)[] =
         convertTimeArray(dbSection);
 
-      const documentsProduct: (DocumentProduct | DocumentSection)[] =
+      const documentsProduct: (ProductEntities | SectionEntities)[] =
         await this.generateBlockImages(products, 'product');
 
-      const documentsSection: (DocumentProduct | DocumentSection)[] =
+      const documentsSection: (ProductEntities | SectionEntities)[] =
         await this.generateBlockImages(sections, 'section');
 
-      const document: (DocumentSection | DocumentProduct)[] = [
+      const document: (ProductEntities | SectionEntities)[] = [
         ...documentsProduct,
         ...documentsSection,
       ];
@@ -144,10 +142,10 @@ export class ElasticsearchService {
 
   async bulkIndexDocuments(
     index: string,
-    documents: (DocumentSection | DocumentProduct)[],
+    documents: (SectionEntities | ProductEntities)[],
   ): Promise<void> {
     const body: elasticBody[] = documents.flatMap(
-      (doc: DocumentSection | DocumentProduct) => [
+      (doc: SectionEntities | ProductEntities) => [
         { index: { _index: index, _id: doc.id } },
         doc,
       ],
@@ -158,7 +156,7 @@ export class ElasticsearchService {
   async addDocument(
     index: string,
     id: string,
-    document: Sections | Products,
+    document: SectionClient | ProductClient,
     type: string,
   ) {
     try {
@@ -190,7 +188,7 @@ export class ElasticsearchService {
   async updateDocument(
     index: string,
     id: string,
-    document: Sections | Products,
+    document: SectionClient | ProductClient,
     type: string,
   ) {
     try {

@@ -13,7 +13,7 @@ import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
-import { resultItems, SectionEntities } from '../../interfaces/global';
+import { SectionBase, resultItems } from '../../interfaces/global';
 import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
@@ -87,14 +87,11 @@ export class SectionsService {
     }
   }
 
-  async getSectionById(
-    id: number,
-  ): Promise<SectionEntities[] | SectionEntities> {
+  async getSectionById(id: number): Promise<SectionBase[] | SectionBase> {
     try {
-      const sections: SectionEntities | null =
-        await this.sectionsRepo.findOneBy({
-          id: id,
-        });
+      const sections: SectionBase | null = await this.sectionsRepo.findOneBy({
+        id: id,
+      });
       if (!sections) {
         throw new NotFoundException('Section not found');
       }
