@@ -2,7 +2,7 @@ import { api } from '#shared/api/axios.js';
 import type { resultItems, Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { isEqual } from 'lodash';
-
+//TODO: Вынести в папку composables
 function ComparisonValues(section: Section, oldSection: Section | null) {
   const resultSection: Record<string, any> = {};
   if (!isEqual(section.name, oldSection?.name)) {
@@ -68,6 +68,7 @@ export async function addSection() {
       getSection: true,
     };
 
+    //TODO: Вынести в отдельный файл
     Object.entries(adminStore.section).forEach(([key, value]) => {
       if (key === 'images') {
         (value as File[]).forEach((file) => {
@@ -82,6 +83,7 @@ export async function addSection() {
       formData.append(key, String(value));
     });
 
+    //TODO: Вынести headers в отдельный метод
     const response = await api.post<{ data: resultItems[] }>(
       '/section',
       formData,
@@ -91,6 +93,7 @@ export async function addSection() {
         },
       }
     );
+    //TODO: Сделать проверки на пустой responses и валидация
     adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
     console.error(err);
@@ -101,6 +104,7 @@ export async function addSection() {
 export async function editSection() {
   const adminStore = useAdminStore();
   try {
+    //TODO: переименовать переменные frontSection и backSection
     const editSection = ComparisonValues(
       adminStore.section,
       adminStore.selectedSection
@@ -130,9 +134,7 @@ export async function editSection() {
     Object.entries(param).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+
     adminStore.setSearchName('');
     const response = await api.put<{ data: resultItems[] }>(
       `/section/${adminStore.selectedSection?.id}`,

@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+//TODO: Избавиться от явных наименований в label при помоща библиотеки i18n. Создать папку lang -> ru -> index.ts в admin
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
@@ -34,12 +35,11 @@ const adminModule = useAdminModule();
 
 const autocompleteOptions = ref([] as Search[]);
 
+//TODO: также как и в moduleSearch
+//const name = typeof value === 'string' ? value : value.name;
+//adminStore.setSearchName(name);
 const onSearchInput = async (value: any) => {
-  if (value && typeof value === 'object') {
-    adminStore.setSearchParentName(value.name);
-  } else {
-    adminStore.setSearchParentName(value);
-  }
+  adminStore.setSearchParentName(value.name || value);
   adminStore.setSectionIdParent(value);
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;

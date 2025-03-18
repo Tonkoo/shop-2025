@@ -18,16 +18,13 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
 const adminStore = useAdminStore();
-const current = ref(adminStore.currentPage);
-const countColumn = ref(adminStore.countColumn.toString());
+const countColumn = computed(() => adminStore.countColumn.toString());
 
-watch(countColumn, (newValue) => {
-  adminStore.setCountColumn(newValue);
-});
+const current = computed(() => adminStore.currentPage);
 
 const totalPages = computed(() => {
   const allCount = adminStore.allCount;
-  const perPage = parseInt(countColumn.value);
+  const perPage = parseInt(countColumn.value, 10);
   return Math.ceil(allCount / perPage);
 });
 

@@ -10,7 +10,7 @@ import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
-import { convertTime } from '../../utils/convertTime.util';
+import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
 import { resultItems, SectionEntities } from '../../interfaces/global';
@@ -53,6 +53,7 @@ export class SectionsService {
           'An error occurred while create the partition.',
         );
       }
+      newSection.images = [];
       if (files.files) {
         data.images = await createImages(queryRunner, files);
         await this.sectionsRepo.update(
@@ -65,7 +66,7 @@ export class SectionsService {
       await this.EsServices.addDocument(
         this.index || 'shop',
         newSection.id.toString(),
-        convertTime([newSection])[0],
+        convertTimeObject(newSection),
         'section',
       );
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -107,15 +108,10 @@ export class SectionsService {
             id: sections.id_parent,
           });
         if (parentSection) {
-          if (sections.parent) {
-            sections.parent.id = parentSection.id;
-            sections.parent.name = parentSection.name;
-          } else {
-            sections.parent = {
-              id: parentSection.id,
-              name: parentSection.name,
-            };
-          }
+          sections.parent = {
+            id: parentSection.id,
+            name: parentSection.name,
+          };
         }
       }
 
@@ -132,7 +128,7 @@ export class SectionsService {
     id: number,
     data: SectionDto,
     files: { files: Express.Multer.File[] },
-  ) {
+  ): Promise<resultItems[] | UpdateResult> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -145,9 +141,11 @@ export class SectionsService {
           searchName: data.searchName,
         };
 
-        const currentSection = await this.sectionsRepo.findOne({
-          where: { id: id },
-        });
+        const currentSection: Sections | null = await this.sectionsRepo.findOne(
+          {
+            where: { id: id },
+          },
+        );
 
         if (!currentSection) {
           throw new NotFoundException('Section not found');
@@ -165,7 +163,7 @@ export class SectionsService {
           data.images = [];
         }
 
-        const currentImageIds = currentSection.images;
+        const currentImageIds: number[] = currentSection.images;
 
         const newImageIds = data.images;
 
@@ -200,16 +198,17 @@ export class SectionsService {
           },
         );
         await queryRunner.commitTransaction();
-        if (updatedSection) {
-          await this.EsServices.updateDocument(
-            this.index || 'shop',
-            id.toString(),
-            convertTime([updatedSection])[0],
-            'section',
-          );
-        } else {
+        if (!updatedSection) {
           throw new NotFoundException('Section not found');
         }
+
+        await this.EsServices.updateDocument(
+          this.index || 'shop',
+          id.toString(),
+          convertTimeObject(updatedSection),
+          'section',
+        );
+
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const result: resultItems[] | UpdateResult = data.getSection
           ? await this.EsServices.getItemsFilter(searchParams)

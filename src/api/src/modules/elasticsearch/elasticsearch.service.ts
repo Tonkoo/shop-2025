@@ -10,7 +10,7 @@ import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
-import { convertTime } from '../../utils/convertTime.util';
+import { convertTimeArray } from '../../utils/convertTime.util';
 import {
   imageData,
   documentProduct,
@@ -93,19 +93,27 @@ export class ElasticsearchService {
 
   async createIndex(): Promise<boolean> {
     try {
-      await this.elasticsearchService.indices.delete({
+      const indexExists = await this.elasticsearchService.indices.exists({
         index: this.index || 'shop',
       });
-    } catch {
-      console.log('No index');
-    }
-    try {
-      const products: (Products | Sections)[] = convertTime(
-        await this.productRepository.find(),
-      );
-      const sections: (Products | Sections)[] = convertTime(
-        await this.sectionsRepository.find(),
-      );
+      if (indexExists) {
+        await this.elasticsearchService.indices.delete({
+          index: this.index || 'shop',
+        });
+      }
+
+      const dbProduct: Products[] = await this.productRepository.find();
+
+      if (!dbProduct) {
+        throw new NotFoundException('Products not found');
+      }
+
+      const products: any[] = convertTimeArray(dbProduct);
+      const dbSection: Sections[] = await this.sectionsRepository.find();
+      if (!dbSection) {
+        throw new NotFoundException('Section not found');
+      }
+      const sections: any[] = convertTimeArray(dbSection);
 
       const documentsProduct: (documentProduct | documentSection)[] =
         await this.generateBlockImages(products, 'product');
@@ -148,9 +156,6 @@ export class ElasticsearchService {
     type: string,
   ) {
     try {
-      if (document.images == undefined) {
-        document.images = [];
-      }
       const images: Images[] = await this.imagesRepository.findBy({
         id: In(document.images),
       });
@@ -241,7 +246,7 @@ export class ElasticsearchService {
       throw new BadRequestException('Error while receiving data');
     }
   }
-
+  //TODO: Написать метод для опредения уровня раздела в древовиндой структуре (Level 1"." Laval 2 ".." и т.д.)
   async getNameShopByElastic(payLoad: payLoad): Promise<string[]> {
     const { searchName, type, size } = payLoad;
     try {

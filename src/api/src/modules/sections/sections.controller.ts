@@ -37,7 +37,7 @@ import {
 import { Sections } from '../../entities/sections.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
-import { DataSource } from 'typeorm';
+import { DataSource, UpdateResult } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 
 class DeleteSectionDto {
@@ -72,7 +72,6 @@ export class SectionsController {
   async getSection(@Query('id') id: number): Promise<response> {
     const result: SectionEntities | SectionEntities[] =
       await this.services.getSectionById(id);
-    // console.log(result);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
   @Post()
@@ -137,15 +136,16 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  // : Promise<response>
   async updateById(
     @Param('id') id: number,
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
-  ) {
-    // : Sections | Sections[]
-    // console.log(data);
-    const result = await this.services.updateById(id, data, files);
+  ): Promise<response> {
+    const result: resultItems[] | UpdateResult = await this.services.updateById(
+      id,
+      data,
+      files,
+    );
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 

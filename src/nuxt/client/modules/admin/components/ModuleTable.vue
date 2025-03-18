@@ -4,7 +4,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Product, Section } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useQuasar } from 'quasar';
 import { useAdminModule } from '~/modules/admin/global';
@@ -57,8 +56,6 @@ const columns = [
   },
 ];
 
-const rows = ref<Section[] | Product[]>([]);
-
 onMounted(async () => {
   await adminModule.getItems().catch((err) => {
     quasar.notify({
@@ -70,12 +67,9 @@ onMounted(async () => {
   });
 });
 
-watch(
-  () => adminStore.items,
-  (newItems) => {
-    rows.value = newItems;
-  }
-);
+const rows = computed(() => {
+  return adminStore.items;
+});
 </script>
 
 <style lang="scss" scoped>

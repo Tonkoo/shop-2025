@@ -36,7 +36,7 @@
             label="Очистить"
             icon="close"
             class="full-height full-width"
-            @click="ClearSearch"
+            @click="clearSearch"
           />
         </div>
       </div>
@@ -56,11 +56,8 @@ const adminModule = useAdminModule();
 const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = async (value: string | { name: string }) => {
-  if (typeof value === 'string') {
-    adminStore.setSearchName(value);
-  } else {
-    adminStore.setSearchName(value.name);
-  }
+  const name = typeof value === 'string' ? value : value.name;
+  adminStore.setSearchName(name);
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;
 };
@@ -72,7 +69,7 @@ const optionsTip = [
 
 let typeSearch = ref(adminStore.typeSearch);
 
-async function ClearSearch() {
+async function clearSearch() {
   try {
     adminStore.setTypeSearch({ label: 'Разделы', value: 'section' });
     typeSearch = ref(adminStore.typeSearch);

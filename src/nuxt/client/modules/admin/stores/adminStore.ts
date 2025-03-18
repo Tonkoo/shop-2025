@@ -11,7 +11,7 @@ import type {
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 
 const adminModule = useAdminModule();
-
+//TODO: вынести параметры для пагинации в файл table.entites.
 export const useAdminStore = defineStore('admin-store', {
   state: (): AdminState => ({
     isEdit: false,

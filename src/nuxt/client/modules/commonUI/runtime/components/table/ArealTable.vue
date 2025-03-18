@@ -1,6 +1,6 @@
 <template>
   <q-table
-    class="my-sticky-header-table full-height"
+    class="areal-table full-height"
     flat
     bordered
     :hide-pagination="true"
@@ -53,7 +53,7 @@ const pagination = {
 </script>
 
 <style lang="scss">
-.my-sticky-header-table {
+.areal-table {
   .q-table__top,
   thead tr:first-child th {
     background-color: getColor('grey', 6);

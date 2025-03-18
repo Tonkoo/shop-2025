@@ -4,7 +4,7 @@
       label="Сохранить"
       color="black"
       icon="save"
-      @click="adminStore.isEdit ? editItem() : AddItem()"
+      @click="adminStore.isEdit ? editItem() : addItem()"
     />
     <areal-button
       outline
@@ -18,23 +18,25 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { useQuasar } from 'quasar';
+import { notifyConfig } from '~/entities/notify.entites';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
 const quasar = useQuasar();
 
-async function AddItem() {
-  if (adminStore.typeItem == 'section') {
+async function addItem() {
+  if (adminStore.typeItem === 'section') {
     await adminModule
       .addSection()
       .then(() => {
         adminStore.clearForms();
         adminStore.setViewModal(false);
         quasar.notify({
+          //TODO: вынести в  quasar.notify в composable (positive и  negative)
           type: 'positive',
           message: 'Элемент успешно добавлен',
           position: 'top-right',
-          timeout: 2500,
+          timeout: notifyConfig.timeout,
         });
       })
       .catch((err) => {
@@ -42,14 +44,14 @@ async function AddItem() {
           type: 'negative',
           message: 'Ошибка при добавлении элемента: ' + err,
           position: 'top',
-          timeout: 2500,
+          timeout: notifyConfig.timeout,
         });
       });
   }
 }
 
 async function editItem() {
-  if (adminStore.typeItem == 'section') {
+  if (adminStore.typeItem === 'section') {
     await adminModule
       .editSection()
       .then(() => {
@@ -59,7 +61,7 @@ async function editItem() {
           type: 'positive',
           message: 'Элемент успешно изменен',
           position: 'top-right',
-          timeout: 2500,
+          timeout: notifyConfig.timeout,
         });
       })
       .catch((err) => {
@@ -67,7 +69,7 @@ async function editItem() {
           type: 'negative',
           message: 'Ошибка при добавлении элемента: ' + err,
           position: 'top',
-          timeout: 2500,
+          timeout: notifyConfig.timeout,
         });
       });
   }
