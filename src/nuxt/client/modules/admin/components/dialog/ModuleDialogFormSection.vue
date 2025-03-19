@@ -28,14 +28,14 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
-import type { ParentSection, Search } from '~/interfaces/global';
+import type { SelectSection, Search } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
 
 const autocompleteOptions = ref([] as Search[]);
 
-const onSearchInput = async (value: ParentSection | string) => {
+const onSearchInput = async (value: SelectSection | string) => {
   const name = typeof value === 'string' ? value : value.name;
   adminStore.setSearchParentName(name);
   if (typeof value !== 'string') {

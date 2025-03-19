@@ -19,9 +19,11 @@ type AdminState = {
   allName: Search[];
   searchName: string;
   searchParentName: string;
+  searchSection: string;
   selectedId: number;
   backSection: Section | null;
   frontSection: Section;
+  frontProduct: Product;
   errors: Err;
 };
 

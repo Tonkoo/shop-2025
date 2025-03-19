@@ -1,9 +1,9 @@
-import type { Param, Section } from '~/interfaces/global';
+import type { ApiParams, Product, Section } from '~/interfaces/global';
 
 export function generateFormData(
   formData: FormData,
-  data: Section | Record<string, any>,
-  param: Param
+  data: Section | Product | Record<string, any>,
+  param: ApiParams
 ) {
   Object.entries(data).forEach(([key, value]) => {
     if (key === 'images' && Array.isArray(value)) {

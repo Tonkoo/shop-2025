@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
 import type {
-  ParentSection,
+  SelectSection,
   ResultItems,
   Search,
   Section,
@@ -26,6 +26,7 @@ export const useAdminStore = defineStore('admin-store', {
     allName: [],
     searchName: '',
     searchParentName: '',
+    searchSection: '',
     selectedId: 0,
     backSection: null,
     frontSection: {
@@ -33,7 +34,19 @@ export const useAdminStore = defineStore('admin-store', {
       code: '',
       name: '',
       images: [],
-      id_parent: null,
+      idParent: null,
+    },
+    frontProduct: {
+      id: 0,
+      code: '',
+      name: '',
+      images: [],
+      price: '',
+      color: '',
+      description: '',
+      idSection: null,
+      showOnMain: false,
+      mainSlider: false,
     },
     errors: { name: false },
   }),
@@ -41,9 +54,9 @@ export const useAdminStore = defineStore('admin-store', {
     setIsEdit(value: boolean) {
       this.isEdit = value;
     },
-    setViewModal(value: boolean) {
+    async setViewModal(value: boolean) {
       if (!value) {
-        this.clearForms();
+        await this.clearForms();
       }
 
       this.viewModal = value;
@@ -74,6 +87,9 @@ export const useAdminStore = defineStore('admin-store', {
     setSearchParentName(value: string) {
       this.searchParentName = value;
     },
+    setSearchSection(value: string) {
+      this.searchSection = value;
+    },
     setDataItems(data: ResultItems) {
       this.items = data.items;
       this.allCount = data.total;
@@ -92,7 +108,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
     },
-    clearForms() {
+    async clearForms() {
       this.setIsEdit(false);
       this.setSectionName('');
       this.setSectionImages([]);
@@ -109,10 +125,10 @@ export const useAdminStore = defineStore('admin-store', {
     setSectionImages(value: File[]) {
       this.frontSection.images = value;
     },
-    setSectionIdParent(value: ParentSection) {
-      this.frontSection.id_parent = value.id;
+    setSectionIdParent(value: SelectSection) {
+      this.frontSection.idParent = value.id;
     },
-    setSectionParent(value: ParentSection) {
+    setSectionParent(value: SelectSection) {
       this.frontSection.parent = { id: value.id, name: value.name };
     },
     setConvertSelectedSectionImages(value: File[]) {
@@ -122,6 +138,30 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setErrorName(value: boolean) {
       this.errors.name = value;
+    },
+    setProductName(value: string) {
+      this.frontProduct.name = value;
+    },
+    setProductImages(value: File[]) {
+      this.frontProduct.images = value;
+    },
+    setProductPrice(value: string) {
+      this.frontProduct.price = value;
+    },
+    setProductColor(value: string) {
+      this.frontProduct.color = value;
+    },
+    setProductDescription(value: string) {
+      this.frontProduct.description = value;
+    },
+    setProductSection(value: SelectSection) {
+      this.frontProduct.idSection = value.id;
+    },
+    setProductShowOnMain(value: boolean) {
+      this.frontProduct.showOnMain = value;
+    },
+    setProductMainSlider(value: boolean) {
+      this.frontProduct.mainSlider = value;
     },
   },
 });

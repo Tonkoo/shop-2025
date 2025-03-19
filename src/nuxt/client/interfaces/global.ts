@@ -3,10 +3,10 @@ type Section = {
   code: string;
   name: string;
   images: File[];
-  create_at?: string;
-  update_at?: string;
-  id_parent: number | null;
-  parent?: ParentSection;
+  createAt?: string;
+  updateAt?: string;
+  idParent: number | null;
+  parent?: SelectSection;
   imageObject?: ImageObject[];
 };
 
@@ -14,20 +14,17 @@ type Product = {
   id: number;
   code: string;
   name: string;
-  images: ImageType[];
-  price: number;
+  images: File[];
+  price: string;
   color: string;
   description: string;
-  show_on_main: boolean;
-  main_slider: boolean;
-  id_section: number;
-  create_at: string;
-  update_at: string;
-};
-
-type ImageType = {
-  alt: string;
-  src: string;
+  showOnMain: boolean;
+  mainSlider: boolean;
+  idSection: number | null;
+  createAt?: string;
+  updateAt?: string;
+  section?: SelectSection;
+  imageObject?: ImageObject[];
 };
 
 interface TypeSearch {
@@ -40,7 +37,7 @@ interface Search {
   name: string;
 }
 
-type ParentSection = {
+type SelectSection = {
   id: number;
   name: string;
 };
@@ -56,18 +53,13 @@ type ImageObject = {
   type: string;
 };
 
-type TypeFile = {
-  id?: number;
-  file: File;
-  del: boolean;
-};
-
-type Param = {
+type ApiParams = {
   type: string;
-  from: string;
-  size: string;
+  from: number | string;
+  size: number | string;
   searchName: string;
   getSection?: boolean;
+  getProduct?: boolean;
 };
 type Err = {
   name: boolean;
@@ -78,10 +70,9 @@ export type {
   TypeSearch,
   Product,
   Search,
-  ParentSection,
+  SelectSection,
   ResultItems,
   ImageObject,
-  TypeFile,
-  Param,
+  ApiParams,
   Err,
 };

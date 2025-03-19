@@ -1,19 +1,44 @@
 import { api } from '~~/shared/api/axios';
-import type { ResultItems, Param } from '~/interfaces/global';
+import type { ResultItems, ApiParams } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
 import { headers } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 
+function fillingParam(
+  type: string,
+  from: string | number,
+  size: string | number,
+  searchName: string,
+  getItem?: boolean
+) {
+  const params: ApiParams = {
+    type,
+    from,
+    size,
+    searchName,
+  };
+  console.log(getItem);
+  if (getItem) {
+    if (type === 'section') {
+      params.getSection = getItem;
+    } else {
+      params.getProduct = getItem;
+    }
+  }
+
+  return params;
+}
+
 export async function getItems() {
   const adminStore = useAdminStore();
   try {
-    const params = {
-      type: adminStore.typeSearch.value,
-      from: (adminStore.currentPage - 1) * adminStore.countColumn,
-      size: adminStore.countColumn,
-      searchName: adminStore.searchName,
-    };
+    const params = fillingParam(
+      adminStore.typeSearch.value,
+      (adminStore.currentPage - 1) * adminStore.countColumn,
+      adminStore.countColumn,
+      adminStore.searchName
+    );
     const response = await api.get<{ data: ResultItems[] }>('/elastic/admin', {
       params,
     });
@@ -30,13 +55,16 @@ export async function getItems() {
 export async function getAllNameColumn() {
   const adminStore = useAdminStore();
   try {
-    const params = {
-      type: adminStore.typeSearch.value,
-      searchName: adminStore.searchName
+    const params = fillingParam(
+      adminStore.typeSearch.value,
+      '',
+      adminStore.countColumn,
+      adminStore.searchName
         ? adminStore.searchName
-        : adminStore.searchParentName,
-      size: adminStore.countColumn,
-    };
+        : adminStore.searchParentName
+          ? adminStore.searchParentName
+          : adminStore.searchSection
+    );
     const response = await api.get('/elastic/admin/name', {
       params,
     });
@@ -49,27 +77,34 @@ export async function getAllNameColumn() {
   }
 }
 
-export async function addSection() {
+export async function addItem() {
   const adminStore = useAdminStore();
   try {
     adminStore.setSearchName('');
     const formData = new FormData();
-    const param: Param = {
-      type: adminStore.typeItem,
-      from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
-      size: adminStore.countColumn.toString(),
-      searchName: adminStore.searchName,
-      getSection: true,
-    };
-    if (adminStore.frontSection.name == '') {
-      adminStore.setErrorName(true);
-      throw new Error('The form is filled in incorrectly');
-    }
+    const param: ApiParams = fillingParam(
+      adminStore.typeItem,
+      ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
+      adminStore.countColumn.toString(),
+      adminStore.searchName,
+      true
+    );
+    // if (adminStore.frontSection.name == '') {
+    //   adminStore.setErrorName(true);
+    //   throw new Error('The form is filled in incorrectly');
+    // }
     adminStore.setErrorName(false);
-    generateFormData(formData, adminStore.frontSection, param);
+    let data;
+    if (adminStore.typeItem === 'section') {
+      data = adminStore.frontSection;
+    } else {
+      data = adminStore.frontProduct;
+    }
+
+    generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItems[] }>(
-      '/section',
+      `/${adminStore.typeItem}`,
       formData,
       headers
     );
@@ -83,7 +118,7 @@ export async function addSection() {
   }
 }
 
-export async function editSection() {
+export async function editItem() {
   const adminStore = useAdminStore();
   try {
     const editSection = comparisonValues(
@@ -91,21 +126,21 @@ export async function editSection() {
       adminStore.backSection
     );
     const formData = new FormData();
-    const param: Param = {
-      type: adminStore.typeItem,
-      from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
-      size: adminStore.countColumn.toString(),
-      searchName: adminStore.searchName,
-      getSection: true,
-    };
-    if (adminStore.frontSection.name == '') {
-      adminStore.setErrorName(true);
-      throw new Error('The form is filled in incorrectly');
-    }
+    const param: ApiParams = fillingParam(
+      adminStore.typeItem,
+      ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
+      adminStore.countColumn.toString(),
+      adminStore.searchName,
+      true
+    );
+    // if (adminStore.frontSection.name == '') {
+    //   adminStore.setErrorName(true);
+    //   throw new Error('The form is filled in incorrectly');
+    // }
     generateFormData(formData, editSection, param);
     adminStore.setSearchName('');
     const response = await api.put<{ data: ResultItems[] }>(
-      `/section/${adminStore.backSection?.id}`,
+      `/${adminStore.typeItem}/${adminStore.backSection?.id}`,
       formData,
       headers
     );
@@ -138,13 +173,13 @@ export async function getSection() {
 
 export async function delSection() {
   const adminStore = useAdminStore();
-  const params: Param = {
-    type: adminStore.typeItem,
-    from: ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
-    size: adminStore.countColumn.toString(),
-    searchName: adminStore.searchName,
-    getSection: true,
-  };
+  const params: ApiParams = fillingParam(
+    adminStore.typeItem,
+    ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
+    adminStore.countColumn.toString(),
+    adminStore.searchName,
+    true
+  );
   try {
     const response = await api.delete<{ data: ResultItems[] }>(
       `/section/${adminStore.selectedId}`,

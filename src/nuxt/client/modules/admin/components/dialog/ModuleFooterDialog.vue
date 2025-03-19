@@ -25,39 +25,35 @@ const adminModule = useAdminModule();
 const quasar = useQuasar();
 
 async function addItem() {
-  if (adminStore.typeItem === 'section') {
-    await adminModule
-      .addSection()
-      .then(() => {
-        adminStore.clearForms();
-        adminStore.setViewModal(false);
-        quasar.notify(notifyPositive);
-      })
-      .catch((err) => {
-        quasar.notify({
-          ...notifyNegative,
-          message: 'Ошибка при сохранении данных: ' + err,
-        });
+  await adminModule
+    .addItem()
+    .then(() => {
+      adminStore.clearForms();
+      adminStore.setViewModal(false);
+      quasar.notify(notifyPositive);
+    })
+    .catch((err) => {
+      quasar.notify({
+        ...notifyNegative,
+        message: 'Ошибка при сохранении данных: ' + err,
       });
-  }
+    });
 }
 
 async function editItem() {
-  if (adminStore.typeItem === 'section') {
-    await adminModule
-      .editSection()
-      .then(() => {
-        adminStore.clearForms();
-        adminStore.setViewModal(false);
-        quasar.notify(notifyPositive);
-      })
-      .catch((err) => {
-        quasar.notify({
-          ...notifyNegative,
-          message: 'Ошибка при сохранении данных: ' + err,
-        });
+  await adminModule
+    .editItem()
+    .then(() => {
+      adminStore.clearForms();
+      adminStore.setViewModal(false);
+      quasar.notify(notifyPositive);
+    })
+    .catch((err) => {
+      quasar.notify({
+        ...notifyNegative,
+        message: 'Ошибка при сохранении данных: ' + err,
       });
-  }
+    });
 }
 </script>
 
