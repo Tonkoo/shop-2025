@@ -158,9 +158,9 @@ export class SectionsController {
   })
   async deleteById(
     @Param('id') id: number,
-    @Body() data: SectionDto,
+    @Query() data: SectionDto,
   ): Promise<response> {
-    const result: number | Sections[] = await this.services.deleteById(
+    const result: resultItems[] | number = await this.services.deleteById(
       id,
       data,
     );

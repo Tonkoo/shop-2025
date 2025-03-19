@@ -123,7 +123,6 @@ export class SectionsService {
       );
     }
   }
-  // : Promise<Sections | Sections[]>
   async updateById(
     id: number,
     data: SectionDto,
@@ -227,28 +226,69 @@ export class SectionsService {
     }
   }
 
-  async deleteById(id: number, data: SectionDto): Promise<number | Sections[]> {
+  async deleteById(
+    id: number,
+    data: SectionDto,
+  ): Promise<resultItems[] | number> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const searchParams: payLoad = {
+      type: data.type,
+      from: Number(data.from),
+      size: Number(data.size),
+      searchName: data.searchName,
+    };
     try {
-      const result = await this.sectionsRepo.delete(id);
+      if (!id) {
+        throw new NotFoundException('ID is required for deletion.');
+      }
 
-      if (!result) {
+      const currentSection: Sections | null = await this.sectionsRepo.findOne({
+        where: { id: id },
+      });
+
+      if (!currentSection) {
+        throw new NotFoundException('Section not found');
+      }
+
+      const currentImageIds: number[] = currentSection.images;
+
+      const delItems = await this.sectionsRepo.delete(id);
+
+      if (!delItems) {
         throw new BadRequestException(
-          'An error occurred while deleting the partition.',
+          'An error occurred while deleting the section.',
         );
       }
 
+      if (currentImageIds) {
+        const delImages = await this.imagesRepository.delete(currentImageIds);
+        if (!delImages) {
+          throw new BadRequestException(
+            'An error occurred while deleting the images.',
+          );
+        }
+      }
+
+      await queryRunner.commitTransaction();
+
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
-      // if (data.getSection) {
-      //   return await this.getList();
-      // }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result: resultItems[] | number = data.getSection
+        ? await this.EsServices.getItemsFilter(searchParams)
+        : id;
 
-      return id;
+      return result;
     } catch (err) {
+      await queryRunner.rollbackTransaction();
       logger.error('Error from sections.delete : ', err);
       throw new BadRequestException(
         'An error occurred while deleting the partition.',
       );
+    } finally {
+      await queryRunner.release();
     }
   }
 }

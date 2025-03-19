@@ -16,6 +16,7 @@ export const useAdminStore = defineStore('admin-store', {
   state: (): AdminState => ({
     isEdit: false,
     items: [],
+    delDialog: false,
     viewModal: false,
     typeItem: 'section',
     countColumn: 10,
@@ -46,6 +47,9 @@ export const useAdminStore = defineStore('admin-store', {
       }
 
       this.viewModal = value;
+    },
+    setDelDialog(value: boolean) {
+      this.delDialog = value;
     },
     setTypeItem(value: string) {
       this.typeItem = value;

@@ -37,8 +37,6 @@ export class ElasticsearchService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
-  //TODO: доработать типы
-
   async generateBlockImages(
     data: (SectionClient | ProductClient)[],
     type: string,

@@ -9,6 +9,7 @@ import type {
 type AdminState = {
   isEdit: boolean;
   items: Section[] | Product[];
+  delDialog: boolean;
   viewModal: boolean;
   typeItem: string;
   countColumn: number;

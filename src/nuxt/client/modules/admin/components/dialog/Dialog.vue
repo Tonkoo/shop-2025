@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
-import ArealDialog from '~/modules/commonUI/runtime/components/dialog/ArealDialog.vue';
 import ModuleHeaderDialog from '~/modules/admin/components/dialog/ModuleHeaderDialog.vue';
 import ModuleFooterDialog from '~/modules/admin/components/dialog/ModuleFooterDialog.vue';
 import ModuleDialogFormSection from '~/modules/admin/components/dialog/ModuleDialogFormSection.vue';

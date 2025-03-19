@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class payLoad {
-  //TODO: Использовать декораторы Пр: IsNotIn
   @IsString({
     message: 'Параметр type должен быть типа string',
   })
@@ -15,6 +14,8 @@ export class payLoad {
   @IsNotEmpty()
   size: number;
 
-  @IsString()
+  @IsString({
+    message: 'Параметр searchName должен быть типа string',
+  })
   searchName?: string;
 }

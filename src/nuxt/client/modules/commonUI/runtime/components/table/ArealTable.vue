@@ -14,10 +14,15 @@
         <areal-button
           outline
           label="Изменить"
+          class="button"
           @click="OpenDialog(props.row.id)"
         />
 
-        <areal-button outline label="Удалить" />
+        <areal-button
+          outline
+          label="Удалить"
+          @click="OpenDelDialog(props.row.id)"
+        />
       </q-td>
     </template>
   </q-table>
@@ -47,6 +52,12 @@ const OpenDialog = (id: number) => {
   adminStore.setSelectedId(id);
   adminStore.setViewModal(true);
 };
+
+const OpenDelDialog = (id: number) => {
+  adminStore.setSelectedId(id);
+  adminStore.setDelDialog(true);
+};
+
 const pagination = {
   rowsPerPage: 0,
 };
@@ -69,6 +80,9 @@ const pagination = {
   }
   thead tr:first-child th {
     top: 0;
+  }
+  .button {
+    margin-right: 7px;
   }
 }
 </style>

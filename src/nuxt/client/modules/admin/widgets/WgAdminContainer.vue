@@ -14,12 +14,14 @@
         <ModulePagination />
       </q-toolbar>
       <Dialog />
+      <DialogDelete />
     </main>
   </q-page-container>
 </template>
 
 <script setup lang="ts">
 import Dialog from '~/modules/admin/components/dialog/Dialog.vue';
+import DialogDelete from '~/modules/admin/components/dialog/DialogDelete.vue';
 import ModuleHeader from '~/modules/admin/components/ModuleHeader.vue';
 import ModuleSearch from '~/modules/admin/components/table/ModuleSearch.vue';
 import ModulePagination from '~/modules/admin/components/table/ModulePagination.vue';
