@@ -4,7 +4,7 @@ import {
   addItem,
   getItem,
   editItem,
-  delSection,
+  delItem,
 } from '../api';
 export function useAdminModule() {
   return {
@@ -13,6 +13,6 @@ export function useAdminModule() {
     addItem,
     getItem,
     editItem,
-    delSection,
+    delItem,
   };
 }

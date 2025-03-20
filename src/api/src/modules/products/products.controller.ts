@@ -144,11 +144,13 @@ export class ProductsController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
-  async deleteById(@Param('id') id: number, @Body() data: ProductDto) {
-    const result: number | Products[] = await this.services.deleteById(
+  async deleteById(@Param('id') id: number, @Query() data: ProductDto) {
+    console.log(data);
+    const result: resultItems[] | number = await this.services.deleteById(
       id,
       data,
     );
+    console.log(ResponseHelper.createResponse(HttpStatus.OK, result));
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

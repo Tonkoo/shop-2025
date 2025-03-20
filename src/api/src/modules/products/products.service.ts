@@ -91,24 +91,10 @@ export class ProductsService {
         ? await this.EsServices.getItemsFilter(searchParams)
         : newProduct;
     } catch (err) {
+      await queryRunner.rollbackTransaction();
       logger.error('Error from product.create: ', err);
       throw new BadRequestException(
         'An error occurred while creating the product.',
-      );
-    }
-  }
-
-  async getList(): Promise<Products[]> {
-    try {
-      const products: Products[] = await this.productsRepo.find();
-
-      if (!products) throw new NotFoundException('Products not found');
-
-      return products;
-    } catch (err) {
-      console.log('Error from products.getList: ', err);
-      throw new BadRequestException(
-        'An error occurred while outputting product data.',
       );
     }
   }
@@ -192,10 +178,6 @@ export class ProductsService {
         }
       }
 
-      console.log(
-        prepareData(data, ['getProduct', 'type', 'from', 'size', 'searchName']),
-      );
-
       const newProduct = await this.productsRepo.update(
         { id: id },
         prepareData(data, [
@@ -235,29 +217,70 @@ export class ProductsService {
         ? await this.EsServices.getItemsFilter(searchParams)
         : newProduct;
     } catch (err) {
+      await queryRunner.rollbackTransaction();
       logger.error('Error from product.update: ', err);
       throw new BadRequestException(
         'An error occurred while updating the product.',
       );
     }
   }
-  async deleteById(id: number, data: ProductDto): Promise<number | Products[]> {
+  async deleteById(
+    id: number,
+    data: ProductDto,
+  ): Promise<resultItems[] | number> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const searchParams: payLoad = {
+      type: data.type,
+      from: Number(data.from),
+      size: Number(data.size),
+      searchName: data.searchName,
+    };
     try {
-      const result = this.productsRepo.delete(id);
+      if (!id) {
+        throw new NotFoundException('ID is required for deletion.');
+      }
 
-      if (result == null)
+      const currentProduct: Products | null = await this.productsRepo.findOne({
+        where: { id: id },
+      });
+
+      if (!currentProduct) {
+        throw new NotFoundException('Product not found');
+      }
+
+      const currentImageIds: number[] | null = currentProduct.images;
+
+      const delItems = await this.productsRepo.delete(id);
+
+      if (!delItems) {
         throw new BadRequestException(
           'An error occurred while deleting the product.',
         );
+      }
+
+      if (currentImageIds) {
+        const delImages = await this.imagesRepository.delete(currentImageIds);
+        if (!delImages) {
+          throw new BadRequestException(
+            'An error occurred while deleting the images.',
+          );
+        }
+      }
+
+      await queryRunner.commitTransaction();
 
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
-      if (data.getProduct) {
-        return await this.getList();
-      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result: resultItems[] | number = data.getProduct
+        ? await this.EsServices.getItemsFilter(searchParams)
+        : id;
 
-      return id;
+      return result;
     } catch (err) {
+      await queryRunner.rollbackTransaction();
       logger.error('Error from products.delete: ', err);
       throw new BadRequestException(
         'An error occurred while deleting the product.',

@@ -98,7 +98,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setSelectedId(value: number) {
       this.selectedId = value;
-      console.log(this.selectedId);
       await adminModule.getItem();
     },
     setNameItems(value: Search[]) {
@@ -188,8 +187,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setProductSection(value: SelectSection) {
       this.frontProduct.section = { id: value.id, name: value.name };
-
-      //      this.frontSection.parent = { id: value.id, name: value.name };
     },
     setProductShowOnMain(value: boolean) {
       this.frontProduct.showOnMain = value;

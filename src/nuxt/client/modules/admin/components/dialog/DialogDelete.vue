@@ -38,7 +38,7 @@ const dialog = computed(() => adminStore.delDialog);
 async function delItem() {
   if (adminStore.typeItem === 'section') {
     await adminModule
-      .delSection()
+      .delItem()
       .then(() => {
         adminStore.clearForms();
         adminStore.setDelDialog(false);

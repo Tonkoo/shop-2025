@@ -18,7 +18,6 @@ function fillingParam(
     size,
     searchName,
   };
-  console.log(getItem);
   if (getItem) {
     if (type === 'section') {
       params.getSection = getItem;
@@ -101,8 +100,6 @@ export async function addItem() {
       data = adminStore.frontProduct;
     }
 
-    console.log(adminStore.frontProduct);
-
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItems[] }>(
@@ -142,7 +139,6 @@ export async function editItem() {
       adminStore.searchName,
       true
     );
-    console.log(param);
     // if (adminStore.frontSection.name == '') {
     //   adminStore.setErrorName(true);
     //   throw new Error('The form is filled in incorrectly');
@@ -177,11 +173,9 @@ export async function getItem() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    console.log(response.data.data);
     if (adminStore.typeSearch.value == 'section') {
       await adminStore.setBackSection(response.data.data);
     } else {
-      console.log(response.data.data);
       await adminStore.setBackProduct(response.data.data);
     }
   } catch (err) {
@@ -190,10 +184,10 @@ export async function getItem() {
   }
 }
 
-export async function delSection() {
+export async function delItem() {
   const adminStore = useAdminStore();
   const params: ApiParams = fillingParam(
-    adminStore.typeItem,
+    adminStore.typeSearch.value,
     ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
     adminStore.countColumn.toString(),
     adminStore.searchName,
@@ -201,7 +195,7 @@ export async function delSection() {
   );
   try {
     const response = await api.delete<{ data: ResultItems[] }>(
-      `/section/${adminStore.selectedId}`,
+      `/${adminStore.typeSearch.value}/${adminStore.selectedId}`,
       { params }
     );
     if (!response) {
