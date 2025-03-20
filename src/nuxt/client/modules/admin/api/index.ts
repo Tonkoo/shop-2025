@@ -154,17 +154,25 @@ export async function editItem() {
   }
 }
 
-export async function getSection() {
+export async function getItem() {
   const adminStore = useAdminStore();
   const params = {
     id: adminStore.selectedId,
   };
   try {
-    const response = await api.get('/section', { params: params });
+    const response = await api.get(`/${adminStore.typeSearch.value}`, {
+      params: params,
+    });
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    await adminStore.setSelectedSection(response.data.data);
+    console.log(response.data.data);
+    if (adminStore.typeSearch.value == 'section') {
+      await adminStore.setBackSection(response.data.data);
+    } else {
+      console.log(response.data.data);
+      await adminStore.setBackProduct(response.data.data);
+    }
   } catch (err) {
     console.error(err);
     throw err;

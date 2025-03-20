@@ -69,7 +69,7 @@ const onSearchInput = async (value: SelectSection | string) => {
   const name = typeof value === 'string' ? value : value.name;
   adminStore.setSearchSection(name);
   if (typeof value !== 'string') {
-    adminStore.setProductSection(value);
+    adminStore.setProductIdSection(value);
   }
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;

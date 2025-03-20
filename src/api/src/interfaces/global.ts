@@ -9,7 +9,7 @@ type Product = {
   price: number;
   color: string;
   description: string;
-  id_section: number;
+  section: parentSection;
   show_on_main: boolean;
   main_slider: boolean;
 };
@@ -38,7 +38,14 @@ type DocumentProduct = Product &
 
 type ProductClient = Product &
   DateClient & {
-    images: number[];
+    images: number[] | null;
+  };
+
+type ProductBase = Product &
+  DateBase & {
+    images: number[] | null;
+    // section?: parentSection;
+    imageObject?: Images[];
   };
 
 type Section = {
@@ -58,13 +65,13 @@ type SectionEntities = Section &
 
 type SectionBase = Sections &
   DateBase & {
-    images: number[];
+    images: number[] | null;
     parent?: parentSection;
     imageObject?: Images[];
   };
 type SectionClient = Section &
   DateClient & {
-    images: number[];
+    images: number[] | null;
   };
 
 type response = {
@@ -131,4 +138,5 @@ export {
   parentSection,
   ProductClient,
   SectionClient,
+  ProductBase,
 };

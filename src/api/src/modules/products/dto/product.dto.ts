@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Products } from '../../../entities/products.entity';
+import { Sections } from '../../../entities/sections.entity';
 
 export class ProductDto {
   @ApiProperty({ example: 1, description: 'ID продукта' })
@@ -12,7 +13,7 @@ export class ProductDto {
   name: string;
 
   @ApiProperty({ example: [1, 2, 3], description: 'Список ID изображений' })
-  images: Awaited<number>[];
+  images: Awaited<number>[] | null;
 
   @ApiProperty({ example: '123.00', description: 'Цена продукта' })
   price: number;
@@ -27,7 +28,7 @@ export class ProductDto {
     example: 2,
     description: 'ID раздела',
   })
-  idSection: number;
+  id_section: number;
 
   @ApiProperty({
     example: true,
@@ -71,7 +72,7 @@ export class ProductDto {
     this.price = ent.price;
     this.color = ent.color;
     this.description = ent.description;
-    this.idSection = ent.id_section;
+    this.id_section = ent.section.id;
     this.showOnMain = ent.show_on_main;
     this.mainSlider = ent.main_slider;
     this.createAt = ent.create_at;

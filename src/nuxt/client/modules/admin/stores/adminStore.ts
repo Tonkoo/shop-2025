@@ -7,6 +7,7 @@ import type {
   Search,
   Section,
   TypeSearch,
+  Product,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 
@@ -29,6 +30,7 @@ export const useAdminStore = defineStore('admin-store', {
     searchSection: '',
     selectedId: 0,
     backSection: null,
+    backProduct: null,
     frontSection: {
       id: 0,
       code: '',
@@ -97,16 +99,27 @@ export const useAdminStore = defineStore('admin-store', {
     async setSelectedId(value: number) {
       this.selectedId = value;
       this.frontSection.id = value;
-      await adminModule.getSection();
+      await adminModule.getItem();
     },
     setNameItems(value: Search[]) {
       this.allName = value;
     },
-    async setSelectedSection(value: Section) {
+    async setBackSection(value: Section) {
       this.backSection = value;
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
+    },
+    async setBackProduct(value: Product) {
+      this.backProduct = value;
+      this.setProductName(value.name);
+      await convertFile(value.imageObject);
+      this.setProductPrice(value.price);
+      this.setProductColor(value.color);
+      this.setProductDescription(value.description);
+      this.setProductSection(value.section ?? { id: 0, name: '' });
+      this.setProductShowOnMain(value.showOnMain);
+      this.setProductMainSlider(value.mainSlider);
     },
     async clearForms() {
       this.setIsEdit(false);
@@ -146,7 +159,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.frontProduct.images = value;
     },
     setProductPrice(value: string) {
-      this.frontProduct.price = value;
+      this.frontProduct.price = String(value);
     },
     setProductColor(value: string) {
       this.frontProduct.color = value;
@@ -154,8 +167,12 @@ export const useAdminStore = defineStore('admin-store', {
     setProductDescription(value: string) {
       this.frontProduct.description = value;
     },
-    setProductSection(value: SelectSection) {
+    setProductIdSection(value: SelectSection) {
       this.frontProduct.idSection = value.id;
+    },
+    setProductSection(value: SelectSection) {
+      this.frontProduct.section = { id: value.id, name: value.name };
+      //      this.frontSection.parent = { id: value.id, name: value.name };
     },
     setProductShowOnMain(value: boolean) {
       this.frontProduct.showOnMain = value;

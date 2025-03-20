@@ -22,6 +22,7 @@ type AdminState = {
   searchSection: string;
   selectedId: number;
   backSection: Section | null;
+  backProduct: Product | null;
   frontSection: Section;
   frontProduct: Product;
   errors: Err;

@@ -21,8 +21,8 @@ export class Products extends BaseEntity {
   @Column()
   name: string;
 
-  @Column('int', { array: true })
-  images: number[];
+  @Column('int', { array: true, nullable: true })
+  images: number[] | null;
 
   @Column()
   price: number;
@@ -35,7 +35,7 @@ export class Products extends BaseEntity {
 
   @ManyToOne(() => Sections, (item) => item.products)
   @JoinColumn({ name: 'id_section' })
-  id_section: number;
+  section: Sections;
 
   @Column({ default: false, name: 'show_on_main' })
   show_on_main: boolean;

@@ -9,6 +9,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -25,7 +26,7 @@ import {
   ResponseHelperApiError,
   ResponseHelperApiOK,
 } from '../../utils/response.util';
-import { response, resultItems } from '../../interfaces/global';
+import { response, resultItems, ProductBase } from '../../interfaces/global';
 import { Products } from '../../entities/products.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
@@ -89,8 +90,9 @@ export class ProductsController {
     type: ResponseHelperApiError,
   })
   @Get()
-  async getList(): Promise<response> {
-    const result: Products[] = await this.services.getList();
+  async getProduct(@Query('id') id: number): Promise<response> {
+    const result: ProductBase | ProductBase[] =
+      await this.services.getProductById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 

@@ -162,16 +162,17 @@ export class SectionsService {
           data.images = [];
         }
 
-        const currentImageIds: number[] = currentSection.images;
-
         const newImageIds = data.images;
 
-        const imagesToDelete = currentImageIds.filter(
-          (id) => !newImageIds.includes(id),
-        );
+        const currentImageIds: number[] | null = currentSection.images;
+        if (currentImageIds) {
+          const imagesToDelete = currentImageIds.filter(
+            (id) => !newImageIds.includes(id),
+          );
 
-        if (imagesToDelete.length > 0) {
-          await this.imagesRepository.delete(imagesToDelete);
+          if (imagesToDelete.length > 0) {
+            await this.imagesRepository.delete(imagesToDelete);
+          }
         }
 
         const newSection = await this.sectionsRepo.update(
@@ -252,7 +253,7 @@ export class SectionsService {
         throw new NotFoundException('Section not found');
       }
 
-      const currentImageIds: number[] = currentSection.images;
+      const currentImageIds: number[] | null = currentSection.images;
 
       const delItems = await this.sectionsRepo.delete(id);
 

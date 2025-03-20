@@ -158,7 +158,10 @@ export class ElasticsearchService {
     type: string,
   ) {
     try {
-      const images: Images[] = await this.imagesRepository.findBy({
+      if (!document.images) {
+        document.images = [];
+      }
+      const images: Images[] | null = await this.imagesRepository.findBy({
         id: In(document.images),
       });
       const imageData: imageData[] = images.map(
@@ -250,7 +253,7 @@ export class ElasticsearchService {
   }
   //TODO: Написать метод для опредения уровня раздела в древовиндой структуре (Level 1"." Laval 2 ".." и т.д.)
   async getNameShopByElastic(payLoad: payLoad): Promise<string[]> {
-    const { searchName, type, size } = payLoad;
+    const { searchName, size } = payLoad;
     try {
       if (searchName == undefined) {
         return [];
@@ -260,7 +263,7 @@ export class ElasticsearchService {
         size,
         query: {
           bool: {
-            must: [{ match: { type: type } }],
+            must: [{ match: { type: 'section' } }],
             should: [{ wildcard: { name: `*${searchName}*` } }],
             minimum_should_match: 1,
           },

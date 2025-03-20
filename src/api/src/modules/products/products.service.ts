@@ -5,17 +5,19 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
-import { resultItems } from '../../interfaces/global';
+import { ProductBase, resultItems } from '../../interfaces/global';
 import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { transliterate as tr } from 'transliteration';
 import { createImages } from '../../utils/createImages.util';
 import { convertTimeObject } from '../../utils/convertTime.util';
+import { Images } from '../../entities/images.entity';
+import { camelCaseConverter } from '../../utils/toCamelCase.util';
 
 @Injectable()
 export class ProductsService {
@@ -24,6 +26,8 @@ export class ProductsService {
     private readonly productsRepo: Repository<Products>,
     @InjectRepository(Sections)
     private readonly sectionsRepo: Repository<Sections>,
+    @InjectRepository(Images)
+    private readonly imagesRepository: Repository<Images>,
     private readonly EsServices: ElasticsearchService,
     private readonly dataSource: DataSource,
   ) {}
@@ -49,7 +53,7 @@ export class ProductsService {
         data.images = [];
       }
       const newProduct: Products = await this.productsRepo.save(
-        prepareData(data, ['getProduct']),
+        prepareData(data, ['getProduct', 'section']),
       );
       if (!newProduct) {
         throw new BadRequestException(
@@ -94,6 +98,32 @@ export class ProductsService {
       return products;
     } catch (err) {
       console.log('Error from products.getList: ', err);
+      throw new BadRequestException(
+        'An error occurred while outputting product data.',
+      );
+    }
+  }
+
+  async getProductById(id: number): Promise<ProductBase[] | ProductBase> {
+    try {
+      const product: ProductBase | null = await this.productsRepo.findOne({
+        where: { id },
+        relations: ['section'],
+      });
+      console.log(product?.section);
+      if (!product) {
+        throw new NotFoundException('Product not found');
+      }
+      if (product.images) {
+        const imageIds: number[] = product.images;
+        product.imageObject = await this.imagesRepository.findBy({
+          id: In(imageIds),
+        });
+      }
+
+      return camelCaseConverter(product);
+    } catch (err) {
+      console.error('Error for product.getProductById: ', err);
       throw new BadRequestException(
         'An error occurred while outputting product data.',
       );

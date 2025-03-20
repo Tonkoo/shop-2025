@@ -20,8 +20,8 @@ export class Sections extends BaseEntity {
   @Column()
   name: string;
 
-  @Column('int', { array: true })
-  images: number[];
+  @Column('int', { array: true, nullable: true })
+  images: number[] | null;
 
   @CreateDateColumn({ name: 'create_at' })
   create_at: Date;
@@ -32,6 +32,6 @@ export class Sections extends BaseEntity {
   @Column({ name: 'id_parent', nullable: true })
   id_parent: number;
 
-  @OneToMany(() => Products, (item) => item.id_section, { onDelete: 'CASCADE' })
+  @OneToMany(() => Products, (item) => item.section, { onDelete: 'CASCADE' })
   products: Products[];
 }
