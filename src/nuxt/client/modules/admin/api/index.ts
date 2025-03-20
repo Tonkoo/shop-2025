@@ -123,10 +123,17 @@ export async function addItem() {
 export async function editItem() {
   const adminStore = useAdminStore();
   try {
-    const editSection = comparisonValues(
-      adminStore.frontSection,
-      adminStore.backSection
-    );
+    let data;
+    if (adminStore.typeItem === 'section') {
+      data = comparisonValues(adminStore.frontSection, adminStore.backSection);
+    } else {
+      data = comparisonValues(adminStore.frontProduct, adminStore.backProduct);
+    }
+    if (data.section) {
+      data.sectionId = data.section.id;
+      data.sectionName = data.section.name;
+    }
+
     const formData = new FormData();
     const param: ApiParams = fillingParam(
       adminStore.typeItem,
@@ -135,14 +142,16 @@ export async function editItem() {
       adminStore.searchName,
       true
     );
+    console.log(param);
     // if (adminStore.frontSection.name == '') {
     //   adminStore.setErrorName(true);
     //   throw new Error('The form is filled in incorrectly');
     // }
-    generateFormData(formData, editSection, param);
+
+    generateFormData(formData, data, param);
     adminStore.setSearchName('');
     const response = await api.put<{ data: ResultItems[] }>(
-      `/${adminStore.typeItem}/${adminStore.backSection?.id}`,
+      `/${adminStore.typeItem}/${adminStore.selectedId}`,
       formData,
       headers
     );

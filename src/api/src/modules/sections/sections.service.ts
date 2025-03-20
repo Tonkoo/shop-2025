@@ -197,10 +197,10 @@ export class SectionsService {
             where: { id: id },
           },
         );
-        await queryRunner.commitTransaction();
         if (!updatedSection) {
           throw new NotFoundException('Section not found');
         }
+        await queryRunner.commitTransaction();
 
         await this.EsServices.updateDocument(
           this.index || 'shop',

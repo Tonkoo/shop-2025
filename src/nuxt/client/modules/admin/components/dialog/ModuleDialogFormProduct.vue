@@ -10,10 +10,10 @@
       :label="$t('admin.label.image')"
       @update:model-value="adminStore.setProductImages"
     />
+    <!--    mask="#.##"-->
     <areal-form-input
       v-model="adminStore.frontProduct.price"
       :label="$t('admin.label.price')"
-      mask="#.##"
       fill-mask="0"
       reverse-fill-mask
       :hint="$t('admin.hint.price')"

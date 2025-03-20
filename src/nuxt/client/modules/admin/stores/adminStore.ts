@@ -98,7 +98,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setSelectedId(value: number) {
       this.selectedId = value;
-      this.frontSection.id = value;
+      console.log(this.selectedId);
       await adminModule.getItem();
     },
     setNameItems(value: Search[]) {
@@ -131,6 +131,17 @@ export const useAdminStore = defineStore('admin-store', {
       });
       this.setSearchParentName('');
       this.setSectionIdParent({ id: 0, name: '' });
+      this.setProductName('');
+      this.setProductImages([]);
+      this.setProductPrice('');
+      this.setProductColor('');
+      this.setProductDescription('');
+      this.setProductSection({
+        id: 0,
+        name: '',
+      });
+      this.setProductShowOnMain(false);
+      this.setProductMainSlider(false);
     },
     setSectionName(value: string) {
       this.frontSection.name = value;

@@ -1,4 +1,5 @@
 type Section = {
+  [key: string]: any;
   id: number;
   code: string;
   name: string;
@@ -11,6 +12,7 @@ type Section = {
 };
 
 type Product = {
+  [key: string]: any;
   id: number;
   code: string;
   name: string;

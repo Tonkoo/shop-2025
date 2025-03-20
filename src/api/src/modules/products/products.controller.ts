@@ -30,6 +30,7 @@ import { response, resultItems, ProductBase } from '../../interfaces/global';
 import { Products } from '../../entities/products.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
+import { UpdateResult } from 'typeorm';
 
 class DeleteProductDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -67,7 +68,6 @@ export class ProductsController {
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
-    console.log(data);
     const result: Products | resultItems[] = await this.services.create(
       data,
       files,
@@ -98,6 +98,12 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [{ name: 'files', maxCount: 10 }],
+      getMulterOptions('section'),
+    ),
+  )
   @ApiOperation({ summary: 'Изменение данных продукта' })
   @ApiBody({
     description: 'Данные для изменения данных продукта',
@@ -113,10 +119,16 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async updateById(@Param('id') id: number, @Body() data: ProductDto) {
-    const result: Products | Products[] = await this.services.updateById(
+  async updateById(
+    @Param('id') id: number,
+    @Body() data: ProductDto,
+    @UploadedFiles() files: { files: Express.Multer.File[] },
+  ) {
+    console.log(data);
+    const result: resultItems[] | UpdateResult = await this.services.updateById(
       id,
       data,
+      files,
     );
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { DataSource, In, Repository } from 'typeorm';
+import { DataSource, In, Repository, UpdateResult } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
@@ -141,37 +141,99 @@ export class ProductsService {
   async updateById(
     id: number,
     data: ProductDto,
-  ): Promise<Products | Products[]> {
+    files: { files: Express.Multer.File[] },
+  ): Promise<resultItems[] | UpdateResult> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
     try {
-      const result = this.productsRepo.update(
-        { id: id },
-        prepareData(data, ['getProduct']),
-      );
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
 
-      if (result == null)
-        throw new BadRequestException(
-          'An error occurred while saving the product.',
-        );
-
-      const updatedProduct = await this.productsRepo.findOne({
+      const currentProduct: Products | null = await this.productsRepo.findOne({
         where: { id: id },
       });
+      console.log(id);
 
-      if (updatedProduct) {
-        // await this.EsServices.updateDocument(
-        //   this.index || 'shop',
-        //   id.toString(),
-        //   updatedProduct,
-        //   'product',
-        // );
-      } else {
+      if (!currentProduct) {
         throw new NotFoundException('Product not found');
       }
 
-      if (data.getProduct) {
-        return await this.getList();
+      if (data.name) {
+        data.code = tr(data.name, { replace: { ' ': '-' } });
       }
-      return updatedProduct;
+
+      if (files.files) {
+        data.images = await createImages(queryRunner, files);
+      }
+
+      if (!Array.isArray(data.images)) {
+        data.images = [];
+      }
+      if (data.section) {
+        data.section = { id: data.sectionId, name: data.sectionName };
+      }
+      data.price = Math.round(Number(data.price));
+      console.log(data.price);
+      const newImageIds = data.images;
+
+      const currentImageIds: number[] | null = currentProduct.images;
+      if (currentImageIds) {
+        const imagesToDelete = currentImageIds.filter(
+          (id) => !newImageIds.includes(id),
+        );
+
+        if (imagesToDelete.length > 0) {
+          await this.imagesRepository.delete(imagesToDelete);
+        }
+      }
+
+      console.log(
+        prepareData(data, ['getProduct', 'type', 'from', 'size', 'searchName']),
+      );
+
+      const newProduct = await this.productsRepo.update(
+        { id: id },
+        prepareData(data, [
+          'getProduct',
+          'type',
+          'from',
+          'size',
+          'searchName',
+          'sectionId',
+          'sectionName',
+        ]),
+      );
+
+      if (!newProduct) {
+        throw new BadRequestException(
+          'An error occurred while saving the product.',
+        );
+      }
+
+      const updatedProduct: Products | null = await this.productsRepo.findOne({
+        where: { id: id },
+      });
+      if (!updatedProduct) {
+        throw new NotFoundException('Product not found');
+      }
+      await queryRunner.commitTransaction();
+
+      await this.EsServices.updateDocument(
+        this.index || 'shop',
+        id.toString(),
+        convertTimeObject(updatedProduct),
+        'product',
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return data.getProduct
+        ? await this.EsServices.getItemsFilter(searchParams)
+        : newProduct;
     } catch (err) {
       logger.error('Error from product.update: ', err);
       throw new BadRequestException(
