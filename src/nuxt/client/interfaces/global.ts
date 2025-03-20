@@ -24,6 +24,8 @@ type Product = {
   createAt?: string;
   updateAt?: string;
   section?: SelectSection;
+  sectionId?: number;
+  sectionName?: string;
   imageObject?: ImageObject[];
 };
 

@@ -10,11 +10,15 @@ export async function convertFile(imageObject: ImageObject[] | undefined) {
     imageObject.map(async (image) => {
       const response = await fetch(image.path);
       const blob = await response.blob();
-
       const file = new File([blob], image.name, { type: image.type });
       return file;
     })
   );
-  adminStore.setSectionImages(filesWithId);
-  adminStore.setConvertSelectedSectionImages(filesWithId);
+  if (adminStore.typeItem == 'section') {
+    adminStore.setSectionImages(filesWithId);
+  } else {
+    adminStore.setProductImages(filesWithId);
+  }
+
+  adminStore.setConvertImages(filesWithId);
 }

@@ -101,6 +101,8 @@ export async function addItem() {
       data = adminStore.frontProduct;
     }
 
+    console.log(adminStore.frontProduct);
+
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItems[] }>(

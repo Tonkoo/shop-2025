@@ -20,6 +20,7 @@ import {
   payLoadTest,
   ProductClient,
   SectionClient,
+  ProductBase,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 import { formatResults } from '../../utils/formatResults.util';
@@ -90,8 +91,8 @@ export class ElasticsearchService {
     }
     return items;
   }
-
-  async createIndex(): Promise<boolean> {
+  // : Promise<boolean>
+  async createIndex() {
     try {
       const indexExists = await this.elasticsearchService.indices.exists({
         index: this.index || 'shop',
@@ -102,7 +103,9 @@ export class ElasticsearchService {
         });
       }
 
-      const dbProduct: Products[] = await this.productRepository.find();
+      const dbProduct: Products[] = await this.productRepository.find({
+        relations: ['section'],
+      });
 
       if (!dbProduct) {
         throw new NotFoundException('Products not found');

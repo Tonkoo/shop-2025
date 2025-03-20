@@ -49,11 +49,21 @@ export class ProductsService {
       };
       data.code = tr(data.name, { replace: { ' ': '-' } });
       data.price = Math.round(Number(data.price));
+
       if (!Array.isArray(data.images)) {
         data.images = [];
       }
+      if (data.section) {
+        data.section = { id: data.sectionId, name: data.sectionName };
+      }
       const newProduct: Products = await this.productsRepo.save(
-        prepareData(data, ['getProduct', 'section']),
+        prepareData(data, [
+          'getProduct',
+          'from',
+          'size',
+          'search_name',
+          'type',
+        ]),
       );
       if (!newProduct) {
         throw new BadRequestException(
@@ -62,9 +72,8 @@ export class ProductsService {
       }
       newProduct.images = [];
       if (files.files) {
-        console.log(12312);
         data.images = await createImages(queryRunner, files);
-        await this.sectionsRepo.update(
+        await this.productsRepo.update(
           { id: newProduct.id },
           { images: data.images },
         );
@@ -110,7 +119,6 @@ export class ProductsService {
         where: { id },
         relations: ['section'],
       });
-      console.log(product?.section);
       if (!product) {
         throw new NotFoundException('Product not found');
       }

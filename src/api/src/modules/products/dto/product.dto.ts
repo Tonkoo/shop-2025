@@ -28,7 +28,7 @@ export class ProductDto {
     example: 2,
     description: 'ID раздела',
   })
-  id_section: number;
+  idSection: number;
 
   @ApiProperty({
     example: true,
@@ -54,6 +54,15 @@ export class ProductDto {
   })
   updateAt: Date;
 
+  section: {
+    id: number;
+    name: string;
+  };
+
+  sectionId: number;
+
+  sectionName: string;
+
   type: string;
 
   from: string;
@@ -72,7 +81,7 @@ export class ProductDto {
     this.price = ent.price;
     this.color = ent.color;
     this.description = ent.description;
-    this.id_section = ent.section.id;
+    this.idSection = ent.section.id;
     this.showOnMain = ent.show_on_main;
     this.mainSlider = ent.main_slider;
     this.createAt = ent.create_at;
