@@ -33,7 +33,7 @@ import { SectionBase, response, resultItems } from '../../interfaces/global';
 import { Sections } from '../../entities/sections.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
-import { DataSource, UpdateResult } from 'typeorm';
+import { UpdateResult } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 
 class DeleteSectionDto {
@@ -44,10 +44,7 @@ class DeleteSectionDto {
 @Controller('section')
 @ApiTags('section')
 export class SectionsController {
-  constructor(
-    private readonly services: SectionsService,
-    private readonly dataSource: DataSource,
-  ) {}
+  constructor(private readonly services: SectionsService) {}
 
   @ApiOperation({ summary: 'Вывод данных таблицы' })
   @ApiBody({

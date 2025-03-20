@@ -7,6 +7,8 @@ import {
   Get,
   HttpStatus,
   Delete,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,15 +19,16 @@ import {
 } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/product.dto';
-import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
   ResponseHelperApiError,
   ResponseHelperApiOK,
 } from '../../utils/response.util';
-import { response } from '../../interfaces/global';
+import { response, resultItems } from '../../interfaces/global';
 import { Products } from '../../entities/products.entity';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { getMulterOptions } from '../../config/multer.config';
 
 class DeleteProductDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -35,12 +38,15 @@ class DeleteProductDto {
 @Controller('product')
 @ApiTags('product')
 export class ProductsController {
-  constructor(
-    private readonly services: ProductsService,
-    private readonly EsServices: ElasticsearchService,
-  ) {}
+  constructor(private readonly services: ProductsService) {}
 
   @Post()
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [{ name: 'files', maxCount: 10 }],
+      getMulterOptions('section'),
+    ),
+  )
   @ApiOperation({ summary: 'Создать новый продукт' })
   @ApiBody({
     description: 'Данные для создания нового продукта',
@@ -56,9 +62,14 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async create(@Body() data: ProductDto): Promise<response> {
-    const result: Products | Products[] =
-      await this.services.saveProducts(data);
+  async create(
+    @Body() data: ProductDto,
+    @UploadedFiles() files: { files: Express.Multer.File[] },
+  ): Promise<response> {
+    const result: Products | resultItems[] = await this.services.create(
+      data,
+      files,
+    );
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 

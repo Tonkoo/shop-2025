@@ -1,6 +1,6 @@
 <template>
   <areal-pagination
-    v-model="current"
+    v-model="adminStore.currentPage"
     :max="totalPages"
     @update:model-value="adminStore.setCurrentPage"
   />
@@ -19,8 +19,6 @@ import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
 const adminStore = useAdminStore();
 const countColumn = computed(() => adminStore.countColumn.toString());
-
-const current = computed(() => adminStore.currentPage);
 
 const totalPages = computed(() => {
   const allCount = adminStore.allCount;

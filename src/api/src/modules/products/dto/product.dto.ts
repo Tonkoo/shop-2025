@@ -53,6 +53,14 @@ export class ProductDto {
   })
   updateAt: Date;
 
+  type: string;
+
+  from: string;
+
+  size: string;
+
+  searchName: string;
+
   getProduct: boolean;
 
   constructor(ent: Products) {

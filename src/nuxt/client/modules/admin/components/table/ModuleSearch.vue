@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-5">
           <areal-select-type-search
-            v-model="typeSearch"
+            v-model="adminStore.typeSearch"
             :label="$t('admin.label.type')"
             :options="optionsTip"
             option-value="value"
@@ -67,12 +67,9 @@ const optionsTip = [
   { label: 'Продукты', value: 'product' },
 ];
 
-let typeSearch = ref(adminStore.typeSearch);
-
 async function clearSearch() {
   try {
     adminStore.setTypeSearch({ label: 'Разделы', value: 'section' });
-    typeSearch = ref(adminStore.typeSearch);
     adminStore.setSearchName('');
     await adminModule.getItems();
   } catch (err) {

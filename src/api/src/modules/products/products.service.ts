@@ -11,6 +11,11 @@ import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
+import { resultItems } from '../../interfaces/global';
+import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
+import { transliterate as tr } from 'transliteration';
+import { createImages } from '../../utils/createImages.util';
+import { convertTimeObject } from '../../utils/convertTime.util';
 
 @Injectable()
 export class ProductsService {
@@ -24,60 +29,54 @@ export class ProductsService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
-  async saveProducts(data: ProductDto): Promise<Products | Products[]> {
+  async create(
+    data: ProductDto,
+    files: { files: Express.Multer.File[] },
+  ): Promise<Products | resultItems[]> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-
     try {
-      // await createImages(data, queryRunner);
-      return await this.create(data, queryRunner);
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      logger.error('Error from products.save: ', err);
-      throw new BadRequestException(
-        'An error occurred while saving the product.',
-      );
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  async create(
-    data: ProductDto,
-    queryRunner: QueryRunner,
-  ): Promise<Products | Products[]> {
-    try {
-      const section: Sections | null = await this.sectionsRepo
-        .findOne({
-          where: {
-            id: data.idSection,
-          },
-        })
-        .catch(() => {
-          return null;
-        });
-
-      if (!section) {
-        throw new NotFoundException('Section not found');
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
+      data.code = tr(data.name, { replace: { ' ': '-' } });
+      data.price = Math.round(Number(data.price));
+      if (!Array.isArray(data.images)) {
+        data.images = [];
       }
-
-      const result: Products = await this.productsRepo.save(
+      const newProduct: Products = await this.productsRepo.save(
         prepareData(data, ['getProduct']),
       );
-      await queryRunner.commitTransaction();
-
-      // await this.EsServices.addDocument(
-      //   this.index || 'shop',
-      //   result.id.toString(),
-      //   result,
-      //   'product',
-      // );
-
-      if (data.getProduct) {
-        return await this.getList();
+      if (!newProduct) {
+        throw new BadRequestException(
+          'An error occurred while create the product.',
+        );
       }
-      return result;
+      newProduct.images = [];
+      if (files.files) {
+        console.log(12312);
+        data.images = await createImages(queryRunner, files);
+        await this.sectionsRepo.update(
+          { id: newProduct.id },
+          { images: data.images },
+        );
+        newProduct.images = data.images;
+      }
+      await queryRunner.commitTransaction();
+      await this.EsServices.addDocument(
+        this.index || 'shop',
+        newProduct.id.toString(),
+        convertTimeObject(newProduct),
+        'product',
+      );
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return data.getProduct
+        ? await this.EsServices.getItemsFilter(searchParams)
+        : newProduct;
     } catch (err) {
       logger.error('Error from product.create: ', err);
       throw new BadRequestException(

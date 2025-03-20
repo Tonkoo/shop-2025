@@ -16,6 +16,7 @@ export async function createImages(
   files: { files: Express.Multer.File[] },
 ): Promise<number[]> {
   try {
+    console.log(files);
     const images: ImageData[] = files.files.map((file) => ({
       originalName: file.originalname,
       fileName: file.filename,
