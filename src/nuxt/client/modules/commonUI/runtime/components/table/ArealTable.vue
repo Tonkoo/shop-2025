@@ -55,7 +55,7 @@ const OpenDialog = (id: number) => {
 };
 
 const OpenDelDialog = (id: number) => {
-  adminStore.setSelectedId(id);
+  adminStore.setSelectedIdDel(id);
   adminStore.setDelDialog(true);
 };
 

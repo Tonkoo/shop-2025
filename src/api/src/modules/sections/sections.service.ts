@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { DataSource, In, QueryRunner, Repository, UpdateResult } from 'typeorm';
+import { DataSource, In, Repository, UpdateResult } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
@@ -18,7 +18,6 @@ import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
 import { removeImages } from '../../utils/removeImages.util';
-import { ProductDto } from '../products/dto/product.dto';
 
 @Injectable()
 export class SectionsService {
@@ -39,6 +38,9 @@ export class SectionsService {
     if (!Array.isArray(data.images)) {
       data.images = [];
     }
+    if (String(data.idParent) == 'null' || String(data.idParent) == '0') {
+      data.idParent = null;
+    }
   }
 
   async create(
@@ -58,8 +60,9 @@ export class SectionsService {
 
       this.ProcessingDate(data);
 
+      console.log(data);
       const newSection: Sections = await this.sectionsRepo.save(
-        prepareData(data, ['getSection']),
+        prepareData(data, ['getSection', 'search_name', 'from', 'size']),
       );
 
       if (!newSection) {
@@ -128,6 +131,11 @@ export class SectionsService {
             name: parentSection.name,
           };
         }
+      } else {
+        sections.parent = {
+          id: 0,
+          name: '',
+        };
       }
 
       return camelCaseConverter(sections);
@@ -177,6 +185,17 @@ export class SectionsService {
           data.images = [];
         }
 
+        const newSection = await this.sectionsRepo.update(
+          { id: id },
+          prepareData(data, [
+            'getSection',
+            'type',
+            'from',
+            'size',
+            'searchName',
+          ]),
+        );
+
         const newImageIds = data.images;
 
         const currentImageIds: number[] | null = currentSection.images;
@@ -189,17 +208,6 @@ export class SectionsService {
             await this.imagesRepository.delete(imagesToDelete);
           }
         }
-
-        const newSection = await this.sectionsRepo.update(
-          { id: id },
-          prepareData(data, [
-            'getSection',
-            'type',
-            'from',
-            'size',
-            'searchName',
-          ]),
-        );
 
         if (!newSection) {
           throw new BadRequestException(

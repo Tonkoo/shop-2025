@@ -1,43 +1,33 @@
 import type { Product, Section } from '~/interfaces/global';
 import { isEqual } from 'lodash';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
-
-export function comparisonValues(
-  data: Section | Product,
-  oldData: Section | Product | null
-) {
+export function comparisonValues<T extends Section | Product>(
+  data: T,
+  oldData: T | null
+): Partial<T> {
   const adminStore = useAdminStore();
-  const resultSection: Partial<Section | Product> = {};
-  if (!isEqual(data.name, oldData?.name)) {
-    resultSection.name = data.name;
-  }
-  if (!isEqual(data.images, oldData?.images)) {
-    resultSection.images = data.images;
-  }
-  if (adminStore.typeItem == 'section') {
-    if (!isEqual(data.parent, oldData?.parent)) {
-      resultSection.id_parent = data.parent?.id;
-    }
+  const result: Partial<T> = {};
+
+  const fields: (keyof T)[] = ['name', 'images'];
+
+  if (adminStore.typeItem === 'section') {
+    fields.push('parent');
   } else {
-    if (!isEqual(data.price, oldData?.price)) {
-      resultSection.price = data.price;
-    }
-    if (!isEqual(data.color, oldData?.color)) {
-      resultSection.color = data.color;
-    }
-    if (!isEqual(data.description, oldData?.description)) {
-      resultSection.color = data.color;
-    }
-    if (!isEqual(data.section, oldData?.section)) {
-      resultSection.section = data.section;
-    }
-    if (!isEqual(data.showOnMain, oldData?.showOnMain)) {
-      resultSection.showOnMain = data.showOnMain;
-    }
-    if (!isEqual(data.showOnMain, oldData?.showOnMain)) {
-      resultSection.mainSlider = data.mainSlider;
+    fields.push(
+      'price',
+      'color',
+      'description',
+      'section',
+      'showOnMain',
+      'mainSlider'
+    );
+  }
+
+  for (const field of fields) {
+    if (!isEqual(data[field], oldData?.[field])) {
+      result[field] = data[field];
     }
   }
 
-  return resultSection;
+  return result;
 }

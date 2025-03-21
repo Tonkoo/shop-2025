@@ -73,6 +73,11 @@ type SectionClient = Section &
     images: number[] | null;
   };
 
+type SectionElastic = Section &
+  DateClient & {
+    type: string;
+  };
+
 type response = {
   statusCode: number;
   data: object | number | undefined;
@@ -138,4 +143,5 @@ export {
   ProductClient,
   SectionClient,
   ProductBase,
+  SectionElastic,
 };

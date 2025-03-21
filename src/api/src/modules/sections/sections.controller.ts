@@ -134,6 +134,7 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
+    console.log(data);
     const result: resultItems[] | UpdateResult = await this.services.updateById(
       id,
       data,

@@ -20,6 +20,7 @@ import {
   payLoadTest,
   ProductClient,
   SectionClient,
+  SectionElastic,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 import { formatResults } from '../../utils/formatResults.util';
@@ -36,6 +37,18 @@ export class ElasticsearchService {
     private readonly imagesRepository: Repository<Images>,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
+
+  private getSectionLevel(
+    sections: SectionElastic[],
+    sectionId: number | string,
+    level: number = 0,
+  ): number {
+    const section = sections.find((s) => s.id === Number(sectionId));
+    if (!section || section.id_parent === null) {
+      return level;
+    }
+    return this.getSectionLevel(sections, section.id_parent, level + 1);
+  }
 
   async generateBlockImages(
     data: (SectionClient | ProductClient)[],
@@ -143,6 +156,11 @@ export class ElasticsearchService {
     index: string,
     documents: (SectionEntities | ProductEntities)[],
   ): Promise<void> {
+    if (documents.length === 0) {
+      console.log('No documents to index. Skipping bulk operation.');
+      return;
+    }
+
     const body: elasticBody[] = documents.flatMap(
       (doc: SectionEntities | ProductEntities) => [
         { index: { _index: index, _id: doc.id } },
@@ -253,7 +271,7 @@ export class ElasticsearchService {
     }
   }
   //TODO: Написать метод для опредения уровня раздела в древовиндой структуре (Level 1"." Laval 2 ".." и т.д.)
-  async getNameShopByElastic(payLoad: payLoad): Promise<string[]> {
+  async getNameShopByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
     const { searchName, size } = payLoad;
     try {
       if (searchName == undefined) {
@@ -270,8 +288,17 @@ export class ElasticsearchService {
           },
         },
       });
+      const testResult = result.hits.hits.map(
+        (item) => item._source,
+      ) as SectionElastic[];
 
-      return result.hits.hits.map((item) => item._source) as string[];
+      return testResult.map((section) => {
+        const level = this.getSectionLevel(testResult, section.id);
+        return {
+          ...section,
+          name: '.'.repeat(level) + section.name,
+        };
+      });
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);
       throw new BadRequestException('Error getting name');

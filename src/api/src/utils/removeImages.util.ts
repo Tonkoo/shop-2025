@@ -1,5 +1,3 @@
-import { SectionDto } from '../modules/sections/dto/section.dto';
-import { ProductDto } from '../modules/products/dto/product.dto';
 import { BadRequestException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Images } from '../entities/images.entity';

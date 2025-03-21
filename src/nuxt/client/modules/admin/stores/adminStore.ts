@@ -100,6 +100,9 @@ export const useAdminStore = defineStore('admin-store', {
       this.selectedId = value;
       await adminModule.getItem();
     },
+    async setSelectedIdDel(value: number) {
+      this.selectedId = value;
+    },
     setNameItems(value: Search[]) {
       this.allName = value;
     },
