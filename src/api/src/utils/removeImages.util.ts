@@ -1,0 +1,28 @@
+import { SectionDto } from '../modules/sections/dto/section.dto';
+import { ProductDto } from '../modules/products/dto/product.dto';
+import { BadRequestException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Images } from '../entities/images.entity';
+import { logger } from './logger/logger';
+import { Sections } from '../entities/sections.entity';
+import { Products } from '../entities/products.entity';
+
+export async function removeImages(
+  data: Sections | Products,
+  imagesRepository: Repository<Images>,
+) {
+  try {
+    const currentImageIds: number[] | null = data.images;
+    if (currentImageIds) {
+      const delImages = await imagesRepository.delete(currentImageIds);
+      if (!delImages) {
+        throw new BadRequestException(
+          'An error occurred while deleting the images.',
+        );
+      }
+    }
+  } catch (err) {
+    logger.error('Error from sections.removeImages : ', err);
+    throw new BadRequestException('There was an error deleting images.');
+  }
+}

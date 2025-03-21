@@ -18,6 +18,7 @@ import { createImages } from '../../utils/createImages.util';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import { Images } from '../../entities/images.entity';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
+import { removeImages } from '../../utils/removeImages.util';
 
 @Injectable()
 export class ProductsService {
@@ -33,6 +34,19 @@ export class ProductsService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
+  ProcessingDate(data: ProductDto) {
+    if (data.name) {
+      data.code = tr(data.name, { replace: { ' ': '-' } });
+    }
+    if (!Array.isArray(data.images)) {
+      data.images = [];
+    }
+    data.price = Math.round(Number(data.price));
+    if (data.section) {
+      data.section = { id: data.sectionId, name: data.sectionName };
+    }
+  }
+
   async create(
     data: ProductDto,
     files: { files: Express.Multer.File[] },
@@ -47,15 +61,9 @@ export class ProductsService {
         size: Number(data.size),
         searchName: data.searchName,
       };
-      data.code = tr(data.name, { replace: { ' ': '-' } });
-      data.price = Math.round(Number(data.price));
 
-      if (!Array.isArray(data.images)) {
-        data.images = [];
-      }
-      if (data.section) {
-        data.section = { id: data.sectionId, name: data.sectionName };
-      }
+      this.ProcessingDate(data);
+
       const newProduct: Products = await this.productsRepo.save(
         prepareData(data, [
           'getProduct',
@@ -65,12 +73,14 @@ export class ProductsService {
           'type',
         ]),
       );
+
       if (!newProduct) {
         throw new BadRequestException(
           'An error occurred while create the product.',
         );
       }
       newProduct.images = [];
+
       if (files.files) {
         data.images = await createImages(queryRunner, files);
         await this.productsRepo.update(
@@ -79,7 +89,9 @@ export class ProductsService {
         );
         newProduct.images = data.images;
       }
+
       await queryRunner.commitTransaction();
+
       await this.EsServices.addDocument(
         this.index || 'shop',
         newProduct.id.toString(),
@@ -143,41 +155,30 @@ export class ProductsService {
       const currentProduct: Products | null = await this.productsRepo.findOne({
         where: { id: id },
       });
-      console.log(id);
 
       if (!currentProduct) {
         throw new NotFoundException('Product not found');
       }
 
-      if (data.name) {
-        data.code = tr(data.name, { replace: { ' ': '-' } });
-      }
+      this.ProcessingDate(data);
 
       if (files.files) {
         data.images = await createImages(queryRunner, files);
       }
 
-      if (!Array.isArray(data.images)) {
-        data.images = [];
-      }
-      if (data.section) {
-        data.section = { id: data.sectionId, name: data.sectionName };
-      }
-      data.price = Math.round(Number(data.price));
-      console.log(data.price);
-      const newImageIds = data.images;
+      if (data.images) {
+        const newImageIds = data.images;
+        const currentImageIds: number[] | null = currentProduct.images;
+        if (currentImageIds) {
+          const imagesToDelete = currentImageIds.filter(
+            (id) => !newImageIds.includes(id),
+          );
 
-      const currentImageIds: number[] | null = currentProduct.images;
-      if (currentImageIds) {
-        const imagesToDelete = currentImageIds.filter(
-          (id) => !newImageIds.includes(id),
-        );
-
-        if (imagesToDelete.length > 0) {
-          await this.imagesRepository.delete(imagesToDelete);
+          if (imagesToDelete.length > 0) {
+            await this.imagesRepository.delete(imagesToDelete);
+          }
         }
       }
-
       const newProduct = await this.productsRepo.update(
         { id: id },
         prepareData(data, [
@@ -200,6 +201,7 @@ export class ProductsService {
       const updatedProduct: Products | null = await this.productsRepo.findOne({
         where: { id: id },
       });
+
       if (!updatedProduct) {
         throw new NotFoundException('Product not found');
       }
@@ -250,8 +252,6 @@ export class ProductsService {
         throw new NotFoundException('Product not found');
       }
 
-      const currentImageIds: number[] | null = currentProduct.images;
-
       const delItems = await this.productsRepo.delete(id);
 
       if (!delItems) {
@@ -260,25 +260,16 @@ export class ProductsService {
         );
       }
 
-      if (currentImageIds) {
-        const delImages = await this.imagesRepository.delete(currentImageIds);
-        if (!delImages) {
-          throw new BadRequestException(
-            'An error occurred while deleting the images.',
-          );
-        }
-      }
+      await removeImages(currentProduct, this.imagesRepository);
 
       await queryRunner.commitTransaction();
 
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const result: resultItems[] | number = data.getProduct
+      return data.getProduct
         ? await this.EsServices.getItemsFilter(searchParams)
         : id;
-
-      return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from products.delete: ', err);

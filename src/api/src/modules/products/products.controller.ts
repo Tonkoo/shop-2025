@@ -124,7 +124,6 @@ export class ProductsController {
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
-    console.log(data);
     const result: resultItems[] | UpdateResult = await this.services.updateById(
       id,
       data,

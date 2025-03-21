@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { DataSource, In, Repository, UpdateResult } from 'typeorm';
+import { DataSource, In, QueryRunner, Repository, UpdateResult } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
@@ -13,10 +13,12 @@ import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
-import { SectionBase, resultItems } from '../../interfaces/global';
+import { resultItems, SectionBase } from '../../interfaces/global';
 import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
+import { removeImages } from '../../utils/removeImages.util';
+import { ProductDto } from '../products/dto/product.dto';
 
 @Injectable()
 export class SectionsService {
@@ -29,6 +31,15 @@ export class SectionsService {
     private readonly EsServices: ElasticsearchService,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
+
+  ProcessingDate(data: SectionDto) {
+    if (data.name) {
+      data.code = tr(data.name, { replace: { ' ': '-' } });
+    }
+    if (!Array.isArray(data.images)) {
+      data.images = [];
+    }
+  }
 
   async create(
     data: SectionDto,
@@ -44,18 +55,19 @@ export class SectionsService {
         size: Number(data.size),
         searchName: data.searchName,
       };
-      data.code = tr(data.name, { replace: { ' ': '-' } });
-      if (!Array.isArray(data.images)) {
-        data.images = [];
-      }
+
+      this.ProcessingDate(data);
+
       const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection']),
       );
+
       if (!newSection) {
         throw new BadRequestException(
           'An error occurred while create the partition.',
         );
       }
+
       newSection.images = [];
       if (files.files) {
         data.images = await createImages(queryRunner, files);
@@ -65,13 +77,16 @@ export class SectionsService {
         );
         newSection.images = data.images;
       }
+
       await queryRunner.commitTransaction();
+
       await this.EsServices.addDocument(
         this.index || 'shop',
         newSection.id.toString(),
         convertTimeObject(newSection),
         'section',
       );
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return data.getSection
         ? await this.EsServices.getItemsFilter(searchParams)
@@ -210,11 +225,9 @@ export class SectionsService {
         );
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const result: resultItems[] | UpdateResult = data.getSection
+        return data.getSection
           ? await this.EsServices.getItemsFilter(searchParams)
           : newSection;
-
-        return result;
       }
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -253,8 +266,6 @@ export class SectionsService {
         throw new NotFoundException('Section not found');
       }
 
-      const currentImageIds: number[] | null = currentSection.images;
-
       const delItems = await this.sectionsRepo.delete(id);
 
       if (!delItems) {
@@ -263,25 +274,16 @@ export class SectionsService {
         );
       }
 
-      if (currentImageIds) {
-        const delImages = await this.imagesRepository.delete(currentImageIds);
-        if (!delImages) {
-          throw new BadRequestException(
-            'An error occurred while deleting the images.',
-          );
-        }
-      }
+      await removeImages(currentSection, this.imagesRepository);
 
       await queryRunner.commitTransaction();
 
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const result: resultItems[] | number = data.getSection
+      return data.getSection
         ? await this.EsServices.getItemsFilter(searchParams)
         : id;
-
-      return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.delete : ', err);

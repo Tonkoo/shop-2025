@@ -44,7 +44,6 @@ type ProductClient = Product &
 type ProductBase = Product &
   DateBase & {
     images: number[] | null;
-    // section?: parentSection;
     imageObject?: Images[];
   };
 
