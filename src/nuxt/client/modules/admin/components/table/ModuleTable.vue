@@ -15,6 +15,7 @@ const quasar = useQuasar();
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
 
+// TODO: добавить столбец разделы для продуктов
 const columns = [
   {
     name: 'name',

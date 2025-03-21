@@ -1,3 +1,4 @@
+//TODO: переписать метод, fields не использовать. вместо for reduce
 import type { Product, Section } from '~/interfaces/global';
 import { isEqual } from 'lodash';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';

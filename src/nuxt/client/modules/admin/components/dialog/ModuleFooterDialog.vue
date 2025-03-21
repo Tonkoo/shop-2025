@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+//TODO: добавить блокировку кнопки "сохранить" в моменте выполнения запроса
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { useQuasar } from 'quasar';

@@ -205,6 +205,7 @@ export class ElasticsearchService {
     }
   }
 
+  //TODO: Вынести уровень родителя в бд и сделать проверку на изменение родителя(Имнгеить родителя можно только, на тот уровень, который был изначально)
   async updateDocument(
     index: string,
     id: string,

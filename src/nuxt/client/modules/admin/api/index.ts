@@ -131,6 +131,9 @@ export async function editItem() {
       data.sectionName = data.section.name;
     }
 
+    console.log(adminStore.backSection?.images);
+    console.log(data.images);
+
     const formData = new FormData();
     const param: ApiParams = fillingParam(
       adminStore.typeItem,
@@ -178,6 +181,7 @@ export async function getItem() {
     } else {
       await adminStore.setBackProduct(response.data.data);
     }
+    console.log(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;

@@ -43,7 +43,8 @@ export class ProductsService {
     }
     data.price = Math.round(Number(data.price));
     if (data.section) {
-      data.section = { id: data.sectionId, name: data.sectionName };
+      // data.section = { id: data.sectionId, name: data.sectionName };
+      data.section = { id: data.sectionId };
     }
   }
 

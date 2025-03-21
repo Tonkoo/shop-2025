@@ -12,6 +12,7 @@
             @update:model-value="adminStore.setTypeSearch"
           />
         </div>
+        <!--        TODO: фильтрация по разделу для продукта -->
         <div class="col-5">
           <areal-select-search
             v-model="adminStore.searchName"

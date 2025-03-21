@@ -55,7 +55,7 @@ export class ProductDto {
 
   section: {
     id: number;
-    name: string;
+    // name: string;
   };
 
   sectionId: number;
