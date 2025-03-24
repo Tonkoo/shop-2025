@@ -7,6 +7,7 @@ type Section = {
   createAt?: string;
   updateAt?: string;
   idParent: number | null;
+  level: number;
   parent?: SelectSection;
   imageObject?: ImageObject[];
 };

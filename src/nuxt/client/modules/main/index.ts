@@ -4,10 +4,11 @@ import {
   addComponentsDir,
   addImportsDir,
 } from '@nuxt/kit';
+
 export default defineNuxtModule({
   meta: {
-    name: 'admin-module',
-    configKey: 'admin-module',
+    name: 'main-module',
+    configKey: 'main-module',
     compatibility: {
       nuxt: '^3.11.1',
     },
@@ -22,6 +23,6 @@ export default defineNuxtModule({
       global: true,
       pathPrefix: false,
     });
-    console.log('Successfully added module Admin');
+    console.log('Successfully added module Main');
   },
 });

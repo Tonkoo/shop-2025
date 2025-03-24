@@ -52,6 +52,7 @@ type Section = {
   code: string;
   name: string;
   id_parent: number | null;
+  level: number;
 };
 
 type SectionEntities = Section &

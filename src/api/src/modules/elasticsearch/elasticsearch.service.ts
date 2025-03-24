@@ -128,6 +128,7 @@ export class ElasticsearchService {
       if (!dbSection) {
         throw new NotFoundException('Section not found');
       }
+      console.log(dbSection);
       const sections: (ProductClient | SectionClient)[] =
         convertTimeArray(dbSection);
 

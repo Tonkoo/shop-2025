@@ -33,6 +33,13 @@ export class SectionDto {
   })
   idParent: number | null;
 
+  @ApiProperty({
+    example: 0,
+    description: 'Уровень раздела',
+    nullable: true,
+  })
+  level: number;
+
   type: string;
 
   from: string;

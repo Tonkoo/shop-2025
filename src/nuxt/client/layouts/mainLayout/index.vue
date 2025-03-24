@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: 'AdminLayout' });
+defineOptions({ name: 'MainLayout' });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped></style>

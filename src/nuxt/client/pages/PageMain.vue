@@ -1,5 +1,5 @@
 <template>
-  <WgAdminContainer />
+  <WgModuleContainer />
 </template>
 
 <script setup lang="ts"></script>

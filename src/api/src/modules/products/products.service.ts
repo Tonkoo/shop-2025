@@ -261,7 +261,7 @@ export class ProductsService {
         );
       }
 
-      await removeImages(currentProduct, this.imagesRepository);
+      await removeImages(currentProduct, this.imagesRepository, queryRunner);
 
       await queryRunner.commitTransaction();
 

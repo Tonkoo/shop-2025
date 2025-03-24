@@ -18,6 +18,7 @@ import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
 import { removeImages } from '../../utils/removeImages.util';
+import { isArray } from 'class-validator';
 
 @Injectable()
 export class SectionsService {
@@ -36,7 +37,7 @@ export class SectionsService {
       data.code = tr(data.name, { replace: { ' ': '-' } });
     }
     if (!Array.isArray(data.images)) {
-      data.images = [];
+      data.images = null;
     }
     if (String(data.idParent) == 'null' || String(data.idParent) == '0') {
       data.idParent = null;
@@ -59,8 +60,20 @@ export class SectionsService {
       };
 
       this.ProcessingDate(data);
+      if (!data.level) {
+        if (!data.idParent) {
+          data.level = 1;
+        } else {
+          const parentSection = await this.sectionsRepo.findOne({
+            where: { id: data.idParent },
+          });
+          if (!parentSection) {
+            throw new NotFoundException('Section not found');
+          }
+          data.level = parentSection.level + 1;
+        }
+      }
 
-      console.log(data);
       const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, ['getSection', 'search_name', 'from', 'size']),
       );
@@ -274,6 +287,14 @@ export class SectionsService {
         throw new NotFoundException('Section not found');
       }
 
+      if (
+        !Array.isArray(currentSection.images) ||
+        !currentSection.images.length
+      ) {
+        currentSection.images = null;
+      }
+      await removeImages(currentSection, this.imagesRepository, queryRunner);
+
       const delItems = await this.sectionsRepo.delete(id);
 
       if (!delItems) {
@@ -281,8 +302,6 @@ export class SectionsService {
           'An error occurred while deleting the section.',
         );
       }
-
-      await removeImages(currentSection, this.imagesRepository);
 
       await queryRunner.commitTransaction();
 

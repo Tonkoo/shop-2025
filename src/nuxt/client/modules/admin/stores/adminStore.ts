@@ -107,6 +107,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.allName = value;
     },
     async setBackSection(value: Section) {
+      console.log(value);
       this.backSection = value;
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });

@@ -32,6 +32,9 @@ export class Sections extends BaseEntity {
   @Column({ name: 'id_parent', nullable: true })
   id_parent: number;
 
+  @Column()
+  level: number;
+
   @OneToMany(() => Products, (item) => item.section, { onDelete: 'CASCADE' })
   products: Products[];
 }

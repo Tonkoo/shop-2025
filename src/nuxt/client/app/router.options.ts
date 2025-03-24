@@ -14,5 +14,14 @@ export default <RouterConfig & { routes: () => Routes }>{
       component: () =>
         import('~/pages/PageAdmin.vue').then((r) => r.default || r),
     },
+    {
+      name: 'MainIndex',
+      path: '/',
+      meta: {
+        layout: 'main-layout',
+      },
+      component: () =>
+        import('~/pages/PageMain.vue').then((r) => r.default || r),
+    },
   ],
 };
