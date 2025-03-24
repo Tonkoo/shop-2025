@@ -17,10 +17,14 @@
       <!--      <DialogDelete />-->
     </main>
   </q-page-container>
+  <q-footer class="bg-white text-black">
+    <ModuleFooter />
+  </q-footer>
 </template>
 
 <script setup lang="ts">
 import ModuleHeader from '~/modules/main/components/ModuleHeader.vue';
+import ModuleFooter from '~/modules/main/components/ModuleFooter.vue';
 </script>
 
 <style scoped></style>

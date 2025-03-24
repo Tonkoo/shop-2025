@@ -303,4 +303,27 @@ export class ElasticsearchService {
       throw new BadRequestException('Error getting name');
     }
   }
+
+  async getItemFooter(): Promise<resultItems[]> {
+    try {
+      const items = await this.searchFromElastic({
+        size: 10,
+        query: {
+          bool: {
+            must: [
+              {
+                terms: {
+                  level: ['1', '2'],
+                },
+              },
+            ],
+          },
+        },
+      });
+      return formatResults(items);
+    } catch (err) {
+      logger.error('Error from elastic.getItemFooter: ', err);
+      throw new BadRequestException('Error getting items footer');
+    }
+  }
 }

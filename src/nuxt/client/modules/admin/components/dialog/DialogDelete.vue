@@ -38,23 +38,21 @@ const dialog = computed(() => adminStore.delDialog);
 
 async function delItem() {
   adminStore.setDisableBtn(true);
-  if (adminStore.typeItem === 'section') {
-    await adminModule
-      .delItem()
-      .then(() => {
-        adminStore.clearForms();
-        adminStore.setDelDialog(false);
-        quasar.notify(notifyPositive);
-        adminStore.setDisableBtn(false);
-      })
-      .catch((err) => {
-        adminStore.setDisableBtn(false);
-        quasar.notify({
-          ...notifyNegative,
-          message: 'Ошибка при сохранении данных: ' + err,
-        });
+  await adminModule
+    .delItem()
+    .then(() => {
+      adminStore.clearForms();
+      adminStore.setDelDialog(false);
+      quasar.notify(notifyPositive);
+      adminStore.setDisableBtn(false);
+    })
+    .catch((err) => {
+      adminStore.setDisableBtn(false);
+      quasar.notify({
+        ...notifyNegative,
+        message: 'Ошибка при сохранении данных: ' + err,
       });
-  }
+    });
 }
 </script>
 
