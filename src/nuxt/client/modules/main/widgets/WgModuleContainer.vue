@@ -17,7 +17,7 @@
       <!--      <DialogDelete />-->
     </main>
   </q-page-container>
-  <q-footer class="bg-white text-black">
+  <q-footer class="footer">
     <ModuleFooter />
   </q-footer>
 </template>
@@ -27,4 +27,8 @@ import ModuleHeader from '~/modules/main/components/ModuleHeader.vue';
 import ModuleFooter from '~/modules/main/components/ModuleFooter.vue';
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.footer {
+  background: getColor('grey', 12);
+}
+</style>

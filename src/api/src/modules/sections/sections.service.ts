@@ -41,6 +41,9 @@ export class SectionsService {
     if (String(data.idParent) == 'null' || String(data.idParent) == '0') {
       data.idParent = null;
     }
+    if (data.idParent) {
+      data.idParent = Number(data.idParent);
+    }
   }
 
   async create(
@@ -59,22 +62,28 @@ export class SectionsService {
       };
 
       this.ProcessingDate(data);
-      if (!data.level) {
-        if (!data.idParent) {
-          data.level = 1;
-        } else {
-          const parentSection = await this.sectionsRepo.findOne({
-            where: { id: data.idParent },
-          });
-          if (!parentSection) {
-            throw new NotFoundException('Section not found');
-          }
-          data.level = parentSection.level + 1;
+
+      if (!data.idParent) {
+        data.level = 1;
+      } else {
+        const parentSection = await this.sectionsRepo.findOne({
+          where: { id: data.idParent },
+        });
+        if (!parentSection) {
+          throw new NotFoundException('Section not found');
         }
+        data.level = parentSection.level + 1;
       }
 
       const newSection: Sections = await this.sectionsRepo.save(
-        prepareData(data, ['getSection', 'search_name', 'from', 'size']),
+        prepareData(data, [
+          'getSection',
+          'search_name',
+          'from',
+          'size',
+          'type',
+          'parent',
+        ]),
       );
 
       if (!newSection) {
