@@ -26,6 +26,7 @@ type AdminState = {
   frontSection: Section;
   frontProduct: Product;
   errors: Err;
+  disableBtn: boolean;
 };
 
 export type { AdminState };

@@ -37,6 +37,7 @@ export const useAdminStore = defineStore('admin-store', {
       name: '',
       images: [],
       idParent: null,
+      level: 1,
     },
     frontProduct: {
       id: 0,
@@ -51,6 +52,7 @@ export const useAdminStore = defineStore('admin-store', {
       mainSlider: false,
     },
     errors: { name: false },
+    disableBtn: false,
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -96,6 +98,9 @@ export const useAdminStore = defineStore('admin-store', {
       this.items = data.items;
       this.allCount = data.total;
     },
+    setDisableBtn(value: boolean) {
+      this.disableBtn = value;
+    },
     async setSelectedId(value: number) {
       this.selectedId = value;
       await adminModule.getItem();
@@ -107,7 +112,6 @@ export const useAdminStore = defineStore('admin-store', {
       this.allName = value;
     },
     async setBackSection(value: Section) {
-      console.log(value);
       this.backSection = value;
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });

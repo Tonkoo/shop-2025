@@ -99,7 +99,6 @@ export async function addItem() {
     } else {
       data = adminStore.frontProduct;
     }
-    console.log(data);
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItems[] }>(
@@ -129,6 +128,9 @@ export async function editItem() {
     if (data.section) {
       data.sectionId = data.section.id;
       data.sectionName = data.section.name;
+    }
+    if (data.parent) {
+      data.idParent = data.parent.id;
     }
 
     const formData = new FormData();

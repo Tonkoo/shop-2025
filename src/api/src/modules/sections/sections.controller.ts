@@ -134,12 +134,14 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
-    const result: resultItems[] | UpdateResult = await this.services.updateById(
-      id,
-      data,
-      files,
-    );
-    return ResponseHelper.createResponse(HttpStatus.OK, result);
+    try {
+      const result: resultItems[] | UpdateResult =
+        await this.services.updateById(id, data, files);
+      return ResponseHelper.createResponse(HttpStatus.OK, result);
+    } catch (err) {
+      logger.error('Error from sections.update: ', err);
+      throw err;
+    }
   }
 
   @Delete(':id')

@@ -41,13 +41,13 @@ export class ElasticsearchService {
   private getSectionLevel(
     sections: SectionElastic[],
     sectionId: number | string,
-    level: number = 0,
   ): number {
     const section = sections.find((s) => s.id === Number(sectionId));
-    if (!section || section.id_parent === null) {
-      return level;
+    if (!section) {
+      throw new NotFoundException('Not found Section');
     }
-    return this.getSectionLevel(sections, section.id_parent, level + 1);
+
+    return section?.level;
   }
 
   async generateBlockImages(
@@ -128,7 +128,6 @@ export class ElasticsearchService {
       if (!dbSection) {
         throw new NotFoundException('Section not found');
       }
-      console.log(dbSection);
       const sections: (ProductClient | SectionClient)[] =
         convertTimeArray(dbSection);
 
@@ -206,7 +205,6 @@ export class ElasticsearchService {
     }
   }
 
-  //TODO: Вынести уровень родителя в бд и сделать проверку на изменение родителя(Имнгеить родителя можно только, на тот уровень, который был изначально)
   async updateDocument(
     index: string,
     id: string,
@@ -272,7 +270,6 @@ export class ElasticsearchService {
       throw new BadRequestException('Error while receiving data');
     }
   }
-  //TODO: Написать метод для опредения уровня раздела в древовиндой структуре (Level 1"." Laval 2 ".." и т.д.)
   async getNameShopByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
     const { searchName, size } = payLoad;
     try {

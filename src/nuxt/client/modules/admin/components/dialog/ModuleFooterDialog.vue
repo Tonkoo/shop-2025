@@ -4,6 +4,7 @@
       :label="$t('admin.label.save')"
       color="black"
       icon="save"
+      :disable="adminStore.disableBtn"
       @click="adminStore.isEdit ? editItem() : addItem()"
     />
     <areal-button
@@ -26,14 +27,17 @@ const adminModule = useAdminModule();
 const quasar = useQuasar();
 
 async function addItem() {
+  adminStore.setDisableBtn(true);
   await adminModule
     .addItem()
     .then(() => {
       adminStore.clearForms();
       adminStore.setViewModal(false);
       quasar.notify(notifyPositive);
+      adminStore.setDisableBtn(false);
     })
     .catch((err) => {
+      adminStore.setDisableBtn(false);
       quasar.notify({
         ...notifyNegative,
         message: 'Ошибка при сохранении данных: ' + err,

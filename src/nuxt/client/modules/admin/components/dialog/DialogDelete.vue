@@ -15,6 +15,7 @@
           label="Удалить"
           color="black"
           icon="delete"
+          :disable="adminStore.disableBtn"
           @click="delItem"
         />
         <areal-button label="Отмена" @click="adminStore.setDelDialog(false)" />
@@ -36,6 +37,7 @@ const quasar = useQuasar();
 const dialog = computed(() => adminStore.delDialog);
 
 async function delItem() {
+  adminStore.setDisableBtn(true);
   if (adminStore.typeItem === 'section') {
     await adminModule
       .delItem()
@@ -43,8 +45,10 @@ async function delItem() {
         adminStore.clearForms();
         adminStore.setDelDialog(false);
         quasar.notify(notifyPositive);
+        adminStore.setDisableBtn(false);
       })
       .catch((err) => {
+        adminStore.setDisableBtn(false);
         quasar.notify({
           ...notifyNegative,
           message: 'Ошибка при сохранении данных: ' + err,

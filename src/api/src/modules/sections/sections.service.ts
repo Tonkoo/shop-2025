@@ -18,7 +18,6 @@ import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
 import { removeImages } from '../../utils/removeImages.util';
-import { isArray } from 'class-validator';
 
 @Injectable()
 export class SectionsService {
@@ -186,16 +185,18 @@ export class SectionsService {
           throw new NotFoundException('Section not found');
         }
 
-        if (data.name) {
-          data.code = tr(data.name, { replace: { ' ': '-' } });
-        }
-
         if (files.files) {
           data.images = await createImages(queryRunner, files);
         }
+        this.ProcessingDate(data);
 
-        if (!Array.isArray(data.images)) {
-          data.images = [];
+        if (data.idParent) {
+          const parentSection = await this.sectionsRepo.findOne({
+            where: { id: data.idParent },
+          });
+          if (currentSection.level - 1 != parentSection?.level) {
+            throw new BadRequestException('Cannot change the section level.');
+          }
         }
 
         const newSection = await this.sectionsRepo.update(
@@ -206,19 +207,21 @@ export class SectionsService {
             'from',
             'size',
             'searchName',
+            'parent',
           ]),
         );
 
         const newImageIds = data.images;
+        if (newImageIds) {
+          const currentImageIds: number[] | null = currentSection.images;
+          if (currentImageIds) {
+            const imagesToDelete = currentImageIds.filter(
+              (id) => !newImageIds.includes(id),
+            );
 
-        const currentImageIds: number[] | null = currentSection.images;
-        if (currentImageIds) {
-          const imagesToDelete = currentImageIds.filter(
-            (id) => !newImageIds.includes(id),
-          );
-
-          if (imagesToDelete.length > 0) {
-            await this.imagesRepository.delete(imagesToDelete);
+            if (imagesToDelete.length > 0) {
+              await this.imagesRepository.delete(imagesToDelete);
+            }
           }
         }
 

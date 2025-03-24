@@ -1,5 +1,5 @@
 <template>
-  <q-btn :label="label" class="button" />
+  <q-btn :label="label" class="button" :disable="disable" />
 </template>
 
 <script setup lang="ts">
@@ -7,6 +7,10 @@ defineProps({
   label: {
     type: String,
     default: 'Название',
+  },
+  disable: {
+    type: Boolean,
+    default: false,
   },
 });
 
