@@ -68,6 +68,7 @@ export class ProductsController {
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
+    console.log(data);
     const result: Products | resultItems[] = await this.services.create(
       data,
       files,

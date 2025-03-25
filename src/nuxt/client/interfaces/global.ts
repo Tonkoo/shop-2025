@@ -23,7 +23,6 @@ type Product = {
   description: string;
   showOnMain: boolean;
   mainSlider: boolean;
-  idSection: number | null;
   createAt?: string;
   updateAt?: string;
   section?: SelectSection;

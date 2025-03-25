@@ -173,7 +173,7 @@ export class ElasticsearchService {
   async addDocument(
     index: string,
     id: string,
-    document: SectionClient | ProductClient,
+    document: ProductClient | SectionClient,
     type: string,
   ) {
     try {
@@ -189,11 +189,16 @@ export class ElasticsearchService {
           src: image.path,
         }),
       );
-      const updatedDocument = {
+      const updatedDocument: any = {
         ...document,
         type,
         images: imageData,
       };
+
+      if (updatedDocument.section) {
+        updatedDocument.section = updatedDocument.section.id;
+      }
+
       return await this.elasticsearchService.index({
         index: index,
         id: id,

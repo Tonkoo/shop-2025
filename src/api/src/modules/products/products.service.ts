@@ -64,14 +64,16 @@ export class ProductsService {
       };
 
       this.ProcessingDate(data);
-
       const newProduct: Products = await this.productsRepo.save(
         prepareData(data, [
+          'searchName',
           'getProduct',
           'from',
           'size',
-          'search_name',
           'type',
+          'sectionId',
+          'sectionName',
+          'idSection',
         ]),
       );
 

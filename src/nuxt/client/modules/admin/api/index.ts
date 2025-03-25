@@ -10,6 +10,7 @@ function fillingParam(
   from: string | number,
   size: string | number,
   searchName: string,
+  typeItem?: string,
   getItem?: boolean
 ) {
   const params: ApiParams = {
@@ -19,7 +20,7 @@ function fillingParam(
     searchName,
   };
   if (getItem) {
-    if (type === 'section') {
+    if (typeItem === 'section') {
       params.getSection = getItem;
     } else {
       params.getProduct = getItem;
@@ -82,12 +83,14 @@ export async function addItem() {
     adminStore.setSearchName('');
     const formData = new FormData();
     const param: ApiParams = fillingParam(
-      adminStore.typeItem,
+      adminStore.typeSearch.value,
       ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       adminStore.countColumn.toString(),
       adminStore.searchName,
+      adminStore.typeItem,
       true
     );
+    console.log(param);
     // if (adminStore.frontSection.name == '') {
     //   adminStore.setErrorName(true);
     //   throw new Error('The form is filled in incorrectly');
@@ -99,6 +102,7 @@ export async function addItem() {
     } else {
       data = adminStore.frontProduct;
     }
+    console.log(data);
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItems[] }>(
@@ -135,10 +139,11 @@ export async function editItem() {
 
     const formData = new FormData();
     const param: ApiParams = fillingParam(
-      adminStore.typeItem,
+      adminStore.typeSearch.value,
       ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       adminStore.countColumn.toString(),
       adminStore.searchName,
+      adminStore.typeItem,
       true
     );
     // if (adminStore.frontSection.name == '') {
@@ -193,6 +198,7 @@ export async function delItem() {
     ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
     adminStore.countColumn.toString(),
     adminStore.searchName,
+    adminStore.typeItem,
     true
   );
   try {
