@@ -36,14 +36,14 @@ export default defineNuxtModule<ModuleOptions>({
     //   nuxt,
     // )
 
-    await addComponentsDir({
+    addComponentsDir({
       path: resolve('./runtime/components'),
       global: true,
       pathPrefix: false,
     });
 
     nuxt.options.css = [
-      resolve('./assets/sass/index.scss'),
+      resolve('./assets/scss/index.scss'),
       ...nuxt.options.css,
     ];
     nuxt.options.vite = {
@@ -52,7 +52,7 @@ export default defineNuxtModule<ModuleOptions>({
         preprocessorOptions: {
           scss: {
             additionalData: `
-            @import "${resolve('./assets/sass/colors.scss')}";
+            @import "${resolve('./assets/scss/colors.scss')}";
         `,
           },
         },

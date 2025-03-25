@@ -1,6 +1,30 @@
 <template>
   <ArealDialog :model-value="dialog" class="sidebar" :position="'left'">
-    <q-card class="sidebar__card"> </q-card>
+    <q-card class="sidebar__card">
+      <div class="nav nav__sidebar">
+        <div
+          v-for="parentSection in getParentSection()"
+          :key="parentSection.id"
+          class="nav__column"
+        >
+          <div class="nav__title">
+            <a :href="'/' + parentSection.code + '/'">{{
+              parentSection.name
+            }}</a>
+          </div>
+          <ul class="nav__list">
+            <li
+              v-for="childSection in getChildSection(parentSection.id)"
+              :key="childSection.id"
+            >
+              <a :href="'/' + childSection.code + '/'">
+                {{ childSection.name }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </q-card>
   </ArealDialog>
 </template>
 
@@ -24,20 +48,22 @@ onMounted(async () => {
     });
   });
 });
+
+function getParentSection() {
+  return mainStores.menuSection.filter((section) => section.level === 1);
+}
+
+function getChildSection(parentId: number) {
+  return mainStores.menuSection.filter(
+    (section) => section.level === 2 && section.idParent === parentId
+  );
+}
 </script>
 
 <style scoped lang="scss">
+@import '~/modules/commonUI/assets/scss/nav';
+@import '~/modules/commonUI/assets/scss/nav.modifiers';
 .sidebar {
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.3s ease;
-  }
-
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
-  }
-
   .sidebar__card {
     position: fixed;
     top: 64px;
