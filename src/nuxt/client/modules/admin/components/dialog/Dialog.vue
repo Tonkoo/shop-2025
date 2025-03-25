@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-sm dialog">
-    <ArealDialog :model-value="dialog">
+    <ArealDialog :model-value="dialog" :position="'right'" class="dialog">
       <q-card class="dialog__card">
         <ModuleHeaderDialog />
         <ModuleDialogFormSection v-if="typeItem == 'section'" />

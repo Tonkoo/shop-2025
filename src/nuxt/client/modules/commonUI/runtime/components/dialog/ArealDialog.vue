@@ -1,9 +1,8 @@
 <template>
   <q-dialog
     :model-value="modelValue"
-    position="right"
+    :position="position"
     full-height
-    class="dialog"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <slot />
@@ -15,6 +14,14 @@ defineProps({
   modelValue: {
     type: Boolean,
     required: true,
+  },
+  position: {
+    type: String as PropType<'right' | 'standard' | 'top' | 'bottom' | 'left'>,
+    default: 'right',
+  },
+  transition: {
+    type: String,
+    default: '',
   },
 });
 

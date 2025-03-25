@@ -17,3 +17,24 @@ export async function getItemFooter() {
     throw new Error('Error while fetching section data from the server.');
   }
 }
+
+export async function getSectionMenu() {
+  try {
+    const mainStores = useMainStores();
+
+    const params = {
+      type: 'section',
+    };
+
+    const response = await api.get<{ data: ResultItems[] }>('/elastic/admin/', {
+      params,
+    });
+    if (!response) {
+      throw new Error('Error while receiving data');
+    }
+    mainStores.setMenuSection(response.data.data[0]);
+  } catch (err) {
+    console.error('Failed to fetch data from the server ' + err);
+    throw new Error('Error while fetching section data from the server.');
+  }
+}
