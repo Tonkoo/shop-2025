@@ -3,7 +3,7 @@
     <div class="footer__top">
       <div class="nav nav__footer">
         <div
-          v-for="parentSection in getParentSection()"
+          v-for="parentSection in getParentSection(mainStores.itemsFooter)"
           :key="parentSection.id"
           class="nav__column"
         >
@@ -14,7 +14,10 @@
           </div>
           <ul class="nav__list">
             <li
-              v-for="childSection in getChildSection(parentSection.id)"
+              v-for="childSection in getChildSection(
+                mainStores.itemsFooter,
+                parentSection.id
+              )"
               :key="childSection.id"
             >
               <a :href="'/' + childSection.code + '/'">
@@ -36,6 +39,10 @@ import { useMainModule } from '~/modules/main/global';
 import { useMainStores } from '~/modules/main/stores/mainStores';
 import { useQuasar } from 'quasar';
 import { notifyNegative } from '~/entities/notify.entites';
+import {
+  getChildSection,
+  getParentSection,
+} from '~/modules/main/utils/menu.helpers.utils';
 
 const mainModule = useMainModule();
 const mainStores = useMainStores();
@@ -49,16 +56,6 @@ onMounted(async () => {
     });
   });
 });
-
-function getParentSection() {
-  return mainStores.itemsFooter.filter((section) => section.level === 1);
-}
-
-function getChildSection(parentId: number) {
-  return mainStores.itemsFooter.filter(
-    (section) => section.level === 2 && section.idParent === parentId
-  );
-}
 </script>
 
 <style scoped lang="scss">

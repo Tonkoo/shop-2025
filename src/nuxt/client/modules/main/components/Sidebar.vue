@@ -3,7 +3,7 @@
     <q-card class="sidebar__card">
       <div class="nav nav__sidebar">
         <div
-          v-for="parentSection in getParentSection()"
+          v-for="parentSection in getParentSection(mainStores.menuSection)"
           :key="parentSection.id"
           class="nav__column"
         >
@@ -14,7 +14,10 @@
           </div>
           <ul class="nav__list">
             <li
-              v-for="childSection in getChildSection(parentSection.id)"
+              v-for="childSection in getChildSection(
+                mainStores.menuSection,
+                parentSection.id
+              )"
               :key="childSection.id"
             >
               <a :href="'/' + childSection.code + '/'">
@@ -33,6 +36,10 @@ import { useMainStores } from '~/modules/main/stores/mainStores';
 import { useMainModule } from '~/modules/main/global';
 import { useQuasar } from 'quasar';
 import { notifyNegative } from '~/entities/notify.entites';
+import {
+  getParentSection,
+  getChildSection,
+} from '~/modules/main/utils/menu.helpers.utils';
 
 const mainStores = useMainStores();
 const mainModule = useMainModule();
@@ -48,16 +55,6 @@ onMounted(async () => {
     });
   });
 });
-
-function getParentSection() {
-  return mainStores.menuSection.filter((section) => section.level === 1);
-}
-
-function getChildSection(parentId: number) {
-  return mainStores.menuSection.filter(
-    (section) => section.level === 2 && section.idParent === parentId
-  );
-}
 </script>
 
 <style scoped lang="scss">
