@@ -5,13 +5,20 @@
     .nav__title {
       text-transform: uppercase;
       font-weight: bold;
+      margin: 8px 0 0;
     }
 
     .nav__list {
+      margin: 8px 0 0;
       display: flex;
       flex-direction: column;
       list-style: none;
       padding: 0;
+    }
+
+    .nav__list-nested{
+      margin-left: 10px;
+      font-style: italic
     }
 
     a {

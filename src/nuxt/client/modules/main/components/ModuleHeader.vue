@@ -1,6 +1,12 @@
 <template>
   <q-toolbar class="q-pa-md header">
-    <q-btn flat round dense icon="menu" @click="mainStores.setSidebar()" />
+    <q-btn
+      flat
+      round
+      dense
+      :icon="mainStores.sidebar ? 'close' : 'menu'"
+      @click="mainStores.setSidebar()"
+    />
     <q-space />
     <q-toolbar-title class="title">StyleHub</q-toolbar-title>
     <q-space />

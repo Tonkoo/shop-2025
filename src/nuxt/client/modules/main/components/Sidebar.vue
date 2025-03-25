@@ -1,9 +1,15 @@
 <template>
-  <ArealDialog :model-value="dialog" class="sidebar" :position="'left'">
+  <ArealDialog
+    :model-value="dialog"
+    class="sidebar"
+    :position="'left'"
+    :transition-show="'fade'"
+    :transition-hide="'fade'"
+  >
     <q-card class="sidebar__card">
-      <div class="nav nav__sidebar">
+      <nav class="nav nav__sidebar">
         <div
-          v-for="parentSection in getParentSection(mainStores.menuSection)"
+          v-for="parentSection in getParentSection(mainStores.section)"
           :key="parentSection.id"
           class="nav__column"
         >
@@ -15,46 +21,47 @@
           <ul class="nav__list">
             <li
               v-for="childSection in getChildSection(
-                mainStores.menuSection,
-                parentSection.id
+                mainStores.section,
+                parentSection.id,
+                2
               )"
               :key="childSection.id"
             >
               <a :href="'/' + childSection.code + '/'">
                 {{ childSection.name }}
               </a>
+              <ul class="nav__list nav__list-nested">
+                <li
+                  v-for="nestedChildSection in getChildSection(
+                    mainStores.section,
+                    childSection.id,
+                    3
+                  )"
+                  :key="nestedChildSection.id"
+                >
+                  <a :href="'/' + nestedChildSection.code + '/'">
+                    {{ nestedChildSection.name }}
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
-      </div>
+      </nav>
     </q-card>
   </ArealDialog>
 </template>
 
 <script setup lang="ts">
 import { useMainStores } from '~/modules/main/stores/mainStores';
-import { useMainModule } from '~/modules/main/global';
-import { useQuasar } from 'quasar';
-import { notifyNegative } from '~/entities/notify.entites';
 import {
   getParentSection,
   getChildSection,
 } from '~/modules/main/utils/menu.helpers.utils';
 
 const mainStores = useMainStores();
-const mainModule = useMainModule();
-const quasar = useQuasar();
 
 const dialog = computed(() => mainStores.sidebar);
-
-onMounted(async () => {
-  await mainModule.getSectionMenu().catch((err) => {
-    quasar.notify({
-      ...notifyNegative,
-      message: err,
-    });
-  });
-});
 </script>
 
 <style scoped lang="scss">

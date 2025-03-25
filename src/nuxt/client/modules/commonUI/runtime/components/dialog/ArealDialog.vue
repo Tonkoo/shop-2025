@@ -3,6 +3,9 @@
     :model-value="modelValue"
     :position="position"
     full-height
+    :transition-show="transitionShow"
+    :transition-hide="transitionHide"
+    :transition-duration="300"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <slot />
@@ -19,9 +22,17 @@ defineProps({
     type: String as PropType<'right' | 'standard' | 'top' | 'bottom' | 'left'>,
     default: 'right',
   },
-  transition: {
+  transitionShow: {
     type: String,
     default: '',
+  },
+  transitionHide: {
+    type: String,
+    default: '',
+  },
+  transitionDuration: {
+    type: Number,
+    default: 300,
   },
 });
 

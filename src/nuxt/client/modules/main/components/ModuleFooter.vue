@@ -3,7 +3,7 @@
     <div class="footer__top">
       <div class="nav nav__footer">
         <div
-          v-for="parentSection in getParentSection(mainStores.itemsFooter)"
+          v-for="parentSection in getParentSection(mainStores.section)"
           :key="parentSection.id"
           class="nav__column"
         >
@@ -15,8 +15,9 @@
           <ul class="nav__list">
             <li
               v-for="childSection in getChildSection(
-                mainStores.itemsFooter,
-                parentSection.id
+                mainStores.section,
+                parentSection.id,
+                2
               )"
               :key="childSection.id"
             >
@@ -49,7 +50,7 @@ const mainStores = useMainStores();
 const quasar = useQuasar();
 
 onMounted(async () => {
-  await mainModule.getItemFooter().catch((err) => {
+  await mainModule.getSection().catch((err) => {
     quasar.notify({
       ...notifyNegative,
       message: err,
@@ -65,7 +66,6 @@ onMounted(async () => {
 .footer__wrapper {
   display: flex;
   flex-direction: column;
-
   padding: 10px;
 
   .footer__top {

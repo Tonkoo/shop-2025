@@ -4,8 +4,12 @@ export function getParentSection(data: Section[] | Product[]) {
   return data.filter((section) => section.level === 1);
 }
 
-export function getChildSection(data: Section[] | Product[], parentId: number) {
+export function getChildSection(
+  data: Section[] | Product[],
+  parentId: number,
+  level: number
+) {
   return data.filter(
-    (section) => section.level === 2 && section.idParent === parentId
+    (section) => section.level === level && section.idParent === parentId
   );
 }

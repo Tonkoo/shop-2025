@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
 import type { MainType } from '~/modules/main/type/types';
-import type { ResultItems, Section } from '~/interfaces/global';
+import type { ResultItems } from '~/interfaces/global';
 
 export const useMainStores = defineStore('main-store', {
   state: (): MainType => ({
     sidebar: false,
-    itemsFooter: [],
-    menuSection: [],
+    section: [],
   }),
   actions: {
     setSidebar() {
@@ -16,11 +15,8 @@ export const useMainStores = defineStore('main-store', {
       }
       this.sidebar = false;
     },
-    setItemsFooter(value: ResultItems) {
-      this.itemsFooter = value.items;
-    },
-    setMenuSection(value: ResultItems) {
-      this.menuSection = value.items;
+    setSection(value: ResultItems) {
+      this.section = value.items;
     },
   },
 });
