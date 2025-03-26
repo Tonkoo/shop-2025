@@ -1,5 +1,11 @@
 export default defineNuxtConfig({
-  modules: ['nuxt-quasar-ui', '@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n'],
+  modules: [
+    'nuxt-quasar-ui',
+    '@nuxt/eslint',
+    '@pinia/nuxt',
+    '@nuxtjs/i18n',
+    'nuxt-swiper',
+  ],
   i18n: {
     vueI18n: './config/i18n.config.ts',
   },
