@@ -15,9 +15,11 @@ export default defineNuxtConfig({
       notify: {},
     },
   },
-  // runtimeConfig: {
-  //   urlApi: process.env.NUXT_API_URL,
-  // },
+  runtimeConfig: {
+    private: {
+      uploadDir: './../api/',
+    },
+  },
   ssr: false,
   devtools: { enabled: false },
   app: {

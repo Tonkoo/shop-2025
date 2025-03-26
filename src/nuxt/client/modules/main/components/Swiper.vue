@@ -9,7 +9,9 @@
         >
           <q-card class="slide__card">
             <q-card-section>
-              <q-img src="https://cdn.quasar.dev/img/mountains.jpg" basic />
+              <q-img
+                src="images/section/1-files-1742974332824-530079792.jpeg"
+              />
               <div class="text-h6">{{ card.title }}</div>
               <div class="text-subtitle2">Контент карточки</div>
             </q-card-section>
