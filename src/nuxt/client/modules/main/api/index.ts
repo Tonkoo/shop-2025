@@ -22,3 +22,25 @@ export async function getSection() {
     throw new Error('Error while fetching section data from the server.');
   }
 }
+
+export async function getProduct() {
+  try {
+    const mainStores = useMainStores();
+
+    const params = {
+      type: 'product',
+      size: 100,
+    };
+
+    const response = await api.get<{ data: ResultItems[] }>('/elastic/admin/', {
+      params,
+    });
+    if (!response) {
+      throw new Error('Error while receiving data');
+    }
+    mainStores.setProduct(response.data.data[0]);
+  } catch (err) {
+    console.error('Failed to fetch data from the server ' + err);
+    throw new Error('Error while fetching section data from the server.');
+  }
+}

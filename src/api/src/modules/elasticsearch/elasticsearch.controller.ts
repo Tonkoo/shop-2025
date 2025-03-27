@@ -91,10 +91,4 @@ export class ElasticController {
       await this.services.getNameShopByElastic(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
-
-  @Get('admin/footer')
-  async getItemFooter(): Promise<response> {
-    const result: resultItems[] = await this.services.getItemFooter();
-    return ResponseHelper.createResponse(HttpStatus.OK, result);
-  }
 }

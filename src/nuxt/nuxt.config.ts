@@ -15,11 +15,6 @@ export default defineNuxtConfig({
       notify: {},
     },
   },
-  runtimeConfig: {
-    private: {
-      uploadDir: './../api/',
-    },
-  },
   ssr: false,
   devtools: { enabled: false },
   app: {

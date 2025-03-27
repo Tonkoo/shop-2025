@@ -3,17 +3,15 @@
     <div class="swiper__wrapper">
       <swiper-container ref="containerRef" class="swiper">
         <swiper-slide
-          v-for="card in cards"
-          :key="card.id"
+          v-for="product in mainStores.product"
+          :key="product.id"
           class="swiper__slide"
         >
           <q-card class="slide__card">
             <q-card-section>
-              <q-img
-                src="images/section/1-files-1742974332824-530079792.jpeg"
-              />
-              <div class="text-h6">{{ card.title }}</div>
-              <div class="text-subtitle2">Контент карточки</div>
+              <q-img src="https://cdn.quasar.dev/img/mountains.jpg" />
+              <div class="text-h6">{{ product.name }}</div>
+              <div class="text-subtitle2">{{ product.price }}</div>
             </q-card-section>
           </q-card>
         </swiper-slide>
@@ -33,6 +31,15 @@
 </template>
 
 <script setup lang="ts">
+import { useMainModule } from '~/modules/main/global';
+import { useMainStores } from '~/modules/main/stores/mainStores';
+import { useQuasar } from 'quasar';
+import { notifyNegative } from '~/entities/notify.entites';
+
+const mainModule = useMainModule();
+const mainStores = useMainStores();
+const quasar = useQuasar();
+
 const containerRef = ref(null);
 const swiper = useSwiper(containerRef, {
   slidesPerView: 4,
@@ -42,13 +49,13 @@ const swiper = useSwiper(containerRef, {
 const isBeginning = ref<boolean | undefined>(true);
 const isEnd = ref<boolean | undefined>(false);
 
-const cards = ref([
-  { id: 1, title: 'Карточка 1' },
-  { id: 2, title: 'Карточка 2' },
-  { id: 3, title: 'Карточка 3' },
-  { id: 4, title: 'Карточка 4' },
-  { id: 5, title: 'Карточка 5' },
-]);
+// const cards = ref([
+//   { id: 1, title: 'Карточка 1' },
+//   { id: 2, title: 'Карточка 2' },
+//   { id: 3, title: 'Карточка 3' },
+//   { id: 4, title: 'Карточка 4' },
+//   { id: 5, title: 'Карточка 5' },
+// ]);
 
 const swiperNext = () => {
   swiper.next();
@@ -64,6 +71,14 @@ const swiperPrev = () => {
     isEnd.value = swiper.instance.value?.isEnd;
   }
 };
+onMounted(async () => {
+  await mainModule.getProduct().catch((err) => {
+    quasar.notify({
+      ...notifyNegative,
+      message: err,
+    });
+  });
+});
 </script>
 
 <style scoped lang="scss">

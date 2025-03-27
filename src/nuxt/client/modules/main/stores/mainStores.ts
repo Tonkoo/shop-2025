@@ -6,6 +6,7 @@ export const useMainStores = defineStore('main-store', {
   state: (): MainType => ({
     sidebar: false,
     section: [],
+    product: [],
   }),
   actions: {
     setSidebar() {
@@ -17,6 +18,10 @@ export const useMainStores = defineStore('main-store', {
     },
     setSection(value: ResultItems) {
       this.section = value.items;
+    },
+    setProduct(value: ResultItems) {
+      this.product = value.items;
+      console.log(this.product);
     },
   },
 });

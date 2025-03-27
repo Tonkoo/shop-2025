@@ -3,7 +3,15 @@ export function prepareData<T extends object>(data: T, exclude: string[]) {
     (result, key) => {
       if (!exclude.includes(key)) {
         const newKey = toSnakeCase(key);
-        result[newKey] = data[key as keyof T];
+        const value = data[key as keyof T];
+        if (
+          typeof value === 'string' &&
+          (value === 'true' || value === 'false')
+        ) {
+          result[newKey] = value === 'true';
+        } else {
+          result[newKey] = value;
+        }
       }
       return result;
     },
