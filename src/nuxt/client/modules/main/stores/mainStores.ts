@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { MainType } from '~/modules/main/type/types';
-import type { ResultItems } from '~/interfaces/global';
+import type { ResultItemsMain } from '~/interfaces/global';
 
 export const useMainStores = defineStore('main-store', {
   state: (): MainType => ({
@@ -16,10 +16,10 @@ export const useMainStores = defineStore('main-store', {
       }
       this.sidebar = false;
     },
-    setSection(value: ResultItems) {
+    setSection(value: ResultItemsMain) {
       this.section = value.items;
     },
-    setProduct(value: ResultItems) {
+    setProduct(value: ResultItemsMain) {
       this.product = value.items;
       console.log(this.product);
     },

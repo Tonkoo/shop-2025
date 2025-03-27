@@ -1,11 +1,11 @@
-import type { Product, Section } from '~/interfaces/global';
+import type { StoreItem } from '~/interfaces/global';
 
-export function getParentSection(data: Section[] | Product[]) {
+export function getParentSection(data: StoreItem[]) {
   return data.filter((section) => section.level === 1);
 }
 
 export function getChildSection(
-  data: Section[] | Product[],
+  data: StoreItem[],
   parentId: number,
   level: number
 ) {

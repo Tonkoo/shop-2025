@@ -3,15 +3,26 @@
     <div class="swiper__wrapper">
       <swiper-container ref="containerRef" class="swiper">
         <swiper-slide
-          v-for="product in mainStores.product"
+          v-for="product in mainStores.product.filter(
+            (item) => item.mainSlider
+          )"
           :key="product.id"
           class="swiper__slide"
         >
           <q-card class="slide__card">
-            <q-card-section>
-              <q-img src="https://cdn.quasar.dev/img/mountains.jpg" />
-              <div class="text-h6">{{ product.name }}</div>
-              <div class="text-subtitle2">{{ product.price }}</div>
+            <q-card-section class="card__section">
+              <q-img
+                class="card__img"
+                :src="`http://localhost/api/v1/${product.images[0].src}`"
+              />
+              <div class="card__text">
+                <div class="text-h6">{{ product.name }}</div>
+                <div class="text-subtitle2">{{ product.price }} ₽</div>
+                <div
+                  class="section__circle"
+                  :style="{ backgroundColor: product.color }"
+                />
+              </div>
             </q-card-section>
           </q-card>
         </swiper-slide>
@@ -21,10 +32,10 @@
         :class="{ hidden: isBeginning }"
         @click="swiperPrev"
       >
-        <img src="./../../commonUI/assets/icon/swiperPrev.svg" alt="Previous" />
+        <q-img :src="swiperPrevIcon" alt="Previous" />
       </button>
       <button class="s-btn-next" :class="{ hidden: isEnd }" @click="swiperNext">
-        <img src="./../../commonUI/assets/icon/swiperNext.svg" alt="Next" />
+        <q-img :src="swiperNextIcon" alt="Next" />
       </button>
     </div>
   </ClientOnly>
@@ -35,6 +46,8 @@ import { useMainModule } from '~/modules/main/global';
 import { useMainStores } from '~/modules/main/stores/mainStores';
 import { useQuasar } from 'quasar';
 import { notifyNegative } from '~/entities/notify.entites';
+import swiperNextIcon from '~/modules/commonUI/assets/icon/swiperNext.svg';
+import swiperPrevIcon from '~/modules/commonUI/assets/icon/swiperPrev.svg';
 
 const mainModule = useMainModule();
 const mainStores = useMainStores();
@@ -48,14 +61,6 @@ const swiper = useSwiper(containerRef, {
 
 const isBeginning = ref<boolean | undefined>(true);
 const isEnd = ref<boolean | undefined>(false);
-
-// const cards = ref([
-//   { id: 1, title: 'Карточка 1' },
-//   { id: 2, title: 'Карточка 2' },
-//   { id: 3, title: 'Карточка 3' },
-//   { id: 4, title: 'Карточка 4' },
-//   { id: 5, title: 'Карточка 5' },
-// ]);
 
 const swiperNext = () => {
   swiper.next();
@@ -87,10 +92,9 @@ onMounted(async () => {
   width: 100%;
   .swiper {
     position: relative;
-    width: 100%;
-
+    margin: 10px;
     &__slide {
-      height: 100%;
+      height: auto;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -99,12 +103,41 @@ onMounted(async () => {
       .slide__card {
         width: 100%;
         height: 100%;
-        max-height: 450px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         box-shadow: none !important;
         border: none !important;
+        overflow: hidden;
+
+        .card__section {
+          display: flex;
+          flex-direction: column;
+          padding: 0;
+
+          .card__img {
+            width: 100%;
+            height: 80%;
+            object-fit: contain;
+            background-color: #f5f5f5;
+            margin-bottom: 12px;
+          }
+
+          .card__text {
+            position: relative;
+            padding-right: 25px;
+          }
+          .section__circle {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            border: 2px solid black;
+            border-radius: 50%;
+          }
+        }
       }
     }
   }
@@ -131,12 +164,6 @@ onMounted(async () => {
     &:hover {
       background-color: #5a5959;
       transform: translateY(-50%) scale(1.1);
-    }
-
-    img {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
     }
   }
 

@@ -150,7 +150,6 @@ export class ProductsController {
       id,
       data,
     );
-    console.log(ResponseHelper.createResponse(HttpStatus.OK, result));
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

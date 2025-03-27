@@ -3,7 +3,7 @@ type Section = {
   id: number;
   code: string;
   name: string;
-  images: File[];
+  // images: File[];
   createAt?: string;
   updateAt?: string;
   idParent: number | null;
@@ -12,12 +12,20 @@ type Section = {
   imageObject?: ImageObject[];
 };
 
+type SectionAdmin = Section & {
+  images: File[];
+};
+
+type SectionMain = Section & {
+  images: ImageElastic[];
+};
+
 type Product = {
   [key: string]: any;
   id: number;
   code: string;
   name: string;
-  images: File[];
+  // images: File[];
   price: string;
   color: string;
   description: string;
@@ -29,6 +37,21 @@ type Product = {
   sectionId?: number;
   sectionName?: string;
   imageObject?: ImageObject[];
+};
+
+type ProductAdmin = Product & {
+  images: File[];
+};
+
+type ProductMain = Product & {
+  images: ImageElastic[];
+};
+
+type StoreItem = SectionMain | SectionAdmin | ProductAdmin | ProductMain;
+
+type ImageElastic = {
+  alt: string;
+  src: string;
 };
 
 interface TypeSearch {
@@ -46,10 +69,16 @@ type SelectSection = {
   name: string;
 };
 
-type ResultItems = {
-  items: Section[] | Product[];
+type ResultItemsMain = {
+  items: SectionMain[] | ProductMain[];
   total: number;
 };
+
+type ResultItemsAdmin = {
+  items: SectionAdmin[] | ProductAdmin[];
+  total: number;
+};
+
 type ImageObject = {
   id: number;
   name: string;
@@ -70,12 +99,17 @@ type Err = {
 };
 
 export type {
-  Section,
+  SectionMain,
+  SectionAdmin,
+  ProductAdmin,
+  ProductMain,
+  StoreItem,
   TypeSearch,
-  Product,
+  // Product,
   Search,
   SelectSection,
-  ResultItems,
+  ResultItemsAdmin,
+  ResultItemsMain,
   ImageObject,
   ApiParams,
   Err,

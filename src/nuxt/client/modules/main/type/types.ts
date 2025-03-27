@@ -1,7 +1,7 @@
-import type { Product, Section } from '~/interfaces/global';
+import type { ProductMain, SectionMain } from '~/interfaces/global';
 
 export type MainType = {
   sidebar: boolean;
-  section: Section[] | Product[];
-  product: Section[] | Product[];
+  section: ProductMain[] | SectionMain[];
+  product: ProductMain[] | SectionMain[];
 };

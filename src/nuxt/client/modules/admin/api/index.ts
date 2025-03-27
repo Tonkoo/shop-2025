@@ -1,5 +1,5 @@
 import { api } from '~~/shared/api/axios';
-import type { ResultItems, ApiParams } from '~/interfaces/global';
+import type { ResultItemsAdmin, ApiParams } from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
 import { headers } from '~/composables/customFetch';
@@ -39,9 +39,13 @@ export async function getItems() {
       adminStore.countColumn,
       adminStore.searchName
     );
-    const response = await api.get<{ data: ResultItems[] }>('/elastic/admin', {
-      params,
-    });
+    adminStore.setTypeItem(adminStore.typeSearch.value);
+    const response = await api.get<{ data: ResultItemsAdmin[] }>(
+      '/elastic/admin',
+      {
+        params,
+      }
+    );
     if (!response) {
       throw new Error('Error while receiving data');
     }
@@ -90,7 +94,6 @@ export async function addItem() {
       adminStore.typeItem,
       true
     );
-    console.log(param);
     // if (adminStore.frontSection.name == '') {
     //   adminStore.setErrorName(true);
     //   throw new Error('The form is filled in incorrectly');
@@ -102,10 +105,9 @@ export async function addItem() {
     } else {
       data = adminStore.frontProduct;
     }
-    console.log(data);
     generateFormData(formData, data, param);
 
-    const response = await api.post<{ data: ResultItems[] }>(
+    const response = await api.post<{ data: ResultItemsAdmin[] }>(
       `/${adminStore.typeItem}`,
       formData,
       headers
@@ -153,7 +155,7 @@ export async function editItem() {
 
     generateFormData(formData, data, param);
     adminStore.setSearchName('');
-    const response = await api.put<{ data: ResultItems[] }>(
+    const response = await api.put<{ data: ResultItemsAdmin[] }>(
       `/${adminStore.typeItem}/${adminStore.selectedId}`,
       formData,
       headers
@@ -180,6 +182,7 @@ export async function getItem() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
+    console.log(response.data.data);
     if (adminStore.typeSearch.value == 'section') {
       await adminStore.setBackSection(response.data.data);
     } else {
@@ -202,7 +205,7 @@ export async function delItem() {
     true
   );
   try {
-    const response = await api.delete<{ data: ResultItems[] }>(
+    const response = await api.delete<{ data: ResultItemsAdmin[] }>(
       `/${adminStore.typeSearch.value}/${adminStore.selectedId}`,
       { params }
     );

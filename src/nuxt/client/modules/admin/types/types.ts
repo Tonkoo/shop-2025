@@ -1,14 +1,15 @@
 import type {
   Search,
-  Product,
-  Section,
   TypeSearch,
   Err,
+  StoreItem,
+  ProductAdmin,
+  SectionAdmin,
 } from '~/interfaces/global';
 
 type AdminState = {
   isEdit: boolean;
-  items: Section[] | Product[];
+  items: StoreItem[];
   delDialog: boolean;
   viewModal: boolean;
   typeItem: string;
@@ -21,10 +22,10 @@ type AdminState = {
   searchParentName: string;
   searchSection: string;
   selectedId: number;
-  backSection: Section | null;
-  backProduct: Product | null;
-  frontSection: Section;
-  frontProduct: Product;
+  backSection: SectionAdmin | null;
+  backProduct: ProductAdmin | null;
+  frontSection: SectionAdmin;
+  frontProduct: ProductAdmin;
   errors: Err;
   disableBtn: boolean;
 };

@@ -1,8 +1,12 @@
-import type { ApiParams, Product, Section } from '~/interfaces/global';
+import type {
+  ApiParams,
+  ProductAdmin,
+  SectionAdmin,
+} from '~/interfaces/global';
 
 export function generateFormData(
   formData: FormData,
-  data: Section | Product | Record<string, any>,
+  data: SectionAdmin | ProductAdmin | Record<string, any>,
   param: ApiParams
 ) {
   Object.entries(data).forEach(([key, value]) => {

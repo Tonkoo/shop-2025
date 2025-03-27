@@ -1,8 +1,8 @@
 //TODO: переписать метод, fields не использовать. вместо for reduce
-import type { Product, Section } from '~/interfaces/global';
+import type { ProductAdmin, SectionAdmin } from '~/interfaces/global';
 import { isEqual } from 'lodash';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
-export function comparisonValues<T extends Section | Product>(
+export function comparisonValues<T extends SectionAdmin | ProductAdmin>(
   data: T,
   oldData: T | null
 ): Partial<T> {

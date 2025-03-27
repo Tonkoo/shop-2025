@@ -3,11 +3,11 @@ import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
 import type {
   SelectSection,
-  ResultItems,
+  ResultItemsAdmin,
   Search,
-  Section,
   TypeSearch,
-  Product,
+  ProductAdmin,
+  SectionAdmin,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 
@@ -94,7 +94,7 @@ export const useAdminStore = defineStore('admin-store', {
     setSearchSection(value: string) {
       this.searchSection = value;
     },
-    setDataItems(data: ResultItems) {
+    setDataItems(data: ResultItemsAdmin) {
       this.items = data.items;
       this.allCount = data.total;
     },
@@ -111,13 +111,13 @@ export const useAdminStore = defineStore('admin-store', {
     setNameItems(value: Search[]) {
       this.allName = value;
     },
-    async setBackSection(value: Section) {
+    async setBackSection(value: SectionAdmin) {
       this.backSection = value;
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
     },
-    async setBackProduct(value: Product) {
+    async setBackProduct(value: ProductAdmin) {
       this.backProduct = value;
       this.setProductName(value.name);
       await convertFile(value.imageObject);
