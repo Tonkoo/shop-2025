@@ -11,12 +11,16 @@
         >
           <q-card class="slide__card">
             <q-card-section class="card__section">
-              <q-img
-                class="card__img"
-                :src="`http://localhost/api/v1/${product.images[0].src}`"
-              />
+              <a :href="'/' + product.code + '/'">
+                <q-img
+                  class="card__img"
+                  :src="`http://localhost/api/v1/${product.images[0].src}`"
+                />
+              </a>
               <div class="card__text">
-                <div class="text-h6">{{ product.name }}</div>
+                <div class="text-h6">
+                  <a :href="'/' + product.code + '/'">{{ product.name }}</a>
+                </div>
                 <div class="text-subtitle2">{{ product.price }} ₽</div>
                 <div
                   class="section__circle"
@@ -94,10 +98,10 @@ onMounted(async () => {
     position: relative;
     margin: 10px;
     &__slide {
-      height: auto;
+      height: 100%;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: stretch;
       padding: 10px 0;
 
       .slide__card {
@@ -112,20 +116,30 @@ onMounted(async () => {
 
         .card__section {
           display: flex;
+          height: 100%;
           flex-direction: column;
+          align-items: stretch;
           padding: 0;
+
+          a {
+            text-decoration: none;
+            color: getColor('black', 2);
+          }
 
           .card__img {
             width: 100%;
-            height: 80%;
             object-fit: contain;
-            background-color: #f5f5f5;
             margin-bottom: 12px;
+            flex-shrink: 0;
           }
 
           .card__text {
             position: relative;
+            flex-grow: 1;
             padding-right: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
           }
           .section__circle {
             position: absolute;
