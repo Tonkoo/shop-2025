@@ -21,7 +21,7 @@ import ModuleFooter from '~/modules/main/components/ModuleFooter.vue';
 defineOptions({ name: 'MainLayout' });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header {
   position: sticky;
   top: 0;
@@ -29,6 +29,6 @@ defineOptions({ name: 'MainLayout' });
   height: 64px;
 }
 .footer {
-  background: #404040;
+  background: getColor('grey', 12);
 }
 </style>

@@ -11,7 +11,7 @@
         <div class="text-h6">
           <a :href="'/' + product.code + '/'">{{ product.name }}</a>
         </div>
-        <div class="text-subtitle2">{{ product.price }} ₽</div>
+        <div class="text-subtitle2 text__price">{{ product.price }} ₽</div>
         <div
           class="section__circle"
           :style="{ backgroundColor: product.color }"
@@ -62,12 +62,17 @@ defineProps({
     }
 
     .card__text {
+      font-family: 'Roboto', sans-serif;
       position: relative;
       flex-grow: 1;
       padding-right: 25px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
+      .text__price {
+        color: getColor('grey', 10);
+      }
     }
     .section__circle {
       position: absolute;

@@ -75,15 +75,15 @@ onMounted(async () => {
 .swiper__wrapper {
   position: relative;
   width: 100%;
+  margin-bottom: 50px;
   .swiper {
     position: relative;
-    margin: 10px;
+    margin: 16px;
     &__slide {
       height: 100%;
       display: flex;
       justify-content: center;
       align-items: stretch;
-      padding: 10px 0;
     }
   }
 
