@@ -1,7 +1,7 @@
 <template>
   <!--  TODO-->
   <p>Результатов: {{ rows.length }} из {{ adminStore.countColumn }}</p>
-  <areal-table :rows="rows" :columns="columns" />
+  <areal-table :rows="rows" :columns="dynamicColumns" />
 </template>
 
 <script setup lang="ts">
@@ -15,8 +15,7 @@ const quasar = useQuasar();
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
 
-// TODO: добавить столбец разделы для продуктов
-const columns = [
+const baseColumns = [
   {
     name: 'name',
     required: true,
@@ -59,6 +58,21 @@ const columns = [
   },
 ];
 
+const dynamicColumns = computed(() => {
+  const columns = [...baseColumns];
+
+  columns.splice(2, 0, {
+    name: adminStore.typeItem === 'section' ? 'idParent' : 'section',
+    required: true,
+    label: adminStore.typeItem === 'section' ? 'Родительский отдел' : 'Раздел',
+    align: 'left' as const,
+    field: adminStore.typeItem === 'section' ? 'idParent' : 'section',
+    sortable: true,
+  });
+
+  return columns;
+});
+
 onMounted(async () => {
   await adminModule.getItems().catch((err) => {
     quasar.notify({
@@ -71,6 +85,10 @@ onMounted(async () => {
 const rows = computed(() => {
   return adminStore.items;
 });
+
+// const transformedRows = computed(() => {
+//   return a
+// });
 </script>
 
 <style lang="scss" scoped>

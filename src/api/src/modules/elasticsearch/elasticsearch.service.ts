@@ -268,7 +268,6 @@ export class ElasticsearchService {
           },
         },
       });
-
       return formatResults(items);
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
