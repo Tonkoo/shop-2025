@@ -30,6 +30,20 @@ function fillingParam(
   return params;
 }
 
+export async function reindex() {
+  try {
+    const response = await api.get('/elastic/reindex');
+    if (!response) {
+      throw new Error('Indexing error');
+    }
+    console.log(response);
+    return true;
+  } catch (err) {
+    console.error('Indexing error ' + err);
+    throw new Error('Indexing error.');
+  }
+}
+
 export async function getItems() {
   const adminStore = useAdminStore();
   try {

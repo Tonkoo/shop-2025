@@ -63,6 +63,7 @@ export class ElasticsearchService {
           if (!item.images) {
             item.images = [];
           }
+
           if (!Array.isArray(item.images)) {
             throw new BadRequestException('Invalid images format');
           }
@@ -88,8 +89,10 @@ export class ElasticsearchService {
       ),
     );
   }
+
   async searchFromElastic(payLoad: payLoadTest) {
     const { query, from, size, source } = payLoad;
+
     const items = await this.elasticsearchService.search({
       index: process.env.ELASTIC_INDEX,
       body: {
@@ -99,16 +102,20 @@ export class ElasticsearchService {
         size,
       },
     });
+
     if (!items?.hits?.hits) {
       throw new NotFoundException('Not found items');
     }
+
     return items;
   }
+
   async createIndex(): Promise<boolean> {
     try {
       const indexExists = await this.elasticsearchService.indices.exists({
         index: this.index || 'shop',
       });
+
       if (indexExists) {
         await this.elasticsearchService.indices.delete({
           index: this.index || 'shop',
@@ -119,6 +126,7 @@ export class ElasticsearchService {
         relations: ['section'],
         loadRelationIds: true,
       });
+
       if (!dbProduct) {
         throw new NotFoundException('Products not found');
       }
@@ -126,9 +134,11 @@ export class ElasticsearchService {
       const products: (ProductClient | SectionClient)[] =
         convertTimeArray(dbProduct);
       const dbSection: Sections[] = await this.sectionsRepository.find();
+
       if (!dbSection) {
         throw new NotFoundException('Section not found');
       }
+
       const sections: (ProductClient | SectionClient)[] =
         convertTimeArray(dbSection);
 
@@ -178,7 +188,6 @@ export class ElasticsearchService {
     type: string,
   ) {
     try {
-      console.log(document);
       if (!document.images) {
         document.images = [];
       }
@@ -273,7 +282,7 @@ export class ElasticsearchService {
       });
       const total: any = items.hits.total;
       const rawItems = items.hits.hits.map(
-        (item) => item._source as Sections | ProductElastic,
+        (item) => item._source as SectionElastic | ProductElastic,
       );
 
       const sectionIds = new Set<number>();

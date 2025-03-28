@@ -9,7 +9,7 @@ type Product = {
   price: number;
   color: string;
   description: string;
-  section: parentSection;
+  // section: parentSection;
   show_on_main: boolean;
   main_slider: boolean;
 };
@@ -28,6 +28,7 @@ type ProductEntities = Product &
   DateClient & {
     images: imageData[];
     type: string;
+    section?: parentSection;
   };
 
 type DocumentProduct = Product &
@@ -47,18 +48,11 @@ type ProductBase = Product &
     imageObject?: Images[];
   };
 
-type ProductElastic = {
-  id: number;
-  code: string;
-  name: string;
-  price: number;
-  color: string;
-  description: string;
-  section: number;
-  show_on_main: boolean;
-  main_slider: boolean;
-  sectionName: string;
-};
+type ProductElastic = Products &
+  DateClient & {
+    section: number;
+    sectionName: string;
+  };
 
 type Section = {
   id: number;
@@ -122,7 +116,7 @@ type elasticBody = {
     _index: string;
     _id: number;
   };
-  data: DocumentProduct | SectionBase;
+  data: ProductEntities | SectionEntities;
 };
 type resultItems = {
   items:
