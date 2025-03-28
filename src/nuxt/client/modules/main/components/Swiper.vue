@@ -9,26 +9,7 @@
           :key="product.id"
           class="swiper__slide"
         >
-          <q-card class="slide__card">
-            <q-card-section class="card__section">
-              <a :href="'/' + product.code + '/'">
-                <q-img
-                  class="card__img"
-                  :src="`http://localhost/api/v1/${product.images[0].src}`"
-                />
-              </a>
-              <div class="card__text">
-                <div class="text-h6">
-                  <a :href="'/' + product.code + '/'">{{ product.name }}</a>
-                </div>
-                <div class="text-subtitle2">{{ product.price }} ₽</div>
-                <div
-                  class="section__circle"
-                  :style="{ backgroundColor: product.color }"
-                />
-              </div>
-            </q-card-section>
-          </q-card>
+          <ArealProductCard :product="product" />
         </swiper-slide>
       </swiper-container>
       <button
@@ -103,56 +84,6 @@ onMounted(async () => {
       justify-content: center;
       align-items: stretch;
       padding: 10px 0;
-
-      .slide__card {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        box-shadow: none !important;
-        border: none !important;
-        overflow: hidden;
-
-        .card__section {
-          display: flex;
-          height: 100%;
-          flex-direction: column;
-          align-items: stretch;
-          padding: 0;
-
-          a {
-            text-decoration: none;
-            color: getColor('black', 2);
-          }
-
-          .card__img {
-            width: 100%;
-            object-fit: contain;
-            margin-bottom: 12px;
-            flex-shrink: 0;
-          }
-
-          .card__text {
-            position: relative;
-            flex-grow: 1;
-            padding-right: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          }
-          .section__circle {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 15px;
-            height: 15px;
-            border: 2px solid black;
-            border-radius: 50%;
-          }
-        }
-      }
     }
   }
 
