@@ -1,18 +1,14 @@
-import { elasticsearchResponse, resultItems } from '../interfaces/global';
 import { camelCaseConverter } from './toCamelCase.util';
-import { Sections } from '../entities/sections.entity';
-import { Products } from '../entities/products.entity';
+import { resultItems } from '../interfaces/global';
 
-export function formatResults(items: elasticsearchResponse): resultItems[] {
+export function formatResults(
+  items: any,
+  total: { value: number },
+): resultItems[] {
   const result: resultItems[] = [];
-  const total = items.hits.total;
   if (typeof total === 'object' && total !== null && 'value' in total) {
     result.push({
-      items: camelCaseConverter(
-        items.hits.hits.map(
-          (items): Sections | Products => items._source as Sections | Products,
-        ),
-      ),
+      items: camelCaseConverter(items),
       total: total.value,
     });
   }

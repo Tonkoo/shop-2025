@@ -47,6 +47,19 @@ type ProductBase = Product &
     imageObject?: Images[];
   };
 
+type ProductElastic = {
+  id: number;
+  code: string;
+  name: string;
+  price: number;
+  color: string;
+  description: string;
+  section: number;
+  show_on_main: boolean;
+  main_slider: boolean;
+  sectionName: string;
+};
+
 type Section = {
   id: number;
   code: string;
@@ -77,6 +90,7 @@ type SectionClient = Section &
 type SectionElastic = Section &
   DateClient & {
     type: string;
+    sectionName: string;
   };
 
 type response = {
@@ -111,7 +125,12 @@ type elasticBody = {
   data: DocumentProduct | SectionBase;
 };
 type resultItems = {
-  items: Sections | Products | (Sections | Products)[];
+  items:
+    | Sections
+    | Products
+    | (Sections | Products)[]
+    | SectionElastic[]
+    | ProductElastic[];
   total?: number | undefined;
 };
 
@@ -145,4 +164,5 @@ export {
   SectionClient,
   ProductBase,
   SectionElastic,
+  ProductElastic,
 };

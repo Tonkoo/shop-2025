@@ -62,11 +62,11 @@ const dynamicColumns = computed(() => {
   const columns = [...baseColumns];
 
   columns.splice(2, 0, {
-    name: adminStore.typeItem === 'section' ? 'idParent' : 'section',
+    name: 'sectionName',
     required: true,
     label: adminStore.typeItem === 'section' ? 'Родительский отдел' : 'Раздел',
     align: 'left' as const,
-    field: adminStore.typeItem === 'section' ? 'idParent' : 'section',
+    field: 'sectionName',
     sortable: true,
   });
 

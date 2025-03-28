@@ -21,6 +21,7 @@ import {
   ProductClient,
   SectionClient,
   SectionElastic,
+  ProductElastic,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 import { formatResults } from '../../utils/formatResults.util';
@@ -177,6 +178,7 @@ export class ElasticsearchService {
     type: string,
   ) {
     try {
+      console.log(document);
       if (!document.images) {
         document.images = [];
       }
@@ -197,6 +199,7 @@ export class ElasticsearchService {
 
       if (updatedDocument.section) {
         updatedDocument.section = updatedDocument.section.id;
+        updatedDocument.section = Number(updatedDocument.section);
       }
 
       return await this.elasticsearchService.index({
@@ -268,12 +271,55 @@ export class ElasticsearchService {
           },
         },
       });
-      return formatResults(items);
+      const total: any = items.hits.total;
+      const rawItems = items.hits.hits.map(
+        (item) => item._source as Sections | ProductElastic,
+      );
+
+      const sectionIds = new Set<number>();
+      rawItems.forEach((item) => {
+        if ('section' in item && item.section) {
+          sectionIds.add(item.section);
+        }
+        if ('id_parent' in item && item.id_parent) {
+          sectionIds.add(item.id_parent);
+        }
+      });
+
+      const sections = await this.sectionsRepository.find({
+        where: { id: In([...sectionIds]) },
+      });
+      const sectionMap = new Map(sections.map((s) => [s.id, s]));
+
+      const result = rawItems.map((item) => {
+        if ('section' in item) {
+          return {
+            ...item,
+            sectionName: item.section
+              ? sectionMap.get(item.section)?.name
+              : undefined,
+          };
+        }
+
+        if ('id_parent' in item) {
+          return {
+            ...item,
+            sectionName: item.id_parent
+              ? sectionMap.get(item.id_parent)?.name
+              : undefined,
+          };
+        }
+
+        return item;
+      });
+
+      return formatResults(result, total);
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
       throw new BadRequestException('Error while receiving data');
     }
   }
+
   async getNameShopByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
     const { searchName, size } = payLoad;
     try {
