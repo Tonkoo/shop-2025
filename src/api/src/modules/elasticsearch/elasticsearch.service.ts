@@ -110,7 +110,7 @@ export class ElasticsearchService {
     return items;
   }
 
-  async createIndex(): Promise<boolean> {
+  async createIndex(payLoad: payLoad) {
     try {
       const indexExists = await this.elasticsearchService.indices.exists({
         index: this.index || 'shop',
@@ -154,7 +154,8 @@ export class ElasticsearchService {
       ];
 
       await this.bulkIndexDocuments(this.index || 'shop', document);
-      return true;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return await this.getItemsFilter(payLoad);
     } catch (err) {
       logger.error('Error from elastic.createIndex: ', err);
       throw new BadRequestException(

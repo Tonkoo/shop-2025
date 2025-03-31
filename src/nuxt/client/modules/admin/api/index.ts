@@ -32,12 +32,25 @@ function fillingParam(
 
 export async function reindex() {
   try {
-    const response = await api.get('/elastic/reindex');
+    const adminStore = useAdminStore();
+    const params = fillingParam(
+      adminStore.typeSearch.value,
+      (adminStore.currentPage - 1) * adminStore.countColumn,
+      adminStore.countColumn,
+      adminStore.searchName
+    );
+    adminStore.setTypeItem(adminStore.typeSearch.value);
+    const response = await api.get<{ data: ResultItemsAdmin[] }>(
+      '/elastic/reindex',
+      {
+        params,
+      }
+    );
     if (!response) {
       throw new Error('Indexing error');
     }
-    console.log(response);
-    return true;
+
+    adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
     console.error('Indexing error ' + err);
     throw new Error('Indexing error.');

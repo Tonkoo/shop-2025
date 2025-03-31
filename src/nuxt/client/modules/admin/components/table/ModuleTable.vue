@@ -85,10 +85,6 @@ onMounted(async () => {
 const rows = computed(() => {
   return adminStore.items;
 });
-
-// const transformedRows = computed(() => {
-//   return a
-// });
 </script>
 
 <style lang="scss" scoped>

@@ -10,9 +10,10 @@ export default defineNuxtConfig({
     vueI18n: './config/i18n.config.ts',
   },
   quasar: {
-    plugins: ['Notify'],
+    plugins: ['Notify', 'Loading'],
     config: {
       notify: {},
+      loading: {},
     },
   },
   ssr: false,

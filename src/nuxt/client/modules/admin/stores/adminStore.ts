@@ -96,7 +96,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setDataItems(data: ResultItemsAdmin) {
       this.items = data.items;
-      console.log(this.items);
       this.allCount = data.total;
     },
     setDisableBtn(value: boolean) {

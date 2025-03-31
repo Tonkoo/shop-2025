@@ -4,15 +4,15 @@
     <q-space />
     <areal-button
       outline
-      label="Добавить"
-      icon="add"
-      @click="adminStore.setViewModal(true)"
-    />
-    <areal-button
-      outline
       label="Переиндексировать"
       icon="database"
       @click="reindexDoc"
+    />
+    <areal-button
+      outline
+      label="Добавить"
+      icon="add"
+      @click="adminStore.setViewModal(true)"
     />
   </q-toolbar>
 </template>
@@ -28,12 +28,15 @@ const adminModule = useAdminModule();
 const quasar = useQuasar();
 
 const reindexDoc = () => {
+  quasar.loading.show();
   adminModule
     .reindex()
     .then(() => {
+      quasar.loading.hide();
       quasar.notify(notifyPositive);
     })
     .catch((err) => {
+      quasar.loading.hide();
       quasar.notify({
         ...notifyNegative,
         message: 'Ошибка при сохранении данных: ' + err,

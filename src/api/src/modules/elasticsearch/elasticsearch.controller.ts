@@ -2,7 +2,12 @@ import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
-import { response, resultItems, SectionElastic } from '../../interfaces/global';
+import {
+  payLoadTest,
+  response,
+  resultItems,
+  SectionElastic,
+} from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 @Controller('elastic')
 @ApiTags('elastic')
@@ -19,11 +24,9 @@ export class ElasticController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
-  async createIndex(): Promise<response> {
-    await this.services.createIndex();
-    return ResponseHelper.createResponse(HttpStatus.OK, {
-      messages: 'Пере индексация выполнена',
-    });
+  async createIndex(@Query() payLoad: payLoad): Promise<response> {
+    const result = await this.services.createIndex(payLoad);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
   @Get('admin')
