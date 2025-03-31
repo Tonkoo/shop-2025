@@ -35,9 +35,7 @@ export class SectionsService {
     if (data.name) {
       data.code = tr(data.name, { replace: { ' ': '-' } });
     }
-    if (!Array.isArray(data.images)) {
-      data.images = null;
-    }
+
     if (String(data.idParent) == 'null' || String(data.idParent) == '0') {
       data.idParent = null;
     }
@@ -62,7 +60,9 @@ export class SectionsService {
       };
 
       this.ProcessingDate(data);
-
+      if (!Array.isArray(data.images)) {
+        data.images = [];
+      }
       if (!data.idParent) {
         data.level = 1;
       } else {
@@ -177,6 +177,8 @@ export class SectionsService {
     await queryRunner.startTransaction();
     try {
       {
+        console.log(data);
+        console.log(files);
         const searchParams: payLoad = {
           type: data.type,
           from: Number(data.from),
@@ -198,7 +200,10 @@ export class SectionsService {
           data.images = await createImages(queryRunner, files);
         }
         this.ProcessingDate(data);
-
+        console.log(data);
+        if (!data.images) {
+          data.images = [];
+        }
         if (data.idParent) {
           const parentSection = await this.sectionsRepo.findOne({
             where: { id: data.idParent },

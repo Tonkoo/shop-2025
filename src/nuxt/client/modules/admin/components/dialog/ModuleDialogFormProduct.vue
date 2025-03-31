@@ -3,6 +3,7 @@
     <areal-form-input
       v-model="adminStore.frontProduct.name"
       :label="$t('admin.label.name')"
+      :errors="adminStore.errors.name"
       @update:model-value="adminStore.setProductName"
     />
     <areal-file
@@ -17,17 +18,20 @@
       fill-mask="0"
       reverse-fill-mask
       :hint="$t('admin.hint.price')"
+      :errors="adminStore.errors.price"
       @update:model-value="adminStore.setProductPrice"
     />
     <areal-form-input
       v-model="adminStore.frontProduct.color"
       :label="$t('admin.label.color')"
+      :errors="adminStore.errors.color"
       @update:model-value="adminStore.setProductColor"
     />
     <areal-form-input
       v-model="adminStore.frontProduct.description"
       :label="$t('admin.label.description')"
       type="textarea"
+      :errors="adminStore.errors.description"
       @update:model-value="adminStore.setProductDescription"
     />
     <areal-select-search
@@ -37,6 +41,7 @@
       option-value="id"
       option-label="name"
       :label="$t('admin.label.section')"
+      :errors="adminStore.errors.section"
       @input-value="onSearchInput"
       @update:model-value="onSearchInput"
       @focus="onSearchInput"

@@ -230,7 +230,7 @@ export class ElasticsearchService {
   ) {
     try {
       await this.deleteDocument(index, id);
-      console.log(document);
+
       return await this.addDocument(index, id, document, type);
     } catch (err) {
       logger.error('Error from elastic.updateDocument: ', err);

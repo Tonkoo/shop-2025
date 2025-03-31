@@ -97,6 +97,10 @@ type ApiParams = {
 };
 type Err = {
   name: boolean;
+  price: boolean;
+  color: boolean;
+  description: boolean;
+  section: boolean;
 };
 
 export type {

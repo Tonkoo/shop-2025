@@ -55,7 +55,13 @@ export const useAdminStore = defineStore('admin-store', {
       showOnMain: false,
       mainSlider: false,
     },
-    errors: { name: false },
+    errors: {
+      name: false,
+      price: false,
+      color: false,
+      description: false,
+      section: false,
+    },
     disableBtn: false,
     filterSection: null,
     itemsFilter: [],
@@ -184,6 +190,25 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setErrorName(value: boolean) {
       this.errors.name = value;
+    },
+    setErrorPrice(value: boolean) {
+      this.errors.price = value;
+    },
+    setErrorColor(value: boolean) {
+      this.errors.color = value;
+    },
+    setErrorDescription(value: boolean) {
+      this.errors.description = value;
+    },
+    setErrorSection(value: boolean) {
+      this.errors.section = value;
+    },
+    setClearError() {
+      this.setErrorName(false);
+      this.setErrorPrice(false);
+      this.setErrorColor(false);
+      this.setErrorDescription(false);
+      this.setErrorSection(false);
     },
     setProductName(value: string) {
       this.frontProduct.name = value;

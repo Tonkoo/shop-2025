@@ -139,17 +139,42 @@ export async function addItem() {
       adminStore.typeItem,
       true
     );
-    // if (adminStore.frontSection.name == '') {
-    //   adminStore.setErrorName(true);
-    //   throw new Error('The form is filled in incorrectly');
-    // }
-    adminStore.setErrorName(false);
+
+    if (adminStore.typeItem == 'section') {
+      if (adminStore.frontSection.name == '') {
+        adminStore.setErrorName(true);
+        throw new Error('The form is filled in incorrectly');
+      }
+    } else {
+      if (adminStore.frontProduct.name == '') {
+        adminStore.setErrorName(true);
+      }
+      if (adminStore.frontProduct.price == '') {
+        adminStore.setErrorPrice(true);
+      }
+      if (adminStore.frontProduct.color == '') {
+        adminStore.setErrorColor(true);
+      }
+      if (adminStore.frontProduct.description == '') {
+        adminStore.setErrorDescription(true);
+      }
+      if (
+        adminStore.frontProduct.section?.id === 0 &&
+        adminStore.frontProduct.section?.name === ''
+      ) {
+        adminStore.setErrorSection(true);
+        throw new Error('The form is filled in incorrectly');
+      }
+    }
+
+    adminStore.setClearError();
     let data;
     if (adminStore.typeItem === 'section') {
       data = adminStore.frontSection;
     } else {
       data = adminStore.frontProduct;
     }
+    console.log(data);
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItemsAdmin[] }>(

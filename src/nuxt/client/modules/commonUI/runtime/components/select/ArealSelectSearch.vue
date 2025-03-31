@@ -7,6 +7,8 @@
     :model-value="model"
     :label="label"
     :options="option"
+    :error-message="errorsMessage"
+    :error="errors"
     square
     outlined
     class="select"
@@ -36,6 +38,14 @@ defineProps({
     type: Array,
     required: false,
     default: () => [],
+  },
+  errors: {
+    type: Boolean,
+    default: false,
+  },
+  errorsMessage: {
+    type: String,
+    default: '',
   },
 });
 const model = ref('');

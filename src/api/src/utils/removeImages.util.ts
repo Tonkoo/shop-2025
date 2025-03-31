@@ -22,7 +22,7 @@ export async function removeImages(
     }
   } catch (err) {
     await queryRunner.rollbackTransaction();
-    logger.error('Error from sections.removeImages : ', err);
+    logger.error('Error from removeImages : ', err);
     throw new BadRequestException('There was an error deleting images.');
   }
 }
