@@ -41,7 +41,9 @@ export class ProductsService {
     if (!Array.isArray(data.images)) {
       data.images = [];
     }
-    data.price = Math.round(Number(data.price));
+    if (data.price) {
+      data.price = Math.round(Number(data.price));
+    }
     if (data.section) {
       data.section = { id: data.sectionId };
     }
@@ -78,7 +80,6 @@ export class ProductsService {
           'idSection',
         ]),
       );
-
       if (!newProduct) {
         throw new BadRequestException(
           'An error occurred while create the product.',
@@ -131,6 +132,13 @@ export class ProductsService {
           id: In(imageIds),
         });
       }
+      if (product.section) {
+        product.section = {
+          id: product.section.id,
+          name: product.section.name,
+        };
+      }
+      console.log(product);
 
       return camelCaseConverter(product);
     } catch (err) {
@@ -184,6 +192,7 @@ export class ProductsService {
           }
         }
       }
+
       const newProduct = await this.productsRepo.update(
         { id: id },
         prepareData(data, [
@@ -205,6 +214,8 @@ export class ProductsService {
 
       const updatedProduct: Products | null = await this.productsRepo.findOne({
         where: { id: id },
+        relations: ['section'],
+        loadRelationIds: true,
       });
 
       if (!updatedProduct) {

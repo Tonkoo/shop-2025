@@ -33,7 +33,7 @@ type Product = {
   mainSlider: boolean;
   createAt?: string;
   updateAt?: string;
-  section?: SelectSection;
+  section: SelectSection;
   sectionId?: number;
   sectionName?: string;
   imageObject?: ImageObject[];

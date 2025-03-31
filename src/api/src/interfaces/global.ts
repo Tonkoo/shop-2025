@@ -9,7 +9,7 @@ type Product = {
   price: number;
   color: string;
   description: string;
-  // section: parentSection;
+  section: parentSection;
   show_on_main: boolean;
   main_slider: boolean;
 };

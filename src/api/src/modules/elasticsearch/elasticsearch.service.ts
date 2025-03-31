@@ -207,11 +207,10 @@ export class ElasticsearchService {
         images: imageData,
       };
 
-      if (updatedDocument.section) {
+      if (updatedDocument.section && updatedDocument.section.id) {
         updatedDocument.section = updatedDocument.section.id;
         updatedDocument.section = Number(updatedDocument.section);
       }
-
       return await this.elasticsearchService.index({
         index: index,
         id: id,
@@ -231,7 +230,7 @@ export class ElasticsearchService {
   ) {
     try {
       await this.deleteDocument(index, id);
-
+      console.log(document);
       return await this.addDocument(index, id, document, type);
     } catch (err) {
       logger.error('Error from elastic.updateDocument: ', err);
@@ -275,7 +274,6 @@ export class ElasticsearchService {
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
       const { type, from, size, searchName, filterSection } = payLoad;
-      console.log(filterSection);
       const filter = this.getFilter(type, searchName, filterSection);
 
       const items = await this.searchFromElastic({

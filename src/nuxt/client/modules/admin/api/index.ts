@@ -23,6 +23,9 @@ function fillingParam(
   if (filterSection) {
     params.filterSection = filterSection;
   }
+  if (!getItem && typeItem && typeItem === 'product') {
+    params.type = 'section';
+  }
   if (getItem) {
     if (typeItem === 'section') {
       params.getSection = getItem;
@@ -71,7 +74,6 @@ export async function getItems() {
       adminStore.searchName,
       adminStore.filterSection?.id
     );
-    console.log(params);
     adminStore.setTypeItem(adminStore.typeSearch.value);
     const response = await api.get<{ data: ResultItemsAdmin[] }>(
       '/elastic/admin',
@@ -107,7 +109,9 @@ export async function getAllNameColumn() {
       adminStore.searchName ??
         adminStore.searchParentName ??
         adminStore.searchSection ??
-        ''
+        '',
+      undefined,
+      adminStore.typeItem
     );
     const response = await api.get('/elastic/admin/name', {
       params,
@@ -167,11 +171,26 @@ export async function editItem() {
   const adminStore = useAdminStore();
   try {
     let data;
+    console.log('Фронт');
+    console.log(adminStore.frontSection);
+    console.log('Бэк');
+    console.log(adminStore.backSection);
     if (adminStore.typeItem === 'section') {
-      data = comparisonValues(adminStore.frontSection, adminStore.backSection);
+      data = comparisonValues(adminStore.frontSection, adminStore.backSection, [
+        'id',
+        'level',
+        'code',
+      ]);
     } else {
-      data = comparisonValues(adminStore.frontProduct, adminStore.backProduct);
+      data = comparisonValues(adminStore.frontProduct, adminStore.backProduct, [
+        'id',
+        'code',
+        'idSection',
+        'sectionName',
+        'sectionId',
+      ]);
     }
+    console.log(data);
     if (data.section) {
       data.sectionId = data.section.id;
       data.sectionName = data.section.name;
@@ -224,7 +243,6 @@ export async function getItem() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    console.log(response.data.data);
     if (adminStore.typeSearch.value == 'section') {
       await adminStore.setBackSection(response.data.data);
     } else {

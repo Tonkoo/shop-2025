@@ -46,6 +46,10 @@ export const useAdminStore = defineStore('admin-store', {
       images: [],
       price: '',
       color: '',
+      section: {
+        id: 0,
+        name: '',
+      },
       description: '',
       idSection: null,
       showOnMain: false,
@@ -115,12 +119,18 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setBackSection(value: SectionAdmin) {
       this.backSection = value;
+      if (!this.backSection.idParent) {
+        this.backSection.idParent = 0;
+      }
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
     },
     async setBackProduct(value: ProductAdmin) {
       this.backProduct = value;
+      if (this.backProduct.price) {
+        this.backProduct.price = String(this.backProduct.price);
+      }
       this.setProductName(value.name);
       await convertFile(value.imageObject);
       this.setProductPrice(value.price);

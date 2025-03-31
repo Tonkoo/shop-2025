@@ -207,7 +207,6 @@ export class SectionsService {
             throw new BadRequestException('Cannot change the section level.');
           }
         }
-
         const newSection = await this.sectionsRepo.update(
           { id: id },
           prepareData(data, [

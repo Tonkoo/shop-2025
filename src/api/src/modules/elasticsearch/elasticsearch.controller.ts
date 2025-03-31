@@ -68,7 +68,6 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async getItems(@Query() payLoad: payLoad): Promise<response> {
-    console.log(payLoad);
     const result: resultItems[] = await this.services.getItemsFilter(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
