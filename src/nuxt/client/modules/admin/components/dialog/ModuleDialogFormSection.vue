@@ -20,6 +20,7 @@
       :label="$t('admin.label.parentSection')"
       @input-value="onSearchInput"
       @update:model-value="onSearchInput"
+      @focus="onSearchInput"
     />
   </areal-form>
 </template>

@@ -4,7 +4,6 @@
     :label="label"
     outlined
     :options="option"
-    class="q-mb-md"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
@@ -18,7 +17,7 @@ defineProps({
   },
   label: {
     type: String,
-    default: 'Изображения',
+    default: '',
   },
   option: {
     type: Array,

@@ -39,6 +39,7 @@
       :label="$t('admin.label.section')"
       @input-value="onSearchInput"
       @update:model-value="onSearchInput"
+      @focus="onSearchInput"
     />
     <areal-checkbox
       v-model="adminStore.frontProduct.showOnMain"

@@ -3,16 +3,18 @@
     :model-value="modelValue"
     :label="label"
     outlined
+    square
     :options="option"
-    class="q-mb-md"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
 
 <script setup lang="ts">
+import type { SectionAdmin } from '~/interfaces/global';
+
 defineProps({
   modelValue: {
-    type: Object,
+    type: Object as PropType<SectionAdmin | null>,
     required: false,
     default: null,
   },

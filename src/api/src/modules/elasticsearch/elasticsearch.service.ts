@@ -251,7 +251,7 @@ export class ElasticsearchService {
     }
   }
 
-  getFilter(type: string, name?: string): any[] {
+  getFilter(type: string, name?: string, filterSection?: number): any[] {
     const filter: any[] = [
       {
         term: { type: type },
@@ -263,14 +263,20 @@ export class ElasticsearchService {
         term: { name: name },
       });
     }
+    if (filterSection) {
+      filter.push({
+        term: { section: filterSection },
+      });
+    }
 
     return filter;
   }
 
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
-      const { type, from, size, searchName } = payLoad;
-      const filter = this.getFilter(type, searchName);
+      const { type, from, size, searchName, filterSection } = payLoad;
+      console.log(filterSection);
+      const filter = this.getFilter(type, searchName, filterSection);
 
       const items = await this.searchFromElastic({
         size,
@@ -331,7 +337,7 @@ export class ElasticsearchService {
   }
 
   async getNameShopByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
-    const { searchName, size } = payLoad;
+    const { type, searchName, size } = payLoad;
     try {
       if (searchName == undefined) {
         return [];
@@ -341,7 +347,7 @@ export class ElasticsearchService {
         size,
         query: {
           bool: {
-            must: [{ match: { type: 'section' } }],
+            must: [{ match: { type: type } }],
             should: [{ wildcard: { name: `*${searchName}*` } }],
             minimum_should_match: 1,
           },

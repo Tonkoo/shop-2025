@@ -18,4 +18,9 @@ export class payLoad {
     message: 'Параметр searchName должен быть типа string',
   })
   searchName?: string;
+
+  @IsString({
+    message: 'Параметр filterSection должен быть типа string',
+  })
+  filterSection?: number;
 }

@@ -28,6 +28,8 @@ type AdminState = {
   frontProduct: ProductAdmin;
   errors: Err;
   disableBtn: boolean;
+  filterSection: SectionAdmin | null;
+  itemsFilter: StoreItem[];
 };
 
 export type { AdminState };

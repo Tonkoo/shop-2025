@@ -93,6 +93,7 @@ type ApiParams = {
   searchName: string;
   getSection?: boolean;
   getProduct?: boolean;
+  filterSection?: number;
 };
 type Err = {
   name: boolean;

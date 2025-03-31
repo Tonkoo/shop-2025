@@ -11,8 +11,8 @@
     outlined
     class="select"
     @update:model-value="setModel"
-    @filter="handleFilter"
   >
+    <!--    @filter="handleFilter"-->
     <template v-slot:no-option>
       <q-item>
         <q-item-section class="text-grey"> No result </q-item-section>
@@ -40,10 +40,10 @@ defineProps({
 });
 const model = ref('');
 const emit = defineEmits(['update:modelValue', 'filter']);
-const handleFilter = (val: string, update: (callback: () => void) => void) => {
-  emit('filter', val);
-  update(() => {});
-};
+// const handleFilter = (val: string, update: (callback: () => void) => void) => {
+//   emit('filter', val);
+//   update(() => {});
+// };
 
 const setModel = (val: string) => {
   model.value = val;

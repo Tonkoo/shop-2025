@@ -53,6 +53,8 @@ export const useAdminStore = defineStore('admin-store', {
     },
     errors: { name: false },
     disableBtn: false,
+    filterSection: null,
+    itemsFilter: [],
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -201,6 +203,12 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setProductMainSlider(value: boolean) {
       this.frontProduct.mainSlider = value;
+    },
+    setFilterSection(value: SectionAdmin | null) {
+      this.filterSection = value;
+    },
+    setItemsFilter(value: ResultItemsAdmin) {
+      this.itemsFilter = value.items;
     },
   },
 });

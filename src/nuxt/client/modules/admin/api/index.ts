@@ -10,6 +10,7 @@ function fillingParam(
   from: string | number,
   size: string | number,
   searchName: string,
+  filterSection?: number,
   typeItem?: string,
   getItem?: boolean
 ) {
@@ -19,6 +20,9 @@ function fillingParam(
     size,
     searchName,
   };
+  if (filterSection) {
+    params.filterSection = filterSection;
+  }
   if (getItem) {
     if (typeItem === 'section') {
       params.getSection = getItem;
@@ -64,8 +68,10 @@ export async function getItems() {
       adminStore.typeSearch.value,
       (adminStore.currentPage - 1) * adminStore.countColumn,
       adminStore.countColumn,
-      adminStore.searchName
+      adminStore.searchName,
+      adminStore.filterSection?.id
     );
+    console.log(params);
     adminStore.setTypeItem(adminStore.typeSearch.value);
     const response = await api.get<{ data: ResultItemsAdmin[] }>(
       '/elastic/admin',
@@ -75,6 +81,9 @@ export async function getItems() {
     );
     if (!response) {
       throw new Error('Error while receiving data');
+    }
+    if (adminStore.typeSearch.value == 'section') {
+      adminStore.setItemsFilter(response.data.data[0]);
     }
     adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
@@ -90,11 +99,15 @@ export async function getAllNameColumn() {
       adminStore.typeSearch.value,
       '',
       adminStore.countColumn,
-      adminStore.searchName
-        ? adminStore.searchName
-        : adminStore.searchParentName
-          ? adminStore.searchParentName
-          : adminStore.searchSection
+      // adminStore.searchName
+      //   ? adminStore.searchName
+      //   : adminStore.searchParentName
+      //     ? adminStore.searchParentName
+      //     : adminStore.searchSection
+      adminStore.searchName ??
+        adminStore.searchParentName ??
+        adminStore.searchSection ??
+        ''
     );
     const response = await api.get('/elastic/admin/name', {
       params,
@@ -118,6 +131,7 @@ export async function addItem() {
       ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       adminStore.countColumn.toString(),
       adminStore.searchName,
+      undefined,
       adminStore.typeItem,
       true
     );
@@ -172,6 +186,7 @@ export async function editItem() {
       ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       adminStore.countColumn.toString(),
       adminStore.searchName,
+      undefined,
       adminStore.typeItem,
       true
     );
@@ -228,6 +243,7 @@ export async function delItem() {
     ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
     adminStore.countColumn.toString(),
     adminStore.searchName,
+    undefined,
     adminStore.typeItem,
     true
   );
