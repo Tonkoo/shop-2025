@@ -8,7 +8,7 @@
       @click="mainStores.setSidebar()"
     />
     <q-space />
-    <q-toolbar-title class="title">StyleHub</q-toolbar-title>
+    <q-toolbar-title class="title"><a href="/">StyleHub</a> </q-toolbar-title>
     <q-space />
     <q-btn flat round dense icon="search" />
   </q-toolbar>
@@ -24,6 +24,11 @@ const mainStores = useMainStores();
 .header {
   .title {
     text-align: center;
+
+    a {
+      text-decoration: none;
+      color: black;
+    }
   }
 }
 </style>

@@ -8,6 +8,8 @@ export async function getSection() {
 
     const params = {
       type: 'section',
+      from: 0,
+      size: 100,
     };
 
     const response = await api.get<{ data: ResultItemsMain[] }>(
@@ -32,6 +34,7 @@ export async function getProduct() {
 
     const params = {
       type: 'product',
+      from: 0,
       size: 100,
     };
 

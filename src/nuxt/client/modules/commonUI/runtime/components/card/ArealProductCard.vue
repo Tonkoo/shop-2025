@@ -1,12 +1,14 @@
 <template>
   <q-card class="slide__card">
     <q-card-section class="card__section">
-      <a :href="'/' + product.code + '/'">
-        <q-img
-          class="card__img"
-          :src="`http://localhost/api/v1/${product.images[0].src}`"
-        />
-      </a>
+      <div class="img__container">
+        <a :href="'/' + product.code + '/'">
+          <q-img
+            class="card__img"
+            :src="`http://localhost/api/v1/${productImage}`"
+          />
+        </a>
+      </div>
       <div class="card__text">
         <div class="text-h6">
           <a :href="'/' + product.code + '/'">{{ product.name }}</a>
@@ -24,11 +26,18 @@
 <script setup lang="ts">
 import type { ProductMain, SectionMain } from '~/interfaces/global';
 
-defineProps({
+const props = defineProps({
   product: {
     type: Object as PropType<ProductMain | SectionMain>,
     required: true,
   },
+});
+
+const productImage = computed(() => {
+  if (!props.product.images?.length || !props.product.images[0]?.src) {
+    return 'images/default.png';
+  }
+  return props.product.images[0].src;
 });
 </script>
 
@@ -41,6 +50,7 @@ defineProps({
   justify-content: center;
   box-shadow: none !important;
   border: none !important;
+  min-height: 300px;
 
   .card__section {
     display: flex;
@@ -48,6 +58,24 @@ defineProps({
     flex-direction: column;
     align-items: stretch;
     padding: 0;
+    position: relative;
+
+    .img__container {
+      height: 550px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+
+      a {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+      }
+    }
 
     a {
       text-decoration: none;
@@ -55,10 +83,10 @@ defineProps({
     }
 
     .card__img {
-      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
-      margin-bottom: 12px;
-      flex-shrink: 0;
+      object-position: center;
     }
 
     .card__text {

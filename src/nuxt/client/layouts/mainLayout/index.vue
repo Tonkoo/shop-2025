@@ -1,6 +1,6 @@
 <template>
   <q-layout>
-    <q-header class="bg-white text-black header">
+    <q-header class="text-black header">
       <ModuleHeader />
     </q-header>
     <q-page-container>
@@ -27,6 +27,7 @@ defineOptions({ name: 'MainLayout' });
   top: 0;
   z-index: 2000;
   height: 64px;
+  background: rgba(255, 255, 255, 0.6);
 }
 .footer {
   background: getColor('grey', 12);
