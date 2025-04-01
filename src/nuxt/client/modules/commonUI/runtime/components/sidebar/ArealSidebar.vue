@@ -14,9 +14,12 @@
           class="nav__column"
         >
           <div class="nav__title">
-            <a :href="'/' + parentSection.code + '/'">{{
-              parentSection.name
-            }}</a>
+            <NuxtLink
+              :to="'/catalog/' + parentSection.code + '/'"
+              @click="mainStores.setSidebar()"
+            >
+              {{ parentSection.name }}</NuxtLink
+            >
           </div>
           <ul class="nav__list">
             <li
@@ -27,9 +30,18 @@
               )"
               :key="childSection.id"
             >
-              <a :href="'/' + childSection.code + '/'">
+              <NuxtLink
+                :to="
+                  '/catalog/' +
+                  parentSection.code +
+                  '/' +
+                  childSection.code +
+                  '/'
+                "
+                @click="mainStores.setSidebar()"
+              >
                 {{ childSection.name }}
-              </a>
+              </NuxtLink>
               <ul class="nav__list nav__list-nested">
                 <li
                   v-for="nestedChildSection in getChildSection(
@@ -39,9 +51,20 @@
                   )"
                   :key="nestedChildSection.id"
                 >
-                  <a :href="'/' + nestedChildSection.code + '/'">
+                  <NuxtLink
+                    :to="
+                      '/catalog/' +
+                      parentSection.code +
+                      '/' +
+                      childSection.code +
+                      '/' +
+                      nestedChildSection.code +
+                      '/'
+                    "
+                    @click="mainStores.setSidebar()"
+                  >
                     {{ nestedChildSection.name }}
-                  </a>
+                  </NuxtLink>
                 </li>
               </ul>
             </li>

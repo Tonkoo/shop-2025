@@ -1,5 +1,5 @@
 <template>
-  <WgMainContainer />
+  <WgCatalogContainer />
 </template>
 
 <script setup lang="ts"></script>

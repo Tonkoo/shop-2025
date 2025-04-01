@@ -3,7 +3,7 @@
     <q-header class="text-black header">
       <ModuleHeader />
     </q-header>
-    <q-page-container>
+    <q-page-container class="pageContainer">
       <main class="main">
         <slot />
       </main>
@@ -11,6 +11,7 @@
     <q-footer class="footer">
       <ModuleFooter />
     </q-footer>
+    <areal-sidebar />
   </q-layout>
 </template>
 
@@ -21,7 +22,13 @@ import ModuleFooter from '~/modules/main/components/ModuleFooter.vue';
 defineOptions({ name: 'MainLayout' });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.pageContainer {
+  padding-top: 32px !important;
+}
+.sidebar .q-dialog__backdrop {
+  top: 64px !important;
+}
 .header {
   position: sticky;
   top: 0;

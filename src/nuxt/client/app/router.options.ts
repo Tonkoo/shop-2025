@@ -1,6 +1,5 @@
 import type { RouterConfig } from '@nuxt/schema';
 import type { Routes } from '~/app/types/router.types';
-// import PageAdmin from '../pages/PageAdmin.vue';
 
 export default <RouterConfig & { routes: () => Routes }>{
   // https://router.vuejs.org/api/interfaces/routeroptions.html#routes
@@ -22,6 +21,33 @@ export default <RouterConfig & { routes: () => Routes }>{
       },
       component: () =>
         import('~/pages/PageMain.vue').then((r) => r.default || r),
+    },
+    {
+      name: 'CatalogParent',
+      path: '/catalog/:ParentCatalogCode',
+      meta: {
+        layout: 'main-layout',
+      },
+      component: () =>
+        import('~/pages/PageCatalog.vue').then((r) => r.default || r),
+    },
+    {
+      name: 'CatalogChild',
+      path: '/catalog/:ParentCatalogCode/:childCatalogCode',
+      meta: {
+        layout: 'main-layout',
+      },
+      component: () =>
+        import('~/pages/PageCatalog.vue').then((r) => r.default || r),
+    },
+    {
+      name: 'CatalogNested',
+      path: '/catalog/:ParentCatalogCode/:childCatalogCode/:nestedChildCatalogCode',
+      meta: {
+        layout: 'main-layout',
+      },
+      component: () =>
+        import('~/pages/PageCatalog.vue').then((r) => r.default || r),
     },
   ],
 };

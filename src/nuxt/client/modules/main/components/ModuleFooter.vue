@@ -8,9 +8,9 @@
           class="nav__column"
         >
           <div class="nav__title">
-            <a :href="'/' + parentSection.code + '/'">{{
-              parentSection.name
-            }}</a>
+            <NuxtLink :to="'/catalog/' + parentSection.code + '/'">
+              {{ parentSection.name }}</NuxtLink
+            >
           </div>
           <ul class="nav__list">
             <li
@@ -21,9 +21,9 @@
               )"
               :key="childSection.id"
             >
-              <a :href="'/' + childSection.code + '/'">
+              <NuxtLink :to="'/catalog/' + childSection.code + '/'">
                 {{ childSection.name }}
-              </a>
+              </NuxtLink>
             </li>
           </ul>
         </div>
