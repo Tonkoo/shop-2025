@@ -34,7 +34,7 @@
       :errors="adminStore.errors.description"
       @update:model-value="adminStore.setProductDescription"
     />
-    <areal-select-search
+    <areal-select-form
       v-model="adminStore.frontProduct.section"
       :value="adminStore.searchSection"
       :option="autocompleteOptions"

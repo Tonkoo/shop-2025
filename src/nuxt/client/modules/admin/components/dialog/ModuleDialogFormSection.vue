@@ -11,7 +11,7 @@
       :label="$t('admin.label.image')"
       @update:model-value="adminStore.setSectionImages"
     />
-    <areal-select-search
+    <areal-select-form
       v-model="adminStore.frontSection.parent"
       :value="adminStore.searchParentName"
       :option="autocompleteOptions"

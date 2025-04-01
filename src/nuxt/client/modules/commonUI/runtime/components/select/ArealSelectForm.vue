@@ -7,11 +7,14 @@
     :model-value="model"
     :label="label"
     :options="option"
+    :error-message="errorsMessage"
+    :error="errors"
     square
     outlined
     class="select"
     @update:model-value="$emit('update:modelValue', $event)"
   >
+    <!--    @filter="handleFilter"-->
     <template v-slot:no-option>
       <q-item>
         <q-item-section class="text-grey"> No result </q-item-section>

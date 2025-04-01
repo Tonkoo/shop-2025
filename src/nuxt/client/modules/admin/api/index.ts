@@ -5,6 +5,56 @@ import { comparisonValues } from '~/modules/admin/composables/сomparisonValues'
 import { headers } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 
+function removeDots(data: string): string {
+  if (!data) {
+    return data;
+  }
+  return data.replace(/^\.+/g, '');
+}
+function validateForm() {
+  const adminStore = useAdminStore();
+  const { typeItem, frontSection, frontProduct } = adminStore;
+  let isValid = true;
+
+  adminStore.setClearError();
+
+  if (typeItem === 'section') {
+    if (!frontSection.name.trim()) {
+      adminStore.setErrorName(true);
+      isValid = false;
+    }
+  } else {
+    if (!frontProduct.name.trim()) {
+      adminStore.setErrorName(true);
+      isValid = false;
+    }
+
+    if (!frontProduct.price) {
+      adminStore.setErrorPrice(true);
+      isValid = false;
+    }
+
+    if (!frontProduct.color.trim()) {
+      adminStore.setErrorColor(true);
+      isValid = false;
+    }
+
+    if (!frontProduct.description.trim()) {
+      adminStore.setErrorDescription(true);
+      isValid = false;
+    }
+
+    if (!frontProduct.section?.id || !frontProduct.section?.name.trim()) {
+      adminStore.setErrorSection(true);
+      isValid = false;
+    }
+  }
+
+  if (!isValid) {
+    throw new Error('The form is filled in incorrectly');
+  }
+}
+
 function fillingParam(
   type: string,
   from: string | number,
@@ -23,7 +73,8 @@ function fillingParam(
   if (filterSection) {
     params.filterSection = filterSection;
   }
-  if (!getItem && typeItem && typeItem === 'product') {
+  if (getItem && typeItem && typeItem === 'product') {
+    console.log(321312312);
     params.type = 'section';
   }
   if (getItem) {
@@ -33,7 +84,7 @@ function fillingParam(
       params.getProduct = getItem;
     }
   }
-
+  console.log(params);
   return params;
 }
 
@@ -71,9 +122,10 @@ export async function getItems() {
       adminStore.typeSearch.value,
       (adminStore.currentPage - 1) * adminStore.countColumn,
       adminStore.countColumn,
-      adminStore.searchName,
+      removeDots(adminStore.searchName),
       adminStore.filterSection?.id
     );
+
     adminStore.setTypeItem(adminStore.typeSearch.value);
     const response = await api.get<{ data: ResultItemsAdmin[] }>(
       '/elastic/admin',
@@ -96,23 +148,20 @@ export async function getItems() {
 
 export async function getAllNameColumn() {
   const adminStore = useAdminStore();
+  console.log(adminStore.typeSearch.value);
   try {
     const params = fillingParam(
       adminStore.typeSearch.value,
       '',
       adminStore.countColumn,
-      // adminStore.searchName
-      //   ? adminStore.searchName
-      //   : adminStore.searchParentName
-      //     ? adminStore.searchParentName
-      //     : adminStore.searchSection
-      adminStore.searchName ??
-        adminStore.searchParentName ??
-        adminStore.searchSection ??
+      removeDots(adminStore.searchName) ??
+        removeDots(adminStore.searchParentName) ??
+        removeDots(adminStore.searchSection) ??
         '',
       undefined,
       adminStore.typeItem
     );
+    console.log(params);
     const response = await api.get('/elastic/admin/name', {
       params,
     });
@@ -134,47 +183,19 @@ export async function addItem() {
       adminStore.typeSearch.value,
       ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
       adminStore.countColumn.toString(),
-      adminStore.searchName,
+      removeDots(adminStore.searchName),
       undefined,
       adminStore.typeItem,
       true
     );
 
-    if (adminStore.typeItem == 'section') {
-      if (adminStore.frontSection.name == '') {
-        adminStore.setErrorName(true);
-        throw new Error('The form is filled in incorrectly');
-      }
-    } else {
-      if (adminStore.frontProduct.name == '') {
-        adminStore.setErrorName(true);
-      }
-      if (adminStore.frontProduct.price == '') {
-        adminStore.setErrorPrice(true);
-      }
-      if (adminStore.frontProduct.color == '') {
-        adminStore.setErrorColor(true);
-      }
-      if (adminStore.frontProduct.description == '') {
-        adminStore.setErrorDescription(true);
-      }
-      if (
-        adminStore.frontProduct.section?.id === 0 &&
-        adminStore.frontProduct.section?.name === ''
-      ) {
-        adminStore.setErrorSection(true);
-        throw new Error('The form is filled in incorrectly');
-      }
-    }
-
-    adminStore.setClearError();
+    validateForm();
     let data;
     if (adminStore.typeItem === 'section') {
       data = adminStore.frontSection;
     } else {
       data = adminStore.frontProduct;
     }
-    console.log(data);
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItemsAdmin[] }>(
@@ -196,10 +217,6 @@ export async function editItem() {
   const adminStore = useAdminStore();
   try {
     let data;
-    console.log('Фронт');
-    console.log(adminStore.frontSection);
-    console.log('Бэк');
-    console.log(adminStore.backSection);
     if (adminStore.typeItem === 'section') {
       data = comparisonValues(adminStore.frontSection, adminStore.backSection, [
         'id',
@@ -215,7 +232,6 @@ export async function editItem() {
         'sectionId',
       ]);
     }
-    console.log(data);
     if (data.section) {
       data.sectionId = data.section.id;
       data.sectionName = data.section.name;
@@ -234,10 +250,8 @@ export async function editItem() {
       adminStore.typeItem,
       true
     );
-    // if (adminStore.frontSection.name == '') {
-    //   adminStore.setErrorName(true);
-    //   throw new Error('The form is filled in incorrectly');
-    // }
+
+    validateForm();
 
     generateFormData(formData, data, param);
     adminStore.setSearchName('');

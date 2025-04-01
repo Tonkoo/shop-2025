@@ -14,7 +14,6 @@
             @update:model-value="adminStore.setTypeSearch"
           />
         </div>
-        <!--        TODO: фильтрация по разделу для продукта -->
         <div v-if="adminStore.typeSearch.value === 'product'" class="col-4">
           <areal-select-filter
             v-model="adminStore.filterSection"

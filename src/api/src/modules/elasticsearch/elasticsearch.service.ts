@@ -253,13 +253,13 @@ export class ElasticsearchService {
   getFilter(type: string, name?: string, filterSection?: number): any[] {
     const filter: any[] = [
       {
-        term: { type: type },
+        match: { type: type },
       },
     ];
 
     if (name) {
       filter.push({
-        term: { name: name },
+        wildcard: { 'name.keyword': `*${name}*` },
       });
     }
     if (filterSection) {
@@ -267,24 +267,22 @@ export class ElasticsearchService {
         term: { section: filterSection },
       });
     }
-
+    console.log(filter);
     return filter;
   }
 
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
+      console.log(payLoad);
       const { type, from, size, searchName, filterSection } = payLoad;
       const filter = this.getFilter(type, searchName, filterSection);
 
       const items = await this.searchFromElastic({
-        size,
-        from,
-        query: {
-          bool: {
-            filter: filter,
-          },
-        },
+        size: Number(size),
+        from: Number(from),
+        query: { bool: { filter } },
       });
+      console.log(items);
       const total: any = items.hits.total;
       const rawItems = items.hits.hits.map(
         (item) => item._source as SectionElastic | ProductElastic,
