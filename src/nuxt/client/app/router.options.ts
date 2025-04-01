@@ -24,7 +24,7 @@ export default <RouterConfig & { routes: () => Routes }>{
     },
     {
       name: 'CatalogParent',
-      path: '/catalog/:ParentCatalogCode',
+      path: '/catalog/:parentCatalogCode',
       meta: {
         layout: 'main-layout',
       },
@@ -33,7 +33,7 @@ export default <RouterConfig & { routes: () => Routes }>{
     },
     {
       name: 'CatalogChild',
-      path: '/catalog/:ParentCatalogCode/:childCatalogCode',
+      path: '/catalog/:parentCatalogCode/:childCatalogCode',
       meta: {
         layout: 'main-layout',
       },
@@ -42,7 +42,7 @@ export default <RouterConfig & { routes: () => Routes }>{
     },
     {
       name: 'CatalogNested',
-      path: '/catalog/:ParentCatalogCode/:childCatalogCode/:nestedChildCatalogCode',
+      path: '/catalog/:parentCatalogCode/:childCatalogCode/:nestedChildCatalogCode',
       meta: {
         layout: 'main-layout',
       },

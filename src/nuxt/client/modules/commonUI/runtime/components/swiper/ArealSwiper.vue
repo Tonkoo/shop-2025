@@ -73,7 +73,7 @@ const swiperPrev = () => {
 .swiper__wrapper {
   position: relative;
   width: 100%;
-  margin-bottom: 50px;
+  //margin-bottom: 50px;
   .swiper {
     position: relative;
     margin: 16px;

@@ -102,6 +102,11 @@ type Err = {
   description: boolean;
   section: boolean;
 };
+type ParamCatalog = {
+  parentCatalogCode: string;
+  childCatalogCode?: string;
+  nestedChildCatalogCode?: string;
+};
 
 export type {
   SectionMain,
@@ -118,4 +123,5 @@ export type {
   ImageObject,
   ApiParams,
   Err,
+  ParamCatalog,
 };

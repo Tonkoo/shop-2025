@@ -61,7 +61,7 @@ const productImage = computed(() => {
     position: relative;
 
     .img__container {
-      height: 550px;
+      //height: 550px;
       width: 100%;
       display: flex;
       align-items: center;
