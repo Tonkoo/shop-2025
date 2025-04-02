@@ -34,9 +34,9 @@
       :errors="adminStore.errors.description"
       @update:model-value="adminStore.setProductDescription"
     />
+    <!--    :value="adminStore.searchSection"-->
     <areal-select-form
       v-model="adminStore.frontProduct.section"
-      :value="adminStore.searchSection"
       :option="autocompleteOptions"
       option-value="id"
       option-label="name"
@@ -72,6 +72,7 @@ const adminModule = useAdminModule();
 const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = async (value: SelectSection | string) => {
+  adminStore.setIsAddEdit(true);
   const name = typeof value === 'string' ? value : value.name;
   adminStore.setSearchSection(name);
   if (typeof value !== 'string') {

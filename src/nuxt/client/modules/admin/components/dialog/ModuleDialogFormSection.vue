@@ -13,7 +13,6 @@
     />
     <areal-select-form
       v-model="adminStore.frontSection.parent"
-      :value="adminStore.searchParentName"
       :option="autocompleteOptions"
       option-value="id"
       option-label="name"
@@ -37,6 +36,7 @@ const adminModule = useAdminModule();
 const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = async (value: SelectSection | string) => {
+  adminStore.setIsAddEdit(true);
   const name = typeof value === 'string' ? value : value.name;
   adminStore.setSearchParentName(name);
   if (typeof value !== 'string') {

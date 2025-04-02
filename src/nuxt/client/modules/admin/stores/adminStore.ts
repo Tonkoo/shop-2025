@@ -65,6 +65,7 @@ export const useAdminStore = defineStore('admin-store', {
     disableBtn: false,
     filterSection: null,
     itemsFilter: [],
+    isAddEdit: false,
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -74,7 +75,7 @@ export const useAdminStore = defineStore('admin-store', {
       if (!value) {
         await this.clearForms();
       }
-
+      this.setIsAddEdit(false);
       this.viewModal = value;
     },
     setDelDialog(value: boolean) {
@@ -244,6 +245,10 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setItemsFilter(value: ResultItemsAdmin) {
       this.itemsFilter = value.items;
+    },
+    setIsAddEdit(value: boolean) {
+      this.isAddEdit = value;
+      console.log(this.isAddEdit);
     },
   },
 });

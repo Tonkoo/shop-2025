@@ -104,6 +104,7 @@ export class ProductsService {
         convertTimeObject(newProduct),
         'product',
       );
+      console.log(searchParams);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return data.getProduct
         ? await this.EsServices.getItemsFilter(searchParams)

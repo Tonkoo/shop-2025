@@ -30,6 +30,7 @@ type AdminState = {
   disableBtn: boolean;
   filterSection: SectionAdmin | null;
   itemsFilter: StoreItem[];
+  isAddEdit: boolean;
 };
 
 export type { AdminState };

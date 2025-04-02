@@ -73,10 +73,9 @@ function fillingParam(
   if (filterSection) {
     params.filterSection = filterSection;
   }
-  if (getItem && typeItem && typeItem === 'product') {
-    console.log(321312312);
-    params.type = 'section';
-  }
+  // if (getItem && typeItem && typeItem === 'product') {
+  //   params.type = 'section';
+  // }
   if (getItem) {
     if (typeItem === 'section') {
       params.getSection = getItem;
@@ -84,7 +83,6 @@ function fillingParam(
       params.getProduct = getItem;
     }
   }
-  console.log(params);
   return params;
 }
 
@@ -126,7 +124,7 @@ export async function getItems() {
       adminStore.filterSection?.id
     );
 
-    adminStore.setTypeItem(adminStore.typeSearch.value);
+    // adminStore.setTypeItem(adminStore.typeSearch.value);
     const response = await api.get<{ data: ResultItemsAdmin[] }>(
       '/elastic/admin',
       {
@@ -148,10 +146,9 @@ export async function getItems() {
 
 export async function getAllNameColumn() {
   const adminStore = useAdminStore();
-  console.log(adminStore.typeSearch.value);
   try {
     const params = fillingParam(
-      adminStore.typeSearch.value,
+      adminStore.isAddEdit ? 'section' : adminStore.typeSearch.value,
       '',
       adminStore.countColumn,
       removeDots(adminStore.searchName) ??
@@ -188,7 +185,7 @@ export async function addItem() {
       adminStore.typeItem,
       true
     );
-
+    console.log(param);
     validateForm();
     let data;
     if (adminStore.typeItem === 'section') {
