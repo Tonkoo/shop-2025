@@ -34,9 +34,9 @@ export class ProductsService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
-  ProcessingDate(data: ProductDto) {
+  processingData(data: ProductDto) {
     if (data.name) {
-      data.code = tr(data.name, { replace: { ' ': '-' } });
+      data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
     }
     if (!Array.isArray(data.images)) {
       data.images = [];
@@ -60,14 +60,7 @@ export class ProductsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-
-      this.ProcessingDate(data);
+      this.processingData(data);
       const newProduct: Products = await this.productsRepo.save(
         prepareData(data, [
           'searchName',
@@ -104,8 +97,13 @@ export class ProductsService {
         convertTimeObject(newProduct),
         'product',
       );
-      console.log(searchParams);
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
       return data.getProduct
         ? await this.EsServices.getItemsFilter(searchParams)
         : newProduct;
@@ -139,7 +137,6 @@ export class ProductsService {
           name: product.section.name,
         };
       }
-      console.log(product);
 
       return camelCaseConverter(product);
     } catch (err) {
@@ -159,13 +156,6 @@ export class ProductsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-
       const currentProduct: Products | null = await this.productsRepo.findOne({
         where: { id: id },
       });
@@ -174,7 +164,7 @@ export class ProductsService {
         throw new NotFoundException('Product not found');
       }
 
-      this.ProcessingDate(data);
+      this.processingData(data);
 
       if (files.files) {
         data.images = await createImages(queryRunner, files);
@@ -232,6 +222,12 @@ export class ProductsService {
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
       return data.getProduct
         ? await this.EsServices.getItemsFilter(searchParams)
         : newProduct;
@@ -250,12 +246,7 @@ export class ProductsService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const searchParams: payLoad = {
-      type: data.type,
-      from: Number(data.from),
-      size: Number(data.size),
-      searchName: data.searchName,
-    };
+
     try {
       if (!id) {
         throw new NotFoundException('ID is required for deletion.');
@@ -284,6 +275,12 @@ export class ProductsService {
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
       return data.getProduct
         ? await this.EsServices.getItemsFilter(searchParams)
         : id;

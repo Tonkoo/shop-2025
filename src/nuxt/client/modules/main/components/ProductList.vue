@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md">
     <div class="row catalog-list">
+      <!--      TODO: вынести в computed-->
       <div
         v-for="product in mainStores.product.filter((item) => item.showOnMain)"
         :key="product.id"

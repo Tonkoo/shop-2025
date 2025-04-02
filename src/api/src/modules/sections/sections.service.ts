@@ -56,17 +56,16 @@ export class SectionsService {
       const parentSection: Sections | null = await this.sectionsRepo.findOneBy({
         id: section.id_parent,
       });
+      section.parent = {
+        id: 0,
+        name: '',
+      };
       if (parentSection) {
         section.parent = {
           id: parentSection.id,
           name: parentSection.name,
         };
       }
-    } else {
-      section.parent = {
-        id: 0,
-        name: '',
-      };
     }
   }
 
@@ -78,20 +77,11 @@ export class SectionsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-
       this.ProcessingDate(data);
-      if (!Array.isArray(data.images)) {
-        data.images = [];
-      }
-      if (!data.idParent) {
-        data.level = 1;
-      } else {
+
+      data.level = 1;
+
+      if (data.idParent) {
         const parentSection = await this.sectionsRepo.findOne({
           where: { id: data.idParent },
         });
@@ -109,6 +99,7 @@ export class SectionsService {
           'size',
           'type',
           'parent',
+          'images',
         ]),
       );
 
@@ -138,6 +129,14 @@ export class SectionsService {
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
+
       return data.getSection
         ? await this.EsServices.getItemsFilter(searchParams)
         : newSection;
@@ -202,15 +201,6 @@ export class SectionsService {
     await queryRunner.startTransaction();
     try {
       {
-        console.log(data);
-        console.log(files);
-        const searchParams: payLoad = {
-          type: data.type,
-          from: Number(data.from),
-          size: Number(data.size),
-          searchName: data.searchName,
-        };
-
         const currentSection: Sections | null = await this.sectionsRepo.findOne(
           {
             where: { id: id },
@@ -225,11 +215,11 @@ export class SectionsService {
           data.images = await createImages(queryRunner, files);
         }
         this.ProcessingDate(data);
-        console.log(data);
         if (!data.images) {
           data.images = [];
         }
         if (data.idParent) {
+          //TODO: Вынести в отдельный метод
           const parentSection = await this.sectionsRepo.findOne({
             where: { id: data.idParent },
           });
@@ -248,7 +238,7 @@ export class SectionsService {
             'parent',
           ]),
         );
-
+        //TODO: вынести в отдельный метод
         const newImageIds = data.images;
         if (newImageIds) {
           const currentImageIds: number[] | null = currentSection.images;
@@ -257,7 +247,7 @@ export class SectionsService {
               (id) => !newImageIds.includes(id),
             );
 
-            if (imagesToDelete.length > 0) {
+            if (imagesToDelete.length) {
               await this.imagesRepository.delete(imagesToDelete);
             }
           }
@@ -287,6 +277,12 @@ export class SectionsService {
         );
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
+        const searchParams: payLoad = {
+          type: data.type,
+          from: Number(data.from),
+          size: Number(data.size),
+          searchName: data.searchName,
+        };
         return data.getSection
           ? await this.EsServices.getItemsFilter(searchParams)
           : newSection;
@@ -309,12 +305,7 @@ export class SectionsService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const searchParams: payLoad = {
-      type: data.type,
-      from: Number(data.from),
-      size: Number(data.size),
-      searchName: data.searchName,
-    };
+
     try {
       if (!id) {
         throw new NotFoundException('ID is required for deletion.');
@@ -349,6 +340,13 @@ export class SectionsService {
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      // TODO
+      const searchParams: payLoad = {
+        type: data.type,
+        from: Number(data.from),
+        size: Number(data.size),
+        searchName: data.searchName,
+      };
       return data.getSection
         ? await this.EsServices.getItemsFilter(searchParams)
         : id;

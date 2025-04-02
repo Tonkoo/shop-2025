@@ -1,5 +1,7 @@
 <template>
+  <!--  TODO: Избавиться от q-toolbar. Использовать стили как на макете div-->
   <q-toolbar class="q-pa-md header">
+    <!--    TODO: перенести в CommonUI-->
     <q-btn
       flat
       round
@@ -7,10 +9,13 @@
       :icon="mainStores.sidebar ? 'close' : 'menu'"
       @click="mainStores.setSidebar()"
     />
+    <!--    TODO: Избавиться от q-space-->
     <q-space />
+    <!--    TODO  Использоваться NuxtLink-->
+    <!--  TODO: Избавиться от q-toolbar-title. Использовать стили как на макете span-->
     <q-toolbar-title class="title"><a href="/">StyleHub</a> </q-toolbar-title>
     <q-space />
-    <q-btn flat round dense icon="search" />
+    <!--    <q-btn flat round dense icon="search" />-->
   </q-toolbar>
 </template>
 

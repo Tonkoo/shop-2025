@@ -11,6 +11,7 @@ import type {
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 import { getItemById } from '~/modules/admin/api';
+import { paramPagination } from '~/entities/table.entites';
 
 const adminModule = useAdminModule();
 //TODO: вынести параметры для пагинации в файл table.entites.
@@ -21,8 +22,8 @@ export const useAdminStore = defineStore('admin-store', {
     delDialog: false,
     viewModal: false,
     typeItem: 'section',
-    countColumn: 10,
-    currentPage: 1,
+    countColumn: paramPagination.countColumn,
+    currentPage: paramPagination.currentPage,
     allCount: 0,
     typeSearch: { label: 'Разделы', value: 'section' },
     allName: [],

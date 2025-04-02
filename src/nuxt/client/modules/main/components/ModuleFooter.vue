@@ -1,13 +1,17 @@
+<!--TODO: Методология БЭМ-->
 <template>
   <div class="footer__wrapper">
     <div class="footer__top">
+      <!--      TODO-->
       <div class="nav nav__footer">
         <div
           v-for="parentSection in getParentSection(mainStores.section)"
           :key="parentSection.id"
           class="nav__column"
         >
+          <!--TODO: Написать метод для склейки ссылки-->
           <div class="nav__title">
+            <!--TODO: сделать ArealLink в CommonUI-->
             <NuxtLink :to="'/catalog/' + parentSection.code + '/'">
               {{ parentSection.name }}</NuxtLink
             >
@@ -30,6 +34,7 @@
       </div>
     </div>
     <div class="footer__bottom">
+      <!--TODO: Автоматически определять даты-->
       <span>&copy; 2025-2026 StyleHub</span>
     </div>
   </div>

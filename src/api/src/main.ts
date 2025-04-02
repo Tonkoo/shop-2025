@@ -17,7 +17,7 @@ async function bootstrap() {
   });
 
   app.useStaticAssets(join(__dirname, '..', 'images'), {
-    prefix: '/api/v1/images/',
+    prefix: '/images/',
   });
 
   const config = new DocumentBuilder()

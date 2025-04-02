@@ -45,7 +45,7 @@ const swiper = useSwiper(containerRef, {
 
 const isBeginning = ref<boolean | undefined>(true);
 const isEnd = ref<boolean | undefined>(false);
-
+// TODO: Фильтрация через elastic
 const filteredItems = computed(() => {
   if (!props.filterKey) return props.dataItems;
   return props.dataItems.filter((item) => {

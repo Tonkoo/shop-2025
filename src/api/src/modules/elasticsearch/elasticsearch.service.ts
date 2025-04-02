@@ -38,17 +38,19 @@ export class ElasticsearchService {
     private readonly imagesRepository: Repository<Images>,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
-
+  //TODO: Поправить getSectionLevel
   private getSectionLevel(
     sections: SectionElastic[],
     sectionId: number | string,
   ): number {
     const section = sections.find((s) => s.id === Number(sectionId));
+
     if (!section) {
-      throw new NotFoundException('Not found Section');
+      throw new Error('');
     }
 
-    return section?.level;
+    // return section?.level || null;
+    return section.level;
   }
 
   async generateBlockImages(
@@ -154,7 +156,10 @@ export class ElasticsearchService {
       ];
 
       await this.bulkIndexDocuments(this.index || 'shop', document);
+      //TODO: придумать как исправить костыль
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      //TODO: добавить параметр get, как с продуктом и разделом
       return await this.getItemsFilter(payLoad);
     } catch (err) {
       logger.error('Error from elastic.createIndex: ', err);
@@ -163,12 +168,12 @@ export class ElasticsearchService {
       );
     }
   }
-
+  //TODO: Засунуть в try catch данный метод
   async bulkIndexDocuments(
     index: string,
     documents: (SectionEntities | ProductEntities)[],
   ): Promise<void> {
-    if (documents.length === 0) {
+    if (!documents.length) {
       console.log('No documents to index. Skipping bulk operation.');
       return;
     }
@@ -182,6 +187,7 @@ export class ElasticsearchService {
     await this.elasticsearchService.bulk({ body });
   }
 
+  //TODO: Разделить на два метода: для продукта и секции
   async addDocument(
     index: string,
     id: string,
@@ -189,18 +195,19 @@ export class ElasticsearchService {
     type: string,
   ) {
     try {
-      if (!document.images) {
-        document.images = [];
+      let imageData: imageData[] = [];
+      if (document.images) {
+        const images: Images[] | null = await this.imagesRepository.findBy({
+          id: In(document.images),
+        });
+        imageData = images.map(
+          (image: Images): imageData => ({
+            alt: image.name,
+            src: image.path,
+          }),
+        );
       }
-      const images: Images[] | null = await this.imagesRepository.findBy({
-        id: In(document.images),
-      });
-      const imageData: imageData[] = images.map(
-        (image: Images): imageData => ({
-          alt: image.name,
-          src: image.path,
-        }),
-      );
+
       const updatedDocument: any = {
         ...document,
         type,
@@ -249,7 +256,7 @@ export class ElasticsearchService {
       throw new BadRequestException('Error deleting document');
     }
   }
-
+  //TODO: Передавать объект с параметрами
   getFilter(type: string, name?: string, filterSection?: number): any[] {
     const filter: any[] = [
       {
@@ -273,7 +280,6 @@ export class ElasticsearchService {
 
   async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
     try {
-      console.log(payLoad);
       const { type, from, size, searchName, filterSection } = payLoad;
       const filter = this.getFilter(type, searchName, filterSection);
 
@@ -282,12 +288,12 @@ export class ElasticsearchService {
         from: Number(from),
         query: { bool: { filter } },
       });
-      console.log(items);
       const total: any = items.hits.total;
       const rawItems = items.hits.hits.map(
         (item) => item._source as SectionElastic | ProductElastic,
       );
-
+      //TODO: разделить данный метод на два метода: для продуктов и разделов
+      //TODO: ЛУЧШЕ вынести в elastic sectionName
       const sectionIds = new Set<number>();
       rawItems.forEach((item) => {
         if ('section' in item && item.section) {
@@ -297,6 +303,7 @@ export class ElasticsearchService {
           sectionIds.add(item.id_parent);
         }
       });
+      // console.log(sectionIds);
 
       const sections = await this.sectionsRepository.find({
         where: { id: In([...sectionIds]) },

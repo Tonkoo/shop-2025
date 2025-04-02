@@ -3,10 +3,7 @@
     <q-card-section class="card__section">
       <div class="img__container">
         <a :href="'/' + section.code + '/'">
-          <q-img
-            class="card__img"
-            :src="`http://localhost/api/v1/${sectionImage}`"
-          />
+          <q-img class="card__img" :src="sectionImage" />
         </a>
       </div>
       <div class="card__text card__text-section">
