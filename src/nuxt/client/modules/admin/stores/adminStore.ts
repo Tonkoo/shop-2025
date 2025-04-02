@@ -10,6 +10,7 @@ import type {
   SectionAdmin,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
+import { getItemById } from '~/modules/admin/api';
 
 const adminModule = useAdminModule();
 //TODO: вынести параметры для пагинации в файл table.entites.
@@ -116,7 +117,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setSelectedId(value: number) {
       this.selectedId = value;
-      await adminModule.getItem();
+      await adminModule.getItemById();
     },
     async setSelectedIdDel(value: number) {
       this.selectedId = value;
@@ -248,7 +249,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setIsAddEdit(value: boolean) {
       this.isAddEdit = value;
-      console.log(this.isAddEdit);
     },
   },
 });

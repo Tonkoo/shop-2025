@@ -158,7 +158,6 @@ export async function getAllNameColumn() {
       undefined,
       adminStore.typeItem
     );
-    console.log(params);
     const response = await api.get('/elastic/admin/name', {
       params,
     });
@@ -185,7 +184,6 @@ export async function addItem() {
       adminStore.typeItem,
       true
     );
-    console.log(param);
     validateForm();
     let data;
     if (adminStore.typeItem === 'section') {
@@ -267,13 +265,13 @@ export async function editItem() {
   }
 }
 
-export async function getItem() {
+export async function getItemById() {
   const adminStore = useAdminStore();
   const params = {
     id: adminStore.selectedId,
   };
   try {
-    const response = await api.get(`/${adminStore.typeSearch.value}`, {
+    const response = await api.get(`/${adminStore.typeSearch.value}/id`, {
       params: params,
     });
     if (!response) {

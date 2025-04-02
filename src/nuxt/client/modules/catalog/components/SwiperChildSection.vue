@@ -1,25 +1,11 @@
 <template>
-  <div
-    v-if="
-      !catalogStore.paramCatalog.childCatalogCode &&
-      !catalogStore.paramCatalog.nestedChildCatalogCode
-    "
-    class="swiper"
-  >
-    <areal-swiper :data-items="mainStores.product" filter-key="mainSlider">
+  <div class="swiper">
+    <ArealSwiper :data-items="mainStores.product" filter-key="mainSlider">
       <template #default="{ item }">
-        <ArealProductCard :product="item" />
+        <ArealSectionCard :section="item" />
       </template>
-    </areal-swiper>
+    </ArealSwiper>
   </div>
-  <!--  <h1-->
-  <!--    v-if="-->
-  <!--      !catalogStore.paramCatalog.childCatalogCode &&-->
-  <!--      !catalogStore.paramCatalog.nestedChildCatalogCode-->
-  <!--    "-->
-  <!--  >-->
-  <!--    12312312-->
-  <!--  </h1>-->
 </template>
 
 <script setup lang="ts">

@@ -32,6 +32,7 @@ import type { ProductMain, SectionMain } from '~/interfaces/global';
 interface Props {
   dataItems: Array<ProductMain | SectionMain>;
   filterKey?: string;
+  filterValue?: string;
 }
 
 const props = defineProps<Props>();
@@ -46,11 +47,13 @@ const isBeginning = ref<boolean | undefined>(true);
 const isEnd = ref<boolean | undefined>(false);
 
 const filteredItems = computed(() => {
-  return props.filterKey
-    ? props.dataItems.filter(
-        (item) => item[props.filterKey as keyof typeof item]
-      )
-    : props.dataItems;
+  if (!props.filterKey) return props.dataItems;
+  return props.dataItems.filter((item) => {
+    if (props.filterValue !== undefined) {
+      return item[props.filterKey as keyof typeof item] === props.filterValue;
+    }
+    return item[props.filterKey as keyof typeof item];
+  });
 });
 
 const swiperNext = () => {

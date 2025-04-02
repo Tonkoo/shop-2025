@@ -60,8 +60,8 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-@import '~/modules/commonUI/assets/scss/nav';
-@import '~/modules/commonUI/assets/scss/nav.modifiers';
+@import '~/modules/commonUI/assets/scss/nav/nav';
+@import '~/modules/commonUI/assets/scss/nav/nav.modifiers';
 
 .footer__wrapper {
   display: flex;

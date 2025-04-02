@@ -44,6 +44,32 @@ export class SectionsService {
     }
   }
 
+  async populateSectionData(section: SectionBase) {
+    if (section.images) {
+      const imageIds: number[] = section.images;
+      section.imageObject = await this.imagesRepository.findBy({
+        id: In(imageIds),
+      });
+    }
+
+    if (section.id_parent) {
+      const parentSection: Sections | null = await this.sectionsRepo.findOneBy({
+        id: section.id_parent,
+      });
+      if (parentSection) {
+        section.parent = {
+          id: parentSection.id,
+          name: parentSection.name,
+        };
+      }
+    } else {
+      section.parent = {
+        id: 0,
+        name: '',
+      };
+    }
+  }
+
   async create(
     data: SectionDto,
     files: { files: Express.Multer.File[] },
@@ -128,38 +154,16 @@ export class SectionsService {
 
   async getSectionById(id: number): Promise<SectionBase[] | SectionBase> {
     try {
-      const sections: SectionBase | null = await this.sectionsRepo.findOneBy({
+      const section: SectionBase | null = await this.sectionsRepo.findOneBy({
         id: id,
       });
-      if (!sections) {
+      if (!section) {
         throw new NotFoundException('Section not found');
       }
-      if (sections.images) {
-        const imageIds: number[] = sections.images;
-        sections.imageObject = await this.imagesRepository.findBy({
-          id: In(imageIds),
-        });
-      }
 
-      if (sections.id_parent) {
-        const parentSection: Sections | null =
-          await this.sectionsRepo.findOneBy({
-            id: sections.id_parent,
-          });
-        if (parentSection) {
-          sections.parent = {
-            id: parentSection.id,
-            name: parentSection.name,
-          };
-        }
-      } else {
-        sections.parent = {
-          id: 0,
-          name: '',
-        };
-      }
+      await this.populateSectionData(section);
 
-      return camelCaseConverter(sections);
+      return camelCaseConverter(section);
     } catch (err) {
       console.log('Error for sections.getList: ', err);
       throw new BadRequestException(
@@ -167,6 +171,27 @@ export class SectionsService {
       );
     }
   }
+
+  async getSectionByName(name: string): Promise<SectionBase[] | SectionBase> {
+    try {
+      const section: SectionBase | null = await this.sectionsRepo.findOneBy({
+        name: name,
+      });
+      if (!section) {
+        throw new NotFoundException('Section not found');
+      }
+
+      await this.populateSectionData(section);
+
+      return camelCaseConverter(section);
+    } catch (err) {
+      console.log('Error for sections.getList: ', err);
+      throw new BadRequestException(
+        'An error occurred while outputting partition data.',
+      );
+    }
+  }
+
   async updateById(
     id: number,
     data: SectionDto,

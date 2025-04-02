@@ -46,9 +46,9 @@ class DeleteSectionDto {
 export class SectionsController {
   constructor(private readonly services: SectionsService) {}
 
-  @ApiOperation({ summary: 'Вывод данных таблицы' })
+  @ApiOperation({ summary: 'Получение раздела по идентификатору' })
   @ApiBody({
-    description: 'Вывод данных таблицы',
+    description: 'Получение раздела по идентификатору',
     type: ProductDto,
   })
   @ApiResponse({
@@ -61,12 +61,36 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  @Get()
-  async getSection(@Query('id') id: number): Promise<response> {
+  @Get('/id')
+  async getSectionById(@Query('id') id: number): Promise<response> {
+    console.log(21312);
     const result: SectionBase | SectionBase[] =
       await this.services.getSectionById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
+
+  @ApiOperation({ summary: 'Получение раздела по названию' })
+  @ApiBody({
+    description: 'Получение раздела по названию',
+    type: ProductDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка',
+    type: ResponseHelperApiError,
+  })
+  @Get('/name')
+  async getSectionByName(@Query('name') name: string): Promise<response> {
+    const result: SectionBase | SectionBase[] =
+      await this.services.getSectionByName(name);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
+  }
+
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor(

@@ -2,22 +2,17 @@
   <q-card class="slide__card">
     <q-card-section class="card__section">
       <div class="img__container">
-        <a :href="'/' + product.code + '/'">
+        <a :href="'/' + section.code + '/'">
           <q-img
             class="card__img"
-            :src="`http://localhost/api/v1/${productImage}`"
+            :src="`http://localhost/api/v1/${sectionImage}`"
           />
         </a>
       </div>
-      <div class="card__text">
+      <div class="card__text card__text-section">
         <div class="text-h6">
-          <a :href="'/' + product.code + '/'">{{ product.name }}</a>
+          <a :href="'/' + section.code + '/'">{{ section.name }}</a>
         </div>
-        <div class="text-subtitle2 text__price">{{ product.price }} ₽</div>
-        <div
-          class="section__circle"
-          :style="{ backgroundColor: product.color }"
-        />
       </div>
     </q-card-section>
   </q-card>
@@ -27,20 +22,21 @@
 import type { ProductMain, SectionMain } from '~/interfaces/global';
 
 const props = defineProps({
-  product: {
+  section: {
     type: Object as PropType<ProductMain | SectionMain>,
     required: true,
   },
 });
 
-const productImage = computed(() => {
-  if (!props.product.images?.length || !props.product.images[0]?.src) {
+const sectionImage = computed(() => {
+  if (!props.section.images?.length || !props.section.images[0]?.src) {
     return 'images/default.png';
   }
-  return props.product.images[0].src;
+  return props.section.images[0].src;
 });
 </script>
 
 <style scoped lang="scss">
 @import '~/modules/commonUI/assets/scss/card/card';
+@import '~/modules/commonUI/assets/scss/card/card.modifiers';
 </style>
