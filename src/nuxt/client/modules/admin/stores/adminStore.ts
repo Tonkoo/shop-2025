@@ -131,9 +131,13 @@ export const useAdminStore = defineStore('admin-store', {
       if (!this.backSection.idParent) {
         this.backSection.idParent = 0;
       }
+      this.setSectionId(value.id);
       this.setSectionName(value.name);
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
+      this.setSectionIdParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
+
+      console.log(this.frontSection);
     },
     async setBackProduct(value: ProductAdmin) {
       this.backProduct = value;
@@ -171,6 +175,9 @@ export const useAdminStore = defineStore('admin-store', {
       this.setProductShowOnMain(false);
       this.setProductMainSlider(false);
     },
+    setSectionId(value: number) {
+      this.frontSection.id = value;
+    },
     setSectionName(value: string) {
       this.frontSection.name = value;
     },
@@ -182,6 +189,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setSectionParent(value: SelectSection) {
       this.frontSection.parent = { id: value.id, name: value.name };
+      console.log(this.frontSection.parent);
     },
     setConvertImages(value: File[]) {
       if (this.backSection) {
