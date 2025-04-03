@@ -90,6 +90,7 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async getNameItems(@Query() payLoad: payLoad): Promise<response> {
+    console.log(payLoad);
     const result: SectionElastic[] =
       await this.services.getNameShopByElastic(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);

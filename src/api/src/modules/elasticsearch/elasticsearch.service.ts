@@ -38,20 +38,6 @@ export class ElasticsearchService {
     private readonly imagesRepository: Repository<Images>,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
-  //TODO: Поправить getSectionLevel
-  private getSectionLevel(
-    sections: SectionElastic[],
-    sectionId: number | string,
-  ): number {
-    const section = sections.find((s) => s.id === Number(sectionId));
-
-    if (!section) {
-      throw new Error('');
-    }
-
-    // return section?.level || null;
-    return section.level;
-  }
 
   async generateBlockImages(
     data: (SectionClient | ProductClient)[],
@@ -303,7 +289,6 @@ export class ElasticsearchService {
           sectionIds.add(item.id_parent);
         }
       });
-      // console.log(sectionIds);
 
       const sections = await this.sectionsRepository.find({
         where: { id: In([...sectionIds]) },
@@ -340,7 +325,7 @@ export class ElasticsearchService {
   }
 
   async getNameShopByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
-    const { type, searchName, size } = payLoad;
+    const { type, searchName, size, typeForm } = payLoad;
     try {
       if (searchName == undefined) {
         return [];
@@ -359,14 +344,17 @@ export class ElasticsearchService {
       const testResult = result.hits.hits.map(
         (item) => item._source,
       ) as SectionElastic[];
-
-      return testResult.map((section) => {
-        const level = this.getSectionLevel(testResult, section.id);
-        return {
+      return testResult
+        .filter((section) => {
+          if (typeForm && typeForm === 'section') {
+            return section.level === 1;
+          }
+          return true;
+        })
+        .map((section) => ({
           ...section,
-          name: '.'.repeat(level) + section.name,
-        };
-      });
+          name: '.'.repeat(section.level) + section.name,
+        }));
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);
       throw new BadRequestException('Error getting name');

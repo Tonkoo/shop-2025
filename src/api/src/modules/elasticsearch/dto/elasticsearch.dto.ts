@@ -23,4 +23,6 @@ export class payLoad {
     message: 'Параметр filterSection должен быть типа string',
   })
   filterSection?: number;
+
+  typeForm?: string;
 }

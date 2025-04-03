@@ -33,7 +33,7 @@ export class SectionsService {
 
   ProcessingDate(data: SectionDto) {
     if (data.name) {
-      data.code = tr(data.name, { replace: { ' ': '-' } });
+      data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
     }
 
     if (String(data.idParent) == 'null' || String(data.idParent) == '0') {

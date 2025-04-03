@@ -62,7 +62,8 @@ function fillingParam(
   searchName: string,
   filterSection?: number,
   typeItem?: string,
-  getItem?: boolean
+  getItem?: boolean,
+  isSearch?: boolean
 ) {
   const params: ApiParams = {
     type,
@@ -82,6 +83,9 @@ function fillingParam(
     } else {
       params.getProduct = getItem;
     }
+  }
+  if (!isSearch) {
+    params.typeForm = typeItem;
   }
   return params;
 }
@@ -156,7 +160,9 @@ export async function getAllNameColumn() {
         removeDots(adminStore.searchSection) ??
         '',
       undefined,
-      adminStore.typeItem
+      adminStore.typeItem,
+      undefined,
+      adminStore.isSearch
     );
     const response = await api.get('/elastic/admin/name', {
       params,
@@ -164,6 +170,7 @@ export async function getAllNameColumn() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
+    adminStore.setIsSearch(false);
     adminStore.setNameItems(response.data.data);
   } catch (err) {
     console.error(err);

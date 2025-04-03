@@ -72,6 +72,8 @@ const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = async (value: string | { name: string }) => {
   const name = typeof value === 'string' ? value : value.name;
+
+  adminStore.setIsSearch(true);
   adminStore.setSearchName(name);
   await adminModule.getAllNameColumn();
   autocompleteOptions.value = adminStore.allName;

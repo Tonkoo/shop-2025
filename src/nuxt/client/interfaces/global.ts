@@ -94,6 +94,7 @@ type ApiParams = {
   getSection?: boolean;
   getProduct?: boolean;
   filterSection?: number;
+  typeForm?: string;
 };
 type Err = {
   name: boolean;

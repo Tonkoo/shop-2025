@@ -68,6 +68,7 @@ export const useAdminStore = defineStore('admin-store', {
     filterSection: null,
     itemsFilter: [],
     isAddEdit: false,
+    isSearch: false,
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -250,6 +251,9 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setIsAddEdit(value: boolean) {
       this.isAddEdit = value;
+    },
+    setIsSearch(value: boolean) {
+      this.isSearch = value;
     },
   },
 });

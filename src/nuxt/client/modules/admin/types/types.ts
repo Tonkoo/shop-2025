@@ -31,6 +31,7 @@ type AdminState = {
   filterSection: SectionAdmin | null;
   itemsFilter: StoreItem[];
   isAddEdit: boolean;
+  isSearch: boolean;
 };
 
 export type { AdminState };
