@@ -11,7 +11,11 @@ import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
-import { ProductBase, resultItems } from '../../interfaces/global';
+import {
+  ProductBase,
+  ProductClient,
+  resultItems,
+} from '../../interfaces/global';
 import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { transliterate as tr } from 'transliteration';
 import { createImages } from '../../utils/createImages.util';
@@ -71,6 +75,7 @@ export class ProductsService {
           'sectionId',
           'sectionName',
           'idSection',
+          'typeForm',
         ]),
       );
       if (!newProduct) {
@@ -86,24 +91,38 @@ export class ProductsService {
           { id: newProduct.id },
           { images: data.images },
         );
-        newProduct.images = data.images;
+      }
+
+      const resultProduct = await this.productsRepo.findOne({
+        where: { id: newProduct.id },
+        relations: ['section'],
+        loadRelationIds: true,
+      });
+
+      if (!resultProduct) {
+        throw new NotFoundException('Product not found');
       }
 
       await queryRunner.commitTransaction();
 
-      await this.EsServices.addDocument(
+      const testProduct = convertTimeObject(resultProduct) as ProductClient;
+
+      await this.EsServices.addProductDocument(
         this.index || 'shop',
         newProduct.id.toString(),
-        convertTimeObject(newProduct),
+        testProduct,
         'product',
       );
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const searchParams: payLoad = {
         type: data.type,
         from: Number(data.from),
         size: Number(data.size),
         searchName: data.searchName,
       };
+
       return data.getProduct
         ? await this.EsServices.getItemsFilter(searchParams)
         : newProduct;
@@ -116,7 +135,7 @@ export class ProductsService {
     }
   }
 
-  async getProductById(id: number): Promise<ProductBase[] | ProductBase> {
+  async getProductById(id: number): Promise<ProductBase> {
     try {
       const product: ProductBase | null = await this.productsRepo.findOne({
         where: { id },
@@ -138,7 +157,7 @@ export class ProductsService {
         };
       }
 
-      return camelCaseConverter(product);
+      return camelCaseConverter(product) as ProductBase;
     } catch (err) {
       console.error('Error for product.getProductById: ', err);
       throw new BadRequestException(
@@ -194,6 +213,7 @@ export class ProductsService {
           'searchName',
           'sectionId',
           'sectionName',
+          'typeForm',
         ]),
       );
 
@@ -239,6 +259,7 @@ export class ProductsService {
       );
     }
   }
+
   async deleteById(
     id: number,
     data: ProductDto,

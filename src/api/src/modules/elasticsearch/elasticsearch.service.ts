@@ -39,6 +39,18 @@ export class ElasticsearchService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
+  async prepareImageData(data: number[]): Promise<imageData[]> {
+    const images: Images[] | null = await this.imagesRepository.findBy({
+      id: In(data),
+    });
+    return images.map(
+      (image: Images): imageData => ({
+        alt: image.name,
+        src: image.path,
+      }),
+    );
+  }
+
   async generateBlockImages(
     data: (SectionClient | ProductClient)[],
     type: string,
@@ -219,45 +231,75 @@ export class ElasticsearchService {
     await this.elasticsearchService.bulk({ body });
   }
 
-  //TODO: Разделить на два метода: для продукта и секции
-  async addDocument(
+  async addSectionDocument(
     index: string,
     id: string,
-    document: ProductClient | SectionClient,
+    document: SectionClient,
     type: string,
   ) {
     try {
       let imageData: imageData[] = [];
       if (document.images) {
-        const images: Images[] | null = await this.imagesRepository.findBy({
-          id: In(document.images),
-        });
-        imageData = images.map(
-          (image: Images): imageData => ({
-            alt: image.name,
-            src: image.path,
-          }),
-        );
+        imageData = await this.prepareImageData(document.images);
       }
 
-      const updatedDocument: any = {
+      const resultDocument: SectionEntities = {
         ...document,
         type,
         images: imageData,
       };
 
-      if (updatedDocument.section && updatedDocument.section.id) {
-        updatedDocument.section = updatedDocument.section.id;
-        updatedDocument.section = Number(updatedDocument.section);
+      if (resultDocument.id_parent) {
+        const parent = await this.sectionsRepository.findOne({
+          where: { id: Number(resultDocument.id_parent) },
+        });
+        resultDocument.sectionName = parent?.name;
       }
+
       return await this.elasticsearchService.index({
         index: index,
         id: id,
-        body: updatedDocument,
+        body: resultDocument,
       });
     } catch (err) {
-      logger.error('Error from elastic.addDocument: ', err);
-      throw new BadRequestException('Error adding document');
+      logger.error('Error from elastic.addSectionDocument: ', err);
+      throw new BadRequestException('Error adding section document');
+    }
+  }
+
+  async addProductDocument(
+    index: string,
+    id: string,
+    document: ProductClient,
+    type: string,
+  ) {
+    try {
+      let imageData: imageData[] = [];
+      if (document.images) {
+        imageData = await this.prepareImageData(document.images);
+      }
+
+      const resultDocument: ProductEntities = {
+        ...document,
+        type,
+        images: imageData,
+      };
+
+      if (resultDocument.section) {
+        const parent = await this.sectionsRepository.findOne({
+          where: { id: Number(resultDocument.section) },
+        });
+        resultDocument.sectionName = parent?.name;
+      }
+
+      return await this.elasticsearchService.index({
+        index: index,
+        id: id,
+        body: resultDocument,
+      });
+    } catch (err) {
+      logger.error('Error from elastic.addProductDocument: ', err);
+      throw new BadRequestException('Error adding product document');
     }
   }
 
@@ -270,7 +312,20 @@ export class ElasticsearchService {
     try {
       await this.deleteDocument(index, id);
 
-      return await this.addDocument(index, id, document, type);
+      if (type === 'section') {
+        return await this.addSectionDocument(
+          index,
+          id,
+          document as SectionClient,
+          type,
+        );
+      }
+      return await this.addProductDocument(
+        index,
+        id,
+        document as ProductClient,
+        type,
+      );
     } catch (err) {
       logger.error('Error from elastic.updateDocument: ', err);
       throw new BadRequestException('Error updating document');

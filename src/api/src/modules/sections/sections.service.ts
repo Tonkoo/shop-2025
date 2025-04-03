@@ -13,7 +13,11 @@ import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
-import { resultItems, SectionBase } from '../../interfaces/global';
+import {
+  resultItems,
+  SectionBase,
+  SectionClient,
+} from '../../interfaces/global';
 import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
@@ -100,6 +104,7 @@ export class SectionsService {
           'type',
           'parent',
           'images',
+          'typeForm',
         ]),
       );
 
@@ -121,10 +126,14 @@ export class SectionsService {
 
       await queryRunner.commitTransaction();
 
-      await this.EsServices.addDocument(
+      const testSection = convertTimeObject(newSection) as SectionClient;
+
+      console.log(testSection);
+
+      await this.EsServices.addSectionDocument(
         this.index || 'shop',
         newSection.id.toString(),
-        convertTimeObject(newSection),
+        testSection,
         'section',
       );
 
@@ -236,6 +245,7 @@ export class SectionsService {
             'size',
             'searchName',
             'parent',
+            'typeForm',
           ]),
         );
         //TODO: вынести в отдельный метод
