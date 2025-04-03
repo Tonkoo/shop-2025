@@ -138,9 +138,9 @@ export async function getItems() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    if (adminStore.typeSearch.value == 'section') {
-      adminStore.setItemsFilter(response.data.data[0]);
-    }
+    // if (adminStore.typeSearch.value == 'section') {
+    //   adminStore.setItemsFilter(response.data.data[0]);
+    // }
     adminStore.setDataItems(response.data.data[0]);
   } catch (err) {
     console.error('Failed to fetch data from the server ' + err);

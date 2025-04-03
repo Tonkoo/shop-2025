@@ -12,16 +12,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
 import { convertTimeArray } from '../../utils/convertTime.util';
 import {
-  imageData,
-  ProductEntities,
-  SectionEntities,
   elasticBody,
-  resultItems,
+  imageData,
   payLoadTest,
   ProductClient,
+  ProductElastic,
+  ProductEntities,
+  resultItems,
   SectionClient,
   SectionElastic,
-  ProductElastic,
+  SectionEntities,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 import { formatResults } from '../../utils/formatResults.util';
@@ -78,6 +78,67 @@ export class ElasticsearchService {
     );
   }
 
+  private async enrichData(
+    dbProduct: Products[],
+    dbSection: Sections[],
+  ): Promise<(ProductEntities | SectionEntities)[]> {
+    const products: (ProductClient | SectionClient)[] =
+      convertTimeArray(dbProduct);
+
+    const documentsProduct = await this.generateBlockImages(
+      products,
+      'product',
+    );
+
+    const sections: (ProductClient | SectionClient)[] =
+      convertTimeArray(dbSection);
+
+    const documentsSection = await this.generateBlockImages(
+      sections,
+      'section',
+    );
+
+    const processedProducts = await Promise.all(
+      documentsProduct.map(async (item) => {
+        if (item.type === 'product') {
+          const product = item as ProductEntities;
+          let sectionName: string | undefined;
+
+          if (product.section) {
+            const section = await this.sectionsRepository.findOne({
+              where: { id: Number(product.section) },
+            });
+            sectionName = section?.name;
+          }
+
+          return { ...product, sectionName };
+        }
+        return item;
+      }),
+    );
+
+    const processedSections = await Promise.all(
+      documentsSection.map(async (item) => {
+        if (item.type === 'section') {
+          const section = item as SectionEntities;
+          let parentName: string | undefined;
+
+          if (section.id_parent) {
+            const parent = await this.sectionsRepository.findOne({
+              where: { id: section.id_parent },
+            });
+            parentName = parent?.name;
+          }
+
+          return { ...section, sectionName: parentName };
+        }
+        return item;
+      }),
+    );
+
+    return [...processedProducts, ...processedSections];
+  }
+
   async searchFromElastic(payLoad: payLoadTest) {
     const { query, from, size, source } = payLoad;
 
@@ -119,27 +180,12 @@ export class ElasticsearchService {
         throw new NotFoundException('Products not found');
       }
 
-      const products: (ProductClient | SectionClient)[] =
-        convertTimeArray(dbProduct);
       const dbSection: Sections[] = await this.sectionsRepository.find();
-
       if (!dbSection) {
         throw new NotFoundException('Section not found');
       }
 
-      const sections: (ProductClient | SectionClient)[] =
-        convertTimeArray(dbSection);
-
-      const documentsProduct: (ProductEntities | SectionEntities)[] =
-        await this.generateBlockImages(products, 'product');
-
-      const documentsSection: (ProductEntities | SectionEntities)[] =
-        await this.generateBlockImages(sections, 'section');
-
-      const document: (ProductEntities | SectionEntities)[] = [
-        ...documentsProduct,
-        ...documentsSection,
-      ];
+      const document = await this.enrichData(dbProduct, dbSection);
 
       await this.bulkIndexDocuments(this.index || 'shop', document);
       //TODO: придумать как исправить костыль
@@ -157,7 +203,7 @@ export class ElasticsearchService {
   //TODO: Засунуть в try catch данный метод
   async bulkIndexDocuments(
     index: string,
-    documents: (SectionEntities | ProductEntities)[],
+    documents: (ProductEntities | SectionEntities)[],
   ): Promise<void> {
     if (!documents.length) {
       console.log('No documents to index. Skipping bulk operation.');

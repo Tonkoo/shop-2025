@@ -14,7 +14,6 @@ import { getItemById } from '~/modules/admin/api';
 import { paramPagination } from '~/entities/table.entites';
 
 const adminModule = useAdminModule();
-//TODO: вынести параметры для пагинации в файл table.entites.
 export const useAdminStore = defineStore('admin-store', {
   state: (): AdminState => ({
     isEdit: false,
