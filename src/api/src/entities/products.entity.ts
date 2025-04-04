@@ -9,6 +9,7 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { Sections } from './sections.entity';
+import { Colors } from './colors.entity';
 
 @Entity({})
 export class Products extends BaseEntity {
@@ -27,8 +28,9 @@ export class Products extends BaseEntity {
   @Column()
   price: number;
 
-  @Column()
-  color: string;
+  @ManyToOne(() => Colors, (item) => item.products)
+  @JoinColumn({ name: 'id_color' })
+  color: Colors;
 
   @Column()
   description: string;

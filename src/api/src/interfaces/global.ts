@@ -7,7 +7,7 @@ type Product = {
   code: string;
   name: string;
   price: number;
-  color: string;
+  color: Colors;
   description: string;
   section: parentSection;
   show_on_main: boolean;
@@ -100,6 +100,12 @@ type elasticsearchResponse = {
       _source?: any;
     }>;
   };
+};
+
+type Colors = {
+  id: number;
+  name: string;
+  hex: string;
 };
 
 type imageData = {
