@@ -90,8 +90,9 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  @Get()
+  @Get('/id')
   async getProduct(@Query('id') id: number): Promise<response> {
+    console.log(312312);
     const result: ProductBase | ProductBase[] =
       await this.services.getProductById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);

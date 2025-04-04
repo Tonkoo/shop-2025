@@ -42,7 +42,7 @@ export class ProductsService {
     if (data.name) {
       data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
     }
-    if (!Array.isArray(data.images)) {
+    if ('images' in data && !data.images) {
       data.images = [];
     }
     if (data.price) {
@@ -287,6 +287,13 @@ export class ProductsService {
         throw new BadRequestException(
           'An error occurred while deleting the product.',
         );
+      }
+
+      if (
+        !Array.isArray(currentProduct.images) ||
+        !currentProduct.images.length
+      ) {
+        currentProduct.images = null;
       }
 
       await removeImages(currentProduct, this.imagesRepository, queryRunner);

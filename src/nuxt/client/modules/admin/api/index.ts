@@ -219,8 +219,6 @@ export async function editItem() {
   const adminStore = useAdminStore();
   try {
     let data;
-    console.log(adminStore.frontSection);
-    console.log(adminStore.backSection);
     if (adminStore.typeItem === 'section') {
       data = comparisonValues(adminStore.frontSection, adminStore.backSection, [
         'id',

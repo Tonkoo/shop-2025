@@ -60,11 +60,13 @@ const baseColumns = [
 
 const dynamicColumns = computed(() => {
   const columns = [...baseColumns];
-
   columns.splice(2, 0, {
     name: 'sectionName',
     required: true,
-    label: adminStore.typeItem === 'section' ? 'Родительский отдел' : 'Раздел',
+    label:
+      adminStore.typeSearch.value === 'section'
+        ? 'Родительский отдел'
+        : 'Раздел',
     align: 'left' as const,
     field: 'sectionName',
     sortable: true,

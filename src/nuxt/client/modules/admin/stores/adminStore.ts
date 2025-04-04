@@ -136,8 +136,6 @@ export const useAdminStore = defineStore('admin-store', {
       this.setSectionParent(value.parent ?? { id: 0, name: '' });
       this.setSectionIdParent(value.parent ?? { id: 0, name: '' });
       await convertFile(value.imageObject);
-
-      console.log(this.frontSection);
     },
     async setBackProduct(value: ProductAdmin) {
       this.backProduct = value;
@@ -189,7 +187,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setSectionParent(value: SelectSection) {
       this.frontSection.parent = { id: value.id, name: value.name };
-      console.log(this.frontSection.parent);
     },
     setConvertImages(value: File[]) {
       if (this.backSection) {
