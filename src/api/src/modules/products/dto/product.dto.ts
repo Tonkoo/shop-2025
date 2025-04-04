@@ -67,7 +67,7 @@ export class ProductDto {
 
   searchName: string;
 
-  getProduct: boolean;
+  getItems: boolean;
 
   constructor(ent: Products) {
     this.id = ent.id;
@@ -82,6 +82,5 @@ export class ProductDto {
     this.mainSlider = ent.main_slider;
     this.createAt = ent.create_at;
     this.updateAt = ent.update_at;
-    this.getProduct = false;
   }
 }

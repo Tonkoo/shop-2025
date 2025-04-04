@@ -91,8 +91,7 @@ type ApiParams = {
   from: number | string;
   size: number | string;
   searchName: string;
-  getSection?: boolean;
-  getProduct?: boolean;
+  getItems?: boolean;
   filterSection?: number;
   typeForm?: string;
 };

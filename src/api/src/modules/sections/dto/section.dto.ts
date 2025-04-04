@@ -1,5 +1,6 @@
 import { Sections } from '../../../entities/sections.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { payLoad } from '../../elasticsearch/dto/elasticsearch.dto';
 
 export class SectionDto {
   @ApiProperty({ example: 1, description: 'ID раздела' })
@@ -48,7 +49,9 @@ export class SectionDto {
 
   searchName: string;
 
-  getSection: boolean;
+  getItems: boolean;
+
+  // params: payLoad;
 
   constructor(ent: Sections) {
     this.id = ent.id;

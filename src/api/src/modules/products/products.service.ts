@@ -68,7 +68,7 @@ export class ProductsService {
       const newProduct: Products = await this.productsRepo.save(
         prepareData(data, [
           'searchName',
-          'getProduct',
+          'getItems',
           'from',
           'size',
           'type',
@@ -123,7 +123,7 @@ export class ProductsService {
         searchName: data.searchName,
       };
 
-      return data.getProduct
+      return data.getItems
         ? await this.EsServices.getItemsFilter(searchParams)
         : newProduct;
     } catch (err) {
@@ -206,7 +206,7 @@ export class ProductsService {
       const newProduct = await this.productsRepo.update(
         { id: id },
         prepareData(data, [
-          'getProduct',
+          'getItems',
           'type',
           'from',
           'size',
@@ -248,7 +248,7 @@ export class ProductsService {
         size: Number(data.size),
         searchName: data.searchName,
       };
-      return data.getProduct
+      return data.getItems
         ? await this.EsServices.getItemsFilter(searchParams)
         : newProduct;
     } catch (err) {
@@ -309,7 +309,7 @@ export class ProductsService {
         size: Number(data.size),
         searchName: data.searchName,
       };
-      return data.getProduct
+      return data.getItems
         ? await this.EsServices.getItemsFilter(searchParams)
         : id;
     } catch (err) {

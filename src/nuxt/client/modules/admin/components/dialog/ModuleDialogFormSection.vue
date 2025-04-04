@@ -41,7 +41,7 @@ const onSearchInput = async (value: SelectSection | string) => {
   if (typeof value !== 'string') {
     adminStore.setSectionIdParent(value);
   }
-  await adminModule.getAllNameColumn('section');
+  await adminModule.getAllNameColumn('section', adminStore.typeItem);
   autocompleteOptions.value = adminStore.allName;
 };
 </script>

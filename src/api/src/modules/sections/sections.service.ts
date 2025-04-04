@@ -97,7 +97,7 @@ export class SectionsService {
 
       const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, [
-          'getSection',
+          'getItems',
           'search_name',
           'from',
           'size',
@@ -128,8 +128,6 @@ export class SectionsService {
 
       const testSection = convertTimeObject(newSection) as SectionClient;
 
-      console.log(testSection);
-
       await this.EsServices.addSectionDocument(
         this.index || 'shop',
         newSection.id.toString(),
@@ -146,7 +144,7 @@ export class SectionsService {
         searchName: data.searchName,
       };
 
-      return data.getSection
+      return data.getItems
         ? await this.EsServices.getItemsFilter(searchParams)
         : newSection;
     } catch (err) {
@@ -240,7 +238,7 @@ export class SectionsService {
         const newSection = await this.sectionsRepo.update(
           { id: id },
           prepareData(data, [
-            'getSection',
+            'getItems',
             'type',
             'from',
             'size',
@@ -294,7 +292,7 @@ export class SectionsService {
           size: Number(data.size),
           searchName: data.searchName,
         };
-        return data.getSection
+        return data.getItems
           ? await this.EsServices.getItemsFilter(searchParams)
           : newSection;
       }
@@ -358,7 +356,7 @@ export class SectionsService {
         size: Number(data.size),
         searchName: data.searchName,
       };
-      return data.getSection
+      return data.getItems
         ? await this.EsServices.getItemsFilter(searchParams)
         : id;
     } catch (err) {

@@ -9,8 +9,6 @@ export function formatResults(
   items: (SectionElastic | ProductElastic)[],
   total: { value: number },
 ): resultItems[] {
-  console.log(items);
-  console.log(total);
   const result: resultItems[] = [];
   if (typeof total === 'object' && total !== null && 'value' in total) {
     result.push({
@@ -18,6 +16,5 @@ export function formatResults(
       total: total.value,
     });
   }
-  console.log(result);
   return result;
 }

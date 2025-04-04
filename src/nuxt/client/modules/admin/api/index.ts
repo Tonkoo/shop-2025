@@ -62,9 +62,7 @@ function fillingParam(
   size: string | number,
   searchName: string,
   filterSection?: number,
-  typeItem?: string,
-  getItem?: boolean,
-  isSearch?: boolean
+  getItem?: boolean
 ) {
   const params: ApiParams = {
     type,
@@ -75,19 +73,10 @@ function fillingParam(
   if (filterSection) {
     params.filterSection = filterSection;
   }
-  // if (getItem && typeItem && typeItem === 'product') {
-  //   params.type = 'section';
-  // }
   if (getItem) {
-    if (typeItem === 'section') {
-      params.getSection = getItem;
-    } else {
-      params.getProduct = getItem;
-    }
+    params.getItems = getItem;
   }
-  if (!isSearch) {
-    params.typeForm = typeItem;
-  }
+
   return params;
 }
 
@@ -149,12 +138,12 @@ export async function getItems() {
   }
 }
 
-export async function getAllNameColumn(type: string) {
+export async function getAllNameColumn(type: string, typeForm?: string) {
   const adminStore = useAdminStore();
   try {
     const typeParams = type === 'section' ? sectionParams : productParams;
 
-    const params = {
+    const params: ApiParams = {
       ...typeParams,
       searchName:
         removeDots(adminStore.searchName) ??
@@ -162,6 +151,9 @@ export async function getAllNameColumn(type: string) {
         removeDots(adminStore.searchSection) ??
         '',
     };
+    if (typeForm) {
+      params.typeForm = adminStore.typeItem;
+    }
 
     const response = await api.get('/elastic/admin/name', {
       params,
@@ -187,7 +179,6 @@ export async function addItem() {
       adminStore.countColumn.toString(),
       removeDots(adminStore.searchName),
       undefined,
-      adminStore.typeItem,
       true
     );
     validateForm();
@@ -198,7 +189,6 @@ export async function addItem() {
       data = adminStore.frontProduct;
     }
     generateFormData(formData, data, param);
-
     const response = await api.post<{ data: ResultItemsAdmin[] }>(
       `/${adminStore.typeItem}`,
       formData,
@@ -248,7 +238,6 @@ export async function editItem() {
       adminStore.countColumn.toString(),
       adminStore.searchName,
       undefined,
-      adminStore.typeItem,
       true
     );
 
@@ -302,7 +291,6 @@ export async function delItem() {
     adminStore.countColumn.toString(),
     adminStore.searchName,
     undefined,
-    adminStore.typeItem,
     true
   );
   try {
