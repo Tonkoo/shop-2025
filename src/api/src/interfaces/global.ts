@@ -121,7 +121,7 @@ type resultItems = {
     | (Sections | Products)[]
     | SectionElastic[]
     | ProductElastic[];
-  total?: number | undefined;
+  total: number;
 };
 
 type payLoadTest = {

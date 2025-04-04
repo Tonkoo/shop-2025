@@ -4,6 +4,7 @@ import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
 import { headers } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
+import { sectionParams, productParams } from '~/entities/search.entites';
 
 function removeDots(data: string): string {
   if (!data) {
@@ -148,30 +149,28 @@ export async function getItems() {
   }
 }
 
-export async function getAllNameColumn() {
+export async function getAllNameColumn(type: string) {
   const adminStore = useAdminStore();
   try {
-    const params = fillingParam(
-      adminStore.isAddEdit ? 'section' : adminStore.typeSearch.value,
-      '',
-      adminStore.countColumn,
-      removeDots(adminStore.searchName) ??
+    const typeParams = type === 'section' ? sectionParams : productParams;
+
+    const params = {
+      ...typeParams,
+      searchName:
+        removeDots(adminStore.searchName) ??
         removeDots(adminStore.searchParentName) ??
         removeDots(adminStore.searchSection) ??
         '',
-      undefined,
-      adminStore.typeItem,
-      undefined,
-      adminStore.isSearch
-    );
+    };
+
     const response = await api.get('/elastic/admin/name', {
       params,
     });
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    adminStore.setIsSearch(false);
     adminStore.setNameItems(response.data.data);
+    adminStore.setItemsFilter(response.data.data);
   } catch (err) {
     console.error(err);
   }

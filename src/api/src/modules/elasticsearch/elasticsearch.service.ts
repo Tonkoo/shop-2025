@@ -361,7 +361,6 @@ export class ElasticsearchService {
         term: { section: filterSection },
       });
     }
-    console.log(filter);
     return filter;
   }
 
@@ -375,50 +374,12 @@ export class ElasticsearchService {
         from: Number(from),
         query: { bool: { filter } },
       });
-      const total: any = items.hits.total;
-      const rawItems = items.hits.hits.map(
+      const total: { value: number } = items.hits.total as { value: number };
+      const rawItems: (SectionElastic | ProductElastic)[] = items.hits.hits.map(
         (item) => item._source as SectionElastic | ProductElastic,
       );
-      //TODO: разделить данный метод на два метода: для продуктов и разделов
-      //TODO: ЛУЧШЕ вынести в elastic sectionName
-      const sectionIds = new Set<number>();
-      rawItems.forEach((item) => {
-        if ('section' in item && item.section) {
-          sectionIds.add(item.section);
-        }
-        if ('id_parent' in item && item.id_parent) {
-          sectionIds.add(item.id_parent);
-        }
-      });
 
-      const sections = await this.sectionsRepository.find({
-        where: { id: In([...sectionIds]) },
-      });
-      const sectionMap = new Map(sections.map((s) => [s.id, s]));
-
-      const result = rawItems.map((item) => {
-        if ('section' in item) {
-          return {
-            ...item,
-            sectionName: item.section
-              ? sectionMap.get(item.section)?.name
-              : undefined,
-          };
-        }
-
-        if ('id_parent' in item) {
-          return {
-            ...item,
-            sectionName: item.id_parent
-              ? sectionMap.get(item.id_parent)?.name
-              : undefined,
-          };
-        }
-
-        return item;
-      });
-
-      return formatResults(result, total);
+      return formatResults(rawItems, total);
     } catch (err) {
       logger.error('Error from elastic.getShopByElastic: ', err);
       throw new BadRequestException('Error while receiving data');

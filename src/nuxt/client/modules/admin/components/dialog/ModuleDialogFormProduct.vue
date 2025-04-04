@@ -72,13 +72,12 @@ const adminModule = useAdminModule();
 const autocompleteOptions = ref([] as Search[]);
 
 const onSearchInput = async (value: SelectSection | string) => {
-  adminStore.setIsAddEdit(true);
   const name = typeof value === 'string' ? value : value.name;
   adminStore.setSearchSection(name);
   if (typeof value !== 'string') {
     adminStore.setProductIdSection(value);
   }
-  await adminModule.getAllNameColumn();
+  await adminModule.getAllNameColumn('section');
   autocompleteOptions.value = adminStore.allName;
 };
 </script>

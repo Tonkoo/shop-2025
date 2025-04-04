@@ -1,17 +1,23 @@
 import { camelCaseConverter } from './toCamelCase.util';
-import { resultItems } from '../interfaces/global';
+import {
+  ProductElastic,
+  resultItems,
+  SectionElastic,
+} from '../interfaces/global';
 
 export function formatResults(
-  items: any,
+  items: (SectionElastic | ProductElastic)[],
   total: { value: number },
 ): resultItems[] {
+  console.log(items);
+  console.log(total);
   const result: resultItems[] = [];
   if (typeof total === 'object' && total !== null && 'value' in total) {
     result.push({
-      items: camelCaseConverter(items),
+      items: camelCaseConverter(items) as SectionElastic[] | ProductElastic[],
       total: total.value,
     });
   }
-
+  console.log(result);
   return result;
 }

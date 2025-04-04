@@ -18,10 +18,11 @@
           <areal-select-filter
             v-model="adminStore.filterSection"
             :label="$t('admin.label.optionSection')"
-            :option="adminStore.itemsFilter"
+            :option="filterOptions"
             option-value="name"
             option-label="name"
             @update:model-value="adminStore.setFilterSection"
+            @focus="getNameFilter()"
           />
         </div>
         <div
@@ -69,13 +70,13 @@ const adminStore = useAdminStore();
 const adminModule = useAdminModule();
 
 const autocompleteOptions = ref([] as Search[]);
+const filterOptions = ref([] as Search[]);
 
 const onSearchInput = async (value: string | { name: string }) => {
   const name = typeof value === 'string' ? value : value.name;
 
-  adminStore.setIsSearch(true);
   adminStore.setSearchName(name);
-  await adminModule.getAllNameColumn();
+  await adminModule.getAllNameColumn(adminStore.typeSearch.value);
   autocompleteOptions.value = adminStore.allName;
 };
 
@@ -92,6 +93,15 @@ async function clearSearch() {
     await adminModule.getItems();
   } catch (err) {
     console.error('Error when receiving "Sections" data from the server:', err);
+  }
+}
+
+async function getNameFilter() {
+  try {
+    await adminModule.getAllNameColumn('section');
+    filterOptions.value = adminStore.itemsFilter;
+  } catch (err) {
+    console.error(err);
   }
 }
 </script>

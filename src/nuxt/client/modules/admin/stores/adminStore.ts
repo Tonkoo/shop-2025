@@ -10,7 +10,6 @@ import type {
   SectionAdmin,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
-import { getItemById } from '~/modules/admin/api';
 import { paramPagination } from '~/entities/table.entites';
 
 const adminModule = useAdminModule();
@@ -66,8 +65,6 @@ export const useAdminStore = defineStore('admin-store', {
     disableBtn: false,
     filterSection: null,
     itemsFilter: [],
-    isAddEdit: false,
-    isSearch: false,
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -77,7 +74,6 @@ export const useAdminStore = defineStore('admin-store', {
       if (!value) {
         await this.clearForms();
       }
-      this.setIsAddEdit(false);
       this.viewModal = value;
     },
     setDelDialog(value: boolean) {
@@ -250,14 +246,8 @@ export const useAdminStore = defineStore('admin-store', {
     setFilterSection(value: SectionAdmin | null) {
       this.filterSection = value;
     },
-    setItemsFilter(value: ResultItemsAdmin) {
-      this.itemsFilter = value.items;
-    },
-    setIsAddEdit(value: boolean) {
-      this.isAddEdit = value;
-    },
-    setIsSearch(value: boolean) {
-      this.isSearch = value;
+    setItemsFilter(value: Search[]) {
+      this.itemsFilter = value;
     },
   },
 });
