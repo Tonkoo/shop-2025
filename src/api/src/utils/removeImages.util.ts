@@ -4,6 +4,8 @@ import { Images } from '../entities/images.entity';
 import { logger } from './logger/logger';
 import { Sections } from '../entities/sections.entity';
 import { Products } from '../entities/products.entity';
+import { SectionDto } from '../modules/sections/dto/section.dto';
+import { ProductDto } from '../modules/products/dto/product.dto';
 
 export async function removeImages(
   data: Sections | Products,
@@ -24,5 +26,34 @@ export async function removeImages(
     await queryRunner.rollbackTransaction();
     logger.error('Error from removeImages : ', err);
     throw new BadRequestException('There was an error deleting images.');
+  }
+}
+
+export async function removeUnusedImages(
+  data: SectionDto | ProductDto,
+  currentData: Sections | Products,
+  imagesRepository: Repository<Images>,
+  queryRunner: QueryRunner,
+) {
+  try {
+    if (data.images) {
+      const newImageIds = data.images;
+      const currentImageIds: number[] | null = currentData.images;
+      if (currentImageIds) {
+        const imagesToDelete = currentImageIds.filter(
+          (id) => !newImageIds.includes(id),
+        );
+
+        if (imagesToDelete.length > 0) {
+          await imagesRepository.delete(imagesToDelete);
+        }
+      }
+    }
+  } catch (err) {
+    await queryRunner.rollbackTransaction();
+    logger.error('Error from removeUnusedImages : ', err);
+    throw new BadRequestException(
+      'removeUnusedImages: There was an error deleting images.',
+    );
   }
 }

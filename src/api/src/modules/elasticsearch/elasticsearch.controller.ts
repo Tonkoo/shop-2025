@@ -2,12 +2,7 @@ import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
-import {
-  payLoadTest,
-  response,
-  resultItems,
-  SectionElastic,
-} from '../../interfaces/global';
+import { response, resultItems, SectionElastic } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 @Controller('elastic')
 @ApiTags('elastic')
@@ -68,7 +63,7 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async getItems(@Query() payLoad: payLoad): Promise<response> {
-    const result: resultItems[] = await this.services.getItemsFilter(payLoad);
+    const result: resultItems = await this.services.getItemsFilter(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 

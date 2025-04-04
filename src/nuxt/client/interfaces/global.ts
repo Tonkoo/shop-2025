@@ -78,6 +78,12 @@ type ResultItemsAdmin = {
   items: SectionAdmin[] | ProductAdmin[];
   total: number;
 };
+type ResultReindex = {
+  data: {
+    message: string;
+  };
+  statusCode: number;
+};
 
 type ImageObject = {
   id: number;
@@ -124,4 +130,5 @@ export type {
   ApiParams,
   Err,
   ParamCatalog,
+  ResultReindex,
 };

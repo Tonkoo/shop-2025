@@ -1,5 +1,9 @@
 import { api } from '~~/shared/api/axios';
-import type { ResultItemsAdmin, ApiParams } from '~/interfaces/global';
+import type {
+  ResultItemsAdmin,
+  ApiParams,
+  ResultReindex,
+} from '~/interfaces/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
 import { headers } from '~/composables/customFetch';
@@ -87,20 +91,25 @@ export async function reindex() {
       adminStore.typeSearch.value,
       (adminStore.currentPage - 1) * adminStore.countColumn,
       adminStore.countColumn,
-      adminStore.searchName
+      adminStore.searchName,
+      undefined,
+      true
     );
     adminStore.setTypeItem(adminStore.typeSearch.value);
-    const response = await api.get<{ data: ResultItemsAdmin[] }>(
-      '/elastic/reindex',
-      {
-        params,
-      }
-    );
+    const response = await api.get<{
+      data: ResultItemsAdmin | ResultReindex;
+    }>('/elastic/reindex', {
+      params,
+    });
     if (!response) {
       throw new Error('Indexing error');
     }
-
-    adminStore.setDataItems(response.data.data[0]);
+    if ('message' in response.data.data) {
+      console.log('Reindex result:', response.data.data.message);
+      return;
+    }
+    const resultData = response.data.data as ResultItemsAdmin;
+    adminStore.setDataItems(resultData);
   } catch (err) {
     console.error('Indexing error ' + err);
     throw new Error('Indexing error.');
@@ -119,7 +128,7 @@ export async function getItems() {
     );
 
     // adminStore.setTypeItem(adminStore.typeSearch.value);
-    const response = await api.get<{ data: ResultItemsAdmin[] }>(
+    const response = await api.get<{ data: ResultItemsAdmin }>(
       '/elastic/admin',
       {
         params,
@@ -131,7 +140,7 @@ export async function getItems() {
     // if (adminStore.typeSearch.value == 'section') {
     //   adminStore.setItemsFilter(response.data.data[0]);
     // }
-    adminStore.setDataItems(response.data.data[0]);
+    adminStore.setDataItems(response.data.data);
   } catch (err) {
     console.error('Failed to fetch data from the server ' + err);
     throw new Error('Error while fetching section data from the server.');
@@ -189,7 +198,7 @@ export async function addItem() {
       data = adminStore.frontProduct;
     }
     generateFormData(formData, data, param);
-    const response = await api.post<{ data: ResultItemsAdmin[] }>(
+    const response = await api.post<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}`,
       formData,
       headers
@@ -197,7 +206,7 @@ export async function addItem() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    adminStore.setDataItems(response.data.data[0]);
+    adminStore.setDataItems(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;
@@ -245,7 +254,7 @@ export async function editItem() {
 
     generateFormData(formData, data, param);
     adminStore.setSearchName('');
-    const response = await api.put<{ data: ResultItemsAdmin[] }>(
+    const response = await api.put<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}/${adminStore.selectedId}`,
       formData,
       headers
@@ -253,7 +262,7 @@ export async function editItem() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    adminStore.setDataItems(response.data.data[0]);
+    adminStore.setDataItems(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;
@@ -294,14 +303,14 @@ export async function delItem() {
     true
   );
   try {
-    const response = await api.delete<{ data: ResultItemsAdmin[] }>(
+    const response = await api.delete<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeSearch.value}/${adminStore.selectedId}`,
       { params }
     );
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    adminStore.setDataItems(response.data.data[0]);
+    adminStore.setDataItems(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;

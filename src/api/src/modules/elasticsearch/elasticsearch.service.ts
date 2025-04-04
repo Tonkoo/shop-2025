@@ -203,8 +203,9 @@ export class ElasticsearchService {
       //TODO: придумать как исправить костыль
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      //TODO: добавить параметр get, как с продуктом и разделом
-      return await this.getItemsFilter(payLoad);
+      return payLoad.getItems
+        ? await this.getItemsFilter(payLoad)
+        : { message: 'Пере индексация выполнена' };
     } catch (err) {
       logger.error('Error from elastic.createIndex: ', err);
       throw new BadRequestException(
@@ -212,7 +213,7 @@ export class ElasticsearchService {
       );
     }
   }
-  //TODO: Засунуть в try catch данный метод
+
   async bulkIndexDocuments(
     index: string,
     documents: (ProductEntities | SectionEntities)[],
@@ -221,14 +222,20 @@ export class ElasticsearchService {
       console.log('No documents to index. Skipping bulk operation.');
       return;
     }
-
-    const body: elasticBody[] = documents.flatMap(
-      (doc: SectionEntities | ProductEntities) => [
-        { index: { _index: index, _id: doc.id } },
-        doc,
-      ],
-    ) as elasticBody[];
-    await this.elasticsearchService.bulk({ body });
+    try {
+      const body: elasticBody[] = documents.flatMap(
+        (doc: SectionEntities | ProductEntities) => [
+          { index: { _index: index, _id: doc.id } },
+          doc,
+        ],
+      ) as elasticBody[];
+      await this.elasticsearchService.bulk({ body });
+    } catch (err) {
+      logger.error('Error from elastic.bulkIndexDocuments: ', err);
+      throw new BadRequestException(
+        'An error occurred while accepting and filling out the document.',
+      );
+    }
   }
 
   async addSectionDocument(
@@ -343,17 +350,18 @@ export class ElasticsearchService {
       throw new BadRequestException('Error deleting document');
     }
   }
-  //TODO: Передавать объект с параметрами
-  getFilter(type: string, name?: string, filterSection?: number): any[] {
+
+  getFilter(payLoad: payLoad): any[] {
+    const { type, searchName, filterSection } = payLoad;
     const filter: any[] = [
       {
         match: { type: type },
       },
     ];
 
-    if (name) {
+    if (searchName) {
       filter.push({
-        wildcard: { 'name.keyword': `*${name}*` },
+        wildcard: { 'name.keyword': `*${searchName}*` },
       });
     }
     if (filterSection) {
@@ -364,10 +372,10 @@ export class ElasticsearchService {
     return filter;
   }
 
-  async getItemsFilter(payLoad: payLoad): Promise<resultItems[]> {
+  async getItemsFilter(payLoad: payLoad): Promise<resultItems> {
     try {
-      const { type, from, size, searchName, filterSection } = payLoad;
-      const filter = this.getFilter(type, searchName, filterSection);
+      const { from, size } = payLoad;
+      const filter = this.getFilter(payLoad);
 
       const items = await this.searchFromElastic({
         size: Number(size),

@@ -63,7 +63,6 @@ export class SectionsController {
   })
   @Get('/id')
   async getSectionById(@Query('id') id: number): Promise<response> {
-    console.log(21312);
     const result: SectionBase | SectionBase[] =
       await this.services.getSectionById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
@@ -118,7 +117,7 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
     try {
-      const result: Sections | resultItems[] = await this.services.create(
+      const result: Sections | resultItems = await this.services.create(
         data,
         files,
       );
@@ -159,8 +158,11 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
     try {
-      const result: resultItems[] | UpdateResult =
-        await this.services.updateById(id, data, files);
+      const result: resultItems | UpdateResult = await this.services.updateById(
+        id,
+        data,
+        files,
+      );
       return ResponseHelper.createResponse(HttpStatus.OK, result);
     } catch (err) {
       logger.error('Error from sections.update: ', err);
@@ -183,7 +185,7 @@ export class SectionsController {
     @Param('id') id: number,
     @Query() data: SectionDto,
   ): Promise<response> {
-    const result: resultItems[] | number = await this.services.deleteById(
+    const result: resultItems | number = await this.services.deleteById(
       id,
       data,
     );

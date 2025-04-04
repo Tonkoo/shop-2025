@@ -25,4 +25,6 @@ export class payLoad {
   filterSection?: number;
 
   typeForm?: string;
+
+  getItems?: boolean;
 }

@@ -21,7 +21,10 @@ import {
 import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
-import { removeImages } from '../../utils/removeImages.util';
+import {
+  removeImages,
+  removeUnusedImages,
+} from '../../utils/removeImages.util';
 
 @Injectable()
 export class SectionsService {
@@ -38,6 +41,10 @@ export class SectionsService {
   processingData(data: SectionDto) {
     if (data.name) {
       data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
+    }
+
+    if ('images' in data && !data.images) {
+      data.images = [];
     }
 
     if (String(data.idParent) == 'null' || String(data.idParent) == '0') {
@@ -73,10 +80,21 @@ export class SectionsService {
     }
   }
 
+  async checkSection(data: SectionDto, section: Sections) {
+    if (data.idParent) {
+      const parentSection = await this.sectionsRepo.findOne({
+        where: { id: data.idParent },
+      });
+      if (section.level - 1 != parentSection?.level) {
+        throw new BadRequestException('Cannot change the section level.');
+      }
+    }
+  }
+
   async create(
     data: SectionDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<Sections | resultItems[]> {
+  ): Promise<Sections | resultItems> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -198,11 +216,25 @@ export class SectionsService {
     }
   }
 
+  // async removeUnusedImages(){
+  //   const newImageIds = data.images;
+  //   const currentImageIds: number[] | null = currentSection.images;
+  //   if (currentImageIds) {
+  //     const imagesToDelete = currentImageIds.filter(
+  //         (id) => !newImageIds.includes(id),
+  //     );
+  //
+  //     if (imagesToDelete.length > 0) {
+  //       await this.imagesRepository.delete(imagesToDelete);
+  //     }
+  //   }
+  // }
+
   async updateById(
     id: number,
     data: SectionDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<resultItems[] | UpdateResult> {
+  ): Promise<resultItems | UpdateResult> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -222,18 +254,15 @@ export class SectionsService {
           data.images = await createImages(queryRunner, files);
         }
         this.processingData(data);
-        if ('images' in data && !data.images) {
-          data.images = [];
-        }
-        if (data.idParent) {
-          //TODO: Вынести в отдельный метод
-          const parentSection = await this.sectionsRepo.findOne({
-            where: { id: data.idParent },
-          });
-          if (currentSection.level - 1 != parentSection?.level) {
-            throw new BadRequestException('Cannot change the section level.');
-          }
-        }
+
+        await removeUnusedImages(
+          data,
+          currentSection,
+          this.imagesRepository,
+          queryRunner,
+        );
+
+        await this.checkSection(data, currentSection);
 
         const newSection = await this.sectionsRepo.update(
           { id: id },
@@ -247,20 +276,6 @@ export class SectionsService {
             'typeForm',
           ]),
         );
-        //TODO: вынести в отдельный метод
-        const newImageIds = data.images;
-        if (newImageIds) {
-          const currentImageIds: number[] | null = currentSection.images;
-          if (currentImageIds) {
-            const imagesToDelete = currentImageIds.filter(
-              (id) => !newImageIds.includes(id),
-            );
-
-            if (imagesToDelete.length) {
-              await this.imagesRepository.delete(imagesToDelete);
-            }
-          }
-        }
 
         if (!newSection) {
           throw new BadRequestException(
@@ -310,7 +325,7 @@ export class SectionsService {
   async deleteById(
     id: number,
     data: SectionDto,
-  ): Promise<resultItems[] | number> {
+  ): Promise<resultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

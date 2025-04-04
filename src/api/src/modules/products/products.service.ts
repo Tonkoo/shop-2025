@@ -22,7 +22,10 @@ import { createImages } from '../../utils/createImages.util';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import { Images } from '../../entities/images.entity';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
-import { removeImages } from '../../utils/removeImages.util';
+import {
+  removeImages,
+  removeUnusedImages,
+} from '../../utils/removeImages.util';
 
 @Injectable()
 export class ProductsService {
@@ -59,7 +62,7 @@ export class ProductsService {
   async create(
     data: ProductDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<Products | resultItems[]> {
+  ): Promise<Products | resultItems> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -170,7 +173,7 @@ export class ProductsService {
     id: number,
     data: ProductDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<resultItems[] | UpdateResult> {
+  ): Promise<resultItems | UpdateResult> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -189,19 +192,12 @@ export class ProductsService {
         data.images = await createImages(queryRunner, files);
       }
 
-      if (data.images) {
-        const newImageIds = data.images;
-        const currentImageIds: number[] | null = currentProduct.images;
-        if (currentImageIds) {
-          const imagesToDelete = currentImageIds.filter(
-            (id) => !newImageIds.includes(id),
-          );
-
-          if (imagesToDelete.length > 0) {
-            await this.imagesRepository.delete(imagesToDelete);
-          }
-        }
-      }
+      await removeUnusedImages(
+        data,
+        currentProduct,
+        this.imagesRepository,
+        queryRunner,
+      );
 
       const newProduct = await this.productsRepo.update(
         { id: id },
@@ -263,7 +259,7 @@ export class ProductsService {
   async deleteById(
     id: number,
     data: ProductDto,
-  ): Promise<resultItems[] | number> {
+  ): Promise<resultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
