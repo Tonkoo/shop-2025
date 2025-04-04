@@ -35,7 +35,7 @@ export class SectionsService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
-  ProcessingDate(data: SectionDto) {
+  processingData(data: SectionDto) {
     if (data.name) {
       data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
     }
@@ -81,7 +81,7 @@ export class SectionsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      this.ProcessingDate(data);
+      this.processingData(data);
 
       data.level = 1;
 
@@ -223,8 +223,8 @@ export class SectionsService {
         if (files.files) {
           data.images = await createImages(queryRunner, files);
         }
-        this.ProcessingDate(data);
-        if (!data.images) {
+        this.processingData(data);
+        if ('images' in data && !data.images) {
           data.images = [];
         }
         if (data.idParent) {
