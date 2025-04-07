@@ -63,10 +63,7 @@ const dynamicColumns = computed(() => {
   columns.splice(2, 0, {
     name: 'sectionName',
     required: true,
-    label:
-      adminStore.typeSearch.value === 'section'
-        ? 'Родительский отдел'
-        : 'Раздел',
+    label: adminStore.nameColumnSection,
     align: 'left' as const,
     field: 'sectionName',
     sortable: true,

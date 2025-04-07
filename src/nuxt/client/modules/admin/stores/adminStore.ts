@@ -65,6 +65,7 @@ export const useAdminStore = defineStore('admin-store', {
     disableBtn: false,
     filterSection: null,
     itemsFilter: [],
+    nameColumnSection: '',
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -95,6 +96,9 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setTypeSearch(value: TypeSearch) {
       this.typeSearch = value;
+    },
+    setNameColumnSection(value: string) {
+      this.nameColumnSection = value;
     },
     setSearchName(value: string) {
       this.searchName = value;

@@ -13,6 +13,7 @@ type AdminState = {
   delDialog: boolean;
   viewModal: boolean;
   typeItem: string;
+  nameColumnSection: string;
   countColumn: number;
   currentPage: number;
   allCount: number;

@@ -126,7 +126,11 @@ export async function getItems() {
       removeDots(adminStore.searchName),
       adminStore.filterSection?.id
     );
-
+    adminStore.setNameColumnSection(
+      adminStore.typeSearch.label === 'Разделы'
+        ? 'Родительский раздел'
+        : 'Раздел'
+    );
     // adminStore.setTypeItem(adminStore.typeSearch.value);
     const response = await api.get<{ data: ResultItemsAdmin }>(
       '/elastic/admin',
