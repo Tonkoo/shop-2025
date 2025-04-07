@@ -19,7 +19,7 @@ export class ProductDto {
 
   @ApiProperty({ example: 'Красный', description: 'Цвет продукта' })
   color: number;
-
+  // color: string;
   @ApiProperty({ example: '...', description: 'Описание продукта' })
   description: string;
 
@@ -76,6 +76,7 @@ export class ProductDto {
     this.images = ent.images;
     this.price = ent.price;
     this.color = ent.color.id;
+    // this.color = ent.color;
     this.description = ent.description;
     this.idSection = ent.section.id;
     this.showOnMain = ent.show_on_main;

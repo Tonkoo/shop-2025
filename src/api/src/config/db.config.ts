@@ -11,6 +11,7 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: ['dist/migrations/*.js'],
   synchronize: false,
   logging: true,
+  cache: false,
 };
 
 const dataSource = new DataSource(dataSourceOptions);

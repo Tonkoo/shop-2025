@@ -31,6 +31,7 @@ export class Products extends BaseEntity {
   @ManyToOne(() => Colors, (item) => item.products)
   @JoinColumn({ name: 'id_color' })
   color: Colors;
+  // color: string;
 
   @Column()
   description: string;

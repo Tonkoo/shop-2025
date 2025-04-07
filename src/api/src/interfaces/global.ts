@@ -8,6 +8,7 @@ type Product = {
   name: string;
   price: number;
   color: Colors;
+  // color: string;
   description: string;
   section: parentSection;
   show_on_main: boolean;
@@ -132,7 +133,7 @@ type resultItems = {
 
 type payLoadTest = {
   source?: string[];
-  size: number;
+  size?: number;
   from?: number;
   query: {
     bool: any;
