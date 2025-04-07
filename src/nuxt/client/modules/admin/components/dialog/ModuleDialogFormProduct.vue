@@ -11,6 +11,8 @@
       :label="$t('admin.label.image')"
       @update:model-value="adminStore.setProductImages"
     />
+
+    <areal-block-images :images-array="adminStore.frontProduct.images" />
     <!--    mask="#.##"-->
     <areal-form-input
       v-model="adminStore.frontProduct.price"

@@ -148,7 +148,7 @@ export class ProductsService {
     try {
       const product: ProductBase | null = await this.productsRepo.findOne({
         where: { id },
-        relations: ['section'],
+        relations: ['section', 'color'],
       });
       if (!product) {
         throw new NotFoundException('Product not found');
@@ -215,6 +215,7 @@ export class ProductsService {
           'searchName',
           'sectionId',
           'sectionName',
+          'colorId',
           'typeForm',
         ]),
       );
