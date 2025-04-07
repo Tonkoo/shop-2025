@@ -6,10 +6,11 @@ import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { ElasticsearchModule } from '../elasticsearch/elasticsearch.module';
 import { Images } from '../../entities/images.entity';
+import { Colors } from '../../entities/colors.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Products, Sections, Images]),
+    TypeOrmModule.forFeature([Products, Sections, Images, Colors]),
     ElasticsearchModule,
   ],
   controllers: [ProductsController],

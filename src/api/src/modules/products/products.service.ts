@@ -26,6 +26,7 @@ import {
   removeImages,
   removeUnusedImages,
 } from '../../utils/removeImages.util';
+import { Colors } from '../../entities/colors.entity';
 
 @Injectable()
 export class ProductsService {
@@ -36,6 +37,8 @@ export class ProductsService {
     private readonly sectionsRepo: Repository<Sections>,
     @InjectRepository(Images)
     private readonly imagesRepository: Repository<Images>,
+    @InjectRepository(Colors)
+    private readonly colorsRepository: Repository<Colors>,
     private readonly EsServices: ElasticsearchService,
     private readonly dataSource: DataSource,
   ) {}
@@ -56,6 +59,9 @@ export class ProductsService {
     }
     if (data.mainSlider == Boolean('true')) {
       data.mainSlider = true;
+    }
+    if (data.color) {
+      data.color = { id: data.colorId };
     }
   }
 
@@ -313,6 +319,23 @@ export class ProductsService {
       logger.error('Error from products.delete: ', err);
       throw new BadRequestException(
         'An error occurred while deleting the product.',
+      );
+    }
+  }
+
+  async getColor(): Promise<Colors[]> {
+    try {
+      const colors: Colors[] = await this.colorsRepository.find();
+
+      if (!colors) {
+        throw new NotFoundException('Colors not found');
+      }
+
+      return colors;
+    } catch (err) {
+      logger.error('Error from products.getColor: ', err);
+      throw new BadRequestException(
+        'An error occurred while outputting colors data.',
       );
     }
   }

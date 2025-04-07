@@ -6,6 +6,7 @@ import {
   editItem,
   delItem,
   reindex,
+  getColors,
 } from '../api';
 export function useAdminModule() {
   return {
@@ -16,5 +17,6 @@ export function useAdminModule() {
     editItem,
     delItem,
     reindex,
+    getColors,
   };
 }

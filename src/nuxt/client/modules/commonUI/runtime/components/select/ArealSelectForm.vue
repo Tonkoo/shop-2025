@@ -9,7 +9,6 @@
     :options="option"
     :error-message="errorsMessage"
     :error="errors"
-    square
     outlined
     class="select"
     @update:model-value="$emit('update:modelValue', $event)"

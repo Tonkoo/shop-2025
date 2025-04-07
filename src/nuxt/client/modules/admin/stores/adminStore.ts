@@ -8,6 +8,7 @@ import type {
   TypeSearch,
   ProductAdmin,
   SectionAdmin,
+  Colors,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 import { paramPagination } from '~/entities/table.entites';
@@ -45,7 +46,7 @@ export const useAdminStore = defineStore('admin-store', {
       name: '',
       images: [],
       price: '',
-      color: '',
+      color: { id: 0, name: '', hex: '' },
       section: {
         id: 0,
         name: '',
@@ -66,6 +67,7 @@ export const useAdminStore = defineStore('admin-store', {
     filterSection: null,
     itemsFilter: [],
     nameColumnSection: '',
+    colors: [],
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -164,7 +166,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.setProductName('');
       this.setProductImages([]);
       this.setProductPrice('');
-      this.setProductColor('');
+      this.setProductColor({ id: 0, name: '', hex: '' });
       this.setProductDescription('');
       this.setProductSection({
         id: 0,
@@ -227,8 +229,9 @@ export const useAdminStore = defineStore('admin-store', {
     setProductPrice(value: string) {
       this.frontProduct.price = String(value);
     },
-    setProductColor(value: string) {
+    setProductColor(value: Colors) {
       this.frontProduct.color = value;
+      this.frontProduct.colorId = value.id;
     },
     setProductDescription(value: string) {
       this.frontProduct.description = value;
@@ -252,6 +255,9 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setItemsFilter(value: Search[]) {
       this.itemsFilter = value;
+    },
+    setColors(value: Colors[]) {
+      this.colors = value;
     },
   },
 });

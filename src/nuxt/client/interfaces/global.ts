@@ -27,7 +27,9 @@ type Product = {
   name: string;
   // images: File[];
   price: string;
-  color: string;
+  // color: string;
+  color: Colors;
+  colorId?: number;
   description: string;
   showOnMain: boolean;
   mainSlider: boolean;
@@ -113,6 +115,11 @@ type ParamCatalog = {
   childCatalogCode?: string;
   nestedChildCatalogCode?: string;
 };
+type Colors = {
+  id: number;
+  name: string;
+  hex: string;
+};
 
 export type {
   SectionMain,
@@ -131,4 +138,5 @@ export type {
   Err,
   ParamCatalog,
   ResultReindex,
+  Colors,
 };

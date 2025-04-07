@@ -21,10 +21,14 @@
       :errors="adminStore.errors.price"
       @update:model-value="adminStore.setProductPrice"
     />
-    <areal-form-input
+    <areal-select-colors
       v-model="adminStore.frontProduct.color"
       :label="$t('admin.label.color')"
       :errors="adminStore.errors.color"
+      :option="optionsColors"
+      option-value="id"
+      option-label="name"
+      @focus="getColorsOptions"
       @update:model-value="adminStore.setProductColor"
     />
     <areal-form-input
@@ -64,12 +68,14 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
-import type { Search, SelectSection } from '~/interfaces/global';
+import type { Colors, Search, SelectSection } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
 
 const autocompleteOptions = ref([] as Search[]);
+
+const optionsColors = ref([] as Colors[]);
 
 const onSearchInput = async (value: SelectSection | string) => {
   const name = typeof value === 'string' ? value : value.name;
@@ -79,6 +85,11 @@ const onSearchInput = async (value: SelectSection | string) => {
   }
   await adminModule.getAllNameColumn('section', adminStore.typeItem);
   autocompleteOptions.value = adminStore.allName;
+};
+
+const getColorsOptions = async () => {
+  await adminModule.getColors();
+  optionsColors.value = adminStore.colors;
 };
 </script>
 

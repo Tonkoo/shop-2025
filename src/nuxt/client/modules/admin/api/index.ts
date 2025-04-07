@@ -39,10 +39,10 @@ function validateForm() {
       isValid = false;
     }
 
-    if (!frontProduct.color.trim()) {
-      adminStore.setErrorColor(true);
-      isValid = false;
-    }
+    // if (!frontProduct.color.trim()) {
+    //   adminStore.setErrorColor(true);
+    //   isValid = false;
+    // }
 
     if (!frontProduct.description.trim()) {
       adminStore.setErrorDescription(true);
@@ -315,6 +315,20 @@ export async function delItem() {
       throw new Error('Error while receiving data');
     }
     adminStore.setDataItems(response.data.data);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+export async function getColors() {
+  const adminStore = useAdminStore();
+  try {
+    const response = await api.get('product/colors');
+
+    if (!response) {
+      throw new Error('Error while receiving data');
+    }
+    adminStore.setColors(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;

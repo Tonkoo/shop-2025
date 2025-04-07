@@ -5,6 +5,7 @@ import type {
   StoreItem,
   ProductAdmin,
   SectionAdmin,
+  Colors,
 } from '~/interfaces/global';
 
 type AdminState = {
@@ -31,6 +32,7 @@ type AdminState = {
   disableBtn: boolean;
   filterSection: SectionAdmin | null;
   itemsFilter: Search[];
+  colors: Colors[];
 };
 
 export type { AdminState };
