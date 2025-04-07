@@ -201,6 +201,9 @@ export const useAdminStore = defineStore('admin-store', {
     setErrorName(value: boolean) {
       this.errors.name = value;
     },
+    setErrorNameMessages(value: string) {
+      this.errors.nameMessages = value;
+    },
     setErrorPrice(value: boolean) {
       this.errors.price = value;
     },

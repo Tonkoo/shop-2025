@@ -105,10 +105,15 @@ type ApiParams = {
 };
 type Err = {
   name: boolean;
+  nameMessages?: string;
   price: boolean;
+  priceMessages?: string;
   color: boolean;
+  colorMessages?: string;
   description: boolean;
+  descriptionMessages?: string;
   section: boolean;
+  sectionMessages?: string;
 };
 type ParamCatalog = {
   parentCatalogCode: string;

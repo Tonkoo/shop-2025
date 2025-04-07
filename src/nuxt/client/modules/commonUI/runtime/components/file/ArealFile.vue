@@ -8,6 +8,7 @@
     :label="label"
     class="q-mb-md"
     accept=".jpg, image/*"
+    max-files="6"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
