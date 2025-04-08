@@ -18,7 +18,6 @@ import {
   SectionBase,
   SectionClient,
 } from '../../interfaces/global';
-import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
 import {
@@ -335,16 +334,6 @@ export class SectionsService {
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      // TODO
-      // const searchParams: payLoad = {
-      //   type: data.type,
-      //   from: Number(data.from),
-      //   size: Number(data.size),
-      //   searchName: data.searchName,
-      // };
-      // return data.getItems
-      //   ? await this.EsServices.getItemsFilter(searchParams)
-      //   : id;
 
       return await formatResponse(data, data.id, this.EsServices);
     } catch (err) {

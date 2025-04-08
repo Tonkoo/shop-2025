@@ -1,5 +1,6 @@
 import { camelCaseConverter } from './toCamelCase.util';
 import {
+  mainLayout,
   ProductElastic,
   resultItems,
   SectionElastic,
@@ -13,13 +14,6 @@ export function formatResults(
   items: (SectionElastic | ProductElastic)[],
   total: { value: number },
 ): resultItems {
-  // const result: resultItems[] = [];
-  // if (typeof total === 'object' && total !== null && 'value' in total) {
-  //   result.push({
-  //     items: camelCaseConverter(items) as SectionElastic[] | ProductElastic[],
-  //     total: total.value,
-  //   });
-  // }
   return {
     items: camelCaseConverter(items) as SectionElastic[] | ProductElastic[],
     total: total.value,
@@ -39,4 +33,25 @@ export async function formatResponse(
   };
 
   return data.getItems ? await EsServices.getItemsFilter(searchParams) : id;
+}
+
+export function formatMainContent(
+  data: ProductElastic[],
+  layout: mainLayout | null,
+) {
+  const mainSlider = data.filter((item) => item.main_slider);
+  const mainGifts = data.filter((item) => item.show_on_main);
+  if (layout) {
+    return {
+      content: {
+        mainSlider,
+        mainGifts,
+      },
+      layout,
+    };
+  }
+  return {
+    mainSlider,
+    mainGifts,
+  };
 }

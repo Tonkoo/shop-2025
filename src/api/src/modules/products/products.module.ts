@@ -10,7 +10,7 @@ import { Colors } from '../../entities/colors.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Products, Sections, Images, Colors]),
+    TypeOrmModule.forFeature([Products, Images, Colors]),
     ElasticsearchModule,
   ],
   controllers: [ProductsController],

@@ -4,8 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Sections } from '../../entities/sections.entity';
-import { DataSource, In, Repository, UpdateResult } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
@@ -16,7 +15,6 @@ import {
   ProductClient,
   resultItems,
 } from '../../interfaces/global';
-import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 import { transliterate as tr } from 'transliteration';
 import { createImages } from '../../utils/createImages.util';
 import { convertTimeObject } from '../../utils/convertTime.util';
@@ -34,8 +32,6 @@ export class ProductsService {
   constructor(
     @InjectRepository(Products)
     private readonly productsRepo: Repository<Products>,
-    @InjectRepository(Sections)
-    private readonly sectionsRepo: Repository<Sections>,
     @InjectRepository(Images)
     private readonly imagesRepository: Repository<Images>,
     @InjectRepository(Colors)

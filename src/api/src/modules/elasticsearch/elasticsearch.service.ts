@@ -14,6 +14,7 @@ import { convertTimeArray } from '../../utils/convertTime.util';
 import {
   elasticBody,
   imageData,
+  mainLayout,
   payLoadTest,
   ProductClient,
   ProductElastic,
@@ -24,7 +25,10 @@ import {
   SectionEntities,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
-import { formatResults } from '../../utils/formatResults.util';
+import {
+  formatMainContent,
+  formatResults,
+} from '../../utils/formatResults.util';
 
 @Injectable()
 export class ElasticsearchService {
@@ -438,6 +442,49 @@ export class ElasticsearchService {
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);
       throw new BadRequestException('Error getting name');
+    }
+  }
+
+  async getItemMain(layout: string) {
+    try {
+      const items = await this.searchFromElastic({
+        query: {
+          bool: {
+            should: [
+              { term: { show_on_main: 'true' } },
+              { term: { main_slider: 'true' } },
+            ],
+            minimum_should_match: 1,
+          },
+        },
+      });
+      const rawItems: ProductElastic[] = items.hits.hits.map(
+        (item) => item._source as ProductElastic,
+      );
+      return formatMainContent(
+        rawItems,
+        layout === 'true' ? await this.getLayout() : null,
+      );
+    } catch (err) {
+      logger.error('Error from elastic.getItemMain: ', err);
+      throw new BadRequestException('Error getting main page items');
+    }
+  }
+
+  async getLayout(): Promise<mainLayout> {
+    try {
+      const layout = await this.searchFromElastic({
+        query: { bool: { must: { term: { type: 'section' } } } },
+      });
+      const menu: SectionElastic[] = layout.hits.hits.map(
+        (item) => item._source as SectionElastic,
+      );
+      return {
+        menu,
+      };
+    } catch (err) {
+      logger.error('Error from elastic.getLayout: ', err);
+      throw new BadRequestException('Error getting menu items');
     }
   }
 }

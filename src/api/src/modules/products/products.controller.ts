@@ -27,10 +27,8 @@ import {
   ResponseHelperApiOK,
 } from '../../utils/response.util';
 import { response, resultItems, ProductBase } from '../../interfaces/global';
-import { Products } from '../../entities/products.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
-import { UpdateResult } from 'typeorm';
 import { Colors } from '../../entities/colors.entity';
 
 class DeleteProductDto {

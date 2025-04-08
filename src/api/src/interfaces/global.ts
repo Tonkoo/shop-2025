@@ -145,6 +145,21 @@ type parentSection = {
   name: string;
 };
 
+type mainLayout = {
+  menu: SectionElastic[];
+};
+
+type mainContent = {
+  content: {
+    mainSlider: ProductElastic[];
+    mainGifts: ProductElastic[];
+  };
+};
+
+type mainResponse = mainContent & {
+  layout: mainLayout;
+};
+
 export {
   response,
   elasticsearchResponse,
@@ -161,4 +176,7 @@ export {
   ProductBase,
   SectionElastic,
   ProductElastic,
+  mainLayout,
+  mainContent,
+  mainResponse,
 };

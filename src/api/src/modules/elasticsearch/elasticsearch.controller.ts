@@ -1,9 +1,10 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
 import { response, resultItems, SectionElastic } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
+import { query } from 'winston';
 @Controller('elastic')
 @ApiTags('elastic')
 export class ElasticController {
@@ -88,5 +89,13 @@ export class ElasticController {
     const result: SectionElastic[] =
       await this.services.getNameShopByElastic(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
+  }
+
+  // TODO: Описать свагер
+  @Get('main')
+  async getItemMain(@Query('layout') layout: string) {
+    const result = await this.services.getItemMain(layout);
+    // const result = await this.services.getLayout();
+    return result;
   }
 }

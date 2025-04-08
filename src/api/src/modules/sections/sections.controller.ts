@@ -30,10 +30,8 @@ import {
 } from '../../utils/response.util';
 import { ProductDto } from '../products/dto/product.dto';
 import { SectionBase, response, resultItems } from '../../interfaces/global';
-import { Sections } from '../../entities/sections.entity';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
-import { UpdateResult } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 
 class DeleteSectionDto {
