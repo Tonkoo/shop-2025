@@ -9,7 +9,7 @@
     <q-card class="sidebar__card">
       <nav class="nav nav__sidebar">
         <div
-          v-for="parentSection in getParentSection(mainStores.section)"
+          v-for="parentSection in getParentSection(mainStores.menu)"
           :key="parentSection.id"
           class="nav__column"
         >
@@ -24,7 +24,7 @@
           <ul class="nav__list">
             <li
               v-for="childSection in getChildSection(
-                mainStores.section,
+                mainStores.menu,
                 parentSection.id,
                 2
               )"
@@ -45,7 +45,7 @@
               <ul class="nav__list nav__list-nested">
                 <li
                   v-for="nestedChildSection in getChildSection(
-                    mainStores.section,
+                    mainStores.menu,
                     childSection.id,
                     3
                   )"

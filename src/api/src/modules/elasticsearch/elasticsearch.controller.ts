@@ -96,6 +96,6 @@ export class ElasticController {
   async getItemMain(@Query('layout') layout: string) {
     const result = await this.services.getItemMain(layout);
     // const result = await this.services.getLayout();
-    return result;
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

@@ -2,6 +2,7 @@ import type { ProductMain, SectionMain } from '~/interfaces/global';
 
 export type MainType = {
   sidebar: boolean;
-  section: ProductMain[] | SectionMain[];
-  product: ProductMain[] | SectionMain[];
+  mainGifts: ProductMain[];
+  mainSlider: ProductMain[];
+  menu: SectionMain[];
 };

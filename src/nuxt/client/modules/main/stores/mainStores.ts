@@ -5,8 +5,9 @@ import type { ResultItemsMain } from '~/interfaces/global';
 export const useMainStores = defineStore('main-store', {
   state: (): MainType => ({
     sidebar: false,
-    section: [],
-    product: [],
+    mainGifts: [],
+    mainSlider: [],
+    menu: [],
   }),
   actions: {
     setSidebar() {
@@ -16,12 +17,10 @@ export const useMainStores = defineStore('main-store', {
       }
       this.sidebar = false;
     },
-    setSection(value: ResultItemsMain) {
-      this.section = value.items;
-    },
-    setProduct(value: ResultItemsMain) {
-      this.product = value.items;
-      console.log(this.product);
+    setItems(value: ResultItemsMain) {
+      this.mainGifts = value.content.mainGifts;
+      this.mainSlider = value.content.mainSlider;
+      this.menu = value.layout.menu;
     },
   },
 });

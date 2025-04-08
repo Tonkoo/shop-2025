@@ -3,7 +3,9 @@
     <div class="row catalog-list">
       <!--      TODO: вынести в computed-->
       <div
-        v-for="product in mainStores.product.filter((item) => item.showOnMain)"
+        v-for="product in mainStores.mainGifts.filter(
+          (item) => item.showOnMain
+        )"
         :key="product.id"
         class="col-3 catalog-list__cards"
       >

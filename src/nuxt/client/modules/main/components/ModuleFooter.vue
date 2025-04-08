@@ -1,36 +1,35 @@
 <!--TODO: Методология БЭМ-->
 <template>
-  <div class="footer__wrapper">
-    <div class="footer__top">
+  <div class="footer">
+    <div class="menu">
       <!--      TODO-->
-      <div class="nav nav__footer">
-        <div
-          v-for="parentSection in getParentSection(mainStores.section)"
-          :key="parentSection.id"
-          class="nav__column"
-        >
-          <!--TODO: Написать метод для склейки ссылки-->
-          <div class="nav__title">
-            <!--TODO: сделать ArealLink в CommonUI-->
-            <NuxtLink :to="'/catalog/' + parentSection.code + '/'">
-              {{ parentSection.name }}</NuxtLink
-            >
-          </div>
-          <ul class="nav__list">
-            <li
-              v-for="childSection in getChildSection(
-                mainStores.section,
-                parentSection.id,
-                2
-              )"
-              :key="childSection.id"
-            >
-              <NuxtLink :to="'/catalog/' + childSection.code + '/'">
-                {{ childSection.name }}
-              </NuxtLink>
-            </li>
-          </ul>
+      <div
+        v-for="parentSection in getParentSection(mainStores.menu)"
+        :key="parentSection.id"
+        class="menu__column"
+      >
+        <div class="menu__title">
+          <ArealLink :link="createLink(parentSection.code)" class="menu__link">
+            {{ parentSection.name }}
+          </ArealLink>
         </div>
+        <ul class="menu__list">
+          <li
+            v-for="childSection in getChildSection(
+              mainStores.menu,
+              parentSection.id,
+              2
+            )"
+            :key="childSection.id"
+          >
+            <ArealLink
+              :link="createLink(parentSection.code, childSection.code)"
+              class="menu__link"
+            >
+              {{ childSection.name }}
+            </ArealLink>
+          </li>
+        </ul>
       </div>
     </div>
     <div class="footer__bottom">
@@ -41,42 +40,45 @@
 </template>
 
 <script setup lang="ts">
-import { useMainModule } from '~/modules/main/global';
 import { useMainStores } from '~/modules/main/stores/mainStores';
-import { useQuasar } from 'quasar';
-import { notifyNegative } from '~/entities/notify.entites';
 import {
   getChildSection,
   getParentSection,
 } from '~/modules/main/utils/menu.helpers.utils';
+import { createLink } from '~/modules/main/utils/createLink.utils';
 
-const mainModule = useMainModule();
 const mainStores = useMainStores();
-const quasar = useQuasar();
-
-onMounted(async () => {
-  await mainModule.getSection().catch((err) => {
-    quasar.notify({
-      ...notifyNegative,
-      message: err,
-    });
-  });
-});
 </script>
 
 <style scoped lang="scss">
-@import '~/modules/commonUI/assets/scss/nav/nav';
-@import '~/modules/commonUI/assets/scss/nav/nav.modifiers';
+//@import '~/modules/commonUI/assets/scss/nav/nav';
+//@import '~/modules/commonUI/assets/scss/nav/nav.modifiers';
 
-.footer__wrapper {
+.footer {
   display: flex;
-  flex-direction: column;
-  padding: 10px;
+  flex-direction: row;
+  flex-flow: row-reverse;
+  justify-content: space-between;
+  padding: 40px;
 
-  .footer__top {
-  }
-
-  .footer__bottom {
+  .menu {
+    display: flex;
+    gap: 110px;
+    &__column {
+    }
+    &__title {
+    }
+    &__link {
+      font-size: 16px;
+      text-decoration: none;
+      font-weight: 400;
+      line-height: 20px;
+      color: getColor('white', 1);
+    }
+    &__list {
+      list-style: none;
+      padding: 0;
+    }
   }
 }
 </style>

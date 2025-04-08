@@ -18,6 +18,7 @@ type SectionAdmin = Section & {
 
 type SectionMain = Section & {
   images: ImageElastic[];
+  id_parent?: number;
 };
 
 type Product = {
@@ -69,8 +70,13 @@ type SelectSection = {
 };
 
 type ResultItemsMain = {
-  items: SectionMain[] | ProductMain[];
-  total: number;
+  content: {
+    mainGifts: ProductMain[];
+    mainSlider: ProductMain[];
+  };
+  layout: {
+    menu: SectionMain[];
+  };
 };
 
 type ResultItemsAdmin = {

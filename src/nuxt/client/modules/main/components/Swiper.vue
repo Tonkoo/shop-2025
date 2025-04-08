@@ -1,5 +1,5 @@
 <template>
-  <areal-swiper :data-items="mainStores.product" filter-key="mainSlider">
+  <areal-swiper :data-items="mainStores.mainSlider" filter-key="mainSlider">
     <template #default="{ item }">
       <ArealProductCard :product="item" />
     </template>
@@ -16,14 +16,14 @@ const mainModule = useMainModule();
 const mainStores = useMainStores();
 const quasar = useQuasar();
 
-onMounted(async () => {
-  await mainModule.getProduct().catch((err) => {
-    quasar.notify({
-      ...notifyNegative,
-      message: err,
-    });
-  });
-});
+// onMounted(async () => {
+//   await mainModule.getProduct().catch((err) => {
+//     quasar.notify({
+//       ...notifyNegative,
+//       message: err,
+//     });
+//   });
+// });
 </script>
 
 <style scoped lang="scss"></style>

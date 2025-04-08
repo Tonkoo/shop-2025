@@ -10,6 +10,6 @@ export function getChildSection(
   level: number
 ) {
   return data.filter(
-    (section) => section.level === level && section.idParent === parentId
+    (section) => section.level === level && section.id_parent === parentId
   );
 }

@@ -1,8 +1,7 @@
-import { getSection, getProduct } from '~/modules/main/api';
+import { getItems } from '~/modules/main/api';
 
 export function useMainModule() {
   return {
-    getSection,
-    getProduct,
+    getItems,
   };
 }

@@ -23,8 +23,23 @@
 <script setup lang="ts">
 import ModuleHeader from '~/modules/main/components/ModuleHeader.vue';
 import ModuleFooter from '~/modules/main/components/ModuleFooter.vue';
+import { useMainModule } from '~/modules/main/global';
+import { useQuasar } from 'quasar';
+import { notifyNegative } from '~/entities/notify.entites';
 
 defineOptions({ name: 'MainLayout' });
+
+const mainModule = useMainModule();
+const quasar = useQuasar();
+
+onMounted(async () => {
+  await mainModule.getItems().catch((err) => {
+    quasar.notify({
+      ...notifyNegative,
+      message: err,
+    });
+  });
+});
 </script>
 
 <style lang="scss">
