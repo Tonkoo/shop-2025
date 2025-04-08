@@ -216,20 +216,6 @@ export class SectionsService {
     }
   }
 
-  // async removeUnusedImages(){
-  //   const newImageIds = data.images;
-  //   const currentImageIds: number[] | null = currentSection.images;
-  //   if (currentImageIds) {
-  //     const imagesToDelete = currentImageIds.filter(
-  //         (id) => !newImageIds.includes(id),
-  //     );
-  //
-  //     if (imagesToDelete.length > 0) {
-  //       await this.imagesRepository.delete(imagesToDelete);
-  //     }
-  //   }
-  // }
-
   async updateById(
     id: number,
     data: SectionDto,

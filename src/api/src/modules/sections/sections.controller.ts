@@ -165,6 +165,7 @@ export class SectionsController {
       );
       return ResponseHelper.createResponse(HttpStatus.OK, result);
     } catch (err) {
+      console.log(err);
       logger.error('Error from sections.update: ', err);
       throw err;
     }

@@ -5,14 +5,14 @@ export class payLoad {
     message: 'Параметр type должен быть типа string',
   })
   @IsNotEmpty()
-  type: string;
+  type?: string;
 
   @IsNumber()
   from?: number;
 
   @IsNumber()
   @IsNotEmpty()
-  size: number;
+  size?: number;
 
   @IsString({
     message: 'Параметр searchName должен быть типа string',

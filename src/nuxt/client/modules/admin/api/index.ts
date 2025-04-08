@@ -9,8 +9,7 @@ import { comparisonValues } from '~/modules/admin/composables/сomparisonValues'
 import { headers } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 import { productParams, sectionParams } from '~/entities/search.entites';
-import { sectionSchema } from '~/modules/admin/schemas/sectionSchema';
-import { productSchema } from '~/modules/admin/schemas/productSchema';
+
 import { validationSection } from '~/modules/admin/validations/validationSection';
 import { validationProduct } from '~/modules/admin/validations/validationProduct';
 
@@ -195,6 +194,7 @@ export async function editItem() {
         'level',
         'code',
       ]);
+      validationSection(adminStore.frontSection);
     } else {
       data = comparisonValues(adminStore.frontProduct, adminStore.backProduct, [
         'id',
@@ -203,6 +203,7 @@ export async function editItem() {
         'sectionName',
         'sectionId',
       ]);
+      validationProduct(adminStore.frontProduct);
     }
     if (data.section) {
       data.sectionId = data.section.id;
@@ -221,8 +222,6 @@ export async function editItem() {
       undefined,
       true
     );
-
-    // validateForm();
 
     generateFormData(formData, data, param);
     adminStore.setSearchName('');
