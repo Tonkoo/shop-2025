@@ -27,6 +27,7 @@ import {
   removeUnusedImages,
 } from '../../utils/removeImages.util';
 import { Colors } from '../../entities/colors.entity';
+import { formatResponse } from '../../utils/formatResults.util';
 
 @Injectable()
 export class ProductsService {
@@ -68,7 +69,7 @@ export class ProductsService {
   async create(
     data: ProductDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<Products | resultItems> {
+  ): Promise<number | resultItems> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -125,16 +126,7 @@ export class ProductsService {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-
-      return data.getItems
-        ? await this.EsServices.getItemsFilter(searchParams)
-        : newProduct;
+      return await formatResponse(data, newProduct.id, this.EsServices);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from product.create: ', err);
@@ -179,7 +171,7 @@ export class ProductsService {
     id: number,
     data: ProductDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<resultItems | UpdateResult> {
+  ): Promise<resultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -245,15 +237,8 @@ export class ProductsService {
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-      return data.getItems
-        ? await this.EsServices.getItemsFilter(searchParams)
-        : newProduct;
+
+      return await formatResponse(data, data.id, this.EsServices);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from product.update: ', err);
@@ -306,15 +291,8 @@ export class ProductsService {
       await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-      return data.getItems
-        ? await this.EsServices.getItemsFilter(searchParams)
-        : id;
+
+      return await formatResponse(data, data.id, this.EsServices);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from products.delete: ', err);

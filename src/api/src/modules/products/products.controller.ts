@@ -69,7 +69,7 @@ export class ProductsController {
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
-    const result: Products | resultItems = await this.services.create(
+    const result: number | resultItems = await this.services.create(
       data,
       files,
     );
@@ -125,7 +125,7 @@ export class ProductsController {
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
-    const result: resultItems | UpdateResult = await this.services.updateById(
+    const result: resultItems | number = await this.services.updateById(
       id,
       data,
       files,
@@ -145,7 +145,6 @@ export class ProductsController {
     type: ResponseHelperApiOK,
   })
   async deleteById(@Param('id') id: number, @Query() data: ProductDto) {
-    console.log(data);
     const result: resultItems | number = await this.services.deleteById(
       id,
       data,

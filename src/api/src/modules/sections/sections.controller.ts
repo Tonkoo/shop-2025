@@ -117,7 +117,7 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
     try {
-      const result: Sections | resultItems = await this.services.create(
+      const result: number | resultItems = await this.services.create(
         data,
         files,
       );
@@ -158,7 +158,7 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
     try {
-      const result: resultItems | UpdateResult = await this.services.updateById(
+      const result: resultItems | number = await this.services.updateById(
         id,
         data,
         files,

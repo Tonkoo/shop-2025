@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sections } from '../../entities/sections.entity';
-import { DataSource, In, Repository, UpdateResult } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
@@ -25,6 +25,7 @@ import {
   removeImages,
   removeUnusedImages,
 } from '../../utils/removeImages.util';
+import { formatResponse } from '../../utils/formatResults.util';
 
 @Injectable()
 export class SectionsService {
@@ -94,7 +95,7 @@ export class SectionsService {
   async create(
     data: SectionDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<Sections | resultItems> {
+  ): Promise<number | resultItems> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -155,16 +156,7 @@ export class SectionsService {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-
-      return data.getItems
-        ? await this.EsServices.getItemsFilter(searchParams)
-        : newSection;
+      return await formatResponse(data, newSection.id, this.EsServices);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.create: ', err);
@@ -220,7 +212,7 @@ export class SectionsService {
     id: number,
     data: SectionDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<resultItems | UpdateResult> {
+  ): Promise<resultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -287,15 +279,8 @@ export class SectionsService {
         );
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const searchParams: payLoad = {
-          type: data.type,
-          from: Number(data.from),
-          size: Number(data.size),
-          searchName: data.searchName,
-        };
-        return data.getItems
-          ? await this.EsServices.getItemsFilter(searchParams)
-          : newSection;
+
+        return await formatResponse(data, data.id, this.EsServices);
       }
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -351,15 +336,17 @@ export class SectionsService {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
       // TODO
-      const searchParams: payLoad = {
-        type: data.type,
-        from: Number(data.from),
-        size: Number(data.size),
-        searchName: data.searchName,
-      };
-      return data.getItems
-        ? await this.EsServices.getItemsFilter(searchParams)
-        : id;
+      // const searchParams: payLoad = {
+      //   type: data.type,
+      //   from: Number(data.from),
+      //   size: Number(data.size),
+      //   searchName: data.searchName,
+      // };
+      // return data.getItems
+      //   ? await this.EsServices.getItemsFilter(searchParams)
+      //   : id;
+
+      return await formatResponse(data, data.id, this.EsServices);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.delete : ', err);
