@@ -4,6 +4,8 @@
     :label="label"
     outlined
     class="q-mb-md"
+    :error="error"
+    :error-message="errorsMessage"
     :options="option"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -12,7 +14,7 @@
 <script setup lang="ts">
 import type { Colors } from '~/interfaces/global';
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: Object as PropType<Colors | null>,
     required: false,
@@ -22,11 +24,19 @@ defineProps({
     type: String,
     default: 'Цвет',
   },
+  errorsMessage: {
+    type: String,
+    default: '',
+  },
   option: {
     type: Array,
     required: false,
     default: null,
   },
+});
+
+const error = computed(() => {
+  return !!props.errorsMessage;
 });
 
 defineEmits(['update:modelValue']);

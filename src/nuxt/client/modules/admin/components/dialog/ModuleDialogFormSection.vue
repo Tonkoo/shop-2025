@@ -3,8 +3,7 @@
     <areal-form-input
       v-model="adminStore.frontSection.name"
       :label="$t('admin.label.name')"
-      :errors="adminStore.errors.name"
-      :errors-message="adminStore.errors.nameMessages"
+      :errors-message="adminStore.errors.name"
       @update:model-value="adminStore.setSectionName"
     />
     <areal-file

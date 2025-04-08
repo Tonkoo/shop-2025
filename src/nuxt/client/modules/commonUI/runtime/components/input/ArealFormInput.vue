@@ -5,7 +5,7 @@
     :model-value="modelValue"
     :label="label"
     class="custom-input q-mb-md"
-    :error="errors"
+    :error="error"
     :error-message="errorsMessage"
     :name="name"
     @update:model-value="$emit('update:modelValue', $event)"
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   modelValue: {
     type: String,
     required: true,
@@ -21,10 +21,6 @@ defineProps({
   label: {
     type: String,
     default: 'Название',
-  },
-  errors: {
-    type: Boolean,
-    default: false,
   },
   errorsMessage: {
     type: String,
@@ -36,6 +32,9 @@ defineProps({
   },
 });
 
+const error = computed(() => {
+  return !!props.errorsMessage;
+});
 defineEmits(['update:modelValue']);
 </script>
 

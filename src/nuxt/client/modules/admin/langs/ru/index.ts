@@ -23,6 +23,6 @@ export default {
     formAdd: 'Новая запись',
   },
   hint: {
-    price: 'Пример: 1.23',
+    price: 'Пример: 123',
   },
 };

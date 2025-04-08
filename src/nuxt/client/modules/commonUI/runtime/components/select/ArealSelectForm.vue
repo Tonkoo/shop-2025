@@ -8,7 +8,7 @@
     :label="label"
     :options="option"
     :error-message="errorsMessage"
-    :error="errors"
+    :error="error"
     outlined
     class="select"
     @update:model-value="$emit('update:modelValue', $event)"
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   model: {
     type: String,
     required: false,
@@ -38,14 +38,14 @@ defineProps({
     required: false,
     default: () => [],
   },
-  errors: {
-    type: Boolean,
-    default: false,
-  },
   errorsMessage: {
     type: String,
     default: '',
   },
+});
+
+const error = computed(() => {
+  return !!props.errorsMessage;
 });
 
 defineEmits(['update:modelValue']);

@@ -9,7 +9,10 @@ import { comparisonValues } from '~/modules/admin/composables/сomparisonValues'
 import { headers } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 import { productParams, sectionParams } from '~/entities/search.entites';
-import { sectionSchema } from '~/modules/admin/dto/validationSchema';
+import { sectionSchema } from '~/modules/admin/schemas/sectionSchema';
+import { productSchema } from '~/modules/admin/schemas/productSchema';
+import { validationSection } from '~/modules/admin/validations/validationSection';
+import { validationProduct } from '~/modules/admin/validations/validationProduct';
 
 function removeDots(data: string): string {
   if (!data) {
@@ -17,80 +20,6 @@ function removeDots(data: string): string {
   }
   return data.replace(/^\.+/g, '');
 }
-// function validateForm() {
-//   const adminStore = useAdminStore();
-//   const { typeItem, frontSection, frontProduct } = adminStore;
-//   let isValid = true;
-//
-//   adminStore.setClearError();
-//
-//   if (typeItem === 'section') {
-//     if (!frontSection.name.trim()) {
-//       adminStore.setErrorName(true);
-//       adminStore.setErrorNameMessages(
-//         'Поле "Название" обязательно для заполнения'
-//       );
-//       isValid = false;
-//     }
-//     if (frontSection.name.length < 3) {
-//       adminStore.setErrorName(true);
-//       adminStore.setErrorNameMessages(
-//         'Название должно быть не короче 3 символов'
-//       );
-//       isValid = false;
-//     }
-//     if (frontSection.name.length > 50) {
-//       adminStore.setErrorName(true);
-//       adminStore.setErrorNameMessages(
-//         'Название не может быть длиннее 50 символов'
-//       );
-//       isValid = false;
-//     }
-//   } else {
-//     if (!frontProduct.name.trim()) {
-//       adminStore.setErrorName(true);
-//       isValid = false;
-//     }
-//
-//     if (frontProduct.name.length < 3) {
-//       adminStore.setErrorName(true);
-//       isValid = false;
-//     }
-//     if (frontProduct.name.length > 50) {
-//       adminStore.setErrorName(true);
-//       isValid = false;
-//     }
-//
-//     if (!frontProduct.price) {
-//       adminStore.setErrorPrice(true);
-//       isValid = false;
-//     }
-//
-//     if (!Number(frontProduct.price)) {
-//       adminStore.setErrorPrice(true);
-//       isValid = false;
-//     }
-//
-//     // if (!frontProduct.color.trim()) {
-//     //   adminStore.setErrorColor(true);
-//     //   isValid = false;
-//     // }
-//
-//     if (!frontProduct.description.trim()) {
-//       adminStore.setErrorDescription(true);
-//       isValid = false;
-//     }
-//
-//     if (!frontProduct.section?.id || !frontProduct.section?.name.trim()) {
-//       adminStore.setErrorSection(true);
-//       isValid = false;
-//     }
-//   }
-//
-//   if (!isValid) {
-//     throw new Error('The form is filled in incorrectly');
-//   }
-// }
 
 function fillingParam(
   type: string,
@@ -216,20 +145,10 @@ export async function getAllNameColumn(type: string, typeForm?: string) {
 export async function addItem() {
   const adminStore = useAdminStore();
   try {
-    const validationResult = sectionSchema.safeParse(adminStore.frontSection);
+    adminStore.clearError();
     // TODO: обрабатывать ошибки в validationResult с помощью forReach
     // TODO: создать один метод в adminStore для заполенения объекта с ошибками.
     // TODO: Создать две папки Schemas, Validations. В Schema будут храниться схемы для валидации. в Validations будут храниться обработчик ошибок с помощью forReach
-
-    if (!validationResult.success) {
-      const formattedErrors = validationResult.error.format();
-      if (formattedErrors.name) {
-        adminStore.setErrorName(true);
-        adminStore.setErrorNameMessages(formattedErrors.name._errors[0]);
-      }
-
-      throw new Error('Validation failed');
-    }
 
     adminStore.setSearchName('');
     const formData = new FormData();
@@ -245,8 +164,10 @@ export async function addItem() {
     let data;
     if (adminStore.typeItem === 'section') {
       data = adminStore.frontSection;
+      validationSection(data);
     } else {
       data = adminStore.frontProduct;
+      validationProduct(data);
     }
     generateFormData(formData, data, param);
     const response = await api.post<{ data: ResultItemsAdmin }>(

@@ -9,6 +9,7 @@ import type {
   ProductAdmin,
   SectionAdmin,
   Colors,
+  Err,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 import { paramPagination } from '~/entities/table.entites';
@@ -45,24 +46,17 @@ export const useAdminStore = defineStore('admin-store', {
       code: '',
       name: '',
       images: [],
-      price: '',
+      price: 0,
       color: { id: 0, name: '', hex: '' },
       section: {
         id: 0,
         name: '',
       },
       description: '',
-      idSection: null,
       showOnMain: false,
       mainSlider: false,
     },
-    errors: {
-      name: false,
-      price: false,
-      color: false,
-      description: false,
-      section: false,
-    },
+    errors: {},
     disableBtn: false,
     filterSection: null,
     itemsFilter: [],
@@ -77,6 +71,7 @@ export const useAdminStore = defineStore('admin-store', {
       if (!value) {
         await this.clearForms();
       }
+      this.clearError();
       this.viewModal = value;
     },
     setDelDialog(value: boolean) {
@@ -84,6 +79,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setTypeItem(value: string) {
       this.typeItem = value;
+      this.clearError();
     },
     async setCountColumn(value: string) {
       const newCount: number = parseInt(value);
@@ -141,9 +137,6 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setBackProduct(value: ProductAdmin) {
       this.backProduct = value;
-      if (this.backProduct.price) {
-        this.backProduct.price = String(this.backProduct.price);
-      }
       this.setProductName(value.name);
       await convertFile(value.imageObject);
       this.setProductPrice(value.price);
@@ -165,7 +158,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.setSectionIdParent({ id: 0, name: '' });
       this.setProductName('');
       this.setProductImages([]);
-      this.setProductPrice('');
+      this.setProductPrice(0);
       this.setProductColor({ id: 0, name: '', hex: '' });
       this.setProductDescription('');
       this.setProductSection({
@@ -198,30 +191,11 @@ export const useAdminStore = defineStore('admin-store', {
         this.backProduct.images = value;
       }
     },
-    setErrorName(value: boolean) {
-      this.errors.name = value;
+    setError(value: Err) {
+      this.errors = value;
     },
-    setErrorNameMessages(value: string) {
-      this.errors.nameMessages = value;
-    },
-    setErrorPrice(value: boolean) {
-      this.errors.price = value;
-    },
-    setErrorColor(value: boolean) {
-      this.errors.color = value;
-    },
-    setErrorDescription(value: boolean) {
-      this.errors.description = value;
-    },
-    setErrorSection(value: boolean) {
-      this.errors.section = value;
-    },
-    setClearError() {
-      this.setErrorName(false);
-      this.setErrorPrice(false);
-      this.setErrorColor(false);
-      this.setErrorDescription(false);
-      this.setErrorSection(false);
+    clearError() {
+      this.errors = {};
     },
     setProductName(value: string) {
       this.frontProduct.name = value;
@@ -229,8 +203,8 @@ export const useAdminStore = defineStore('admin-store', {
     setProductImages(value: File[]) {
       this.frontProduct.images = value;
     },
-    setProductPrice(value: string) {
-      this.frontProduct.price = String(value);
+    setProductPrice(value: number) {
+      this.frontProduct.price = Number(value);
     },
     setProductColor(value: Colors) {
       this.frontProduct.color = value;
@@ -240,9 +214,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.frontProduct.description = value;
     },
     setProductIdSection(value: SelectSection) {
-      this.frontProduct.idSection = value.id;
       this.frontProduct.sectionId = value.id;
-      this.frontProduct.sectionName = value.name;
     },
     setProductSection(value: SelectSection) {
       this.frontProduct.section = { id: value.id, name: value.name };
