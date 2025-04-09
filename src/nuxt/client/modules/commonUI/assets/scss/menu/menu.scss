@@ -1,0 +1,23 @@
+@import '../colors';
+
+.menu{
+  display: flex;
+  &__title {
+    text-transform: uppercase;
+  }
+  &__list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+  }
+  &__link {
+    background: linear-gradient(currentColor, currentColor) no-repeat 0 100%;
+    background-size: 0 1px;
+    transition: background-size 0.3s;
+
+    &:hover {
+      background-size: 100% 1px;
+    }
+  }
+}

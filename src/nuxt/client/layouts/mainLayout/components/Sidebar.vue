@@ -6,22 +6,21 @@
     :transition-show="'fade'"
     :transition-hide="'fade'"
   >
-    <q-card class="sidebar__card">
-      <nav class="nav nav__sidebar">
+    <div class="card">
+      <nav class="menu">
         <div
           v-for="parentSection in getParentSection(mainStores.menu)"
           :key="parentSection.id"
-          class="nav__column"
+          class="menu__column"
         >
-          <div class="nav__title">
-            <NuxtLink
-              :to="'/catalog/' + parentSection.code + '/'"
-              @click="mainStores.setSidebar()"
-            >
-              {{ parentSection.name }}</NuxtLink
+          <div class="menu__title">
+            <ArealLink
+              :link="createLink(parentSection.code)"
+              class="menu__link menu__link--title"
+              >{{ parentSection.name }}</ArealLink
             >
           </div>
-          <ul class="nav__list">
+          <ul class="menu__list">
             <li
               v-for="childSection in getChildSection(
                 mainStores.menu,
@@ -30,48 +29,16 @@
               )"
               :key="childSection.id"
             >
-              <NuxtLink
-                :to="
-                  '/catalog/' +
-                  parentSection.code +
-                  '/' +
-                  childSection.code +
-                  '/'
-                "
-                @click="mainStores.setSidebar()"
+              <ArealLink
+                :link="createLink(parentSection.code, childSection.code)"
+                class="menu__link"
+                >{{ childSection.name }}</ArealLink
               >
-                {{ childSection.name }}
-              </NuxtLink>
-              <ul class="nav__list nav__list-nested">
-                <li
-                  v-for="nestedChildSection in getChildSection(
-                    mainStores.menu,
-                    childSection.id,
-                    3
-                  )"
-                  :key="nestedChildSection.id"
-                >
-                  <NuxtLink
-                    :to="
-                      '/catalog/' +
-                      parentSection.code +
-                      '/' +
-                      childSection.code +
-                      '/' +
-                      nestedChildSection.code +
-                      '/'
-                    "
-                    @click="mainStores.setSidebar()"
-                  >
-                    {{ nestedChildSection.name }}
-                  </NuxtLink>
-                </li>
-              </ul>
             </li>
           </ul>
         </div>
       </nav>
-    </q-card>
+    </div>
   </ArealDialog>
 </template>
 
@@ -81,6 +48,7 @@ import {
   getParentSection,
   getChildSection,
 } from '~/modules/main/utils/menu.helpers.utils';
+import { createLink } from '~/modules/main/utils/createLink.utils';
 
 const mainStores = useMainStores();
 
@@ -88,16 +56,36 @@ const dialog = computed(() => mainStores.sidebar);
 </script>
 
 <style scoped lang="scss">
-@import '~/modules/commonUI/assets/scss/nav/nav';
-@import '~/modules/commonUI/assets/scss/nav/nav.modifiers';
+@import '~/modules/commonUI/assets/scss/menu/menu';
+
 .sidebar {
-  .sidebar__card {
+  .card {
     position: fixed;
     top: 64px;
     width: 300px;
     background: getColor('white', 1);
-    border-radius: 0 !important;
-    box-shadow: none !important;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 40px;
+    .menu {
+      flex-direction: column;
+      gap: 20px;
+
+      &__column {
+      }
+      &__title {
+        font-weight: 500;
+      }
+      &__list {
+        gap: 8px;
+      }
+      &__link {
+        color: getColor('grey', 12);
+        &--title {
+          font-weight: 500;
+        }
+      }
+    }
   }
 }
 </style>

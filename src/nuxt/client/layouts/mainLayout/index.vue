@@ -1,21 +1,16 @@
-<!--TODO не использовать quasar элементы, а использовать div, избавиться от !important. Методология БЭМ-->
-
 <template>
-  <q-layout class="main-layout">
-    <q-header class="text-black header">
+  <div class="main-layout">
+    <header class="header">
       <ModuleHeader />
-    </q-header>
-    <q-page-container class="main-layout__container">
-      <main class="main">
-        <slot />
-      </main>
-    </q-page-container>
-    <q-footer class="footer">
+    </header>
+    <main class="main-layout__container">
+      <slot />
+    </main>
+    <footer class="footer">
       <ModuleFooter />
-    </q-footer>
-    <!--TODO: Вынести areal-sidebar в mainLayout -> components-->
+    </footer>
     <Sidebar />
-  </q-layout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -43,16 +38,14 @@ onMounted(async () => {
 
 <style lang="scss">
 .main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
   &__container {
     padding-top: 32px;
+    flex-grow: 1;
   }
-  //.sidebar .q-dialog__backdrop {
-  //  top: 64px !important;
-  //}
   .header {
-    position: sticky;
-    top: 0;
-    z-index: 2000;
     height: 64px;
     background: rgba(255, 255, 255, 0.6);
   }

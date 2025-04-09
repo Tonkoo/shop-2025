@@ -53,8 +53,7 @@ const mainStores = useMainStores();
 </script>
 
 <style scoped lang="scss">
-//@import '~/modules/commonUI/assets/scss/nav/nav';
-//@import '~/modules/commonUI/assets/scss/nav/nav.modifiers';
+@import '~/modules/commonUI/assets/scss/menu/menu';
 
 .footer {
   display: flex;
@@ -64,30 +63,17 @@ const mainStores = useMainStores();
   padding: 40px;
 
   .menu {
-    display: flex;
     gap: 110px;
     &__column {
     }
     &__title {
-      text-transform: uppercase;
+    }
+    &__list {
+      gap: 16px;
+      margin-top: 24px;
     }
     &__link {
       color: getColor('white', 1);
-      background: linear-gradient(currentColor, currentColor) no-repeat 0 100%;
-      background-size: 0 1px;
-      transition: background-size 0.3s;
-
-      &:hover {
-        background-size: 100% 1px;
-      }
-    }
-    &__list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 24px;
-      list-style: none;
-      padding: 0;
     }
   }
 
