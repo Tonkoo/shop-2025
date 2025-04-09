@@ -1,5 +1,3 @@
-<!--TODO: Вынести ModuleHeader ModuleFooter в mainLayout -> widgets-->
-
 <!--TODO не использовать quasar элементы, а использовать div, избавиться от !important. Методология БЭМ-->
 
 <template>
@@ -16,13 +14,14 @@
       <ModuleFooter />
     </q-footer>
     <!--TODO: Вынести areal-sidebar в mainLayout -> components-->
-    <areal-sidebar />
+    <Sidebar />
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import ModuleHeader from '~/modules/main/components/ModuleHeader.vue';
-import ModuleFooter from '~/modules/main/components/ModuleFooter.vue';
+import ModuleHeader from '~/layouts/mainLayout/widgets/ModuleHeader.vue';
+import ModuleFooter from '~/layouts/mainLayout/widgets/ModuleFooter.vue';
+import Sidebar from '~/layouts/mainLayout/components/Sidebar.vue';
 import { useMainModule } from '~/modules/main/global';
 import { useQuasar } from 'quasar';
 import { notifyNegative } from '~/entities/notify.entites';

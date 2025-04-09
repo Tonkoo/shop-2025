@@ -72,10 +72,6 @@ const mainStores = useMainStores();
       text-transform: uppercase;
     }
     &__link {
-      font-size: 16px;
-      text-decoration: none;
-      font-weight: 400;
-      line-height: 20px;
       color: getColor('white', 1);
       background: linear-gradient(currentColor, currentColor) no-repeat 0 100%;
       background-size: 0 1px;

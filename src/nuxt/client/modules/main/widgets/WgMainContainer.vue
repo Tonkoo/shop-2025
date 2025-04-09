@@ -8,9 +8,6 @@
 <script setup lang="ts">
 import Swiper from '~/modules/main/components/Swiper.vue';
 import ProductList from '~/modules/main/components/ProductList.vue';
-import { notifyNegative } from '~/entities/notify.entites';
-import { useMainModule } from '~/modules/main/global';
-import { useQuasar } from 'quasar';
 </script>
 
 <style lang="scss">

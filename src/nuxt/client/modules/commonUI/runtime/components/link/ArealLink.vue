@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="link">
+  <NuxtLink :to="link" class="link">
     <slot />
   </NuxtLink>
 </template>
@@ -13,4 +13,11 @@ defineProps({
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.link {
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 400;
+  line-height: 20px;
+}
+</style>
