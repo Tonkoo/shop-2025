@@ -42,6 +42,9 @@ onMounted(async () => {
   flex-direction: column;
   min-height: 100dvh;
   &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
     padding-top: 32px;
     flex-grow: 1;
   }

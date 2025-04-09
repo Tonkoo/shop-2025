@@ -1,37 +1,38 @@
 <template>
   <ClientOnly>
-    <div class="swiper__wrapper">
-      <swiper-container ref="containerRef" class="swiper">
-        <swiper-slide
-          v-for="item in filteredItems"
-          :key="item.id"
-          class="swiper__slide"
-        >
-          <slot :item="item" />
-        </swiper-slide>
-      </swiper-container>
-      <button
-        class="s-btn-prev"
-        :class="{ hidden: isBeginning }"
-        @click="swiperPrev"
+    <swiper-container ref="containerRef" class="swiper">
+      <swiper-slide
+        v-for="item in props.dataItems"
+        :key="item.id"
+        class="swiper__slide"
       >
-        <q-img :src="swiperPrevIcon" alt="Previous" />
-      </button>
-      <button class="s-btn-next" :class="{ hidden: isEnd }" @click="swiperNext">
-        <q-img :src="swiperNextIcon" alt="Next" />
-      </button>
-    </div>
+        <slot :item="item" />
+      </swiper-slide>
+    </swiper-container>
+    <button
+      class="swiper__btn-prev"
+      :class="{ hidden: isBeginning }"
+      @click="swiperPrev"
+    >
+      <q-img :src="swiperPrevIcon" alt="Previous" />
+    </button>
+    <button
+      class="swiper__btn-next"
+      :class="{ hidden: isEnd }"
+      @click="swiperNext"
+    >
+      <q-img :src="swiperNextIcon" alt="Next" />
+    </button>
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import swiperPrevIcon from '~/modules/commonUI/assets/icon/swiperPrev.svg';
-import swiperNextIcon from '~/modules/commonUI/assets/icon/swiperNext.svg';
+import swiperPrevIcon from '~/modules/commonUI/assets/icon/swiper/swiperPrev.svg';
+import swiperNextIcon from '~/modules/commonUI/assets/icon/swiper/swiperNext.svg';
 import type { ProductMain, SectionMain } from '~/interfaces/global';
 
 interface Props {
   dataItems: Array<ProductMain | SectionMain>;
-  filterKey?: string;
   filterValue?: string;
 }
 
@@ -40,21 +41,11 @@ const props = defineProps<Props>();
 const containerRef = ref(null);
 const swiper = useSwiper(containerRef, {
   slidesPerView: 4,
-  spaceBetween: 16,
+  spaceBetween: 24,
 });
 
 const isBeginning = ref<boolean | undefined>(true);
 const isEnd = ref<boolean | undefined>(false);
-// TODO: Фильтрация через elastic
-const filteredItems = computed(() => {
-  if (!props.filterKey) return props.dataItems;
-  return props.dataItems.filter((item) => {
-    if (props.filterValue !== undefined) {
-      return item[props.filterKey as keyof typeof item] === props.filterValue;
-    }
-    return item[props.filterKey as keyof typeof item];
-  });
-});
 
 const swiperNext = () => {
   swiper.next();
@@ -72,53 +63,40 @@ const swiperPrev = () => {
 };
 </script>
 
-<style scoped>
-.swiper__wrapper {
+<style scoped lang="scss">
+.swiper {
+  cursor: grab;
+  display: inline-grid;
   position: relative;
-  width: 100%;
-  //margin-bottom: 50px;
-  .swiper {
-    position: relative;
-    margin: 16px;
-    &__slide {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-    }
-  }
 
-  .s-btn-prev,
-  .s-btn-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #7e7c7c;
-    border: none;
-    cursor: pointer;
+  &__slide {
+    height: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 0;
-    z-index: 10;
-    transition: all 0.3s ease;
-    overflow: hidden;
+    align-items: stretch;
+  }
+  &__btn-prev,
+  &__btn-next {
+    cursor: pointer;
+    width: 42px;
+    height: 42px;
+    background-color: getColor('black', 1);
+    position: absolute;
+    z-index: 1;
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
+    border-radius: 42px;
+    border: none;
 
     &:hover {
-      background-color: #5a5959;
-      transform: translateY(-50%) scale(1.1);
+      opacity: 1;
     }
   }
-
-  .s-btn-prev {
-    left: 10px;
+  &__btn-prev {
+    left: 24px;
   }
-
-  .s-btn-next {
-    right: 10px;
+  &__btn-next {
+    right: 24px;
   }
 }
 </style>
