@@ -32,9 +32,11 @@
         </ul>
       </div>
     </div>
-    <div class="footer__bottom">
-      <!--TODO: Автоматически определять даты-->
-      <span>&copy; 2025-2026 StyleHub</span>
+    <div class="copyright">
+      <span class="copyright__text"
+        >&copy; {{ new Date().getFullYear() }} --
+        {{ new Date().getFullYear() + 1 }} StyleHub</span
+      >
     </div>
   </div>
 </template>
@@ -67,6 +69,7 @@ const mainStores = useMainStores();
     &__column {
     }
     &__title {
+      text-transform: uppercase;
     }
     &__link {
       font-size: 16px;
@@ -74,10 +77,34 @@ const mainStores = useMainStores();
       font-weight: 400;
       line-height: 20px;
       color: getColor('white', 1);
+      background: linear-gradient(currentColor, currentColor) no-repeat 0 100%;
+      background-size: 0 1px;
+      transition: background-size 0.3s;
+
+      &:hover {
+        background-size: 100% 1px;
+      }
     }
     &__list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 24px;
       list-style: none;
       padding: 0;
+    }
+  }
+
+  .copyright {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    &__text {
+      color: getColor('white', 1);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 20px;
     }
   }
 }

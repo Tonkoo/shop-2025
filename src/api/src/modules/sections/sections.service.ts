@@ -25,6 +25,7 @@ import {
   removeUnusedImages,
 } from '../../utils/removeImages.util';
 import { formatResponse } from '../../utils/formatResults.util';
+import { isUndefined } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class SectionsService {
@@ -46,8 +47,11 @@ export class SectionsService {
     if ('images' in data && !data.images) {
       data.images = [];
     }
-
-    if (String(data.idParent) == 'null' || String(data.idParent) == '0') {
+    if (
+      String(data.idParent) == 'null' ||
+      String(data.idParent) == '0' ||
+      String(data.idParent) == 'undefined'
+    ) {
       data.idParent = null;
     }
     if (data.idParent) {
