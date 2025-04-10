@@ -29,6 +29,7 @@ import {
   formatMainContent,
   formatResults,
 } from '../../utils/formatResults.util';
+import { Colors } from '../../entities/colors.entity';
 
 @Injectable()
 export class ElasticsearchService {
@@ -40,6 +41,8 @@ export class ElasticsearchService {
     private readonly sectionsRepository: Repository<Sections>,
     @InjectRepository(Images)
     private readonly imagesRepository: Repository<Images>,
+    @InjectRepository(Colors)
+    private readonly colorsRepository: Repository<Colors>,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
@@ -119,7 +122,7 @@ export class ElasticsearchService {
         if (item.type === 'product') {
           const product = item as ProductEntities;
           let sectionName: string | undefined;
-
+          let hexColor: string | undefined;
           if (product.section) {
             const section = await this.sectionsRepository.findOne({
               where: { id: Number(product.section) },
@@ -127,7 +130,14 @@ export class ElasticsearchService {
             sectionName = section?.name;
           }
 
-          return { ...product, sectionName };
+          if (product.color) {
+            const color = await this.colorsRepository.findOne({
+              where: { id: Number(product.color) },
+            });
+            hexColor = color?.hex;
+          }
+
+          return { ...product, sectionName, hexColor };
         }
         return item;
       }),
@@ -199,10 +209,10 @@ export class ElasticsearchService {
       });
 
       const dbProduct: Products[] = await this.productRepository.find({
-        relations: ['section'],
+        relations: ['section', 'color'],
         loadRelationIds: true,
       });
-
+      console.log(dbProduct);
       if (!dbProduct) {
         throw new NotFoundException('Products not found');
       }
@@ -312,6 +322,13 @@ export class ElasticsearchService {
           where: { id: Number(resultDocument.section) },
         });
         resultDocument.sectionName = parent?.name;
+      }
+
+      if (resultDocument.color) {
+        const color = await this.colorsRepository.findOne({
+          where: { id: Number(resultDocument.color) },
+        });
+        resultDocument.hexColor = color?.hex;
       }
 
       return await this.elasticsearchService.index({

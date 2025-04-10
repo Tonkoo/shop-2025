@@ -31,6 +31,7 @@ type ProductEntities = Product &
     type: string;
     section: parentSection;
     sectionName?: string;
+    hexColor?: string;
   };
 
 type ProductClient = Product &

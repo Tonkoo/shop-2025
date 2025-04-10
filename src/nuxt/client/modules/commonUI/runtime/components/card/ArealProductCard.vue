@@ -1,24 +1,26 @@
 <template>
   <div class="card">
-    <div class="card-section">
-      <div class="card-section__img">
+    <div class="card__section">
+      <div class="card__img-block">
         <!--TODO: универсальный метод для склейки ссылки на страницу-->
-
         <areal-link :link="createLink(product.code)">
-          <areal-img class="card__img" :src="productImage" />
+          <areal-img :src="productImage" />
         </areal-link>
       </div>
-      <div class="text-block">
-        <div class="text-block__title">
-          <areal-link :link="createLink(product.code)">
+      <div class="card__description">
+        <div class="card__description-title">
+          <areal-link
+            class="card__description-link"
+            :link="createLink(product.code)"
+          >
             {{ product.name }}
           </areal-link>
+          <div
+            class="card__description-circle"
+            :style="{ backgroundColor: product.hexColor }"
+          />
         </div>
-        <span class="text-block__price">{{ product.price }} ₽</span>
-        <div
-          class="text-block__circle"
-          :style="{ backgroundColor: product.color }"
-        />
+        <span class="card__description-price">{{ product.price }} ₽</span>
       </div>
     </div>
   </div>
@@ -45,9 +47,36 @@ const productImage = computed(() => {
 </script>
 
 <style scoped lang="scss">
-//@import '~/modules/commonUI/assets/scss/card/card';
 .card {
-  .card-section {
+  width: 100%;
+  height: 100%;
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  &__description {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    &-title {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    &-link {
+      color: getColor('grey', 12);
+    }
+    &-circle {
+      width: 15px;
+      height: 15px;
+      border: 1px solid black;
+      border-radius: 50%;
+    }
+    &-price {
+      font-size: 14px;
+      color: getColor('grey', 13);
+    }
   }
 }
 </style>
