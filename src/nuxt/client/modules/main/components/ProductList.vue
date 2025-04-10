@@ -1,13 +1,11 @@
 <template>
-  <div class="q-pa-md">
-    <div class="row catalog-list">
+  <div class="catalog-wrapper">
+    <div class="catalog-list">
       <!--      TODO: вынести в computed-->
       <div
-        v-for="product in mainStores.mainGifts.filter(
-          (item) => item.showOnMain
-        )"
+        v-for="product in mainStores.mainGifts"
         :key="product.id"
-        class="col-3 catalog-list__cards"
+        class="catalog-list__cards"
       >
         <ArealProductCard :product="product" />
       </div>
@@ -22,13 +20,14 @@ const mainStores = useMainStores();
 </script>
 
 <style scoped lang="scss">
-.catalog-list {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 50px;
-  &__cards {
-    width: 23%;
+.catalog-wrapper {
+  width: 100%;
+  padding: 0 20px;
+
+  .catalog-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 24px;
   }
 }
 </style>

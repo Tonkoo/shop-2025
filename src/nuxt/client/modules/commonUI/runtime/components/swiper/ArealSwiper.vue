@@ -11,22 +11,21 @@
     </swiper-container>
     <button
       class="swiper__btn-prev"
-      :class="{ hidden: isBeginning }"
+      :hidden="isBeginning()"
       @click="swiperPrev"
     >
       <q-img :src="swiperPrevIcon" alt="Previous" />
     </button>
-    <button
-      class="swiper__btn-next"
-      :class="{ hidden: isEnd }"
-      @click="swiperNext"
-    >
+    <!--    :hidden="isEnd"-->
+    <button class="swiper__btn-next" @click="swiperNext">
       <q-img :src="swiperNextIcon" alt="Next" />
     </button>
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
+import type { SwiperContainer } from 'swiper/element';
+import { register } from 'swiper/element/bundle';
 import swiperPrevIcon from '~/modules/commonUI/assets/icon/swiper/swiperPrev.svg';
 import swiperNextIcon from '~/modules/commonUI/assets/icon/swiper/swiperNext.svg';
 import type { ProductMain, SectionMain } from '~/interfaces/global';
@@ -36,30 +35,35 @@ interface Props {
   filterValue?: string;
 }
 
+// register();
+
+// const isBeginning = computed<boolean>(() => {
+//   return swiper.instance?.value?.isBeginning ?? false;
+// });
+
+const isBeginning = () => {
+  console.log(swiper.instance?.value?.isEnd);
+  return swiper.instance?.value?.isBeginning ?? false;
+};
+
+// const isEnd = computed<boolean>(() => {
+//   console.log(swiper.instance?.value);
+//   return swiper.instance?.value?.isEnd ?? false;
+// });
+
 const props = defineProps<Props>();
 
-const containerRef = ref(null);
+const containerRef = ref<SwiperContainer | null>(null);
 const swiper = useSwiper(containerRef, {
   slidesPerView: 4,
   spaceBetween: 24,
 });
 
-const isBeginning = ref<boolean | undefined>(true);
-const isEnd = ref<boolean | undefined>(false);
-
 const swiperNext = () => {
   swiper.next();
-  if (swiper.instance) {
-    isBeginning.value = swiper.instance.value?.isBeginning;
-    isEnd.value = swiper.instance.value?.isEnd;
-  }
 };
 const swiperPrev = () => {
   swiper.prev();
-  if (swiper.instance) {
-    isBeginning.value = swiper.instance.value?.isBeginning;
-    isEnd.value = swiper.instance.value?.isEnd;
-  }
 };
 </script>
 

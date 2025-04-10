@@ -3,9 +3,10 @@
     <span class="swiper__title">Новинки</span>
     <Swiper />
   </div>
-
-  <div class="title-main">Подарки</div>
-  <ProductList />
+  <div class="product-list">
+    <span class="product-list__title">Подарки</span>
+    <ProductList />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -21,6 +22,19 @@ import ProductList from '~/modules/main/components/ProductList.vue';
   gap: 50px;
   padding: 0 16px;
   width: 100%;
+  &__title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: getColor('black', 1);
+  }
+}
+.product-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
   &__title {
     text-align: center;
     font-size: 22px;

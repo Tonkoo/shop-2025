@@ -47,6 +47,7 @@ onMounted(async () => {
     gap: 72px;
     padding-top: 32px;
     flex-grow: 1;
+    margin-bottom: 42px;
   }
   .header {
     height: 64px;
