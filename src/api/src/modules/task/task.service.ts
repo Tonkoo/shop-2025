@@ -7,6 +7,6 @@ export class TaskService {
   constructor(private readonly EsServices: ElasticsearchService) {}
   @Cron(CronExpression.EVERY_MINUTE)
   async reindexElastic() {
-    await this.EsServices.createIndex({ getItems: false });
+    // await this.EsServices.createIndex({ getItems: false });
   }
 }

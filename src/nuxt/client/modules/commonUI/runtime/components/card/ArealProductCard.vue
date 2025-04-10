@@ -1,29 +1,33 @@
 <template>
-  <q-card class="slide__card">
-    <q-card-section class="card__section">
-      <div class="img__container">
+  <div class="card">
+    <div class="card-section">
+      <div class="card-section__img">
         <!--TODO: универсальный метод для склейки ссылки на страницу-->
-        <a :href="'/' + product.code + '/'">
-          <!--TODO: q-img -> ArealImg-->
-          <q-img class="card__img" :src="productImage" />
-        </a>
+
+        <areal-link :link="createLink(product.code)">
+          <areal-img class="card__img" :src="productImage" />
+        </areal-link>
       </div>
-      <div class="card__text">
-        <div class="text-h6">
-          <a :href="'/' + product.code + '/'">{{ product.name }}</a>
+      <div class="text-block">
+        <div class="text-block__title">
+          <areal-link :link="createLink(product.code)">
+            {{ product.name }}
+          </areal-link>
         </div>
-        <span class="text-subtitle2 text__price">{{ product.price }} ₽</span>
+        <span class="text-block__price">{{ product.price }} ₽</span>
         <div
-          class="section__circle"
+          class="text-block__circle"
           :style="{ backgroundColor: product.color }"
         />
       </div>
-    </q-card-section>
-  </q-card>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { ProductMain, SectionMain } from '~/interfaces/global';
+import defaultSVG from '~/modules/commonUI/assets/icon/default.svg';
+import { createLink } from '~/modules/main/utils/createLink.utils';
 
 const props = defineProps({
   product: {
@@ -34,12 +38,16 @@ const props = defineProps({
 
 const productImage = computed(() => {
   if (!props.product.images?.length || !props.product.images[0]?.src) {
-    return 'images/default.png';
+    return defaultSVG;
   }
   return props.product.images[0].src;
 });
 </script>
 
 <style scoped lang="scss">
-@import '~/modules/commonUI/assets/scss/card/card';
+//@import '~/modules/commonUI/assets/scss/card/card';
+.card {
+  .card-section {
+  }
+}
 </style>

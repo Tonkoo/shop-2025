@@ -31,6 +31,15 @@ async function bootstrap() {
       url: '/api-docs',
     },
   });
+  // TODO: для булвых значений
+  // app.useGlobalPipes(
+  //     new ValidationPipe({
+  //       transform: true,
+  //       transformOptions: {
+  //         enableImplicitConversion: true, // Автоматическое преобразование типов
+  //       },
+  //     }),
+  // );
 
   await app.listen(process.env.BACKEND_PORT || 5173);
 }

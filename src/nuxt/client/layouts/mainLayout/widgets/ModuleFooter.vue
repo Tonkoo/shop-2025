@@ -9,6 +9,7 @@
         class="menu__column"
       >
         <div class="menu__title">
+          <!--          TODO: генерацию ссылки вынести на сервер-->
           <ArealLink :link="createLink(parentSection.code)" class="menu__link">
             {{ parentSection.name }}
           </ArealLink>
@@ -33,6 +34,7 @@
       </div>
     </div>
     <div class="copyright">
+      <!--      TODO: Вынести в отдельный метод-->
       <span class="copyright__text"
         >&copy; {{ new Date().getFullYear() }} --
         {{ new Date().getFullYear() + 1 }} StyleHub</span

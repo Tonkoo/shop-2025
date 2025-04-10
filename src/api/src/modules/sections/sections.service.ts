@@ -103,6 +103,7 @@ export class SectionsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      // TODO: Попробовать JSON.Parse
       this.processingData(data);
 
       data.level = 1;

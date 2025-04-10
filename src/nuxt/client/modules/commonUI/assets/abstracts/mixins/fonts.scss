@@ -1,0 +1,83 @@
+@import '../variables';
+
+@mixin load-font-family($fontFamily, $filePath, $fileName, $filesList) {
+  @each $suffix, $weight, $style in $filesList {
+    @font-face {
+      font-family: $fontFamily;
+      font-weight: $weight;
+      font-style: $style;
+      font-display: swap;
+      src:
+        local('#{$filePath}-#{$suffix}'),
+        url('#{$filePath}/#{$fileName}-#{$suffix}.woff') format('woff'),
+        url('#{$filePath}/#{$fileName}-#{$suffix}.woff2') format('woff2');
+    }
+  }
+}
+
+@mixin textFont($family, $size, $line-height, $weight) {
+  font-family: $family;
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+}
+
+
+@mixin font-preset($name) {
+  @if $name == 'Text/54px' {
+    @include textFont($formaDJRDisplay, 54px, 62px, 400);
+  }
+  @else if $name == 'Text/32px' {
+    @include textFont($formaDJRDisplay, 32px, 38px, 400);
+  }
+  @else if $name == 'H1/32px/Text' {
+    @include textFont($formaDJRDisplay, 32px, 38px, 500);
+    text-transform: uppercase;
+  }
+  @else if $name == 'H2/22/Text' {
+    @include textFont($formaDJRDisplay, 22px, 26px, 500);
+    text-transform: uppercase;
+  }
+  @else if $name == 'Text/22pxMedium' {
+    @include textFont($formaDJRDisplay, 22px, 26px, 500);
+  }
+  @else if $name == 'Text/16px' {
+    @include textFont($formaDJRDisplay, 16px, 20px, 400);
+  }
+  @else if  $name == 'Text/16pxRegularCapitalized' {
+    @include textFont($formaDJRDisplay, 16px, 20px, 400);
+    text-transform: uppercase;
+  }
+  @else if $name == 'Text/16pxMedium' {
+    @include textFont($formaDJRDisplay, 16px, 20px, 500);
+  }
+  @else if $name == 'Text/16pxMediumCapitalized' {
+    @include textFont($formaDJRDisplay, 16px, 20px, 500);
+    text-transform: uppercase;
+  }
+  @else if $name == 'Text/14px' {
+    @include textFont($formaDJRDisplay, 14px, 16px, 400);
+  }
+  @else if $name == 'Text/14pxRegularCapitalized' {
+    @include textFont($formaDJRDisplay, 14px, 16px, 400);
+    text-transform: uppercase;
+  }
+  @else if $name == 'Text/14pxMedium' {
+    @include textFont($formaDJRDisplay, 14px, 16px, 500);
+  }
+  @else if $name == 'Text/12pxRegular' {
+    @include textFont($formaDJRDisplay, 12px, 14px, 400);
+  }
+  @else if $name == 'Text/12pxMedium' {
+    @include textFont($formaDJRDisplay, 12px, 14px, 500);
+  }
+  @else if $name == 'Text/10px' {
+    @include textFont($formaDJRDisplay, 10px, 12px, 400);
+  }
+}
+
+@mixin setFont($family: inter, $size: 14, $weight: normal) {
+  font-family: $formaDJRDisplay;
+}
+
+

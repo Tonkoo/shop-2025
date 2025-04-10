@@ -177,6 +177,7 @@ export class ElasticsearchService {
 
   async createIndex(payLoad: payLoad) {
     try {
+      //TODO: Прочитать alias Elastic
       const indexExists = await this.elasticsearchService.indices.exists({
         index: this.index || 'shop',
       });
@@ -470,7 +471,7 @@ export class ElasticsearchService {
       throw new BadRequestException('Error getting main page items');
     }
   }
-
+  // TODO: если у родительского раздела есть дочерние, то добавить св-ва item и в внурь него складывать дочерние элементы
   async getLayout(): Promise<mainLayout> {
     try {
       const layout = await this.searchFromElastic({

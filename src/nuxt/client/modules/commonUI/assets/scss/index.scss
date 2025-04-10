@@ -1,11 +1,11 @@
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
 @import 'colors';
 @import 'swiper/scss';
 @import 'swiper/scss/navigation';
+@import 'fonts';
 
 *{
-  font-family:
-  Forma DJR Display,
-  Helvetica,
-  Arial,
-  sans-serif;;
+  font-family: $formaDJRDisplay;
 }

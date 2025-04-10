@@ -65,10 +65,10 @@ const swiperPrev = () => {
 
 <style scoped lang="scss">
 .swiper {
-  cursor: grab;
   display: inline-grid;
   position: relative;
-
+  cursor: grab;
+  width: 100%;
   &__slide {
     height: 100%;
     display: flex;

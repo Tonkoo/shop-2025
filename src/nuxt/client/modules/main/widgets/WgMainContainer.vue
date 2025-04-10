@@ -1,7 +1,6 @@
 <template>
   <div class="swiper">
     <span class="swiper__title">Новинки</span>
-
     <Swiper />
   </div>
 
@@ -14,13 +13,14 @@ import Swiper from '~/modules/main/components/Swiper.vue';
 import ProductList from '~/modules/main/components/ProductList.vue';
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .swiper {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
+  gap: 50px;
   padding: 0 16px;
+  width: 100%;
   &__title {
     text-align: center;
     font-size: 22px;

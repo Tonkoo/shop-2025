@@ -1,6 +1,8 @@
 <template>
   <div class="header">
     <div class="header__btn">
+      <!--      TODO: Вынести в отдельный компонент-->
+      <!--      TODO: https://gitlab.arealidea.ru/kuch-zl/site-kuchenland/nuxt/-/blob/zl-release/client/modules/commonUi/runtime/components/icons/ArealIconWrapper.vue?ref_type=heads-->
       <areal-button flat round dense @click="mainStores.setSidebar()">
         <img :src="mainStores.sidebar ? closeMenu : openMenu" alt="Previous" />
       </areal-button>
