@@ -15,11 +15,7 @@
         </div>
         <ul class="menu__list">
           <li
-            v-for="childSection in getChildSection(
-              mainStores.menu,
-              parentSection.id,
-              2
-            )"
+            v-for="childSection in parentSection.items"
             :key="childSection.id"
           >
             <ArealLink :link="childSection.url" class="menu__link">
@@ -39,10 +35,7 @@
 
 <script setup lang="ts">
 import { useMainStores } from '~/modules/main/stores/mainStores';
-import {
-  getChildSection,
-  getParentSection,
-} from '~/modules/main/utils/menu.helpers.utils';
+import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
 
 const mainStores = useMainStores();
 

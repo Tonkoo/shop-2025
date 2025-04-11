@@ -20,6 +20,7 @@ type SectionMain = Section & {
   images: ImageElastic[];
   id_parent?: number;
   url: string;
+  items?: SectionMain[];
 };
 
 type Product = {

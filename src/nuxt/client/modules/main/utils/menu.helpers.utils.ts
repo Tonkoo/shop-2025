@@ -1,15 +1,5 @@
-import type { StoreItem } from '~/interfaces/global';
+import type { SectionMain } from '~/interfaces/global';
 
-export function getParentSection(data: StoreItem[]) {
+export function getParentSection(data: SectionMain[]) {
   return data.filter((section) => section.level === 1);
-}
-
-export function getChildSection(
-  data: StoreItem[],
-  parentId: number,
-  level: number
-) {
-  return data.filter(
-    (section) => section.level === level && section.id_parent === parentId
-  );
 }
