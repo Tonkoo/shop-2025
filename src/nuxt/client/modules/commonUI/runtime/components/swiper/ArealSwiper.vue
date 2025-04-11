@@ -9,15 +9,11 @@
         <slot :item="item" />
       </swiper-slide>
     </swiper-container>
-    <button
-      class="swiper__btn-prev"
-      :hidden="isBeginning()"
-      @click="swiperPrev"
-    >
+    <button class="swiper__btn-prev" :hidden="isBeginning" @click="swiperPrev">
       <q-img :src="swiperPrevIcon" alt="Previous" />
     </button>
-    <!--    :hidden="isEnd"-->
-    <button class="swiper__btn-next" @click="swiperNext">
+
+    <button class="swiper__btn-next" :hidden="isEnd" @click="swiperNext">
       <q-img :src="swiperNextIcon" alt="Next" />
     </button>
   </ClientOnly>
@@ -25,7 +21,6 @@
 
 <script setup lang="ts">
 import type { SwiperContainer } from 'swiper/element';
-import { register } from 'swiper/element/bundle';
 import swiperPrevIcon from '~/modules/commonUI/assets/icon/swiper/swiperPrev.svg';
 import swiperNextIcon from '~/modules/commonUI/assets/icon/swiper/swiperNext.svg';
 import type { ProductMain, SectionMain } from '~/interfaces/global';
@@ -35,35 +30,35 @@ interface Props {
   filterValue?: string;
 }
 
-// register();
-
-// const isBeginning = computed<boolean>(() => {
-//   return swiper.instance?.value?.isBeginning ?? false;
-// });
-
-const isBeginning = () => {
-  console.log(swiper.instance?.value?.isEnd);
-  return swiper.instance?.value?.isBeginning ?? false;
-};
-
-// const isEnd = computed<boolean>(() => {
-//   console.log(swiper.instance?.value);
-//   return swiper.instance?.value?.isEnd ?? false;
-// });
-
-const props = defineProps<Props>();
-
 const containerRef = ref<SwiperContainer | null>(null);
 const swiper = useSwiper(containerRef, {
   slidesPerView: 4,
   spaceBetween: 24,
 });
 
+const isBeginning = ref(true);
+const isEnd = ref(false);
+
+const updateSwiperState = () => {
+  setTimeout(() => {
+    if (swiper.instance?.value) {
+      isBeginning.value = swiper.instance.value.isBeginning;
+      isEnd.value = swiper.instance.value.isEnd;
+    }
+  }, 100);
+};
+
+onMounted(() => updateSwiperState());
+
+const props = defineProps<Props>();
+
 const swiperNext = () => {
   swiper.next();
+  updateSwiperState();
 };
 const swiperPrev = () => {
   swiper.prev();
+  updateSwiperState();
 };
 </script>
 
