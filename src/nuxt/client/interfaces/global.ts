@@ -126,9 +126,8 @@ type Err = {
   section?: string;
 };
 type ParamCatalog = {
-  parentCatalogCode: string;
+  parentCatalogCode?: string;
   childCatalogCode?: string;
-  nestedChildCatalogCode?: string;
 };
 type Colors = {
   id: number;

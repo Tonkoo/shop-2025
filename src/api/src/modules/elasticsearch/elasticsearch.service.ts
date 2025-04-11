@@ -555,4 +555,5 @@ export class ElasticsearchService {
       throw new BadRequestException('Error getting menu items');
     }
   }
+  getItemCatalog(layout: string, catalog?: string) {}
 }

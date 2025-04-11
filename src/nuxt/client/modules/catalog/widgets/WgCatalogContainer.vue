@@ -12,12 +12,7 @@
       </q-breadcrumbs>
     </div>
     <q-space />
-    <SwiperChildSection
-      v-if="
-        !catalogStore.paramCatalog.childCatalogCode &&
-        !catalogStore.paramCatalog.nestedChildCatalogCode
-      "
-    />
+    <SwiperChildSection v-if="isChildSection" />
     <q-space />
     <div class="catalog-filter__btn">
       <q-btn flat icon="filter_alt">Фильтр</q-btn>
@@ -38,6 +33,13 @@ const router = useRouter();
 const route = useRoute();
 
 catalogStore.setParamCatalog(route.params as ParamCatalog);
+
+const isChildSection = computed(() => {
+  if (!Object.keys(catalogStore.paramCatalog).length) {
+    return true;
+  }
+  return !catalogStore.paramCatalog.childCatalogCode;
+});
 </script>
 
 <style lang="scss">

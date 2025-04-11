@@ -95,7 +95,18 @@ export class ElasticController {
   @Get('main')
   async getItemMain(@Query('layout') layout: string) {
     const result = await this.services.getItemMain(layout);
-    // const result = await this.services.getLayout();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
+  }
+
+  // TODO: Описать свагер
+  @Get('catalog')
+  async getItemCatalog(
+    @Query('layout') layout: string,
+    @Query('catalog') catalog: string,
+  ) {
+    console.log(layout);
+    console.log(catalog);
+    // const result = await this.services.getItemMain(layout);
+    // return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

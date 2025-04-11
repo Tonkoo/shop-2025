@@ -1,4 +1,4 @@
-import type { ParamCatalog, SectionMain } from '~/interfaces/global';
+import type { ParamCatalog } from '~/interfaces/global';
 
 type CatalogState = {
   paramCatalog: ParamCatalog;
