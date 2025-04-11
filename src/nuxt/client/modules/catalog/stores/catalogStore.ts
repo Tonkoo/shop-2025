@@ -11,6 +11,7 @@ export const useCatalogStore = defineStore('catalog-store', {
   actions: {
     setParamCatalog(value: ParamCatalog) {
       this.paramCatalog = value;
+      console.log(this.paramCatalog);
     },
   },
 });

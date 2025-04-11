@@ -1,8 +1,6 @@
-import type { ProductMain, SectionMain } from '~/interfaces/global';
+import type { ProductMain } from '~/interfaces/global';
 
 export type MainType = {
-  sidebar: boolean;
   mainGifts: ProductMain[];
   mainSlider: ProductMain[];
-  menu: SectionMain[];
 };

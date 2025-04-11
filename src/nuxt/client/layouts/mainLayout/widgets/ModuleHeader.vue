@@ -3,8 +3,11 @@
     <div class="header__btn">
       <!--      TODO: Вынести в отдельный компонент-->
       <!--      TODO: https://gitlab.arealidea.ru/kuch-zl/site-kuchenland/nuxt/-/blob/zl-release/client/modules/commonUi/runtime/components/icons/ArealIconWrapper.vue?ref_type=heads-->
-      <areal-button flat round dense @click="mainStores.setSidebar()">
-        <img :src="mainStores.sidebar ? closeMenu : openMenu" alt="Previous" />
+      <areal-button flat round dense @click="layoutStores.setSidebar()">
+        <img
+          :src="layoutStores.sidebar ? closeMenu : openMenu"
+          alt="Previous"
+        />
       </areal-button>
     </div>
     <div class="header__title">
@@ -14,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStores } from '~/modules/main/stores/mainStores';
+import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 import openMenu from '~/modules/commonUI/assets/icon/menu/openMenu.svg';
 import closeMenu from '~/modules/commonUI/assets/icon/menu/closeMenu.svg';
 
-const mainStores = useMainStores();
+const layoutStores = useLayoutStores();
 </script>
 
 <style scoped lang="scss">

@@ -4,7 +4,7 @@
     <div class="menu">
       <!--      TODO-->
       <div
-        v-for="parentSection in getParentSection(mainStores.menu)"
+        v-for="parentSection in getParentSection(layoutStores.menu)"
         :key="parentSection.id"
         class="menu__column"
       >
@@ -34,10 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStores } from '~/modules/main/stores/mainStores';
+import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
 
-const mainStores = useMainStores();
+const layoutStores = useLayoutStores();
 
 const getYearCopyright = () => {
   const year = new Date().getFullYear();

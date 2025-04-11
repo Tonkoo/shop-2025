@@ -23,6 +23,15 @@ export default <RouterConfig & { routes: () => Routes }>{
         import('~/pages/PageMain.vue').then((r) => r.default || r),
     },
     {
+      name: 'Catalog',
+      path: '/catalog',
+      meta: {
+        layout: 'main-layout',
+      },
+      component: () =>
+        import('~/pages/PageCatalog.vue').then((r) => r.default || r),
+    },
+    {
       name: 'CatalogParent',
       path: '/catalog/:parentCatalogCode',
       meta: {
@@ -34,15 +43,6 @@ export default <RouterConfig & { routes: () => Routes }>{
     {
       name: 'CatalogChild',
       path: '/catalog/:parentCatalogCode/:childCatalogCode',
-      meta: {
-        layout: 'main-layout',
-      },
-      component: () =>
-        import('~/pages/PageCatalog.vue').then((r) => r.default || r),
-    },
-    {
-      name: 'CatalogNested',
-      path: '/catalog/:parentCatalogCode/:childCatalogCode/:nestedChildCatalogCode',
       meta: {
         layout: 'main-layout',
       },

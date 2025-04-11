@@ -9,7 +9,7 @@
     <div class="card">
       <nav class="menu">
         <div
-          v-for="parentSection in getParentSection(mainStores.menu)"
+          v-for="parentSection in getParentSection(LayoutStores.menu)"
           :key="parentSection.id"
           class="menu__column"
         >
@@ -17,7 +17,7 @@
             <ArealLink
               :link="parentSection.url"
               class="menu__link menu__link--title"
-              @click="mainStores.setSidebar()"
+              @click="LayoutStores.setSidebar()"
               >{{ parentSection.name }}</ArealLink
             >
           </div>
@@ -29,7 +29,7 @@
               <ArealLink
                 :link="childSection.url"
                 class="menu__link"
-                @click="mainStores.setSidebar()"
+                @click="LayoutStores.setSidebar()"
                 >{{ childSection.name }}</ArealLink
               >
             </li>
@@ -41,12 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStores } from '~/modules/main/stores/mainStores';
+import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
 
-const mainStores = useMainStores();
+const LayoutStores = useLayoutStores();
 
-const dialog = computed(() => mainStores.sidebar);
+const dialog = computed(() => LayoutStores.sidebar);
 </script>
 
 <style scoped lang="scss">

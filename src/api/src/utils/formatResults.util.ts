@@ -51,7 +51,9 @@ export function formatMainContent(
     };
   }
   return {
-    mainSlider,
-    mainGifts,
+    content: {
+      mainSlider,
+      mainGifts,
+    },
   };
 }
