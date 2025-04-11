@@ -21,6 +21,8 @@ export const useMainStores = defineStore('main-store', {
       this.mainGifts = value.content.mainGifts;
       this.mainSlider = value.content.mainSlider;
       this.menu = value.layout.menu;
+
+      console.log(this.mainSlider);
     },
   },
 });

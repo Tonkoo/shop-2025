@@ -30,6 +30,10 @@ import {
   formatResults,
 } from '../../utils/formatResults.util';
 import { Colors } from '../../entities/colors.entity';
+import {
+  generateLinkProduct,
+  generateLinkSection,
+} from '../../utils/generateLink.util';
 
 @Injectable()
 export class ElasticsearchService {
@@ -137,7 +141,12 @@ export class ElasticsearchService {
             hexColor = color?.hex;
           }
 
-          return { ...product, sectionName, hexColor };
+          const url = await generateLinkProduct(
+            product,
+            this.sectionsRepository,
+          );
+
+          return { ...product, sectionName, hexColor, url };
         }
         return item;
       }),
@@ -156,7 +165,12 @@ export class ElasticsearchService {
             parentName = parent?.name;
           }
 
-          return { ...section, sectionName: parentName };
+          const url = await generateLinkSection(
+            section,
+            this.sectionsRepository,
+          );
+
+          return { ...section, sectionName: parentName, url };
         }
         return item;
       }),
@@ -288,6 +302,11 @@ export class ElasticsearchService {
         resultDocument.sectionName = parent?.name;
       }
 
+      resultDocument.url = await generateLinkSection(
+        resultDocument,
+        this.sectionsRepository,
+      );
+
       return await this.elasticsearchService.index({
         index: index,
         id: id,
@@ -330,6 +349,11 @@ export class ElasticsearchService {
         });
         resultDocument.hexColor = color?.hex;
       }
+
+      resultDocument.url = await generateLinkProduct(
+        resultDocument,
+        this.sectionsRepository,
+      );
 
       return await this.elasticsearchService.index({
         index: index,
@@ -479,6 +503,11 @@ export class ElasticsearchService {
       const rawItems: ProductElastic[] = items.hits.hits.map(
         (item) => item._source as ProductElastic,
       );
+
+      // const itemWithLink: ProductElastic[] = await generateLinkProduct(
+      //   rawItems,
+      //   this.sectionsRepository,
+      // );
       return formatMainContent(
         rawItems,
         layout === 'true' ? await this.getLayout() : null,
@@ -488,7 +517,6 @@ export class ElasticsearchService {
       throw new BadRequestException('Error getting main page items');
     }
   }
-  // TODO: если у родительского раздела есть дочерние, то добавить св-ва item и в внурь него складывать дочерние элементы
   async getLayout(): Promise<mainLayout> {
     try {
       const layout = await this.searchFromElastic({
@@ -497,6 +525,22 @@ export class ElasticsearchService {
       const menu: SectionElastic[] = layout.hits.hits.map(
         (item) => item._source as SectionElastic,
       );
+
+      // const resultMenu: SectionElastic[] = menu.map(async (item) => {
+      //   if (!item.id_parent) {
+      //     const sections = await this.sectionsRepository.find({
+      //       where: { id_parent: item.id },
+      //     });
+      //
+      //     return {
+      //       ...item,
+      //       items: sections,
+      //     };
+      //   }
+      //   return item;
+      // });
+
+      // const result = await generateLinkSection(menu, this.sectionsRepository);
       return {
         menu,
       };

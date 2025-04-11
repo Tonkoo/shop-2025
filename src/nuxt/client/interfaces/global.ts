@@ -19,6 +19,7 @@ type SectionAdmin = Section & {
 type SectionMain = Section & {
   images: ImageElastic[];
   id_parent?: number;
+  url: string;
 };
 
 type Product = {
@@ -46,7 +47,16 @@ type ProductAdmin = Product & {
 type ProductMain = Product & {
   images: ImageElastic[];
   hexColor: string;
+  url: string;
 };
+
+// type ProductMain = {
+//
+//   item: Product & {
+//     images: ImageElastic[];
+//     hexColor: string;
+//   };
+// };
 
 type StoreItem = SectionMain | SectionAdmin | ProductAdmin | ProductMain;
 

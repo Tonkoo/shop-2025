@@ -17,23 +17,8 @@
 import ModuleHeader from '~/layouts/mainLayout/widgets/ModuleHeader.vue';
 import ModuleFooter from '~/layouts/mainLayout/widgets/ModuleFooter.vue';
 import Sidebar from '~/layouts/mainLayout/components/Sidebar.vue';
-import { useMainModule } from '~/modules/main/global';
-import { useQuasar } from 'quasar';
-import { notifyNegative } from '~/entities/notify.entites';
 
 defineOptions({ name: 'MainLayout' });
-
-const mainModule = useMainModule();
-const quasar = useQuasar();
-
-onMounted(async () => {
-  await mainModule.getItems().catch((err) => {
-    quasar.notify({
-      ...notifyNegative,
-      message: err,
-    });
-  });
-});
 </script>
 
 <style lang="scss">

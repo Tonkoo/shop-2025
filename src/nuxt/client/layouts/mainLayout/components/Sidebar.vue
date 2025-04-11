@@ -15,8 +15,9 @@
         >
           <div class="menu__title">
             <ArealLink
-              :link="createLink(parentSection.code)"
+              :link="parentSection.url"
               class="menu__link menu__link--title"
+              @click="mainStores.setSidebar()"
               >{{ parentSection.name }}</ArealLink
             >
           </div>
@@ -30,8 +31,9 @@
               :key="childSection.id"
             >
               <ArealLink
-                :link="createLink(parentSection.code, childSection.code)"
+                :link="childSection.url"
                 class="menu__link"
+                @click="mainStores.setSidebar()"
                 >{{ childSection.name }}</ArealLink
               >
             </li>
@@ -48,7 +50,6 @@ import {
   getParentSection,
   getChildSection,
 } from '~/modules/main/utils/menu.helpers.utils';
-import { createLink } from '~/modules/main/utils/createLink.utils';
 
 const mainStores = useMainStores();
 

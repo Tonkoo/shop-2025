@@ -2,17 +2,13 @@
   <div class="card">
     <div class="card__section">
       <div class="card__img-block">
-        <!--TODO: универсальный метод для склейки ссылки на страницу-->
-        <areal-link :link="createLink(product.code)">
+        <areal-link :link="product.url">
           <areal-img :src="productImage" />
         </areal-link>
       </div>
       <div class="card__description">
         <div class="card__description-title">
-          <areal-link
-            class="card__description-link"
-            :link="createLink(product.code)"
-          >
+          <areal-link class="card__description-link" :link="product.url">
             {{ product.name }}
           </areal-link>
           <div
@@ -29,7 +25,6 @@
 <script setup lang="ts">
 import type { ProductMain, SectionMain } from '~/interfaces/global';
 import defaultSVG from '~/modules/commonUI/assets/icon/default.svg';
-import { createLink } from '~/modules/main/utils/createLink.utils';
 
 const props = defineProps({
   product: {

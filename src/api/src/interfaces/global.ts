@@ -32,6 +32,7 @@ type ProductEntities = Product &
     section: parentSection;
     sectionName?: string;
     hexColor?: string;
+    url?: string;
   };
 
 type ProductClient = Product &
@@ -45,10 +46,11 @@ type ProductBase = Product &
     imageObject?: Images[];
   };
 
-type ProductElastic = Products &
+type ProductElastic = Product &
   DateClient & {
     section: number;
     sectionName: string;
+    url: string;
   };
 
 type Section = {
@@ -66,6 +68,7 @@ type SectionEntities = Section &
     imageObject?: Images[];
     type: string;
     sectionName?: string;
+    url?: string;
   };
 
 type SectionBase = Sections &
@@ -83,6 +86,8 @@ type SectionElastic = Section &
   DateClient & {
     type: string;
     sectionName: string;
+    url: string;
+    items?: SectionBase[];
   };
 
 type response = {

@@ -1,6 +1,6 @@
 <template>
   <div class="swiper">
-    <ArealSwiper :data-items="mainStores.mainSlider" filter-key="mainSlider">
+    <ArealSwiper :data-items="mainStores.mainSlider">
       <template #default="{ item }">
         <ArealSectionCard :section="item" />
       </template>

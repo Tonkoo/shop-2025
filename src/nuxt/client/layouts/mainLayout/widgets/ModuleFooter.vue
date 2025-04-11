@@ -10,7 +10,7 @@
       >
         <div class="menu__title">
           <!--          TODO: генерацию ссылки вынести на сервер-->
-          <ArealLink :link="createLink(parentSection.code)" class="menu__link">
+          <ArealLink :link="parentSection.url" class="menu__link">
             {{ parentSection.name }}
           </ArealLink>
         </div>
@@ -23,10 +23,7 @@
             )"
             :key="childSection.id"
           >
-            <ArealLink
-              :link="createLink(parentSection.code, childSection.code)"
-              class="menu__link"
-            >
+            <ArealLink :link="childSection.url" class="menu__link">
               {{ childSection.name }}
             </ArealLink>
           </li>
@@ -34,10 +31,8 @@
       </div>
     </div>
     <div class="copyright">
-      <!--      TODO: Вынести в отдельный метод-->
       <span class="copyright__text"
-        >&copy; {{ new Date().getFullYear() }} --
-        {{ new Date().getFullYear() + 1 }} StyleHub</span
+        >&copy; {{ getYearCopyright() }} StyleHub</span
       >
     </div>
   </div>
@@ -49,9 +44,13 @@ import {
   getChildSection,
   getParentSection,
 } from '~/modules/main/utils/menu.helpers.utils';
-import { createLink } from '~/modules/main/utils/createLink.utils';
 
 const mainStores = useMainStores();
+
+const getYearCopyright = () => {
+  const year = new Date().getFullYear();
+  return `${year} -- ${year + 1}`;
+};
 </script>
 
 <style scoped lang="scss">
