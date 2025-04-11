@@ -9,7 +9,6 @@
         class="menu__column"
       >
         <div class="menu__title">
-          <!--          TODO: генерацию ссылки вынести на сервер-->
           <ArealLink :link="parentSection.url" class="menu__link">
             {{ parentSection.name }}
           </ArealLink>

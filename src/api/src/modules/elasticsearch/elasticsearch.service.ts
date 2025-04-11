@@ -504,10 +504,6 @@ export class ElasticsearchService {
         (item) => item._source as ProductElastic,
       );
 
-      // const itemWithLink: ProductElastic[] = await generateLinkProduct(
-      //   rawItems,
-      //   this.sectionsRepository,
-      // );
       return formatMainContent(
         rawItems,
         layout === 'true' ? await this.getLayout() : null,
@@ -526,23 +522,33 @@ export class ElasticsearchService {
         (item) => item._source as SectionElastic,
       );
 
-      // const resultMenu: SectionElastic[] = menu.map(async (item) => {
-      //   if (!item.id_parent) {
-      //     const sections = await this.sectionsRepository.find({
-      //       where: { id_parent: item.id },
-      //     });
-      //
-      //     return {
-      //       ...item,
-      //       items: sections,
-      //     };
-      //   }
-      //   return item;
-      // });
+      const resultMenu: SectionElastic[] = await Promise.all(
+        menu.map(async (item) => {
+          if (!item.id_parent) {
+            const sections = await this.searchFromElastic({
+              query: {
+                bool: {
+                  must: [
+                    { term: { type: 'section' } },
+                    { term: { id_parent: item.id } },
+                  ],
+                },
+              },
+            });
+            const items: SectionElastic[] = sections.hits.hits.map(
+              (item) => item._source as SectionElastic,
+            );
+            return {
+              ...item,
+              items,
+            };
+          }
+          return item;
+        }),
+      );
 
-      // const result = await generateLinkSection(menu, this.sectionsRepository);
       return {
-        menu,
+        menu: resultMenu,
       };
     } catch (err) {
       logger.error('Error from elastic.getLayout: ', err);

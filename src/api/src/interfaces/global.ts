@@ -87,7 +87,7 @@ type SectionElastic = Section &
     type: string;
     sectionName: string;
     url: string;
-    items?: SectionBase[];
+    items?: SectionElastic[];
   };
 
 type response = {
