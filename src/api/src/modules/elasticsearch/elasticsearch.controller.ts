@@ -1,10 +1,10 @@
-import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
 import { response, resultItems, SectionElastic } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
-import { query } from 'winston';
+
 @Controller('elastic')
 @ApiTags('elastic')
 export class ElasticController {
@@ -104,9 +104,7 @@ export class ElasticController {
     @Query('layout') layout: string,
     @Query('catalog') catalog: string,
   ) {
-    console.log(layout);
-    console.log(catalog);
-    // const result = await this.services.getItemMain(layout);
-    // return ResponseHelper.createResponse(HttpStatus.OK, result);
+    const result = await this.services.getItemCatalog(layout, catalog);
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

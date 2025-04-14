@@ -166,6 +166,15 @@ type mainResponse = mainContent & {
   layout: mainLayout;
 };
 
+type CatalogContent = {
+  itemCatalog: ProductElastic[] | [];
+  childSection?: SectionElastic[];
+};
+
+type CatalogLayout = CatalogContent & {
+  layout: mainLayout;
+};
+
 export {
   response,
   elasticsearchResponse,
@@ -185,4 +194,6 @@ export {
   mainLayout,
   mainContent,
   mainResponse,
+  CatalogContent,
+  CatalogLayout,
 };

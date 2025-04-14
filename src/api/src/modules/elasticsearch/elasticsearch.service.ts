@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
 import { convertTimeArray } from '../../utils/convertTime.util';
 import {
+  CatalogContent,
   elasticBody,
   imageData,
   mainLayout,
@@ -26,6 +27,7 @@ import {
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 import {
+  formatCatalogContent,
   formatMainContent,
   formatResults,
 } from '../../utils/formatResults.util';
@@ -555,5 +557,53 @@ export class ElasticsearchService {
       throw new BadRequestException('Error getting menu items');
     }
   }
-  getItemCatalog(layout: string, catalog?: string) {}
+  async getItemCatalog(layout: string, catalog?: string) {
+    try {
+      const filter: any[] = [{ term: { type: 'product' } }];
+      const result: CatalogContent = {
+        itemCatalog: [],
+      };
+      if (catalog) {
+        const section = await this.sectionsRepository.findOne({
+          where: { code: catalog },
+        });
+        if (!section) {
+          throw new NotFoundException('Section not found');
+        }
+        if (section.level === 1) {
+          const childSection = await this.searchFromElastic({
+            query: {
+              bool: {
+                must: [
+                  { term: { type: 'section' } },
+                  { term: { id_parent: section.id } },
+                ],
+              },
+            },
+          });
+          result.childSection = childSection.hits.hits.map(
+            (item) => item._source as SectionElastic,
+          );
+        }
+        filter.push({ term: { section: section.id } });
+      }
+      const itemCatalog = await this.searchFromElastic({
+        query: {
+          bool: {
+            must: filter,
+          },
+        },
+      });
+      result.itemCatalog = itemCatalog.hits.hits.map(
+        (item) => item._source as ProductElastic,
+      );
+      return formatCatalogContent(
+        result,
+        layout === 'true' ? await this.getLayout() : null,
+      );
+    } catch (err) {
+      logger.error('Error from elastic.getItemCatalog: ', err);
+      throw new BadRequestException('Error getting catalog items');
+    }
+  }
 }

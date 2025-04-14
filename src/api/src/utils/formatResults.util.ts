@@ -1,5 +1,6 @@
 import { camelCaseConverter } from './toCamelCase.util';
 import {
+  CatalogContent,
   mainLayout,
   ProductElastic,
   resultItems,
@@ -54,6 +55,28 @@ export function formatMainContent(
     content: {
       mainSlider,
       mainGifts,
+    },
+  };
+}
+
+export function formatCatalogContent(
+  result: CatalogContent,
+  layout: mainLayout | null,
+) {
+  const { itemCatalog, childSection } = result;
+  if (layout) {
+    return {
+      content: {
+        itemCatalog,
+        childSection,
+      },
+      layout,
+    };
+  }
+  return {
+    content: {
+      itemCatalog,
+      childSection,
     },
   };
 }
