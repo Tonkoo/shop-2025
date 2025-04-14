@@ -7,6 +7,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     paramCatalog: {},
     itemCatalog: [],
     childSection: [],
+    dialogFilter: false,
   }),
   actions: {
     setParamCatalog(value: ParamCatalog) {
@@ -17,6 +18,13 @@ export const useCatalogStore = defineStore('catalog-store', {
       if (value.content.childSection) {
         this.childSection = value.content.childSection;
       }
+    },
+    setDialogFilter() {
+      if (!this.dialogFilter) {
+        this.dialogFilter = true;
+        return;
+      }
+      this.dialogFilter = false;
     },
   },
 });

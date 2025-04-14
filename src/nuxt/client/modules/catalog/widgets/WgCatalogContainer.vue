@@ -17,7 +17,10 @@
       </div>
 
       <div class="catalog-filter__right">
-        <div class="catalog-filter__btn">
+        <div
+          class="catalog-filter__btn"
+          @click="catalogStore.setDialogFilter()"
+        >
           <span>{{ $t('catalog.label.filter') }}</span>
           <img :src="btnFilter" alt="" />
         </div>
@@ -27,6 +30,7 @@
   <div class="product-list">
     <CatalogProduct />
   </div>
+  <DialogFilter />
 </template>
 
 <script setup lang="ts">
@@ -36,6 +40,7 @@ import type { ParamCatalog } from '~/interfaces/global';
 import SwiperChildSection from '~/modules/catalog/components/SwiperChildSection.vue';
 import btnFilter from '~/modules/commonUI/assets/icon/catalog/btnFilter.svg';
 import CatalogProduct from '~/modules/catalog/components/CatalogProduct.vue';
+import DialogFilter from '~/modules/catalog/components/DialogFilter.vue';
 
 const catalogStore = useCatalogStore();
 
