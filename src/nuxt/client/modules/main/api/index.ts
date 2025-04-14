@@ -21,7 +21,7 @@ export async function getItems() {
 
     mainStores.setItems(response.data.data);
     if (params.layout) {
-      layoutStores.setMenu(response.data.data);
+      layoutStores.setMenu(response.data.data.layout.menu);
     }
   } catch (err) {
     console.error(err);

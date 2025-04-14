@@ -135,6 +135,16 @@ type Colors = {
   hex: string;
 };
 
+type ResultItemsCatalog = {
+  content: {
+    itemCatalog: ProductMain[];
+    childSection: SectionMain[];
+  };
+  layout: {
+    menu: SectionMain[];
+  };
+};
+
 export type {
   SectionMain,
   SectionAdmin,
@@ -153,4 +163,5 @@ export type {
   ParamCatalog,
   ResultReindex,
   Colors,
+  ResultItemsCatalog,
 };

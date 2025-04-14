@@ -1,8 +1,13 @@
-import type { ParamCatalog } from '~/interfaces/global';
+import type {
+  ParamCatalog,
+  ProductMain,
+  SectionMain,
+} from '~/interfaces/global';
 
 type CatalogState = {
   paramCatalog: ParamCatalog;
-  // section: SectionMain;
+  itemCatalog: ProductMain[];
+  childSection: SectionMain[];
 };
 
 export type { CatalogState };

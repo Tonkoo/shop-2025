@@ -25,7 +25,6 @@ import {
   removeUnusedImages,
 } from '../../utils/removeImages.util';
 import { formatResponse } from '../../utils/formatResults.util';
-import { isUndefined } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class SectionsService {
@@ -47,13 +46,7 @@ export class SectionsService {
     if ('images' in data && !data.images) {
       data.images = [];
     }
-    if (
-      String(data.idParent) == 'null' ||
-      String(data.idParent) == '0' ||
-      String(data.idParent) == 'undefined'
-    ) {
-      data.idParent = null;
-    }
+
     if (data.idParent) {
       data.idParent = Number(data.idParent);
     }
@@ -105,6 +98,14 @@ export class SectionsService {
     try {
       // TODO: Попробовать JSON.Parse
       this.processingData(data);
+
+      if (
+        String(data.idParent) == 'null' ||
+        String(data.idParent) == '0' ||
+        String(data.idParent) == 'undefined'
+      ) {
+        data.idParent = null;
+      }
 
       data.level = 1;
 
@@ -236,7 +237,6 @@ export class SectionsService {
           data.images = await createImages(queryRunner, files);
         }
         this.processingData(data);
-
         await removeUnusedImages(
           data,
           currentSection,

@@ -194,6 +194,7 @@ export async function editItem() {
         'level',
         'code',
       ]);
+
       validationSection(adminStore.frontSection);
     } else {
       data = comparisonValues(adminStore.frontProduct, adminStore.backProduct, [
@@ -222,7 +223,6 @@ export async function editItem() {
       undefined,
       true
     );
-
     generateFormData(formData, data, param);
     adminStore.setSearchName('');
     const response = await api.put<{ data: ResultItemsAdmin }>(

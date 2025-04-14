@@ -1,21 +1,24 @@
 <template>
-  <div class="catalog-filter">
-    <div class="catalog-filter__breadcrumbs">
-      <q-breadcrumbs separator="|" active-color="black" class="breadcrumbs">
-        <q-breadcrumbs-el
-          label="Назад"
-          icon="arrow_back_ios"
-          class="breadcrumbs__link"
-          @click="router.back()"
-        />
-        <q-breadcrumbs-el label="12312" />
-      </q-breadcrumbs>
-    </div>
-    <q-space />
-    <SwiperChildSection v-if="isChildSection" />
-    <q-space />
-    <div class="catalog-filter__btn">
-      <q-btn flat icon="filter_alt">Фильтр</q-btn>
+  <div class="filter-wrapper">
+    <div class="catalog-filter">
+      <div class="catalog-filter__breadcrumbs">
+        <q-breadcrumbs separator="|" active-color="black" class="breadcrumbs">
+          <q-breadcrumbs-el
+            label="Назад"
+            icon="arrow_back_ios"
+            class="breadcrumbs__link"
+            @click="router.back()"
+          />
+          <q-breadcrumbs-el label="12312" />
+        </q-breadcrumbs>
+      </div>
+      <div class="swiper">
+        <SwiperChildSection v-if="isChildSection" />
+      </div>
+
+      <div class="catalog-filter__btn">
+        <q-btn flat icon="filter_alt">Фильтр</q-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -42,14 +45,15 @@ const isChildSection = computed(() => {
 });
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .catalog-filter {
   display: flex;
+  justify-content: space-between;
   width: 100%;
-  position: relative;
+  padding: 0 40px;
+  gap: 48px;
+  align-items: end;
   .catalog-filter__breadcrumbs {
-    margin-top: auto;
-    margin-left: 10px;
     .breadcrumbs {
       &__link {
         cursor: pointer;
@@ -61,8 +65,8 @@ const isChildSection = computed(() => {
     }
   }
   .catalog-filter__btn {
-    margin-top: auto;
-    margin-right: 10px;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

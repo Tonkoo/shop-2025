@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { ResultItemsMain } from '~/interfaces/global';
+import type { SectionMain } from '~/interfaces/global';
 import type { LayoutType } from '~/layouts/mainLayout/type/types';
 
 export const useLayoutStores = defineStore('layout-store', {
@@ -15,8 +15,8 @@ export const useLayoutStores = defineStore('layout-store', {
       }
       this.sidebar = false;
     },
-    setMenu(value: ResultItemsMain) {
-      this.menu = value.layout.menu;
+    setMenu(value: SectionMain[]) {
+      this.menu = value;
     },
   },
 });

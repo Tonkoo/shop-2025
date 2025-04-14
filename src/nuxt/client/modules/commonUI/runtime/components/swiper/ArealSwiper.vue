@@ -81,10 +81,12 @@ const swiperPrev = () => {
     height: 42px;
     background-color: getColor('black', 1);
     position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 1;
     opacity: 0.45;
     transition: opacity 0.3s ease;
-    border-radius: 42px;
+    border-radius: 50%;
     border: none;
 
     &:hover {
@@ -92,10 +94,10 @@ const swiperPrev = () => {
     }
   }
   &__btn-prev {
-    left: 24px;
+    left: 0;
   }
   &__btn-next {
-    right: 24px;
+    right: 0;
   }
 }
 </style>
