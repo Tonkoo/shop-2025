@@ -1,11 +1,15 @@
 <template>
-  <div class="swiper">
-    <span class="swiper__title">Новинки</span>
-    <Swiper />
+  <div class="main-slider">
+    <div class="slider">
+      <span class="slider__title">Новинки</span>
+      <Swiper />
+    </div>
   </div>
-  <div class="product-list">
-    <span class="product-list__title">Подарки</span>
-    <ProductList />
+  <div class="main-list">
+    <div class="product-list">
+      <span class="product-list__title">Подарки</span>
+      <ProductList />
+    </div>
   </div>
 </template>
 
@@ -15,12 +19,15 @@ import ProductList from '~/modules/main/components/ProductList.vue';
 </script>
 
 <style scoped lang="scss">
-.swiper {
+.main-slider {
+  padding: 0 40px;
+}
+.slider {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 50px;
-  padding: 0 16px;
+  position: relative;
+  gap: 24px;
   width: 100%;
   &__title {
     text-align: center;
@@ -29,6 +36,9 @@ import ProductList from '~/modules/main/components/ProductList.vue';
     text-transform: uppercase;
     color: getColor('black', 1);
   }
+}
+.main-list {
+  padding: 0 40px;
 }
 .product-list {
   display: flex;

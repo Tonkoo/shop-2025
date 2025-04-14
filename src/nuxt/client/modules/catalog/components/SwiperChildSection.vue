@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper">
+  <div class="slider">
     <ArealSwiper :data-items="catalogStore.childSection">
       <template #default="{ item }">
         <ArealSectionCard :section="item" />
@@ -15,7 +15,8 @@ const catalogStore = useCatalogStore();
 </script>
 
 <style scoped lang="scss">
-.swiper {
-  width: 750px;
+.slider {
+  position: relative;
+  max-width: 716px;
 }
 </style>

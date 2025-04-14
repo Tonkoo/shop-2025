@@ -22,11 +22,10 @@ const mainStores = useMainStores();
 <style scoped lang="scss">
 .catalog-wrapper {
   width: 100%;
-  padding: 0 20px;
 
   .catalog-list {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
   }
 }

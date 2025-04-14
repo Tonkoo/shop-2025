@@ -68,6 +68,7 @@ const swiperPrev = () => {
   position: relative;
   cursor: grab;
   width: 100%;
+  z-index: 1;
   &__slide {
     height: 100%;
     display: flex;
@@ -81,23 +82,24 @@ const swiperPrev = () => {
     height: 42px;
     background-color: getColor('black', 1);
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1;
+    top: calc(50% - 24px);
+
+    z-index: 2;
     opacity: 0.45;
     transition: opacity 0.3s ease;
     border-radius: 50%;
     border: none;
-
     &:hover {
       opacity: 1;
     }
   }
   &__btn-prev {
-    left: 0;
+    //left: 0;
+    left: -24px;
   }
   &__btn-next {
-    right: 0;
+    //right: 0;
+    right: -24px;
   }
 }
 </style>

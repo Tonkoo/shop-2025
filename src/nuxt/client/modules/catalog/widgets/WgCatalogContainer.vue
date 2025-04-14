@@ -12,7 +12,7 @@
           <q-breadcrumbs-el label="12312" />
         </q-breadcrumbs>
       </div>
-      <div class="swiper">
+      <div class="catalog-filter__swiper">
         <SwiperChildSection v-if="isChildSection" />
       </div>
 
@@ -62,6 +62,7 @@ const isChildSection = computed(() => {
   gap: 48px;
   align-items: end;
   &__left {
+    flex-basis: 50%;
     .breadcrumbs {
       color: getColor('grey', 12);
       &__link {
@@ -74,7 +75,15 @@ const isChildSection = computed(() => {
       }
     }
   }
+  &__swiper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+  }
   &__right {
+    flex-basis: 50%;
     display: flex;
     justify-content: flex-end;
   }

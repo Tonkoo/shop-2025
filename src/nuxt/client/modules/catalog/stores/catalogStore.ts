@@ -14,8 +14,9 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     setItems(value: ResultItemsCatalog) {
       this.itemCatalog = value.content.itemCatalog;
-      this.childSection = value.content.childSection;
-      console.log(this.childSection);
+      if (value.content.childSection) {
+        this.childSection = value.content.childSection;
+      }
     },
   },
 });
