@@ -37,7 +37,7 @@ const productImage = computed(() => {
   if (!props.product.images?.length || !props.product.images[0]?.src) {
     return defaultSVG;
   }
-  return props.product.images[0].src;
+  return new URL(props.product.images[0].src, 'http://localhost').toString();
 });
 </script>
 
