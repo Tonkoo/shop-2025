@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { FilterCatalog } from '../../../interfaces/global';
 
 export class payLoad {
   @IsString({
@@ -28,3 +29,10 @@ export class payLoad {
 
   getItems?: boolean;
 }
+
+// export class paramsCatalog {
+//   url: string;
+//   filter: FilterCatalog;
+//   layout: string;
+//   onlyFilters: string;
+// }

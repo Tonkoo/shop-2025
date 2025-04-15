@@ -63,12 +63,13 @@ export function formatCatalogContent(
   result: CatalogContent,
   layout: mainLayout | null,
 ) {
-  const { itemCatalog, childSection } = result;
+  const { itemCatalog, childSection, filter } = result;
   if (layout) {
     return {
       content: {
         itemCatalog,
         childSection,
+        filter,
       },
       layout,
     };
@@ -77,6 +78,7 @@ export function formatCatalogContent(
     content: {
       itemCatalog,
       childSection,
+      filter,
     },
   };
 }

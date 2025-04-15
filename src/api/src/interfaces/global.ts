@@ -48,6 +48,7 @@ type ProductBase = Product &
 
 type ProductElastic = Product &
   DateClient & {
+    type: string;
     section: number;
     sectionName: string;
     url: string;
@@ -96,17 +97,9 @@ type response = {
 };
 
 type elasticsearchResponse = {
-  hits: {
-    total?:
-      | {
-          value: number;
-          relation: string;
-        }
-      | number;
-    hits: Array<{
-      _source?: any;
-    }>;
-  };
+  total: { value: number };
+  items: (SectionElastic | ProductElastic)[];
+  aggregations?: ResultFilterCatalog;
 };
 
 type Colors = {
@@ -144,6 +137,8 @@ type payLoadTest = {
   query: {
     bool: any;
   };
+  aggregations?: any;
+  sort?: any[];
 };
 
 type parentSection = {
@@ -169,10 +164,45 @@ type mainResponse = mainContent & {
 type CatalogContent = {
   itemCatalog: ProductElastic[] | [];
   childSection?: SectionElastic[];
+  filter?: ResultFilterCatalog;
 };
 
 type CatalogLayout = CatalogContent & {
   layout: mainLayout;
+};
+
+type FilterCatalog = {
+  price?: {
+    from?: number;
+    to?: number;
+  };
+  color?: string[];
+};
+
+type ParamsCatalog = {
+  url: string;
+  sorting: string;
+  filter: string;
+  // filter: FilterCatalog;
+  layout: string;
+  onlyFilters: string;
+};
+
+type AggregationsFilter = {
+  price: {
+    min: number;
+    max: number;
+  };
+  color: {
+    buckets: { key: string }[];
+  };
+};
+type ResultFilterCatalog = {
+  price: {
+    min: number;
+    max: number;
+  };
+  color: string[];
 };
 
 export {
@@ -196,4 +226,9 @@ export {
   mainResponse,
   CatalogContent,
   CatalogLayout,
+  FilterCatalog,
+  ParamsCatalog,
+  ResultFilterCatalog,
+  AggregationsFilter,
 };
+// export default class FilterCatalog {}

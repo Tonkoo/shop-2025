@@ -1,5 +1,13 @@
-import { addComponentsDir, createResolver, defineNuxtModule } from '@nuxt/kit';
+import {
+  addComponentsDir,
+  createResolver,
+  defineNuxtModule,
+  installModule,
+} from '@nuxt/kit';
 import type { ModuleOptions } from 'rollup';
+import type { IconsType } from '~/modules/commonUI/runtime/components/svg/types/IconsType';
+
+export type { IconsType };
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -17,24 +25,24 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.components = true;
 
     nuxt.options.appConfig.commonUi = options;
-
-    // await installModule(
-    //   'nuxt-svg-icon-sprite',
-    //   {
-    //     sprites: {
-    //       default: {
-    //         importPatterns: [resolve(runtimeDir, 'assets/icons/**/*.svg')],
-    //       },
-    //       special: {
-    //         importPatterns: [resolve(runtimeDir, 'assets/special/**/*.svg')],
-    //       },
-    //       linning: {
-    //         importPatterns: [resolve(runtimeDir, 'assets/linning/**/*.svg')],
-    //       },
-    //     },
-    //   },
-    //   nuxt,
-    // )
+    console.log(resolve(runtimeDir, 'assets/icon/**/*.svg'), 'dsfdsfsdfdsfsdf');
+    await installModule(
+      'nuxt-svg-icon-sprite',
+      {
+        sprites: {
+          default: {
+            importPatterns: [resolve('assets/icon/**/*.svg')],
+          },
+          // special: {
+          //   importPatterns: [resolve(runtimeDir, 'assets/special/**/*.svg')],
+          // },
+          // linning: {
+          //   importPatterns: [resolve(runtimeDir, 'assets/linning/**/*.svg')],
+          // },
+        },
+      },
+      nuxt
+    );
 
     addComponentsDir({
       path: resolve('./runtime/components'),

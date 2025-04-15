@@ -36,7 +36,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
-import type { ParamCatalog } from '~/interfaces/global';
 import SwiperChildSection from '~/modules/catalog/components/SwiperChildSection.vue';
 import btnFilter from '~/modules/commonUI/assets/icon/catalog/btnFilter.svg';
 import CatalogProduct from '~/modules/catalog/components/CatalogProduct.vue';
@@ -48,13 +47,14 @@ const router = useRouter();
 
 const route = useRoute();
 
-catalogStore.setParamCatalog(route.params as ParamCatalog);
+catalogStore.setParamCatalog(route.fullPath);
 
 const isChildSection = computed(() => {
-  if (!Object.keys(catalogStore.paramCatalog).length) {
-    return true;
-  }
-  return !catalogStore.paramCatalog.childCatalogCode;
+  // if (!Object.keys(catalogStore.paramCatalog).length) {
+  //   return true;
+  // }
+  // return !catalogStore.paramCatalog.childCatalogCode;
+  return false;
 });
 </script>
 

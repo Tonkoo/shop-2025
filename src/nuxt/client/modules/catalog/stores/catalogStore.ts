@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia';
 import type { CatalogState } from '~/modules/catalog/types/types';
-import type { ParamCatalog, ResultItemsCatalog } from '~/interfaces/global';
+import type { ResultItemsCatalog } from '~/interfaces/global';
 
 export const useCatalogStore = defineStore('catalog-store', {
   state: (): CatalogState => ({
-    paramCatalog: {},
+    pathPage: '',
     itemCatalog: [],
     childSection: [],
     dialogFilter: false,
   }),
   actions: {
-    setParamCatalog(value: ParamCatalog) {
-      this.paramCatalog = value;
+    setParamCatalog(value: string) {
+      this.pathPage = value;
     },
     setItems(value: ResultItemsCatalog) {
       this.itemCatalog = value.content.itemCatalog;

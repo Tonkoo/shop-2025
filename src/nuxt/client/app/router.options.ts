@@ -24,25 +24,7 @@ export default <RouterConfig & { routes: () => Routes }>{
     },
     {
       name: 'Catalog',
-      path: '/catalog',
-      meta: {
-        layout: 'main-layout',
-      },
-      component: () =>
-        import('~/pages/PageCatalog.vue').then((r) => r.default || r),
-    },
-    {
-      name: 'CatalogParent',
-      path: '/catalog/:parentCatalogCode',
-      meta: {
-        layout: 'main-layout',
-      },
-      component: () =>
-        import('~/pages/PageCatalog.vue').then((r) => r.default || r),
-    },
-    {
-      name: 'CatalogChild',
-      path: '/catalog/:parentCatalogCode/:childCatalogCode',
+      path: '/catalog/:catalogPath(.*)*',
       meta: {
         layout: 'main-layout',
       },

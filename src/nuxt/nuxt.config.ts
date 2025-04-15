@@ -5,15 +5,15 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/i18n',
     'nuxt-swiper',
-    'nuxt-svg-icon-sprite',
+    // 'nuxt-svg-icon-sprite',
   ],
-  svgIconSprite: {
-    sprites: {
-      default: {
-        importPatterns: ['./client/modules/commonUI/assets/icon/default.svg'],
-      },
-    },
-  },
+  // svgIconSprite: {
+  //   sprites: {
+  //     default: {
+  //       importPatterns: ['./client/modules/commonUI/assets/icon/default.svg'],
+  //     },
+  //   },
+  // },
 
   i18n: {
     vueI18n: './config/i18n.config.ts',

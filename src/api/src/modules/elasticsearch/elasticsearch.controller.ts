@@ -1,8 +1,14 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
-import { response, resultItems, SectionElastic } from '../../interfaces/global';
+import {
+  response,
+  resultItems,
+  SectionElastic,
+  ParamsCatalog,
+  FilterCatalog,
+} from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 
 @Controller('elastic')
@@ -100,11 +106,9 @@ export class ElasticController {
 
   // TODO: Описать свагер
   @Get('catalog')
-  async getItemCatalog(
-    @Query('layout') layout: string,
-    @Query('catalog') catalog: string,
-  ) {
-    const result = await this.services.getItemCatalog(layout, catalog);
+  async getItemCatalog(@Query() params: ParamsCatalog) {
+    const result = await this.services.getItemCatalog(params);
+    // return result;
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

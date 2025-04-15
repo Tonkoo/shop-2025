@@ -135,10 +135,19 @@ type Colors = {
   hex: string;
 };
 
+type FilterCatalog = {
+  price: {
+    min: number;
+    max: number;
+  };
+  color: string[];
+};
+
 type ResultItemsCatalog = {
   content: {
     itemCatalog: ProductMain[];
     childSection: SectionMain[];
+    filter: FilterCatalog;
   };
   layout: {
     menu: SectionMain[];
@@ -164,4 +173,6 @@ export type {
   ResultReindex,
   Colors,
   ResultItemsCatalog,
+  // FilterCatalog,
+  // ParamsCatalog,
 };

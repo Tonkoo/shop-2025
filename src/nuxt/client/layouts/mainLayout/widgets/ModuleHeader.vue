@@ -4,9 +4,12 @@
       <!--      TODO: Вынести в отдельный компонент-->
       <!--      TODO: https://gitlab.arealidea.ru/kuch-zl/site-kuchenland/nuxt/-/blob/zl-release/client/modules/commonUi/runtime/components/icons/ArealIconWrapper.vue?ref_type=heads-->
       <areal-button flat round dense @click="layoutStores.setSidebar()">
-        <img
-          :src="layoutStores.sidebar ? closeMenu : openMenu"
-          alt="Previous"
+        <!--        <img-->
+        <!--          :src="layoutStores.sidebar ? closeMenu : openMenu"-->
+        <!--          alt="Previous"-->
+        <!--        />-->
+        <areal-svg
+          :icon-name="layoutStores.sidebar ? 'closeMenu' : 'openMenu'"
         />
       </areal-button>
     </div>
@@ -18,8 +21,8 @@
 
 <script setup lang="ts">
 import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
-import openMenu from '~/modules/commonUI/assets/icon/menu/openMenu.svg';
-import closeMenu from '~/modules/commonUI/assets/icon/menu/closeMenu.svg';
+// import openMenu from '~/modules/commonUI/assets/icon/menu/openMenu.svg';
+// import closeMenu from '~/modules/commonUI/assets/icon/menu/closeMenu.svg';
 
 const layoutStores = useLayoutStores();
 </script>

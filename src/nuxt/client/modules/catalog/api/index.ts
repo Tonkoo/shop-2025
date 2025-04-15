@@ -8,22 +8,26 @@ export async function getItemCatalog() {
   const layoutStores = useLayoutStores();
 
   const params = {
+    url: catalogStore.pathPage,
+    sorting: 'none',
+    filter: JSON.stringify({
+      price: { from: 0, to: 10000 },
+      color: ['#FFFF00'],
+    }),
     layout: !layoutStores.menu.length,
-    catalog:
-      catalogStore.paramCatalog?.childCatalogCode ??
-      catalogStore.paramCatalog?.parentCatalogCode ??
-      undefined,
+    onlyFilters: false,
   };
   try {
     const response = await api.get<{ data: ResultItemsCatalog }>(
       `/elastic/catalog`,
       {
-        params: params,
+        params,
       }
     );
     if (!response) {
       throw new Error('Error while receiving data');
     }
+    console.log(response.data.data);
     if (params.layout) {
       layoutStores.setMenu(response.data.data.layout.menu);
     }

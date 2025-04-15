@@ -1,11 +1,7 @@
-import type {
-  ParamCatalog,
-  ProductMain,
-  SectionMain,
-} from '~/interfaces/global';
+import type { ProductMain, SectionMain } from '~/interfaces/global';
 
 type CatalogState = {
-  paramCatalog: ParamCatalog;
+  pathPage: string;
   itemCatalog: ProductMain[];
   childSection: SectionMain[];
   dialogFilter: boolean;
