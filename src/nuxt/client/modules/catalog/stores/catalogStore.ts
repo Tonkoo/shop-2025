@@ -15,9 +15,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     setItems(value: ResultItemsCatalog) {
       this.itemCatalog = value.content.itemCatalog;
-      if (value.content.childSection) {
-        this.childSection = value.content.childSection;
-      }
+      this.childSection = value.content.childSection;
     },
     setDialogFilter() {
       if (!this.dialogFilter) {

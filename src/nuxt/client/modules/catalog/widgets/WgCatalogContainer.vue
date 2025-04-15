@@ -13,7 +13,7 @@
         </q-breadcrumbs>
       </div>
       <div class="catalog-filter__swiper">
-        <SwiperChildSection v-if="isChildSection" />
+        <SwiperChildSection v-if="catalogStore.childSection" />
       </div>
 
       <div class="catalog-filter__right">
@@ -48,14 +48,6 @@ const router = useRouter();
 const route = useRoute();
 
 catalogStore.setParamCatalog(route.fullPath);
-
-const isChildSection = computed(() => {
-  // if (!Object.keys(catalogStore.paramCatalog).length) {
-  //   return true;
-  // }
-  // return !catalogStore.paramCatalog.childCatalogCode;
-  return false;
-});
 </script>
 
 <style scoped lang="scss">

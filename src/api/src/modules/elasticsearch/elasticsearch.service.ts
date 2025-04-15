@@ -635,7 +635,6 @@ export class ElasticsearchService {
           query: {
             bool: { must: filterCatalog },
           },
-          size: onlyFilters === 'true' ? 0 : undefined,
           aggregations: {
             price: {
               stats: { field: 'price' },
