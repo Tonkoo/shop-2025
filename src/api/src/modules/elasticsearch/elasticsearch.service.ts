@@ -623,7 +623,7 @@ export class ElasticsearchService {
     }
   }
   async getItemCatalog(params: ParamsCatalog) {
-    const { url, filter, layout, onlyFilters } = params;
+    const { url, filter, layout, sorting, onlyFilters } = params;
     try {
       let typePage = 'section';
       const result: CatalogContent = {
@@ -644,10 +644,30 @@ export class ElasticsearchService {
         const section = items.items as SectionElastic[];
         result.childSection = await this.getChildSection(section);
         const filterCatalog = this.getFilterCatalog(filter, section);
+        let sort: any[] = [];
+        switch (sorting) {
+          case 'none':
+            sort = [];
+            break;
+          case 'newProduct':
+            sort = [{ create_at: { order: 'desc' } }];
+            break;
+          case 'ascPrice':
+            sort = [{ price: { order: 'asc' } }];
+            break;
+          case 'descPrice':
+            sort = [{ price: { order: 'desc' } }];
+            break;
+          default:
+            sort = [];
+            break;
+        }
+
         const products = await this.searchFromElastic({
           query: {
             bool: { must: filterCatalog },
           },
+          sort,
           aggregations: {
             price: {
               stats: { field: 'price' },

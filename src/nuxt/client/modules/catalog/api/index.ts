@@ -8,19 +8,19 @@ export async function getItemCatalog() {
   const layoutStores = useLayoutStores();
 
   const params = {
-    // url: catalogStore.pathPage,
-    // sorting: 'none',
-    // filter: JSON.stringify({
-    //   price: { from: 0, to: 10000 },
-    //   color: ['#000000'],
-    // }),
-    // layout: !layoutStores.menu.length,
-    // onlyFilters: false,
     url: catalogStore.pathPage,
     sorting: 'none',
-    filter: JSON.stringify({}),
-    layout: false,
-    onlyFilters: true,
+    filter: JSON.stringify({
+      price: { from: 0, to: 10000 },
+      color: ['#000000'],
+    }),
+    layout: !layoutStores.menu.length,
+    onlyFilters: false,
+    // url: catalogStore.pathPage,
+    // sorting: 'none',
+    // filter: JSON.stringify({}),
+    // layout: false,
+    // onlyFilters: true,
   };
   try {
     const response = await api.get<{ data: ResultItemsCatalog }>(
