@@ -1,20 +1,46 @@
 <template>
-  <div class="accordion">
+  <div class="accordion" @click="toggleAccordion">
     <div class="accordion__text">
       <span>{{ label }}</span>
-      <ArealSvg icon-name="accordionOpen" />
+      <ArealSvg :icon-name="isOpen ? 'accordionClose' : 'accordionOpen'" />
     </div>
-
-    <slot />
+    <div ref="panelRef" class="accordion__panel">
+      <div class="accordion__content">
+        <slot />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Ref } from 'vue';
+
 defineProps({
   label: {
     type: String,
     default: '',
   },
+});
+
+const isOpen = ref(false);
+const panelRef: Ref<HTMLElement | null> = ref(null);
+
+const toggleAccordion = () => {
+  isOpen.value = !isOpen.value;
+
+  if (panelRef.value) {
+    if (isOpen.value) {
+      panelRef.value.style.maxHeight = panelRef.value.scrollHeight + 'px';
+    } else {
+      panelRef.value.style.maxHeight = '0px';
+    }
+  }
+};
+
+onMounted(() => {
+  if (isOpen.value && panelRef.value) {
+    panelRef.value.style.maxHeight = panelRef.value.scrollHeight + 'px';
+  }
 });
 </script>
 
@@ -22,8 +48,6 @@ defineProps({
 .accordion {
   display: flex;
   flex-direction: column;
-  padding-top: 24px;
-  padding-bottom: 16px;
   cursor: pointer;
   &__text {
     display: flex;
@@ -31,6 +55,16 @@ defineProps({
     justify-content: space-between;
     font-size: 16px;
     color: getColor('grey', 12);
+    padding-top: 24px;
+    padding-bottom: 16px;
+  }
+  &__panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+  &__content {
+    padding-bottom: 8px;
   }
 }
 </style>

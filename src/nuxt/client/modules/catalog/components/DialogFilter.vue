@@ -16,9 +16,36 @@
       >
         <ArealSvg icon-name="closeMenu" />
       </areal-button>
-      <ArealAccordion label="Сортировка">
-        <div class="dialog-filter__accordion-block">
-          <p>123123</p>
+      <ArealAccordion label="Сортировка" class="dialog-filter__accordion-item">
+        <div class="dialog-filter__block-radio">
+          <q-radio
+            size="xs"
+            model-value=""
+            val=""
+            label="Без сортировки"
+            color="black"
+          />
+          <q-radio
+            size="xs"
+            model-value=""
+            val=""
+            label="Без новизне"
+            color="black"
+          />
+          <q-radio
+            size="xs"
+            model-value=""
+            val=""
+            label="По возрастанию цены"
+            color="black"
+          />
+          <q-radio
+            size="xs"
+            model-value=""
+            val=""
+            label="По убыванию цены"
+            color="black"
+          />
         </div>
       </ArealAccordion>
     </div>
@@ -27,7 +54,6 @@
 
 <script setup lang="ts">
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
-import closeMenu from '~/modules/commonUI/assets/icon/menu/closeMenu.svg';
 
 const catalogStore = useCatalogStore();
 
@@ -48,20 +74,13 @@ const color = ref(false);
     border-radius: 0;
     padding: 40px;
   }
-  &__accordion {
-    border-bottom: 1px solid transparent;
+  &__accordion-item {
+    border-bottom: 1px solid black;
 
     &:last-child {
       border-bottom: 0;
     }
   }
-  //&__expansion {
-  //  padding-top: 24px;
-  //  padding-bottom: 16px;
-  //  &_border {
-  //    border-top: 1px solid getColor('black', 1);
-  //  }
-  //}
   &__btn-close {
     position: absolute;
     right: 0;
@@ -74,6 +93,7 @@ const color = ref(false);
     gap: 12px;
   }
   &__block-price {
+    padding-top: 4px;
     display: flex;
     flex-direction: column;
     gap: 16px;
