@@ -660,10 +660,10 @@ export class ElasticsearchService {
         result.itemCatalog = products.items as ProductElastic[];
         result.filter = products.aggregations;
       }
-
       return formatCatalogContent(
         result,
         layout === 'true' ? await this.getLayout() : null,
+        onlyFilters,
       );
     } catch (err) {
       logger.error('Error from elastic.getItemCatalog: ', err);

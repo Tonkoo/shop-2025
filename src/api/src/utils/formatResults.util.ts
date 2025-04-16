@@ -62,8 +62,16 @@ export function formatMainContent(
 export function formatCatalogContent(
   result: CatalogContent,
   layout: mainLayout | null,
+  onlyFilters: string,
 ) {
   const { itemCatalog, childSection, filter } = result;
+  if (onlyFilters === 'true') {
+    return {
+      content: {
+        filter,
+      },
+    };
+  }
   if (layout) {
     return {
       content: {
