@@ -129,7 +129,7 @@ export class ElasticsearchService {
     return filter;
   }
 
-  getFilterCatalog(data: string, section?: string): any[] {
+  getFilterCatalog(data: string, section?: SectionElastic[]): any[] {
     const filter: FilterCatalog = JSON.parse(data) as FilterCatalog;
     const result: any[] = [];
     if (filter.price) {
@@ -148,8 +148,8 @@ export class ElasticsearchService {
         { term: { 'type.keyword': 'product' } },
       );
     }
-    if (section) {
-      result.push({ term: { 'sectionName.keyword': section } });
+    if (section && section?.length !== 0) {
+      result.push({ term: { 'sectionName.keyword': section[0].sectionName } });
     }
     return result;
   }
@@ -636,7 +636,6 @@ export class ElasticsearchService {
           },
         },
       });
-      // if (items.items.length !== 0) {
       if (items.items.length !== 0) {
         typePage = items.items[0].type;
       }
@@ -644,12 +643,8 @@ export class ElasticsearchService {
       if (typePage === 'section') {
         const section = items.items as SectionElastic[];
         result.childSection = await this.getChildSection(section);
-        const filterCatalog = this.getFilterCatalog(
-          filter,
-          section[0].name ? section[0].name : undefined,
-        );
-        console.log(filterCatalog);
-        const sections = await this.searchFromElastic({
+        const filterCatalog = this.getFilterCatalog(filter, section);
+        const products = await this.searchFromElastic({
           query: {
             bool: { must: filterCatalog },
           },
@@ -662,10 +657,9 @@ export class ElasticsearchService {
             },
           },
         });
-        result.itemCatalog = sections.items as ProductElastic[];
-        result.filter = sections.aggregations;
+        result.itemCatalog = products.items as ProductElastic[];
+        result.filter = products.aggregations;
       }
-      // }
 
       return formatCatalogContent(
         result,
