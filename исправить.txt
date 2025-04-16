@@ -91,3 +91,55 @@
   layout: bool,
   onlyFilters: false,
  }
+
+      <!--      <ArealExpansion label="Сортировка" class="dialog-filter__expansion">-->
+      <!--        <div class="dialog-filter__block-radio">-->
+      <!--          <q-radio-->
+      <!--            size="xs"-->
+      <!--            model-value=""-->
+      <!--            val=""-->
+      <!--            label="Без сортировки"-->
+      <!--            color="black"-->
+      <!--          />-->
+      <!--          <q-radio-->
+      <!--            size="xs"-->
+      <!--            model-value=""-->
+      <!--            val=""-->
+      <!--            label="Без новизне"-->
+      <!--            color="black"-->
+      <!--          />-->
+      <!--          <q-radio-->
+      <!--            size="xs"-->
+      <!--            model-value=""-->
+      <!--            val=""-->
+      <!--            label="По возрастанию цены"-->
+      <!--            color="black"-->
+      <!--          />-->
+      <!--          <q-radio-->
+      <!--            size="xs"-->
+      <!--            model-value=""-->
+      <!--            val=""-->
+      <!--            label="По убыванию цены"-->
+      <!--            color="black"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--      </ArealExpansion>-->
+      <!--      <ArealExpansion-->
+      <!--        label="Цена"-->
+      <!--        class="dialog-filter__expansion dialog-filter__expansion-border"-->
+      <!--      >-->
+      <!--        <div class="dialog-filter__input">-->
+      <!--          <ArealFormInput :model-value="input1" />-->
+      <!--          <ArealFormInput :model-value="input2" />-->
+      <!--        </div>-->
+      <!--      </ArealExpansion>-->
+
+      <!--      <div class="dialog-filter__block-color">-->
+      <!--        <span>Цвет</span>-->
+      <!--        <div class="dialog-filter__checkbox">-->
+      <!--          <q-checkbox :model-value="color" style="font-size: 25px !important" />-->
+      <!--          <q-checkbox :model-value="color" />-->
+      <!--          <q-checkbox :model-value="color" />-->
+      <!--          <q-checkbox :model-value="color" />-->
+      <!--        </div>-->
+      <!--      </div>-->

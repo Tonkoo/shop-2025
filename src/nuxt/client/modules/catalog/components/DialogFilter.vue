@@ -14,59 +14,13 @@
         class="dialog-filter__btn-close"
         @click="catalogStore.setDialogFilter()"
       >
-        <img :src="closeMenu" alt="Previous" />
+        <ArealSvg icon-name="closeMenu" />
       </areal-button>
-      <ArealExpansion label="Сортировка" class="dialog-filter__expansion">
-        <div class="dialog-filter__block-radio">
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
-            label="Без сортировки"
-            color="black"
-          />
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
-            label="Без новизне"
-            color="black"
-          />
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
-            label="По возрастанию цены"
-            color="black"
-          />
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
-            label="По убыванию цены"
-            color="black"
-          />
+      <ArealAccordion label="Сортировка">
+        <div class="dialog-filter__accordion-block">
+          <p>123123</p>
         </div>
-      </ArealExpansion>
-      <ArealExpansion
-        label="Цена"
-        class="dialog-filter__expansion dialog-filter__expansion-border"
-      >
-        <div class="dialog-filter__input">
-          <ArealFormInput :model-value="input1" />
-          <ArealFormInput :model-value="input2" />
-        </div>
-      </ArealExpansion>
-
-      <div class="dialog-filter__block-color">
-        <span>Цвет</span>
-        <div class="dialog-filter__checkbox">
-          <q-checkbox :model-value="color" style="font-size: 25px !important" />
-          <q-checkbox :model-value="color" />
-          <q-checkbox :model-value="color" />
-          <q-checkbox :model-value="color" />
-        </div>
-      </div>
+      </ArealAccordion>
     </div>
   </ArealDialog>
 </template>
@@ -94,13 +48,20 @@ const color = ref(false);
     border-radius: 0;
     padding: 40px;
   }
-  &__expansion {
-    padding-top: 24px;
-    padding-bottom: 16px;
-    &_border {
-      border-top: 1px solid getColor('black', 1);
+  &__accordion {
+    border-bottom: 1px solid transparent;
+
+    &:last-child {
+      border-bottom: 0;
     }
   }
+  //&__expansion {
+  //  padding-top: 24px;
+  //  padding-bottom: 16px;
+  //  &_border {
+  //    border-top: 1px solid getColor('black', 1);
+  //  }
+  //}
   &__btn-close {
     position: absolute;
     right: 0;

@@ -22,7 +22,7 @@
           @click="catalogStore.setDialogFilter()"
         >
           <span>{{ $t('catalog.label.filter') }}</span>
-          <img :src="btnFilter" alt="" />
+          <ArealSvg icon-name="btnFilter" />
         </div>
       </div>
     </div>

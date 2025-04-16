@@ -149,7 +149,7 @@ export class ElasticsearchService {
       );
     }
     if (section && section?.length !== 0) {
-      result.push({ term: { 'sectionName.keyword': section[0].sectionName } });
+      result.push({ term: { 'sectionName.keyword': section[0].name } });
     }
     return result;
   }
@@ -622,7 +622,9 @@ export class ElasticsearchService {
       throw new BadRequestException('Error getting menu items');
     }
   }
+
   async getItemCatalog(params: ParamsCatalog) {
+    console.log(params);
     const { url, filter, layout, sorting, onlyFilters } = params;
     try {
       let typePage = 'section';
@@ -636,6 +638,7 @@ export class ElasticsearchService {
           },
         },
       });
+      // console.log(items);
       if (items.items.length !== 0) {
         typePage = items.items[0].type;
       }
@@ -662,7 +665,6 @@ export class ElasticsearchService {
             sort = [];
             break;
         }
-
         const products = await this.searchFromElastic({
           query: {
             bool: { must: filterCatalog },
