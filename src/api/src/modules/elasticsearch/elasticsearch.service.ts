@@ -232,9 +232,36 @@ export class ElasticsearchService {
     return [...processedProducts, ...processedSections];
   }
 
+  async getChildSection(section: SectionElastic[]) {
+    let result: SectionElastic[] = [];
+    if (section.length === 0) {
+      const childSection = await this.searchFromElastic({
+        query: {
+          bool: {
+            must: [{ term: { type: 'section' } }, { term: { level: 1 } }],
+          },
+        },
+      });
+      result = childSection.items as SectionElastic[];
+    }
+    if (section.length !== 0 && section[0].level === 1) {
+      const childSection = await this.searchFromElastic({
+        query: {
+          bool: {
+            must: [
+              { term: { type: 'section' } },
+              { term: { id_parent: section[0].id } },
+            ],
+          },
+        },
+      });
+      result = childSection.items as SectionElastic[];
+    }
+    return result;
+  }
+
   async searchFromElastic(payLoad: payLoadTest) {
     const { query, from, size, source, sort, aggregations } = payLoad;
-    console.log(size);
     const items = await this.elasticsearchService.search({
       index: process.env.ELASTIC_INDEX,
       body: {
@@ -599,38 +626,29 @@ export class ElasticsearchService {
     const { url, filter, layout, onlyFilters } = params;
     try {
       let typePage = 'section';
-      let sectionName: string | undefined;
       const result: CatalogContent = {
         itemCatalog: [],
       };
-      if (url !== '/catalog/') {
-        const items = await this.searchFromElastic({
-          query: {
-            bool: {
-              must: [{ term: { 'url.keyword': url } }],
-            },
+      const items = await this.searchFromElastic({
+        query: {
+          bool: {
+            must: [{ term: { 'url.keyword': url } }],
           },
-        });
-        const section = items.items as SectionElastic[];
-        typePage = section[0].type;
-        sectionName = section[0].name;
-        if (section[0].level === 1) {
-          const childSection = await this.searchFromElastic({
-            query: {
-              bool: {
-                must: [
-                  { term: { type: 'section' } },
-                  { term: { id_parent: section[0].id } },
-                ],
-              },
-            },
-          });
-          result.childSection = childSection.items as SectionElastic[];
-        }
+        },
+      });
+      // if (items.items.length !== 0) {
+      if (items.items.length !== 0) {
+        typePage = items.items[0].type;
       }
 
       if (typePage === 'section') {
-        const filterCatalog = this.getFilterCatalog(filter, sectionName);
+        const section = items.items as SectionElastic[];
+        result.childSection = await this.getChildSection(section);
+        const filterCatalog = this.getFilterCatalog(
+          filter,
+          section[0].name ? section[0].name : undefined,
+        );
+        console.log(filterCatalog);
         const sections = await this.searchFromElastic({
           query: {
             bool: { must: filterCatalog },
@@ -647,6 +665,8 @@ export class ElasticsearchService {
         result.itemCatalog = sections.items as ProductElastic[];
         result.filter = sections.aggregations;
       }
+      // }
+
       return formatCatalogContent(
         result,
         layout === 'true' ? await this.getLayout() : null,

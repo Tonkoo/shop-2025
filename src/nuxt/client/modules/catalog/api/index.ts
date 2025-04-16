@@ -12,7 +12,7 @@ export async function getItemCatalog() {
     sorting: 'none',
     filter: JSON.stringify({
       price: { from: 0, to: 10000 },
-      color: ['#FFFF00'],
+      color: ['#000000'],
     }),
     layout: !layoutStores.menu.length,
     onlyFilters: false,
