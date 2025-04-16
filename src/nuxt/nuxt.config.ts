@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   // svgIconSprite: {
   //   sprites: {
   //     default: {
-  //       importPatterns: ['./client/modules/commonUI/assets/icon/default.svg'],
+  //       importPatterns: ['./client/modules/commonUI/assets/icon/radioFalseIcon.svg'],
   //     },
   //   },
   // },
