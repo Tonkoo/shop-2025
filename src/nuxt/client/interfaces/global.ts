@@ -154,6 +154,13 @@ type ResultItemsCatalog = {
   };
 };
 
+type FilterStore = {
+  sort: string;
+  priceFrom: string;
+  priceTo: string;
+  color: string;
+};
+
 export type {
   SectionMain,
   SectionAdmin,
@@ -173,6 +180,7 @@ export type {
   ResultReindex,
   Colors,
   ResultItemsCatalog,
-  // FilterCatalog,
+  FilterCatalog,
   // ParamsCatalog,
+  FilterStore,
 };

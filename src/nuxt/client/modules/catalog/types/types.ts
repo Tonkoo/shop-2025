@@ -1,11 +1,17 @@
-import type { ProductMain, SectionMain } from '~/interfaces/global';
+import type {
+  FilterCatalog,
+  FilterStore,
+  ProductMain,
+  SectionMain,
+} from '~/interfaces/global';
 
 type CatalogState = {
   pathPage: string;
   itemCatalog: ProductMain[];
   childSection: SectionMain[];
+  filter: FilterCatalog;
   dialogFilter: boolean;
-  sort: string;
+  filterCatalog: FilterStore;
 };
 
 export type { CatalogState };

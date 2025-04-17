@@ -19,28 +19,40 @@
       <ArealAccordion label="Сортировка" class="dialog-filter__accordion-item">
         <div class="dialog-filter__block-radio">
           <ArealRadio
-            v-model="catalogStore.sort"
+            v-model="catalogStore.filterCatalog.sort"
             name="catalog-sort"
             value="none"
             label="Без сортировки"
           />
           <ArealRadio
-            v-model="catalogStore.sort"
+            v-model="catalogStore.filterCatalog.sort"
             name="catalog-sort"
             value="newProduct"
             label="По новизне"
           />
           <ArealRadio
-            v-model="catalogStore.sort"
+            v-model="catalogStore.filterCatalog.sort"
             name="catalog-sort"
             value="ascPrice"
             label="По возрастанию цены"
           />
           <ArealRadio
-            v-model="catalogStore.sort"
+            v-model="catalogStore.filterCatalog.sort"
             name="catalog-sort"
             value="descPrice"
             label="По убыванию цены"
+          />
+        </div>
+      </ArealAccordion>
+      <ArealAccordion label="Цена" class="dialog-filter__accordion-item">
+        <div class="dialog-filter__block-price">
+          <ArealFilterInput
+            v-model="catalogStore.filterCatalog.priceFrom"
+            :label="`от ${catalogStore.filter.price.min}`"
+          />
+          <ArealFilterInput
+            v-model="catalogStore.filterCatalog.priceFrom"
+            :label="`до ${catalogStore.filter.price.max}`"
           />
         </div>
       </ArealAccordion>
@@ -54,8 +66,6 @@ import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
 const catalogStore = useCatalogStore();
 
 const dialog = computed(() => catalogStore.dialogFilter);
-
-const selectedSort = ref('none');
 </script>
 
 <style scoped lang="scss">
@@ -89,8 +99,6 @@ const selectedSort = ref('none');
   &__block-price {
     padding-top: 4px;
     display: flex;
-    flex-direction: column;
-    gap: 16px;
   }
   &__input {
     display: flex;

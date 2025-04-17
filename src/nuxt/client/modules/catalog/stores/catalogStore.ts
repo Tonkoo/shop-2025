@@ -7,8 +7,20 @@ export const useCatalogStore = defineStore('catalog-store', {
     pathPage: '',
     itemCatalog: [],
     childSection: [],
+    filter: {
+      color: [],
+      price: {
+        min: 0,
+        max: 0,
+      },
+    },
     dialogFilter: false,
-    sort: 'none',
+    filterCatalog: {
+      sort: 'none',
+      priceFrom: '',
+      priceTo: '',
+      color: '',
+    },
   }),
   actions: {
     setParamCatalog(value: string) {
@@ -17,6 +29,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     setItems(value: ResultItemsCatalog) {
       this.itemCatalog = value.content.itemCatalog;
       this.childSection = value.content.childSection;
+      this.filter = value.content.filter;
     },
     setDialogFilter() {
       if (!this.dialogFilter) {
@@ -26,7 +39,7 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.dialogFilter = false;
     },
     setSort(value: string) {
-      this.sort = value;
+      this.filterCatalog.sort = value;
     },
   },
 });
