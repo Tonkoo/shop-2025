@@ -1,6 +1,6 @@
 <template>
-  <div class="accordion" @click="toggleAccordion">
-    <div class="accordion__text">
+  <div class="accordion">
+    <div class="accordion__text" @click="toggleAccordion">
       <span>{{ label }}</span>
       <ArealSvg :icon-name="isOpen ? 'accordionClose' : 'accordionOpen'" />
     </div>

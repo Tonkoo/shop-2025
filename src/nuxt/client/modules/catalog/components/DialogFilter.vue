@@ -18,33 +18,29 @@
       </areal-button>
       <ArealAccordion label="Сортировка" class="dialog-filter__accordion-item">
         <div class="dialog-filter__block-radio">
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
+          <ArealRadio
+            v-model="catalogStore.sort"
+            name="catalog-sort"
+            value="none"
             label="Без сортировки"
-            color="black"
           />
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
-            label="Без новизне"
-            color="black"
+          <ArealRadio
+            v-model="catalogStore.sort"
+            name="catalog-sort"
+            value="newProduct"
+            label="По новизне"
           />
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
+          <ArealRadio
+            v-model="catalogStore.sort"
+            name="catalog-sort"
+            value="ascPrice"
             label="По возрастанию цены"
-            color="black"
           />
-          <q-radio
-            size="xs"
-            model-value=""
-            val=""
+          <ArealRadio
+            v-model="catalogStore.sort"
+            name="catalog-sort"
+            value="descPrice"
             label="По убыванию цены"
-            color="black"
           />
         </div>
       </ArealAccordion>
@@ -59,9 +55,7 @@ const catalogStore = useCatalogStore();
 
 const dialog = computed(() => catalogStore.dialogFilter);
 
-const input1 = ref('');
-const input2 = ref('');
-const color = ref(false);
+const selectedSort = ref('none');
 </script>
 
 <style scoped lang="scss">

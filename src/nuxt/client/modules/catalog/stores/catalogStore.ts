@@ -8,6 +8,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     itemCatalog: [],
     childSection: [],
     dialogFilter: false,
+    sort: 'none',
   }),
   actions: {
     setParamCatalog(value: string) {
@@ -23,6 +24,9 @@ export const useCatalogStore = defineStore('catalog-store', {
         return;
       }
       this.dialogFilter = false;
+    },
+    setSort(value: string) {
+      this.sort = value;
     },
   },
 });

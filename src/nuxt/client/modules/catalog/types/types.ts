@@ -5,6 +5,7 @@ type CatalogState = {
   itemCatalog: ProductMain[];
   childSection: SectionMain[];
   dialogFilter: boolean;
+  sort: string;
 };
 
 export type { CatalogState };
