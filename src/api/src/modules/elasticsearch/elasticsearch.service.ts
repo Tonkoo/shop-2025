@@ -131,23 +131,21 @@ export class ElasticsearchService {
 
   getFilterCatalog(data: string, section?: SectionElastic[]): any[] {
     const filter: FilterCatalog = JSON.parse(data) as FilterCatalog;
-    const result: any[] = [];
-    if (filter.price) {
+    const result: any[] = [{ term: { 'type.keyword': 'product' } }];
+    if (filter.priceTo && filter.priceFrom) {
       result.push({
         range: {
           price: {
-            gte: filter.price.from,
-            lte: filter.price.to,
+            gte: Number(filter.priceFrom),
+            lte: Number(filter.priceTo),
           },
         },
       });
     }
-    if (filter.color) {
-      result.push(
-        { terms: { 'hexColor.keyword': filter.color } },
-        { term: { 'type.keyword': 'product' } },
-      );
+    if (filter.color.length !== 0) {
+      result.push({ terms: { 'hexColor.keyword': filter.color } });
     }
+
     if (section && section?.length !== 0) {
       result.push({ term: { 'sectionName.keyword': section[0].name } });
     }
@@ -624,7 +622,6 @@ export class ElasticsearchService {
   }
 
   async getItemCatalog(params: ParamsCatalog) {
-    console.log(params);
     const { url, filter, layout, sorting, onlyFilters } = params;
     try {
       let typePage = 'section';
@@ -665,6 +662,7 @@ export class ElasticsearchService {
             sort = [];
             break;
         }
+        console.log(filterCatalog);
         const products = await this.searchFromElastic({
           query: {
             bool: { must: filterCatalog },

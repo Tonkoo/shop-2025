@@ -10,10 +10,7 @@ export async function getItemCatalog() {
   const params = {
     url: catalogStore.pathPage,
     sorting: 'none',
-    filter: JSON.stringify({
-      price: { from: 0, to: 10000 },
-      color: ['#000000'],
-    }),
+    filter: JSON.stringify(catalogStore.filterCatalog),
     layout: !layoutStores.menu.length,
     onlyFilters: false,
     // url: catalogStore.pathPage,

@@ -158,7 +158,7 @@ type FilterStore = {
   sort: string;
   priceFrom: string;
   priceTo: string;
-  color: string;
+  color: string[];
 };
 
 export type {

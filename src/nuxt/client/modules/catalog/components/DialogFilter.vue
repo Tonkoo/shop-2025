@@ -56,6 +56,25 @@
           />
         </div>
       </ArealAccordion>
+      <ArealAccordion label="Цвет" class="dialog-filter__accordion-item">
+        <div class="dialog-filter__block-color">
+          <div
+            v-for="(color, index) in catalogStore.filter.color"
+            :key="index"
+            class="dialog-filter__block-color__wrapper"
+            :class="{
+              'dialog-filter__block-color__wrapper_checked':
+                catalogStore.filterCatalog.color.includes(color),
+            }"
+            @click="catalogStore.setColor(color)"
+          >
+            <div
+              class="dialog-filter__block-color__circle"
+              :style="{ backgroundColor: color }"
+            />
+          </div>
+        </div>
+      </ArealAccordion>
     </div>
   </ArealDialog>
 </template>
@@ -80,7 +99,7 @@ const dialog = computed(() => catalogStore.dialogFilter);
   }
   &__accordion-item {
     border-bottom: 1px solid black;
-
+    //margin-bottom: 24px;
     &:last-child {
       border-bottom: 0;
     }
@@ -104,10 +123,25 @@ const dialog = computed(() => catalogStore.dialogFilter);
     display: flex;
     flex-direction: row;
   }
-  &__color {
+  &__block-color {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 16px;
+    &__wrapper {
+      height: 26px;
+      width: 26px;
+      border-radius: 50%;
+      padding: 2px;
+
+      &_checked {
+        border: 1px solid getColor('black', 3);
+      }
+    }
+    &__circle {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
   }
   &__checkbox {
     display: flex;

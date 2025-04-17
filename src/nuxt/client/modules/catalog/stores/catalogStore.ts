@@ -19,7 +19,7 @@ export const useCatalogStore = defineStore('catalog-store', {
       sort: 'none',
       priceFrom: '',
       priceTo: '',
-      color: '',
+      color: [],
     },
   }),
   actions: {
@@ -40,6 +40,15 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     setSort(value: string) {
       this.filterCatalog.sort = value;
+    },
+    setColor(value: string) {
+      if (this.filterCatalog.color.includes(value)) {
+        this.filterCatalog.color = this.filterCatalog.color.filter(
+          (c) => c !== value
+        );
+      } else {
+        this.filterCatalog.color.push(value);
+      }
     },
   },
 });

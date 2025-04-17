@@ -172,11 +172,9 @@ type CatalogLayout = CatalogContent & {
 };
 
 type FilterCatalog = {
-  price?: {
-    from?: number;
-    to?: number;
-  };
-  color?: string[];
+  priceFrom: string;
+  priceTo: string;
+  color: string[];
 };
 
 type ParamsCatalog = {
