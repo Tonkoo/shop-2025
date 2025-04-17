@@ -16,65 +16,83 @@
       >
         <ArealSvg icon-name="closeMenu" />
       </areal-button>
-      <ArealAccordion label="Сортировка" class="dialog-filter__accordion-item">
-        <div class="dialog-filter__block-radio">
-          <ArealRadio
-            v-model="catalogStore.filterCatalog.sort"
-            name="catalog-sort"
-            value="none"
-            label="Без сортировки"
-          />
-          <ArealRadio
-            v-model="catalogStore.filterCatalog.sort"
-            name="catalog-sort"
-            value="newProduct"
-            label="По новизне"
-          />
-          <ArealRadio
-            v-model="catalogStore.filterCatalog.sort"
-            name="catalog-sort"
-            value="ascPrice"
-            label="По возрастанию цены"
-          />
-          <ArealRadio
-            v-model="catalogStore.filterCatalog.sort"
-            name="catalog-sort"
-            value="descPrice"
-            label="По убыванию цены"
-          />
-        </div>
-      </ArealAccordion>
-      <ArealAccordion label="Цена" class="dialog-filter__accordion-item">
-        <div class="dialog-filter__block-price">
-          <ArealFilterInput
-            v-model="catalogStore.filterCatalog.priceFrom"
-            :label="`от ${catalogStore.filter.price.min}`"
-          />
-          <ArealFilterInput
-            v-model="catalogStore.filterCatalog.priceFrom"
-            :label="`до ${catalogStore.filter.price.max}`"
-          />
-        </div>
-      </ArealAccordion>
-      <ArealAccordion label="Цвет" class="dialog-filter__accordion-item">
-        <div class="dialog-filter__block-color">
-          <div
-            v-for="(color, index) in catalogStore.filter.color"
-            :key="index"
-            class="dialog-filter__block-color__wrapper"
-            :class="{
-              'dialog-filter__block-color__wrapper_checked':
-                catalogStore.filterCatalog.color.includes(color),
-            }"
-            @click="catalogStore.setColor(color)"
-          >
-            <div
-              class="dialog-filter__block-color__circle"
-              :style="{ backgroundColor: color }"
+      <div class="dialog-filter__block-filter">
+        <ArealAccordion
+          label="Сортировка"
+          class="dialog-filter__accordion-item"
+        >
+          <div class="dialog-filter__block-radio">
+            <ArealRadio
+              v-model="catalogStore.filterCatalog.sort"
+              name="catalog-sort"
+              value="none"
+              label="Без сортировки"
+            />
+            <ArealRadio
+              v-model="catalogStore.filterCatalog.sort"
+              name="catalog-sort"
+              value="newProduct"
+              label="По новизне"
+            />
+            <ArealRadio
+              v-model="catalogStore.filterCatalog.sort"
+              name="catalog-sort"
+              value="ascPrice"
+              label="По возрастанию цены"
+            />
+            <ArealRadio
+              v-model="catalogStore.filterCatalog.sort"
+              name="catalog-sort"
+              value="descPrice"
+              label="По убыванию цены"
             />
           </div>
-        </div>
-      </ArealAccordion>
+        </ArealAccordion>
+        <ArealAccordion label="Цена" class="dialog-filter__accordion-item">
+          <div class="dialog-filter__block-price">
+            <ArealFilterInput
+              v-model="catalogStore.filterCatalog.priceFrom"
+              :label="`от ${catalogStore.filter.price.min}`"
+            />
+            <ArealFilterInput
+              v-model="catalogStore.filterCatalog.priceFrom"
+              :label="`до ${catalogStore.filter.price.max}`"
+            />
+          </div>
+        </ArealAccordion>
+        <ArealAccordion label="Цвет" class="dialog-filter__accordion-item">
+          <div class="dialog-filter__block-color">
+            <div
+              v-for="(color, index) in catalogStore.filter.color"
+              :key="index"
+              class="dialog-filter__block-color__wrapper"
+              :class="{
+                'dialog-filter__block-color__wrapper_checked':
+                  catalogStore.filterCatalog.color.includes(color),
+              }"
+              @click="catalogStore.setColor(color)"
+            >
+              <div
+                class="dialog-filter__block-color__circle"
+                :style="{ backgroundColor: color }"
+              />
+            </div>
+          </div>
+        </ArealAccordion>
+      </div>
+
+      <div class="dialog-filter__footer">
+        <ArealButton
+          class="dialog-filter__footer__button"
+          outline
+          label="Показать"
+        />
+        <ArealButton
+          class="dialog-filter__footer__button"
+          outline
+          label="Очистить"
+        />
+      </div>
     </div>
   </ArealDialog>
 </template>
@@ -90,12 +108,17 @@ const dialog = computed(() => catalogStore.dialogFilter);
 <style scoped lang="scss">
 .dialog-filter {
   &__card {
+    display: flex;
+    flex-direction: column;
     position: fixed;
     right: 0;
     width: 520px;
     background: getColor('white', 1);
     border-radius: 0;
     padding: 40px;
+  }
+  &__block-filter {
+    flex-grow: 1;
   }
   &__accordion-item {
     border-bottom: 1px solid black;
@@ -143,10 +166,13 @@ const dialog = computed(() => catalogStore.dialogFilter);
       border-radius: 50%;
     }
   }
-  &__checkbox {
+  &__footer {
     display: flex;
     flex-direction: row;
-    gap: 6px;
+    box-sizing: border-box;
+    &__button {
+      width: 100%;
+    }
   }
 }
 </style>
