@@ -6,18 +6,11 @@ import type { ResultItemsCatalog } from '~/interfaces/global';
 export async function getItemCatalog() {
   const catalogStore = useCatalogStore();
   const layoutStores = useLayoutStores();
-
   const params = {
     url: catalogStore.pathPage,
-    sorting: 'none',
     filter: JSON.stringify(catalogStore.filterCatalog),
     layout: !layoutStores.menu.length,
     onlyFilters: catalogStore.onlyFilter,
-    // url: catalogStore.pathPage,
-    // sorting: 'none',
-    // filter: JSON.stringify({}),
-    // layout: false,
-    // onlyFilters: true,
   };
   try {
     const response = await api.get<{ data: ResultItemsCatalog }>(

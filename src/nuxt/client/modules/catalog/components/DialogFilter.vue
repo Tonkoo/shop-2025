@@ -52,7 +52,7 @@
           <div class="dialog-filter__block-price">
             <ArealFilterInput
               v-model="catalogStore.filterCatalog.priceFrom"
-              :label="`от ${catalogStore.filter.price.min}`"
+              :placeholder="`от ${catalogStore.filter.price.min}`"
               :debounce="400"
               :max="catalogStore.filter.price.max"
               @update:model-value="getOnlyFilter"
@@ -60,7 +60,7 @@
             <ArealFilterInput
               v-model="catalogStore.filterCatalog.priceTo"
               :max="catalogStore.filter.price.max"
-              :label="`до ${catalogStore.filter.price.max}`"
+              :placeholder="`до ${catalogStore.filter.price.max}`"
             />
           </div>
         </ArealAccordion>
@@ -74,7 +74,7 @@
                 'dialog-filter__block-color__wrapper_checked':
                   catalogStore.filterCatalog.color.includes(color),
               }"
-              @click="catalogStore.setColor(color)"
+              @click="setColorFilter(color)"
             >
               <div
                 class="dialog-filter__block-color__circle"
@@ -118,6 +118,12 @@ const getFilteredData = () => {
 
 const getOnlyFilter = () => {
   catalogStore.setOnlyFilter(true);
+  catalogModule.getItemCatalog();
+};
+
+const setColorFilter = (color: string) => {
+  catalogStore.setOnlyFilter(true);
+  catalogStore.setColor(color);
   catalogModule.getItemCatalog();
 };
 

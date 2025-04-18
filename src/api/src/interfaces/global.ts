@@ -172,6 +172,7 @@ type CatalogLayout = CatalogContent & {
 };
 
 type FilterCatalog = {
+  sort: string;
   priceFrom: string;
   priceTo: string;
   color: string[];

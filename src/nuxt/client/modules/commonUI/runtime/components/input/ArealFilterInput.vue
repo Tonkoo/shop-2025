@@ -4,10 +4,11 @@
     outlined
     :debounce="debounce"
     :model-value="modelValue"
-    :label="label"
+    :placeholder="placeholder"
     @keydown="handleKeyDown"
     @update:model-value="handleInput"
   />
+  <!--    :label="label"-->
 </template>
 
 <script setup lang="ts">
@@ -16,7 +17,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  label: {
+  placeholder: {
     type: String,
     default: '',
   },
@@ -38,6 +39,22 @@ const emit = defineEmits(['update:modelValue']);
 
 const handleKeyDown = (e: KeyboardEvent) => {
   const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  const currentValue = props.modelValue;
+  const maxValue = props.max.toString();
+
+  if (currentValue === maxValue && !allowedKeys.includes(e.key)) {
+    e.preventDefault();
+    return;
+  }
+
+  if (props.max > 0 && !allowedKeys.includes(e.key) && !isNaN(Number(e.key))) {
+    const potentialValue = currentValue + e.key;
+    if (Number(potentialValue) > props.max) {
+      e.preventDefault();
+      return;
+    }
+  }
+
   if (!allowedKeys.includes(e.key) && isNaN(Number(e.key))) {
     e.preventDefault();
   }

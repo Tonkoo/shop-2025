@@ -130,14 +130,14 @@ export class ElasticsearchService {
     return filter;
   }
 
-  getFilterCatalog(data: string, section?: SectionElastic[]): any[] {
-    const filter: FilterCatalog = JSON.parse(data) as FilterCatalog;
+  getFilterCatalog(data: FilterCatalog, section?: SectionElastic[]): any[] {
+    // const filter: FilterCatalog = JSON.parse(data) as FilterCatalog;
     const result: any[] = [{ term: { 'type.keyword': 'product' } }];
 
-    if (filter.priceTo || filter.priceFrom) {
+    if (data.priceTo || data.priceFrom) {
       const priceRange: PriceRange = {};
-      if (filter.priceFrom) priceRange.gte = Number(filter.priceFrom);
-      if (filter.priceTo) priceRange.lte = Number(filter.priceTo);
+      if (data.priceFrom) priceRange.gte = Number(data.priceFrom);
+      if (data.priceTo) priceRange.lte = Number(data.priceTo);
 
       result.push({
         range: {
@@ -145,8 +145,8 @@ export class ElasticsearchService {
         },
       });
     }
-    if (filter.color.length !== 0) {
-      result.push({ terms: { 'hexColor.keyword': filter.color } });
+    if (data.color.length !== 0) {
+      result.push({ terms: { 'hexColor.keyword': data.color } });
     }
 
     if (section && section?.length !== 0) {
@@ -625,7 +625,8 @@ export class ElasticsearchService {
   }
 
   async getItemCatalog(params: ParamsCatalog) {
-    const { url, filter, layout, sorting, onlyFilters } = params;
+    const { url, filter, layout, onlyFilters } = params;
+    const filterConvert: FilterCatalog = JSON.parse(filter) as FilterCatalog;
     try {
       let typePage = 'section';
       const result: CatalogContent = {
@@ -646,9 +647,9 @@ export class ElasticsearchService {
       if (typePage === 'section') {
         const section = items.items as SectionElastic[];
         result.childSection = await this.getChildSection(section);
-        const filterCatalog = this.getFilterCatalog(filter, section);
+        const filterCatalog = this.getFilterCatalog(filterConvert, section);
         let sort: any[] = [];
-        switch (sorting) {
+        switch (filterConvert.sort) {
           case 'none':
             sort = [];
             break;
