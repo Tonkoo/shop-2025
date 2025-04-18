@@ -22,15 +22,16 @@ export async function getItemCatalog() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    console.log(response.data.data);
     if (params.onlyFilters) {
       catalogStore.setOnlyFilter(false);
-      catalogStore.setFilter(response.data.data);
+      catalogStore.setTotalItems(response.data.data.content.totalItems);
+      //
+      catalogStore.setTestColor(response.data.data.content.filter.color);
     } else {
       if (params.layout) {
         layoutStores.setMenu(response.data.data.layout.menu);
+        catalogStore.setFilter(response.data.data);
       }
-
       catalogStore.setItems(response.data.data);
     }
   } catch (err) {

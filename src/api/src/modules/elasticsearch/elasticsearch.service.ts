@@ -630,6 +630,7 @@ export class ElasticsearchService {
     try {
       let typePage = 'section';
       const result: CatalogContent = {
+        totalItems: 0,
         itemCatalog: [],
       };
       const items = await this.searchFromElastic({
@@ -680,6 +681,7 @@ export class ElasticsearchService {
             },
           },
         });
+        result.totalItems = products.total.value;
         result.itemCatalog = products.items as ProductElastic[];
         result.filter = products.aggregations;
       }

@@ -7,6 +7,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     pathPage: '',
     itemCatalog: [],
     childSection: [],
+    totalItems: 0,
     filter: {
       color: [],
       price: {
@@ -22,6 +23,7 @@ export const useCatalogStore = defineStore('catalog-store', {
       color: [],
     },
     onlyFilter: false,
+    testColor: [],
   }),
   actions: {
     setParamCatalog(value: string) {
@@ -30,7 +32,14 @@ export const useCatalogStore = defineStore('catalog-store', {
     setItems(value: ResultItemsCatalog) {
       this.itemCatalog = value.content.itemCatalog;
       this.childSection = value.content.childSection;
-      this.filter = value.content.filter;
+      // this.filter = value.content.filter;
+      this.totalItems = value.content.totalItems;
+    },
+    setTestColor(value: string[]) {
+      this.testColor = value;
+    },
+    setTotalItems(value: number) {
+      this.totalItems = value;
     },
     setFilter(value: ResultItemsCatalog) {
       this.filter = value.content.filter;
@@ -56,6 +65,19 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     setOnlyFilter(value: boolean) {
       this.onlyFilter = value;
+    },
+    clearFilter() {
+      this.filterCatalog = {
+        sort: 'none',
+        priceFrom: '',
+        priceTo: '',
+        color: [],
+      };
+    },
+    removeColor(value: string) {
+      this.filterCatalog.color = this.filterCatalog.color.filter(
+        (item) => item !== value
+      );
     },
   },
 });

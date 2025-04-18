@@ -13,6 +13,8 @@ type CatalogState = {
   dialogFilter: boolean;
   filterCatalog: FilterStore;
   onlyFilter: boolean;
+  totalItems: number;
+  testColor: string[];
 };
 
 export type { CatalogState };

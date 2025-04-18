@@ -16,6 +16,36 @@
       >
         <ArealSvg icon-name="closeMenu" />
       </areal-button>
+      <div v-if="hasActiveFilters" class="dialog-filter__tags-wrapper">
+        <div
+          v-if="catalogStore.filterCatalog.priceFrom"
+          class="dialog-filter__tags"
+          @click="catalogStore.filterCatalog.priceFrom = ''"
+        >
+          <span>от {{ catalogStore.filterCatalog.priceFrom }}</span>
+          <ArealSvg size="S" icon-name="CloseIcon" />
+        </div>
+        <div
+          v-if="catalogStore.filterCatalog.priceTo"
+          class="dialog-filter__tags"
+          @click="catalogStore.filterCatalog.priceTo = ''"
+        >
+          <span>до {{ catalogStore.filterCatalog.priceTo }}</span>
+          <ArealSvg size="S" icon-name="CloseIcon" />
+        </div>
+        <div
+          v-for="color in catalogStore.filterCatalog.color"
+          :key="color"
+          class="dialog-filter__tags"
+          @click="catalogStore.removeColor(color)"
+        >
+          <div
+            class="dialog-filter__tags__circle"
+            :style="{ backgroundColor: color }"
+          />
+          <ArealSvg size="S" icon-name="CloseIcon" />
+        </div>
+      </div>
       <div class="dialog-filter__block-filter">
         <ArealAccordion
           label="Сортировка"
@@ -90,7 +120,7 @@
           flat
           square
           class="dialog-filter__footer__button dialog-filter__footer__button_black"
-          :label="`Показать(${catalogStore.itemCatalog.length})`"
+          :label="`Показать(${catalogStore.totalItems})`"
           @click="getFilteredData()"
         />
         <ArealButton
@@ -98,6 +128,7 @@
           flat
           class="dialog-filter__footer__button dialog-filter__footer__button_white"
           label="Очистить"
+          @click="clearFilter()"
         />
       </div>
     </div>
@@ -111,6 +142,14 @@ import { useCatalogModule } from '~/modules/catalog/global';
 const catalogStore = useCatalogStore();
 const catalogModule = useCatalogModule();
 
+const hasActiveFilters = computed(() => {
+  return (
+    catalogStore.filterCatalog.priceFrom ||
+    catalogStore.filterCatalog.priceTo ||
+    catalogStore.filterCatalog.color.length > 0
+  );
+});
+
 const getFilteredData = () => {
   catalogModule.getItemCatalog();
   catalogStore.setDialogFilter();
@@ -118,6 +157,12 @@ const getFilteredData = () => {
 
 const getOnlyFilter = () => {
   catalogStore.setOnlyFilter(true);
+  catalogModule.getItemCatalog();
+};
+
+const clearFilter = () => {
+  catalogStore.setOnlyFilter(true);
+  catalogStore.clearFilter();
   catalogModule.getItemCatalog();
 };
 
@@ -142,6 +187,28 @@ const dialog = computed(() => catalogStore.dialogFilter);
     border-radius: 0;
     padding: 40px;
   }
+  &__tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  &__tags {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px;
+    background-color: getColor('black', 1);
+    color: getColor('white', 1);
+    font-size: 12px;
+    column-gap: 4px;
+    &__circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid getColor('white', 1);
+    }
+  }
+
   &__block-filter {
     flex-grow: 1;
   }
