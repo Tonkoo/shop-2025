@@ -12,6 +12,7 @@ type CatalogState = {
   filter: FilterCatalog;
   dialogFilter: boolean;
   filterCatalog: FilterStore;
+  onlyFilter: boolean;
 };
 
 export type { CatalogState };

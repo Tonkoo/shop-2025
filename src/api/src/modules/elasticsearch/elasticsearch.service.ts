@@ -21,6 +21,7 @@ import {
   mainLayout,
   ParamsCatalog,
   payLoadTest,
+  PriceRange,
   ProductClient,
   ProductElastic,
   ProductEntities,
@@ -132,13 +133,15 @@ export class ElasticsearchService {
   getFilterCatalog(data: string, section?: SectionElastic[]): any[] {
     const filter: FilterCatalog = JSON.parse(data) as FilterCatalog;
     const result: any[] = [{ term: { 'type.keyword': 'product' } }];
-    if (filter.priceTo && filter.priceFrom) {
+
+    if (filter.priceTo || filter.priceFrom) {
+      const priceRange: PriceRange = {};
+      if (filter.priceFrom) priceRange.gte = Number(filter.priceFrom);
+      if (filter.priceTo) priceRange.lte = Number(filter.priceTo);
+
       result.push({
         range: {
-          price: {
-            gte: Number(filter.priceFrom),
-            lte: Number(filter.priceTo),
-          },
+          price: priceRange,
         },
       });
     }
@@ -662,7 +665,6 @@ export class ElasticsearchService {
             sort = [];
             break;
         }
-        console.log(filterCatalog);
         const products = await this.searchFromElastic({
           query: {
             bool: { must: filterCatalog },

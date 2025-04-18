@@ -203,6 +203,10 @@ type ResultFilterCatalog = {
   color: string[];
 };
 
+type PriceRange = {
+  gte?: number;
+  lte?: number;
+};
 export {
   response,
   elasticsearchResponse,
@@ -228,5 +232,6 @@ export {
   ParamsCatalog,
   ResultFilterCatalog,
   AggregationsFilter,
+  PriceRange,
 };
 // export default class FilterCatalog {}

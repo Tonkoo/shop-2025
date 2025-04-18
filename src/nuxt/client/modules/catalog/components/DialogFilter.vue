@@ -53,9 +53,13 @@
             <ArealFilterInput
               v-model="catalogStore.filterCatalog.priceFrom"
               :label="`от ${catalogStore.filter.price.min}`"
+              :debounce="400"
+              :max="catalogStore.filter.price.max"
+              @update:model-value="getOnlyFilter"
             />
             <ArealFilterInput
-              v-model="catalogStore.filterCatalog.priceFrom"
+              v-model="catalogStore.filterCatalog.priceTo"
+              :max="catalogStore.filter.price.max"
               :label="`до ${catalogStore.filter.price.max}`"
             />
           </div>
@@ -83,13 +87,16 @@
 
       <div class="dialog-filter__footer">
         <ArealButton
-          class="dialog-filter__footer__button"
-          outline
-          label="Показать"
+          flat
+          square
+          class="dialog-filter__footer__button dialog-filter__footer__button_black"
+          :label="`Показать(${catalogStore.itemCatalog.length})`"
+          @click="getFilteredData()"
         />
         <ArealButton
-          class="dialog-filter__footer__button"
-          outline
+          square
+          flat
+          class="dialog-filter__footer__button dialog-filter__footer__button_white"
           label="Очистить"
         />
       </div>
@@ -99,8 +106,20 @@
 
 <script setup lang="ts">
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
+import { useCatalogModule } from '~/modules/catalog/global';
 
 const catalogStore = useCatalogStore();
+const catalogModule = useCatalogModule();
+
+const getFilteredData = () => {
+  catalogModule.getItemCatalog();
+  catalogStore.setDialogFilter();
+};
+
+const getOnlyFilter = () => {
+  catalogStore.setOnlyFilter(true);
+  catalogModule.getItemCatalog();
+};
 
 const dialog = computed(() => catalogStore.dialogFilter);
 </script>
@@ -172,6 +191,19 @@ const dialog = computed(() => catalogStore.dialogFilter);
     box-sizing: border-box;
     &__button {
       width: 100%;
+
+      &_black {
+        background-color: getColor('black', 1) !important;
+        color: getColor('white', 1);
+      }
+      &_white {
+        border: 1px solid getColor('grey', 15);
+        &:hover {
+          background-color: transparent;
+          border-color: getColor('grey', 13);
+          color: getColor('grey', 12);
+        }
+      }
     }
   }
 }

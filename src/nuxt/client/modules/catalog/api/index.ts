@@ -12,7 +12,7 @@ export async function getItemCatalog() {
     sorting: 'none',
     filter: JSON.stringify(catalogStore.filterCatalog),
     layout: !layoutStores.menu.length,
-    onlyFilters: false,
+    onlyFilters: catalogStore.onlyFilter,
     // url: catalogStore.pathPage,
     // sorting: 'none',
     // filter: JSON.stringify({}),
@@ -30,10 +30,16 @@ export async function getItemCatalog() {
       throw new Error('Error while receiving data');
     }
     console.log(response.data.data);
-    if (params.layout) {
-      layoutStores.setMenu(response.data.data.layout.menu);
+    if (params.onlyFilters) {
+      catalogStore.setOnlyFilter(false);
+      catalogStore.setFilter(response.data.data);
+    } else {
+      if (params.layout) {
+        layoutStores.setMenu(response.data.data.layout.menu);
+      }
+
+      catalogStore.setItems(response.data.data);
     }
-    catalogStore.setItems(response.data.data);
   } catch (err) {
     console.error(err);
     throw err;
