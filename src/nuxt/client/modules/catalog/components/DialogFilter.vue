@@ -89,8 +89,10 @@
             />
             <ArealFilterInput
               v-model="catalogStore.filterCatalog.priceTo"
+              :debounce="400"
               :max="catalogStore.filter.price.max"
               :placeholder="`до ${catalogStore.filter.price.max}`"
+              @update:model-value="getOnlyFilter"
             />
           </div>
         </ArealAccordion>
@@ -103,6 +105,8 @@
               :class="{
                 'dialog-filter__block-color__wrapper_checked':
                   catalogStore.filterCatalog.color.includes(color),
+                'dialog-filter__block-color__wrapper_disabled':
+                  !catalogStore.availableColors.includes(color),
               }"
               @click="setColorFilter(color)"
             >
@@ -250,6 +254,11 @@ const dialog = computed(() => catalogStore.dialogFilter);
 
       &_checked {
         border: 1px solid getColor('black', 3);
+      }
+      &_disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
       }
     }
     &__circle {

@@ -23,7 +23,7 @@ export const useCatalogStore = defineStore('catalog-store', {
       color: [],
     },
     onlyFilter: false,
-    testColor: [],
+    availableColors: [],
   }),
   actions: {
     setParamCatalog(value: string) {
@@ -32,11 +32,10 @@ export const useCatalogStore = defineStore('catalog-store', {
     setItems(value: ResultItemsCatalog) {
       this.itemCatalog = value.content.itemCatalog;
       this.childSection = value.content.childSection;
-      // this.filter = value.content.filter;
       this.totalItems = value.content.totalItems;
     },
-    setTestColor(value: string[]) {
-      this.testColor = value;
+    setAvailableColors(value: string[]) {
+      this.availableColors = value;
     },
     setTotalItems(value: number) {
       this.totalItems = value;

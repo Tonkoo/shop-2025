@@ -14,7 +14,7 @@ type CatalogState = {
   filterCatalog: FilterStore;
   onlyFilter: boolean;
   totalItems: number;
-  testColor: string[];
+  availableColors: string[];
 };
 
 export type { CatalogState };
