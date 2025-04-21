@@ -37,17 +37,12 @@
 import { useRouter } from 'vue-router';
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
 import SwiperChildSection from '~/modules/catalog/components/SwiperChildSection.vue';
-import btnFilter from '~/modules/commonUI/assets/icon/catalog/btnFilter.svg';
 import CatalogProduct from '~/modules/catalog/components/CatalogProduct.vue';
 import DialogFilter from '~/modules/catalog/components/DialogFilter.vue';
 
 const catalogStore = useCatalogStore();
 
 const router = useRouter();
-
-const route = useRoute();
-
-catalogStore.setParamCatalog(route.fullPath);
 </script>
 
 <style scoped lang="scss">

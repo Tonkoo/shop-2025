@@ -6,7 +6,6 @@ import type {
 } from '~/interfaces/global';
 
 type CatalogState = {
-  pathPage: string;
   itemCatalog: ProductMain[];
   childSection: SectionMain[];
   filter: FilterCatalog;
@@ -19,4 +18,8 @@ type CatalogState = {
   contentName: string;
 };
 
-export type { CatalogState };
+type DetailPageState = {
+  product: ProductMain | object;
+};
+
+export type { CatalogState, DetailPageState };

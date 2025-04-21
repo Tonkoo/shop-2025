@@ -162,9 +162,10 @@ type mainResponse = mainContent & {
 };
 
 type CatalogContent = {
+  typeItem: string;
   contentName: string;
   totalItems: number;
-  itemCatalog: ProductElastic[] | [];
+  itemCatalog: ProductElastic[] | [] | ProductElastic;
   childSection?: SectionElastic[];
   filter?: ResultFilterCatalog;
 };

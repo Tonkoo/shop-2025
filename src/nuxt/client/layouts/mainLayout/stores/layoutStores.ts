@@ -6,6 +6,8 @@ export const useLayoutStores = defineStore('layout-store', {
   state: (): LayoutType => ({
     sidebar: false,
     menu: [],
+    typePage: '',
+    pathPage: '',
   }),
   actions: {
     setSidebar() {
@@ -17,6 +19,13 @@ export const useLayoutStores = defineStore('layout-store', {
     },
     setMenu(value: SectionMain[]) {
       this.menu = value;
+    },
+    setTypePage(value: string) {
+      this.typePage = value;
+      console.log(this.typePage);
+    },
+    setPathPage(value: string) {
+      this.pathPage = value;
     },
   },
 });

@@ -1,18 +1,22 @@
-<!--TODO: написать виджет для детальной страницы и вызывать его в зависимости от типа, пришедшего с бэкенда. -->
 <template>
-  <WgCatalogContainer />
+  <WgCatalogContainer v-if="layoutStores.typePage === 'section'" />
+  <WgDetailPageContainer v-if="layoutStores.typePage === 'product'" />
 </template>
 
 <script setup lang="ts">
 import { useCatalogModule } from '~/modules/catalog/global';
-
+import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 import { useQuasar } from 'quasar';
 import { notifyNegative } from '~/entities/notify.entites';
 
 const catalogModule = useCatalogModule();
+const layoutStores = useLayoutStores();
+
 const quasar = useQuasar();
+const route = useRoute();
 
 onMounted(async () => {
+  layoutStores.setPathPage(route.path);
   await catalogModule.getItemCatalog().catch((err) => {
     quasar.notify({
       ...notifyNegative,

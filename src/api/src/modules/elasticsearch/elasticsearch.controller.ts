@@ -164,7 +164,7 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async getItemCatalog(@Query() params: ParamsCatalog) {
-    const result = await this.services.getItemCatalog(params);
+    const result = await this.services.getItemsCatalog(params);
     // return result;
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }

@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
 import type { CatalogState } from '~/modules/catalog/types/types';
-import type { ResultItemsCatalog } from '~/interfaces/global';
+import type { ProductMain, ResultItemsCatalog } from '~/interfaces/global';
 
 export const useCatalogStore = defineStore('catalog-store', {
   state: (): CatalogState => ({
-    pathPage: '',
     itemCatalog: [],
     childSection: [],
     totalItems: 0,
@@ -28,11 +27,8 @@ export const useCatalogStore = defineStore('catalog-store', {
     contentName: '',
   }),
   actions: {
-    setParamCatalog(value: string) {
-      this.pathPage = value;
-    },
     setItems(value: ResultItemsCatalog) {
-      this.itemCatalog = value.content.itemCatalog;
+      this.itemCatalog = value.content.itemCatalog as ProductMain[];
       this.childSection = value.content.childSection;
       this.totalItems = value.content.totalItems;
       this.contentName = value.content.contentName;
@@ -44,9 +40,6 @@ export const useCatalogStore = defineStore('catalog-store', {
     setTotalItems(value: number) {
       this.totalItems = value;
     },
-    // setFilter(value: ResultItemsCatalog) {
-    //   this.filter = value.content.filter;
-    // },
     setDialogFilter() {
       if (!this.dialogFilter) {
         this.dialogFilter = true;

@@ -129,8 +129,7 @@ export class ElasticsearchService {
     return filter;
   }
 
-  getFilterCatalog(data: FilterCatalog, section?: SectionElastic[]): any[] {
-    // const filter: FilterCatalog = JSON.parse(data) as FilterCatalog;
+  getFilterCatalog(data: FilterCatalog, section?: SectionElastic): any[] {
     const result: any[] = [{ term: { 'type.keyword': 'product' } }];
 
     if (data.priceTo || data.priceFrom) {
@@ -148,8 +147,8 @@ export class ElasticsearchService {
       result.push({ terms: { 'hexColor.keyword': data.color } });
     }
 
-    if (section && section?.length !== 0) {
-      result.push({ term: { 'sectionName.keyword': section[0].name } });
+    if (section) {
+      result.push({ term: { 'sectionName.keyword': section.name } });
     }
     return result;
   }
@@ -232,9 +231,9 @@ export class ElasticsearchService {
     return [...processedProducts, ...processedSections];
   }
 
-  async getChildSection(section: SectionElastic[]) {
+  async getChildSection(section: SectionElastic) {
     let result: SectionElastic[] = [];
-    if (section.length === 0) {
+    if (!section) {
       const childSection = await this.searchFromElastic({
         query: {
           bool: {
@@ -244,13 +243,13 @@ export class ElasticsearchService {
       });
       result = childSection.items as SectionElastic[];
     }
-    if (section.length !== 0 && section[0].level === 1) {
+    if (section && section.level === 1) {
       const childSection = await this.searchFromElastic({
         query: {
           bool: {
             must: [
               { term: { type: 'section' } },
-              { term: { id_parent: section[0].id } },
+              { term: { id_parent: section.id } },
             ],
           },
         },
@@ -258,6 +257,40 @@ export class ElasticsearchService {
       result = childSection.items as SectionElastic[];
     }
     return result;
+  }
+
+  async getItem(url: string) {
+    const items = await this.searchFromElastic({
+      query: {
+        bool: {
+          must: [{ term: { 'url.keyword': url } }],
+        },
+      },
+    });
+
+    return items.items[0];
+  }
+
+  createSortOptions(sorting: string) {
+    let sort: any[] = [];
+    switch (sorting) {
+      case 'none':
+        sort = [];
+        break;
+      case 'newProduct':
+        sort = [{ 'create_at.keyword': { order: 'asc' } }];
+        break;
+      case 'ascPrice':
+        sort = [{ price: { order: 'asc' } }];
+        break;
+      case 'descPrice':
+        sort = [{ price: { order: 'desc' } }];
+        break;
+      default:
+        sort = [];
+        break;
+    }
+    return sort;
   }
 
   async searchFromElastic(payLoad: payLoadTest) {
@@ -624,49 +657,26 @@ export class ElasticsearchService {
     }
   }
 
-  async getItemCatalog(params: ParamsCatalog) {
+  async getItemsCatalog(params: ParamsCatalog) {
     const { url, filter, layout, onlyFilters } = params;
     const filterConvert: FilterCatalog = JSON.parse(filter) as FilterCatalog;
     try {
-      let typePage = 'section';
       const result: CatalogContent = {
+        typeItem: '',
         contentName: '',
         totalItems: 0,
         itemCatalog: [],
       };
-      const items = await this.searchFromElastic({
-        query: {
-          bool: {
-            must: [{ term: { 'url.keyword': url } }],
-          },
-        },
-      });
-      result.contentName = items.items[0].name;
-      if (items.items.length !== 0) {
-        typePage = items.items[0].type;
-      }
-      if (typePage === 'section') {
-        const section = items.items as SectionElastic[];
+      const item = await this.getItem(url);
+      result.typeItem = item ? item.type : 'section';
+      result.contentName = item ? item.name : 'Каталог';
+
+      if (result.typeItem === 'section') {
+        const section = item as SectionElastic;
         result.childSection = await this.getChildSection(section);
         const filterCatalog = this.getFilterCatalog(filterConvert, section);
-        let sort: any[] = [];
-        switch (filterConvert.sort) {
-          case 'none':
-            sort = [];
-            break;
-          case 'newProduct':
-            sort = [{ 'create_at.keyword': { order: 'asc' } }];
-            break;
-          case 'ascPrice':
-            sort = [{ price: { order: 'asc' } }];
-            break;
-          case 'descPrice':
-            sort = [{ price: { order: 'desc' } }];
-            break;
-          default:
-            sort = [];
-            break;
-        }
+        const sort = this.createSortOptions(filterConvert.sort);
+
         const products = await this.searchFromElastic({
           query: {
             bool: { must: filterCatalog },
@@ -684,6 +694,9 @@ export class ElasticsearchService {
         result.totalItems = products.total.value;
         result.itemCatalog = products.items as ProductElastic[];
         result.filter = products.aggregations;
+      }
+      if (result.typeItem === 'product') {
+        result.itemCatalog = item as ProductElastic;
       }
       return formatCatalogContent(
         result,
