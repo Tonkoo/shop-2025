@@ -540,6 +540,7 @@ export class ElasticsearchService {
           },
         },
       });
+      console.log(result);
       const testResult = result.items as SectionElastic[];
 
       return testResult

@@ -12,6 +12,7 @@ export async function getItemCatalog() {
     layout: !layoutStores.menu.length,
     onlyFilters: catalogStore.onlyFilter,
   };
+
   try {
     const response = await api.get<{ data: ResultItemsCatalog }>(
       `/elastic/catalog`,
@@ -35,7 +36,6 @@ export async function getItemCatalog() {
     } else {
       if (params.layout) {
         layoutStores.setMenu(response.data.data.layout.menu);
-        catalogStore.setFilter(response.data.data);
       }
       catalogStore.setItems(response.data.data);
       catalogStore.setAvailableColors(response.data.data.content.filter.color);

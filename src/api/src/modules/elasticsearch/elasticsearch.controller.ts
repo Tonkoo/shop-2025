@@ -17,7 +17,7 @@ export class ElasticController {
 
   @Get('reindex')
   @ApiOperation({
-    summary: 'Первичная индексация всех документов',
+    summary: 'Индексация всех документов',
     description: 'Все данные из базы данных отправляются в поисковый индекс',
   })
   @ApiResponse({

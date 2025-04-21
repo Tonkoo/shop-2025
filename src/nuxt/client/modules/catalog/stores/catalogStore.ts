@@ -36,6 +36,7 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.childSection = value.content.childSection;
       this.totalItems = value.content.totalItems;
       this.contentName = value.content.contentName;
+      this.filter = value.content.filter;
     },
     setAvailableColors(value: string[]) {
       this.availableColors = value;
@@ -43,9 +44,9 @@ export const useCatalogStore = defineStore('catalog-store', {
     setTotalItems(value: number) {
       this.totalItems = value;
     },
-    setFilter(value: ResultItemsCatalog) {
-      this.filter = value.content.filter;
-    },
+    // setFilter(value: ResultItemsCatalog) {
+    //   this.filter = value.content.filter;
+    // },
     setDialogFilter() {
       if (!this.dialogFilter) {
         this.dialogFilter = true;

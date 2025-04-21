@@ -75,9 +75,8 @@ export class ProductsController {
   }
 
   @Get('/id')
-  @ApiOperation({ summary: 'Вывод данных таблицы' })
+  @ApiOperation({ summary: 'Получение продукта по идентификатору' })
   @ApiBody({
-    description: 'Вывод данных таблицы',
     type: ProductDto,
   })
   @ApiResponse({
@@ -105,7 +104,7 @@ export class ProductsController {
   )
   @ApiOperation({ summary: 'Изменение данных продукта' })
   @ApiBody({
-    description: 'Данные для изменения данных продукта',
+    description: 'Данные для изменения продукта',
     type: ProductDto,
   })
   @ApiResponse({
@@ -149,8 +148,6 @@ export class ProductsController {
     );
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
-
-  //TODO: Описать свагер
 
   @Get('/colors')
   @ApiOperation({ summary: 'Получение цветов из БД' })

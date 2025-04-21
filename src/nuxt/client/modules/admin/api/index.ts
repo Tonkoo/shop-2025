@@ -127,7 +127,6 @@ export async function getAllNameColumn(type: string, typeForm?: string) {
     if (typeForm) {
       params.typeForm = adminStore.typeItem;
     }
-
     const response = await api.get('/elastic/admin/name', {
       params,
     });

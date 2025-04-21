@@ -1,19 +1,22 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { FilterCatalog } from '../../../interfaces/global';
-import { Transform } from 'class-transformer';
+import {
+  IsBoolean,
+  IsEmpty,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class payLoad {
   @IsString({
     message: 'Параметр type должен быть типа string',
   })
-  @IsNotEmpty()
   type?: string;
 
   @IsNumber()
   from?: number;
 
   @IsNumber()
-  @IsNotEmpty()
   size?: number;
 
   @IsString({
@@ -21,13 +24,16 @@ export class payLoad {
   })
   searchName?: string;
 
-  @IsString({
-    message: 'Параметр filterSection должен быть типа string',
-  })
+  @IsNumber()
+  @IsOptional()
   filterSection?: number;
 
+  @IsString()
+  @IsOptional()
   typeForm?: string;
 
+  @IsBoolean()
+  @IsOptional()
   getItems?: boolean;
 }
 
