@@ -3,7 +3,7 @@
     <div class="card__section">
       <div class="card__img">
         <areal-link :link="section.url">
-          <areal-img :src="sectionImage" />
+          <areal-img :src="section.images[0].src" />
         </areal-link>
       </div>
       <div class="card__description">
@@ -17,20 +17,12 @@
 
 <script setup lang="ts">
 import type { ProductMain, SectionMain } from '~/interfaces/global';
-import defaultSVG from '~/modules/commonUI/assets/icon/default.svg';
 
-const props = defineProps({
+defineProps({
   section: {
     type: Object as PropType<ProductMain | SectionMain>,
     required: true,
   },
-});
-
-const sectionImage = computed(() => {
-  if (!props.section.images?.length || !props.section.images[0]?.src) {
-    return defaultSVG;
-  }
-  return new URL(props.section.images[0].src, 'http://localhost').toString();
 });
 </script>
 

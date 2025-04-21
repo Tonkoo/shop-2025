@@ -19,7 +19,7 @@ type CatalogState = {
 };
 
 type DetailPageState = {
-  product: ProductMain | object;
+  product: ProductMain;
 };
 
 export type { CatalogState, DetailPageState };

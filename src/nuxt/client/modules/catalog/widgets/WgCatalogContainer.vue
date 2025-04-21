@@ -36,9 +36,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
-import SwiperChildSection from '~/modules/catalog/components/SwiperChildSection.vue';
-import CatalogProduct from '~/modules/catalog/components/CatalogProduct.vue';
-import DialogFilter from '~/modules/catalog/components/DialogFilter.vue';
+import SwiperChildSection from '~/modules/catalog/components/catalog/SwiperChildSection.vue';
+import CatalogProduct from '~/modules/catalog/components/catalog/CatalogProduct.vue';
+import DialogFilter from '~/modules/catalog/components/catalog/DialogFilter.vue';
 
 const catalogStore = useCatalogStore();
 
