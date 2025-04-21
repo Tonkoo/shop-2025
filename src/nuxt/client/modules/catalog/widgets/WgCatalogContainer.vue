@@ -9,7 +9,7 @@
             class="breadcrumbs__link"
             @click="router.back()"
           />
-          <q-breadcrumbs-el label="12312" />
+          <q-breadcrumbs-el :label="catalogStore.contentName" />
         </q-breadcrumbs>
       </div>
       <div class="catalog-filter__swiper">

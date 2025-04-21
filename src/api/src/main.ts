@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { logger } from './utils/logger/logger';
 import { join } from 'path';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -32,14 +33,16 @@ async function bootstrap() {
     },
   });
   // TODO: для булвых значений
-  // app.useGlobalPipes(
-  //     new ValidationPipe({
-  //       transform: true,
-  //       transformOptions: {
-  //         enableImplicitConversion: true, // Автоматическое преобразование типов
-  //       },
-  //     }),
-  // );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   await app.listen(process.env.BACKEND_PORT || 5173);
 }

@@ -17,34 +17,31 @@
         <ArealSvg icon-name="closeMenu" />
       </areal-button>
       <div v-if="hasActiveFilters" class="dialog-filter__tags-wrapper">
-        <div
+        <ArealTag
           v-if="catalogStore.filterCatalog.priceFrom"
           class="dialog-filter__tags"
-          @click="removeTagsPrice('priceFrom')"
+          @click="removeTags('priceFrom')"
         >
           <span>от {{ catalogStore.filterCatalog.priceFrom }}</span>
-          <ArealSvg size="S" icon-name="CloseIcon" />
-        </div>
-        <div
+        </ArealTag>
+        <ArealTag
           v-if="catalogStore.filterCatalog.priceTo"
           class="dialog-filter__tags"
-          @click="removeTagsPrice('priceTo')"
+          @click="removeTags('priceTo')"
         >
           <span>до {{ catalogStore.filterCatalog.priceTo }}</span>
-          <ArealSvg size="S" icon-name="CloseIcon" />
-        </div>
-        <div
+        </ArealTag>
+        <ArealTag
           v-for="color in catalogStore.filterCatalog.color"
           :key="color"
           class="dialog-filter__tags"
-          @click="removeTagsPrice('color', color)"
+          @click="removeTags('color', color)"
         >
           <div
             class="dialog-filter__tags__circle"
             :style="{ backgroundColor: color }"
           />
-          <ArealSvg size="S" icon-name="CloseIcon" />
-        </div>
+        </ArealTag>
       </div>
       <div class="dialog-filter__block-filter">
         <ArealAccordion
@@ -154,7 +151,7 @@ const hasActiveFilters = computed(() => {
   );
 });
 
-const removeTagsPrice = (property: string, color?: string) => {
+const removeTags = (property: string, color?: string) => {
   if (property === 'priceFrom') {
     catalogStore.setPriceFrom('');
     getOnlyFilter();
@@ -214,13 +211,6 @@ const dialog = computed(() => catalogStore.dialogFilter);
     margin-bottom: 24px;
   }
   &__tags {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px;
-    background-color: getColor('black', 1);
-    color: getColor('white', 1);
-    font-size: 12px;
-    column-gap: 4px;
     &__circle {
       width: 12px;
       height: 12px;
@@ -235,7 +225,6 @@ const dialog = computed(() => catalogStore.dialogFilter);
   &__accordion-item {
     border-bottom: 1px solid black;
     padding-bottom: 8px;
-    //margin-bottom: 24px;
     &:last-child {
       border-bottom: 0;
     }

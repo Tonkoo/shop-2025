@@ -25,7 +25,6 @@ import {
   ProductClient,
   ProductElastic,
   ProductEntities,
-  ResultFilterCatalog,
   resultItems,
   SectionClient,
   SectionElastic,
@@ -630,6 +629,7 @@ export class ElasticsearchService {
     try {
       let typePage = 'section';
       const result: CatalogContent = {
+        contentName: '',
         totalItems: 0,
         itemCatalog: [],
       };
@@ -640,11 +640,10 @@ export class ElasticsearchService {
           },
         },
       });
-      // console.log(items);
+      result.contentName = items.items[0].name;
       if (items.items.length !== 0) {
         typePage = items.items[0].type;
       }
-
       if (typePage === 'section') {
         const section = items.items as SectionElastic[];
         result.childSection = await this.getChildSection(section);
@@ -655,7 +654,7 @@ export class ElasticsearchService {
             sort = [];
             break;
           case 'newProduct':
-            sort = [{ create_at: { order: 'desc' } }];
+            sort = [{ 'create_at.keyword': { order: 'asc' } }];
             break;
           case 'ascPrice':
             sort = [{ price: { order: 'asc' } }];
@@ -687,6 +686,7 @@ export class ElasticsearchService {
       }
       return formatCatalogContent(
         result,
+        // layout ? await this.getLayout() : null,
         layout === 'true' ? await this.getLayout() : null,
         onlyFilters,
       );

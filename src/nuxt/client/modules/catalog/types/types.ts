@@ -16,6 +16,7 @@ type CatalogState = {
   totalItems: number;
   availableColors: string[];
   filterPrice: boolean;
+  contentName: string;
 };
 
 export type { CatalogState };

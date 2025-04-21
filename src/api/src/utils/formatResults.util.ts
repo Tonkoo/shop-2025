@@ -64,10 +64,12 @@ export function formatCatalogContent(
   layout: mainLayout | null,
   onlyFilters: string,
 ) {
-  const { totalItems, itemCatalog, childSection, filter } = result;
+  const { contentName, totalItems, itemCatalog, childSection, filter } = result;
+
   if (onlyFilters === 'true') {
     return {
       content: {
+        contentName,
         totalItems,
         filter,
       },
@@ -76,6 +78,7 @@ export function formatCatalogContent(
   if (layout) {
     return {
       content: {
+        contentName,
         totalItems,
         itemCatalog,
         childSection,
@@ -86,6 +89,7 @@ export function formatCatalogContent(
   }
   return {
     content: {
+      contentName,
       totalItems,
       itemCatalog,
       childSection,

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { ElasticsearchService } from './elasticsearch.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
@@ -7,7 +7,6 @@ import {
   resultItems,
   SectionElastic,
   ParamsCatalog,
-  FilterCatalog,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
 
@@ -66,7 +65,7 @@ export class ElasticController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Успешный ответ с массивом документов.',
+    description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
   async getItems(@Query() payLoad: payLoad): Promise<response> {
@@ -88,7 +87,7 @@ export class ElasticController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Успешный ответ с массивом названий документов.',
+    description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
   async getNameItems(@Query() payLoad: payLoad): Promise<response> {
@@ -99,6 +98,21 @@ export class ElasticController {
 
   // TODO: Описать свагер
   @Get('main')
+  @ApiOperation({
+    summary: 'Получение контента для главной страницы сайта из Elasticsearch',
+  })
+  @ApiQuery({
+    name: 'layout',
+    type: String,
+    description: 'Признак получения элементов меню',
+    example: 'true',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
   async getItemMain(@Query('layout') layout: string) {
     const result = await this.services.getItemMain(layout);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
@@ -106,6 +120,49 @@ export class ElasticController {
 
   // TODO: Описать свагер
   @Get('catalog')
+  @ApiOperation({
+    summary: 'Получение контента для главной страницы сайта из Elasticsearch',
+  })
+  @ApiQuery({
+    name: 'url',
+    type: String,
+    description: 'Ссылка элемента',
+    example: '/catalog/muzhskoy/shorty/',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'sorting',
+    type: String,
+    description: 'Признак сортировки',
+    example: 'none',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'filter',
+    type: String,
+    description: 'Объект с свойствами фильтрации',
+    example: 'none',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'layout',
+    type: String,
+    description: 'Признак получения элементов меню',
+    example: 'true',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'onlyFilters',
+    type: String,
+    description: 'Признак получения только фильтров',
+    example: 'true',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
   async getItemCatalog(@Query() params: ParamsCatalog) {
     const result = await this.services.getItemCatalog(params);
     // return result;

@@ -145,6 +145,7 @@ type FilterCatalog = {
 
 type ResultItemsCatalog = {
   content: {
+    contentName: string;
     totalItems: number;
     itemCatalog: ProductMain[];
     childSection: SectionMain[];

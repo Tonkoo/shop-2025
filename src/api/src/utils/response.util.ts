@@ -44,7 +44,7 @@ export class ResponseHelperApiError {
   statusCode: number;
 
   @ApiProperty({
-    example: { id: 1, name: 'Тест 1' },
+    example: { message: 'Ошибка: ...' },
   })
   data: any;
 }

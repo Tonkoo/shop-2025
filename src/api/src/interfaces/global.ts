@@ -162,6 +162,7 @@ type mainResponse = mainContent & {
 };
 
 type CatalogContent = {
+  contentName: string;
   totalItems: number;
   itemCatalog: ProductElastic[] | [];
   childSection?: SectionElastic[];
@@ -183,7 +184,6 @@ type ParamsCatalog = {
   url: string;
   sorting: string;
   filter: string;
-  // filter: FilterCatalog;
   layout: string;
   onlyFilters: string;
 };

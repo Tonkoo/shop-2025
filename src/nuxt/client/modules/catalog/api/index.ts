@@ -19,10 +19,10 @@ export async function getItemCatalog() {
         params,
       }
     );
+
     if (!response) {
       throw new Error('Error while receiving data');
     }
-
     if (params.onlyFilters) {
       if (catalogStore.filterPrice) {
         catalogStore.setAvailableColors(

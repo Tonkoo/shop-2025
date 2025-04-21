@@ -25,6 +25,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     onlyFilter: false,
     availableColors: [],
     filterPrice: false,
+    contentName: '',
   }),
   actions: {
     setParamCatalog(value: string) {
@@ -34,6 +35,7 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.itemCatalog = value.content.itemCatalog;
       this.childSection = value.content.childSection;
       this.totalItems = value.content.totalItems;
+      this.contentName = value.content.contentName;
     },
     setAvailableColors(value: string[]) {
       this.availableColors = value;

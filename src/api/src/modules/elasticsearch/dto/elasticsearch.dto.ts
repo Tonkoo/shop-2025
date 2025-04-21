@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { FilterCatalog } from '../../../interfaces/global';
+import { Transform } from 'class-transformer';
 
 export class payLoad {
   @IsString({
@@ -30,9 +31,39 @@ export class payLoad {
   getItems?: boolean;
 }
 
-// export class paramsCatalog {
+// export class ParamsCatalog {
+//   @IsString({
+//     message: 'url',
+//   })
 //   url: string;
-//   filter: FilterCatalog;
-//   layout: string;
-//   onlyFilters: string;
+//
+//   // @IsString({
+//   //   message: 'sorting',
+//   // })
+//   // sorting: string;
+//
+//   @IsString({
+//     message: 'filter',
+//   })
+//   filter: string;
+//   // filter: FilterCatalog;
+//   // @Transform(({ value }) => value === 'true' )
+//
+//   @IsBoolean({
+//     message: 'layout',
+//   })
+//   // @Transform(({ value }) => {
+//   //   console.log(typeof value);
+//   //   return Boolean(value);
+//   // })
+//   layout: boolean;
+//
+//   @IsBoolean({
+//     message: 'onlyFilters',
+//   })
+//   @Transform(({ value }) => {
+//     console.log(value);
+//     return Boolean(value);
+//   })
+//   onlyFilters: boolean;
 // }

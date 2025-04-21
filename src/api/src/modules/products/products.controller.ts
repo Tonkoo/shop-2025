@@ -19,7 +19,7 @@ import {
   ApiProperty,
 } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
-import { ProductDto } from './dto/product.dto';
+import { ColorDto, ProductDto } from './dto/product.dto';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
@@ -74,6 +74,7 @@ export class ProductsController {
     return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
+  @Get('/id')
   @ApiOperation({ summary: 'Вывод данных таблицы' })
   @ApiBody({
     description: 'Вывод данных таблицы',
@@ -89,7 +90,6 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  @Get('/id')
   async getProduct(@Query('id') id: number): Promise<response> {
     const result: ProductBase | ProductBase[] =
       await this.services.getProductById(id);
@@ -153,6 +153,21 @@ export class ProductsController {
   //TODO: Описать свагер
 
   @Get('/colors')
+  @ApiOperation({ summary: 'Получение цветов из БД' })
+  @ApiBody({
+    description: 'Формат вывода данных из таблицы Colors',
+    type: ColorDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный ответ',
+    type: ResponseHelperApiOK,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка',
+    type: ResponseHelperApiError,
+  })
   async getColors(): Promise<response> {
     const result: Colors[] = await this.services.getColor();
     return ResponseHelper.createResponse(HttpStatus.OK, result);

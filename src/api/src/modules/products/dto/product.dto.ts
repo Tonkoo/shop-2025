@@ -89,3 +89,14 @@ export class ProductDto {
     this.updateAt = ent.update_at;
   }
 }
+
+export class ColorDto {
+  @ApiProperty({ example: 1, description: 'ID цвета' })
+  id: number;
+
+  @ApiProperty({ example: 'Красный', description: 'Название цвета' })
+  name: string;
+
+  @ApiProperty({ example: '#FF0000', description: 'hex цвета' })
+  hex: string;
+}
