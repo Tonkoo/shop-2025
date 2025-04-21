@@ -24,16 +24,21 @@ export async function getItemCatalog() {
     }
 
     if (params.onlyFilters) {
+      if (catalogStore.filterPrice) {
+        catalogStore.setAvailableColors(
+          response.data.data.content.filter.color
+        );
+        catalogStore.setFilterPrice(false);
+      }
       catalogStore.setOnlyFilter(false);
       catalogStore.setTotalItems(response.data.data.content.totalItems);
-      catalogStore.setAvailableColors(response.data.data.content.filter.color);
     } else {
       if (params.layout) {
         layoutStores.setMenu(response.data.data.layout.menu);
         catalogStore.setFilter(response.data.data);
       }
-
       catalogStore.setItems(response.data.data);
+      catalogStore.setAvailableColors(response.data.data.content.filter.color);
     }
   } catch (err) {
     console.error(err);

@@ -24,6 +24,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     onlyFilter: false,
     availableColors: [],
+    filterPrice: false,
   }),
   actions: {
     setParamCatalog(value: string) {
@@ -77,6 +78,15 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.filterCatalog.color = this.filterCatalog.color.filter(
         (item) => item !== value
       );
+    },
+    setFilterPrice(value: boolean) {
+      this.filterPrice = value;
+    },
+    setPriceFrom(value: string) {
+      this.filterCatalog.priceFrom = value;
+    },
+    setPriceTo(value: string) {
+      this.filterCatalog.priceTo = value;
     },
   },
 });

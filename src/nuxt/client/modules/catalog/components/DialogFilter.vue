@@ -20,7 +20,7 @@
         <div
           v-if="catalogStore.filterCatalog.priceFrom"
           class="dialog-filter__tags"
-          @click="catalogStore.filterCatalog.priceFrom = ''"
+          @click="removeTagsPrice('priceFrom')"
         >
           <span>от {{ catalogStore.filterCatalog.priceFrom }}</span>
           <ArealSvg size="S" icon-name="CloseIcon" />
@@ -28,7 +28,7 @@
         <div
           v-if="catalogStore.filterCatalog.priceTo"
           class="dialog-filter__tags"
-          @click="catalogStore.filterCatalog.priceTo = ''"
+          @click="removeTagsPrice('priceTo')"
         >
           <span>до {{ catalogStore.filterCatalog.priceTo }}</span>
           <ArealSvg size="S" icon-name="CloseIcon" />
@@ -37,7 +37,7 @@
           v-for="color in catalogStore.filterCatalog.color"
           :key="color"
           class="dialog-filter__tags"
-          @click="catalogStore.removeColor(color)"
+          @click="removeTagsPrice('color', color)"
         >
           <div
             class="dialog-filter__tags__circle"
@@ -154,12 +154,28 @@ const hasActiveFilters = computed(() => {
   );
 });
 
+const removeTagsPrice = (property: string, color?: string) => {
+  if (property === 'priceFrom') {
+    catalogStore.setPriceFrom('');
+    getOnlyFilter();
+  }
+  if (property === 'priceTo') {
+    catalogStore.setPriceTo('');
+    getOnlyFilter();
+  }
+  if (property === 'color' && color) {
+    catalogStore.removeColor(color);
+    getOnlyFilter();
+  }
+};
+
 const getFilteredData = () => {
   catalogModule.getItemCatalog();
   catalogStore.setDialogFilter();
 };
 
 const getOnlyFilter = () => {
+  catalogStore.setFilterPrice(true);
   catalogStore.setOnlyFilter(true);
   catalogModule.getItemCatalog();
 };
@@ -218,6 +234,7 @@ const dialog = computed(() => catalogStore.dialogFilter);
   }
   &__accordion-item {
     border-bottom: 1px solid black;
+    padding-bottom: 8px;
     //margin-bottom: 24px;
     &:last-child {
       border-bottom: 0;
