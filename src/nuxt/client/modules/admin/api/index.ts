@@ -1,6 +1,7 @@
 import { api } from '~~/shared/api/axios';
 import type {
   ApiParams,
+  ProductAdmin,
   ResultItemsAdmin,
   ResultReindex,
 } from '~/interfaces/global';
@@ -101,9 +102,6 @@ export async function getItems() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    // if (adminStore.typeSearch.value == 'section') {
-    //   adminStore.setItemsFilter(response.data.data[0]);
-    // }
     adminStore.setDataItems(response.data.data);
   } catch (err) {
     console.error('Failed to fetch data from the server ' + err);
@@ -198,15 +196,15 @@ export async function editItem() {
         'idSection',
         'sectionName',
         'sectionId',
-      ]);
+      ]) as ProductAdmin;
       validationProduct(adminStore.frontProduct);
-      if (data.section) {
-        data.sectionId = data.section.id;
-        data.sectionName = data.section.name;
-      }
-      if (data.parent) {
-        data.idParent = data.parent.id;
-      }
+      // if (data.section) {
+      //   data.sectionId = data.section.id;
+      //   data.sectionName = data.section.name;
+      // }
+      // if (data.parent) {
+      //   data.idParent = data.parent.id;
+      // }
     }
     // console.log(data);
 

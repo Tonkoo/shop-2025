@@ -1,5 +1,4 @@
 type Section = {
-  // [key: string]: any;
   id: number;
   code: string;
   name: string;
@@ -12,6 +11,7 @@ type Section = {
 
 type SectionAdmin = Section & {
   images?: File[];
+  parent?: SelectSection;
 };
 
 type SectionMain = Section & {
@@ -22,7 +22,6 @@ type SectionMain = Section & {
 };
 
 type Product = {
-  [key: string]: any;
   id: number;
   code: string;
   name: string;
@@ -49,15 +48,7 @@ type ProductMain = Product & {
   url: string;
 };
 
-// type ProductMain = {
-//
-//   item: Product & {
-//     images: ImageElastic[];
-//     hexColor: string;
-//   };
-// };
-
-type StoreItem = SectionMain | SectionAdmin | ProductAdmin | ProductMain;
+type StoreItem = SectionAdmin | ProductAdmin;
 
 type ImageElastic = {
   alt: string;
@@ -123,10 +114,7 @@ type Err = {
   description?: string;
   section?: string;
 };
-type ParamCatalog = {
-  parentCatalogCode?: string;
-  childCatalogCode?: string;
-};
+
 type Colors = {
   id: number;
   name: string;
@@ -169,7 +157,6 @@ export type {
   ProductMain,
   StoreItem,
   TypeSearch,
-  // Product,
   Search,
   SelectSection,
   ResultItemsAdmin,
@@ -177,11 +164,9 @@ export type {
   ImageObject,
   ApiParams,
   Err,
-  ParamCatalog,
   ResultReindex,
   Colors,
   ResultItemsCatalog,
   FilterCatalog,
-  // ParamsCatalog,
   FilterStore,
 };

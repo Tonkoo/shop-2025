@@ -113,11 +113,9 @@ export const useAdminStore = defineStore('admin-store', {
       this.backSection = value;
       this.setSectionId(value.id);
       this.setSectionName(value.name);
-      // if (value.parent) {
-      //   this.setSectionParent(value.parent);
-      // }
-      if (value.idParent) {
+      if (value.idParent && value.parent) {
         this.setSectionIdParent(value.idParent);
+        this.setSectionParent(value.parent);
       }
 
       await convertFile(value.imageObject);
