@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class payLoad {
   @IsString({
@@ -37,39 +38,37 @@ export class payLoad {
   getItems?: boolean;
 }
 
-// export class ParamsCatalog {
-//   @IsString({
-//     message: 'url',
-//   })
-//   url: string;
-//
-//   // @IsString({
-//   //   message: 'sorting',
-//   // })
-//   // sorting: string;
-//
-//   @IsString({
-//     message: 'filter',
-//   })
-//   filter: string;
-//   // filter: FilterCatalog;
-//   // @Transform(({ value }) => value === 'true' )
-//
-//   @IsBoolean({
-//     message: 'layout',
-//   })
-//   // @Transform(({ value }) => {
-//   //   console.log(typeof value);
-//   //   return Boolean(value);
-//   // })
-//   layout: boolean;
-//
-//   @IsBoolean({
-//     message: 'onlyFilters',
-//   })
-//   @Transform(({ value }) => {
-//     console.log(value);
-//     return Boolean(value);
-//   })
-//   onlyFilters: boolean;
-// }
+export class ParamsCatalog {
+  @IsString({
+    message: 'url',
+  })
+  @IsNotEmpty()
+  url: string;
+
+  // @IsString({
+  //   message: 'sorting',
+  // })
+  // sorting: string;
+
+  @IsString({
+    message: 'filter',
+  })
+  filter: string;
+  // filter: FilterCatalog;
+  // @Transform(({ value }) => value === 'true' )
+
+  @IsBoolean({
+    message: 'layout',
+  })
+  // @Transform(({ value }) => {
+  //   console.log(typeof value);
+  //   return Boolean(value);
+  // })
+  layout: boolean;
+
+  @IsBoolean({
+    message: 'onlyFilters',
+  })
+  @Transform(({ value }) => value === 'true')
+  onlyFilters: boolean;
+}

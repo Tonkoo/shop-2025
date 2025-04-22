@@ -9,7 +9,6 @@ import { DataSource, In, Repository } from 'typeorm';
 import { logger } from '../../utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
 import { prepareData } from '../../utils/prepare.util';
-import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
@@ -25,6 +24,7 @@ import {
   removeUnusedImages,
 } from '../../utils/removeImages.util';
 import { formatResponse } from '../../utils/formatResults.util';
+import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
 
 @Injectable()
 export class SectionsService {
@@ -34,7 +34,7 @@ export class SectionsService {
     @InjectRepository(Images)
     private readonly imagesRepository: Repository<Images>,
     private readonly dataSource: DataSource,
-    private readonly EsServices: ElasticsearchService,
+    private readonly EsServices: ElasticsearchAdminService,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 

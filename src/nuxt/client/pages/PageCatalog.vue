@@ -1,6 +1,6 @@
 <template>
   <WgCatalogContainer v-if="layoutStores.typePage === 'section'" />
-  <WgDetailPageContainer v-if="layoutStores.typePage === 'product'" />
+  <WgDetailPageContainer v-else />
 </template>
 
 <script setup lang="ts">

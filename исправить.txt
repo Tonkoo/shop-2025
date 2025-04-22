@@ -91,3 +91,9 @@
   layout: bool,
   onlyFilters: false,
  }
+
+
+ На фронте сделать middleWare на добаавление / в роут
+
+ Сделать таблицу для вывода парметров сортировки (id, name, order(desc, asc), default(true/false), code ('default', 'newProduct', 'ascPrice', 'descPrice')
+ )

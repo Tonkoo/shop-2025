@@ -24,7 +24,9 @@ export async function getItemCatalog() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    layoutStores.setTypePage(response.data.data.content.typeItem);
+    if(response.data.data.content.typeItem){
+      layoutStores.setTypePage(response.data.data.content.typeItem);
+    }
     if (layoutStores.typePage === 'section') {
       if (params.onlyFilters) {
         if (catalogStore.filterPrice) {

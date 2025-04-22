@@ -12,18 +12,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
 import { convertTimeArray } from '../../utils/convertTime.util';
 import {
-  AggregationsFilter,
-  CatalogContent,
   elasticBody,
-  elasticsearchResponse,
-  FilterCatalog,
   imageData,
-  mainLayout,
-  ParamsCatalog,
-  payLoadTest,
-  PriceRange,
   ProductClient,
-  ProductElastic,
   ProductEntities,
   resultItems,
   SectionClient,
@@ -31,19 +22,16 @@ import {
   SectionEntities,
 } from '../../interfaces/global';
 import { payLoad } from './dto/elasticsearch.dto';
-import {
-  formatCatalogContent,
-  formatMainContent,
-  formatResults,
-} from '../../utils/formatResults.util';
+import { formatResults } from '../../utils/formatResults.util';
 import { Colors } from '../../entities/colors.entity';
 import {
   generateLinkProduct,
   generateLinkSection,
 } from '../../utils/generateLink.util';
+import { searchFromElastic } from '../../utils/searchFromElastic.util';
 
 @Injectable()
-export class ElasticsearchService {
+export class ElasticsearchAdminService {
   constructor(
     private readonly elasticsearchService: ESClient,
     @InjectRepository(Products)
@@ -55,6 +43,7 @@ export class ElasticsearchService {
     @InjectRepository(Colors)
     private readonly colorsRepository: Repository<Colors>,
   ) {}
+
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
   async prepareImageData(data: number[]): Promise<imageData[]> {
@@ -129,30 +118,12 @@ export class ElasticsearchService {
     return filter;
   }
 
-  getFilterCatalog(data: FilterCatalog, section?: SectionElastic): any[] {
-    const result: any[] = [{ term: { 'type.keyword': 'product' } }];
-
-    if (data.priceTo || data.priceFrom) {
-      const priceRange: PriceRange = {};
-      if (data.priceFrom) priceRange.gte = Number(data.priceFrom);
-      if (data.priceTo) priceRange.lte = Number(data.priceTo);
-
-      result.push({
-        range: {
-          price: priceRange,
-        },
-      });
-    }
-    if (data.color.length !== 0) {
-      result.push({ terms: { 'hexColor.keyword': data.color } });
-    }
-
-    if (section) {
-      result.push({ term: { 'sectionName.keyword': section.name } });
-    }
-    return result;
-  }
-
+  /**
+   * Формирование данных для эластика
+   * @param dbProduct
+   * @param dbSection
+   * @private
+   */
   private async enrichData(
     dbProduct: Products[],
     dbSection: Sections[],
@@ -175,6 +146,7 @@ export class ElasticsearchService {
 
     const processedProducts = await Promise.all(
       documentsProduct.map(async (item) => {
+        //Todo: Убрать условие
         if (item.type === 'product') {
           const product = item as ProductEntities;
           let sectionName: string | undefined;
@@ -229,106 +201,6 @@ export class ElasticsearchService {
     );
 
     return [...processedProducts, ...processedSections];
-  }
-
-  async getChildSection(section: SectionElastic) {
-    let result: SectionElastic[] = [];
-    if (!section) {
-      const childSection = await this.searchFromElastic({
-        query: {
-          bool: {
-            must: [{ term: { type: 'section' } }, { term: { level: 1 } }],
-          },
-        },
-      });
-      result = childSection.items as SectionElastic[];
-    }
-    if (section && section.level === 1) {
-      const childSection = await this.searchFromElastic({
-        query: {
-          bool: {
-            must: [
-              { term: { type: 'section' } },
-              { term: { id_parent: section.id } },
-            ],
-          },
-        },
-      });
-      result = childSection.items as SectionElastic[];
-    }
-    return result;
-  }
-
-  async getItem(url: string) {
-    const items = await this.searchFromElastic({
-      query: {
-        bool: {
-          must: [{ term: { 'url.keyword': url } }],
-        },
-      },
-    });
-
-    return items.items[0];
-  }
-
-  createSortOptions(sorting: string) {
-    let sort: any[] = [];
-    switch (sorting) {
-      case 'none':
-        sort = [];
-        break;
-      case 'newProduct':
-        sort = [{ 'create_at.keyword': { order: 'asc' } }];
-        break;
-      case 'ascPrice':
-        sort = [{ price: { order: 'asc' } }];
-        break;
-      case 'descPrice':
-        sort = [{ price: { order: 'desc' } }];
-        break;
-      default:
-        sort = [];
-        break;
-    }
-    return sort;
-  }
-
-  async searchFromElastic(payLoad: payLoadTest) {
-    const { query, from, size, source, sort, aggregations } = payLoad;
-    const items = await this.elasticsearchService.search({
-      index: process.env.ELASTIC_INDEX,
-      body: {
-        _source: source,
-        query,
-        from,
-        size,
-        sort,
-        aggregations,
-      },
-    });
-
-    if (!items?.hits?.hits) {
-      throw new NotFoundException('Not found items');
-    }
-
-    const result: elasticsearchResponse = {
-      total: items.hits.total as { value: number },
-      items: items.hits.hits.map(
-        (item) => item._source as SectionElastic | ProductElastic,
-      ),
-    };
-
-    if (aggregations) {
-      const aggs = items.aggregations as AggregationsFilter;
-      result.aggregations = {
-        price: {
-          min: aggs.price.min,
-          max: aggs.price.max,
-        },
-        color: aggs.color.buckets.map((item) => item.key),
-      };
-    }
-    return result;
   }
 
   async createIndex(payLoad: payLoad) {
@@ -543,11 +415,14 @@ export class ElasticsearchService {
       const { from, size } = payLoad;
       const filter = this.getFilterAdmin(payLoad);
 
-      const items = await this.searchFromElastic({
-        size: Number(size),
-        from: Number(from),
-        query: { bool: { filter } },
-      });
+      const items = await searchFromElastic(
+        {
+          size: Number(size),
+          from: Number(from),
+          query: { bool: { filter } },
+        },
+        this.elasticsearchService,
+      );
 
       return formatResults(items.items, items.total);
     } catch (err) {
@@ -563,25 +438,24 @@ export class ElasticsearchService {
         return [];
       }
 
-      const result = await this.searchFromElastic({
-        size,
-        query: {
-          bool: {
-            must: [{ match: { type: type } }],
-            should: [{ wildcard: { name: `*${searchName}*` } }],
-            minimum_should_match: 1,
+      const result = await searchFromElastic(
+        {
+          size,
+          query: {
+            bool: {
+              must: [{ match: { type: type } }],
+              should: [{ wildcard: { name: `*${searchName}*` } }],
+              minimum_should_match: 1,
+            },
           },
         },
-      });
-      console.log(result);
+        this.elasticsearchService,
+      );
       const testResult = result.items as SectionElastic[];
 
       return testResult
         .filter((section) => {
-          if (typeForm && typeForm === 'section') {
-            return section.level === 1;
-          }
-          return true;
+          return typeForm && typeForm === 'section' && section.level === 1;
         })
         .map((section) => ({
           ...section,
@@ -590,123 +464,6 @@ export class ElasticsearchService {
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);
       throw new BadRequestException('Error getting name');
-    }
-  }
-
-  async getItemMain(layout: string) {
-    try {
-      const items = await this.searchFromElastic({
-        query: {
-          bool: {
-            should: [
-              { term: { show_on_main: 'true' } },
-              { term: { main_slider: 'true' } },
-            ],
-            minimum_should_match: 1,
-          },
-        },
-      });
-
-      return formatMainContent(
-        items.items as ProductElastic[],
-        layout === 'true' ? await this.getLayout() : null,
-      );
-    } catch (err) {
-      logger.error('Error from elastic.getItemMain: ', err);
-      throw new BadRequestException('Error getting main page items');
-    }
-  }
-  async getLayout(): Promise<mainLayout> {
-    try {
-      const layout = await this.searchFromElastic({
-        query: { bool: { must: { term: { type: 'section' } } } },
-      });
-
-      const menu = layout.items as SectionElastic[];
-      const resultMenu: SectionElastic[] = await Promise.all(
-        menu.map(async (item) => {
-          if (!item.id_parent) {
-            const sections = await this.searchFromElastic({
-              query: {
-                bool: {
-                  must: [
-                    { term: { type: 'section' } },
-                    { term: { id_parent: item.id } },
-                  ],
-                },
-              },
-            });
-            // const items: SectionElastic[] = sections.hits.hits.map(
-            //   (item) => item._source as SectionElastic,
-            // );
-            return {
-              ...item,
-              items: sections.items as SectionElastic[],
-            };
-          }
-          return item;
-        }),
-      );
-
-      return {
-        menu: resultMenu,
-      };
-    } catch (err) {
-      logger.error('Error from elastic.getLayout: ', err);
-      throw new BadRequestException('Error getting menu items');
-    }
-  }
-
-  async getItemsCatalog(params: ParamsCatalog) {
-    const { url, filter, layout, onlyFilters } = params;
-    const filterConvert: FilterCatalog = JSON.parse(filter) as FilterCatalog;
-    try {
-      const result: CatalogContent = {
-        typeItem: '',
-        contentName: '',
-        totalItems: 0,
-        itemCatalog: [],
-      };
-      const item = await this.getItem(url);
-      result.typeItem = item ? item.type : 'section';
-      result.contentName = item ? item.name : 'Каталог';
-
-      if (result.typeItem === 'section') {
-        const section = item as SectionElastic;
-        result.childSection = await this.getChildSection(section);
-        const filterCatalog = this.getFilterCatalog(filterConvert, section);
-        const sort = this.createSortOptions(filterConvert.sort);
-
-        const products = await this.searchFromElastic({
-          query: {
-            bool: { must: filterCatalog },
-          },
-          sort,
-          aggregations: {
-            price: {
-              stats: { field: 'price' },
-            },
-            color: {
-              terms: { field: 'hexColor.keyword' },
-            },
-          },
-        });
-        result.totalItems = products.total.value;
-        result.itemCatalog = products.items as ProductElastic[];
-        result.filter = products.aggregations;
-      }
-      if (result.typeItem === 'product') {
-        result.itemCatalog = item as ProductElastic;
-      }
-      return formatCatalogContent(
-        result,
-        // layout ? await this.getLayout() : null,
-        layout === 'true' ? await this.getLayout() : null,
-        onlyFilters,
-      );
-    } catch (err) {
-      logger.error('Error from elastic.getItemCatalog: ', err);
-      throw new BadRequestException('Error getting catalog items');
     }
   }
 }

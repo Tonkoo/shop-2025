@@ -1,19 +1,20 @@
 import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
-import { ElasticsearchService } from './elasticsearch.service';
+import { ElasticsearchCatalogService } from './elasticsearch.catalog.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
-import {
-  response,
-  resultItems,
-  SectionElastic,
-  ParamsCatalog,
-} from '../../interfaces/global';
-import { payLoad } from './dto/elasticsearch.dto';
+import { response, resultItems, SectionElastic } from '../../interfaces/global';
+import { payLoad, ParamsCatalog } from './dto/elasticsearch.dto';
+import { ElasticsearchAdminService } from './elasticsearch.admin.service';
+import { ElasticsearchMainService } from './elasticsearch.main.service';
 
 @Controller('elastic')
 @ApiTags('elastic')
 export class ElasticController {
-  constructor(private readonly services: ElasticsearchService) {}
+  constructor(
+    private readonly servicesAdmin: ElasticsearchAdminService,
+    private readonly servicesMain: ElasticsearchMainService,
+    private readonly servicesCatalog: ElasticsearchCatalogService,
+  ) {}
 
   @Get('reindex')
   @ApiOperation({
@@ -26,7 +27,7 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async createIndex(@Query() payLoad: payLoad): Promise<response> {
-    const result = await this.services.createIndex(payLoad);
+    const result = await this.servicesAdmin.createIndex(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -69,7 +70,8 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async getItems(@Query() payLoad: payLoad): Promise<response> {
-    const result: resultItems = await this.services.getItemsFilter(payLoad);
+    const result: resultItems =
+      await this.servicesAdmin.getItemsFilter(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -92,7 +94,7 @@ export class ElasticController {
   })
   async getNameItems(@Query() payLoad: payLoad): Promise<response> {
     const result: SectionElastic[] =
-      await this.services.getNameShopByElastic(payLoad);
+      await this.servicesAdmin.getNameShopByElastic(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -114,7 +116,7 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async getItemMain(@Query('layout') layout: string) {
-    const result = await this.services.getItemMain(layout);
+    const result = await this.servicesMain.getItemMain(layout);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
@@ -164,8 +166,7 @@ export class ElasticController {
     type: ResponseHelperApiOK,
   })
   async getItemCatalog(@Query() params: ParamsCatalog) {
-    const result = await this.services.getItemsCatalog(params);
-    // return result;
+    const result = await this.servicesCatalog.getItemsCatalog(params);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 }

@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+// TODO прописываешь все запросы к бэку здесь
 import { useRouter } from 'vue-router';
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
 import SwiperChildSection from '~/modules/catalog/components/catalog/SwiperChildSection.vue';

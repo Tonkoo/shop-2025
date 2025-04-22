@@ -8,7 +8,6 @@ import { DataSource, In, Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
-import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { prepareData } from '../../utils/prepare.util';
 import {
   ProductBase,
@@ -26,6 +25,7 @@ import {
 } from '../../utils/removeImages.util';
 import { Colors } from '../../entities/colors.entity';
 import { formatResponse } from '../../utils/formatResults.util';
+import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
 
 @Injectable()
 export class ProductsService {
@@ -36,7 +36,7 @@ export class ProductsService {
     private readonly imagesRepository: Repository<Images>,
     @InjectRepository(Colors)
     private readonly colorsRepository: Repository<Colors>,
-    private readonly EsServices: ElasticsearchService,
+    private readonly EsServices: ElasticsearchAdminService,
     private readonly dataSource: DataSource,
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;

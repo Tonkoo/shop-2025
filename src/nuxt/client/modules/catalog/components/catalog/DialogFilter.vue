@@ -49,6 +49,7 @@
           class="dialog-filter__accordion-item"
         >
           <div class="dialog-filter__block-radio">
+            <!---->
             <ArealRadio
               v-model="catalogStore.filterCatalog.sort"
               name="catalog-sort"
@@ -137,6 +138,7 @@
 </template>
 
 <script setup lang="ts">
+// TODO: прокидывать данные через props
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
 import { useCatalogModule } from '~/modules/catalog/global';
 
@@ -167,6 +169,7 @@ const removeTags = (property: string, color?: string) => {
 };
 
 const getFilteredData = () => {
+  emit();
   catalogModule.getItemCatalog();
   catalogStore.setDialogFilter();
 };

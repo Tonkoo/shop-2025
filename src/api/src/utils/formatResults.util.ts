@@ -9,7 +9,7 @@ import {
 import { payLoad } from '../modules/elasticsearch/dto/elasticsearch.dto';
 import { SectionDto } from '../modules/sections/dto/section.dto';
 import { ProductDto } from '../modules/products/dto/product.dto';
-import { ElasticsearchService } from '../modules/elasticsearch/elasticsearch.service';
+import { ElasticsearchAdminService } from '../modules/elasticsearch/elasticsearch.admin.service';
 
 export function formatResults(
   items: (SectionElastic | ProductElastic)[],
@@ -24,7 +24,7 @@ export function formatResults(
 export async function formatResponse(
   data: SectionDto | ProductDto,
   id: number,
-  EsServices: ElasticsearchService,
+  EsServices: ElasticsearchAdminService,
 ) {
   const searchParams: payLoad = {
     type: data.type,
@@ -62,7 +62,8 @@ export function formatMainContent(
 export function formatCatalogContent(
   result: CatalogContent,
   layout: mainLayout | null,
-  onlyFilters: string,
+  // onlyFilters: string,
+  onlyFilters: boolean,
 ) {
   const {
     typeItem,
@@ -73,7 +74,8 @@ export function formatCatalogContent(
     filter,
   } = result;
 
-  if (onlyFilters === 'true') {
+  // if (onlyFilters === 'true') {
+  if (onlyFilters) {
     return {
       content: {
         contentName,
