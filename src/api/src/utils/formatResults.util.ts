@@ -2,6 +2,7 @@ import { camelCaseConverter } from './toCamelCase.util';
 import {
   CatalogContent,
   mainLayout,
+  ParamsAdmin,
   ProductElastic,
   resultItems,
   SectionElastic,
@@ -22,18 +23,18 @@ export function formatResults(
 }
 
 export async function formatResponse(
-  data: SectionDto | ProductDto,
+  filters: SectionDto | ProductDto,
   id: number,
   EsServices: ElasticsearchAdminService,
 ) {
   const searchParams: payLoad = {
-    type: data.type,
-    from: Number(data.from),
-    size: Number(data.size),
-    searchName: data.searchName,
+    type: filters.type,
+    from: Number(filters.from),
+    size: Number(filters.size),
+    searchName: filters.searchName,
   };
 
-  return data.getItems ? await EsServices.getItemsFilter(searchParams) : id;
+  return filters.getItems ? await EsServices.getItemsFilter(searchParams) : id;
 }
 
 export function formatMainContent(
@@ -62,7 +63,7 @@ export function formatMainContent(
 export function formatCatalogContent(
   result: CatalogContent,
   layout: mainLayout | null,
-  // onlyFilters: string,
+
   onlyFilters: boolean,
 ) {
   const {
@@ -74,7 +75,6 @@ export function formatCatalogContent(
     filter,
   } = result;
 
-  // if (onlyFilters === 'true') {
   if (onlyFilters) {
     return {
       content: {

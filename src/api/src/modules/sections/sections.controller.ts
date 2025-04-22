@@ -33,6 +33,7 @@ import { SectionBase, response, resultItems } from '../../interfaces/global';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
 import { logger } from '../../utils/logger/logger';
+import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -156,7 +157,6 @@ export class SectionsController {
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
     try {
-      console.log(id);
       const result: resultItems | number = await this.services.updateById(
         id,
         data,

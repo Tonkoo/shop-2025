@@ -13,7 +13,7 @@
     />
     <areal-block-images :images-array="adminStore.frontSection.images" />
     <areal-select-form
-      v-model="adminStore.frontSection.parent"
+      v-model="adminStore.sectionParent"
       :option="autocompleteOptions"
       option-value="id"
       option-label="name"
@@ -40,7 +40,7 @@ const onSearchInput = async (value: SelectSection | string) => {
   const name = typeof value === 'string' ? value : value.name;
   adminStore.setSearchParentName(name);
   if (typeof value !== 'string') {
-    adminStore.setSectionIdParent(value);
+    adminStore.setSectionIdParent(value.id);
   }
   await adminModule.getAllNameColumn('section', adminStore.typeItem);
   autocompleteOptions.value = adminStore.allName;

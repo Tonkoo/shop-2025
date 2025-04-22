@@ -1,5 +1,5 @@
 <template>
-  <div v-if="imagesArray.length" class="gallery q-mb-md">
+  <div v-if="imagesArray && imagesArray.length" class="gallery q-mb-md">
     <div v-for="(images, index) in imagesArray" :key="index">
       <q-img :src="getUrlFile(images)" class="gallery__image" />
     </div>
@@ -9,7 +9,7 @@
 <script setup lang="ts">
 defineProps({
   imagesArray: {
-    type: Array as PropType<File[]>,
+    type: Array as PropType<File[] | undefined>,
     required: false,
     default: null,
   },
@@ -33,9 +33,6 @@ const getUrlFile = (image: File) => {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   gap: 10px;
   padding: 10px;
-  //max-height: 500px;
-  //overflow-y: auto;
-  //overflow-x: hidden;
 
   &__image {
     width: 100%;

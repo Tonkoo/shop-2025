@@ -169,7 +169,6 @@ const removeTags = (property: string, color?: string) => {
 };
 
 const getFilteredData = () => {
-  emit();
   catalogModule.getItemCatalog();
   catalogStore.setDialogFilter();
 };

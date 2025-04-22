@@ -1,19 +1,17 @@
 type Section = {
-  [key: string]: any;
+  // [key: string]: any;
   id: number;
   code: string;
   name: string;
-  // images: File[];
   createAt?: string;
   updateAt?: string;
-  idParent: number | null;
+  idParent?: number | null;
   level: number;
-  parent?: SelectSection;
   imageObject?: ImageObject[];
 };
 
 type SectionAdmin = Section & {
-  images: File[];
+  images?: File[];
 };
 
 type SectionMain = Section & {
@@ -42,7 +40,7 @@ type Product = {
 };
 
 type ProductAdmin = Product & {
-  images: File[];
+  images?: File[];
 };
 
 type ProductMain = Product & {

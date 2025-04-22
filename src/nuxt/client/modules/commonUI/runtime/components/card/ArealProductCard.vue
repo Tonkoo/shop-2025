@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ProductMain, SectionMain } from '~/interfaces/global';
+import type { ProductMain } from '~/interfaces/global';
 
 defineProps({
   product: {
-    type: Object as PropType<ProductMain | SectionMain>,
+    type: Object as PropType<ProductMain>,
     required: true,
   },
 });

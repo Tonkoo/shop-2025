@@ -34,6 +34,7 @@ export class payLoad {
   typeForm?: string;
 
   @IsBoolean()
+  @Transform(({ value }) => value === 'true')
   @IsOptional()
   getItems?: boolean;
 }
@@ -45,25 +46,15 @@ export class ParamsCatalog {
   @IsNotEmpty()
   url: string;
 
-  // @IsString({
-  //   message: 'sorting',
-  // })
-  // sorting: string;
-
   @IsString({
     message: 'filter',
   })
   filter: string;
-  // filter: FilterCatalog;
-  // @Transform(({ value }) => value === 'true' )
 
   @IsBoolean({
     message: 'layout',
   })
-  // @Transform(({ value }) => {
-  //   console.log(typeof value);
-  //   return Boolean(value);
-  // })
+  @Transform(({ value }) => value === 'true')
   layout: boolean;
 
   @IsBoolean({

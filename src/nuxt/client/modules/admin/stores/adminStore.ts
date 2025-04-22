@@ -13,6 +13,11 @@ import type {
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 import { paramPagination } from '~/entities/table.entites';
+import {
+  sectionDefault,
+  sectionParentDefault,
+} from '~/entities/section.entites';
+import { productDefault } from '~/entities/product.entites';
 
 const adminModule = useAdminModule();
 export const useAdminStore = defineStore('admin-store', {
@@ -33,29 +38,9 @@ export const useAdminStore = defineStore('admin-store', {
     selectedId: 0,
     backSection: null,
     backProduct: null,
-    frontSection: {
-      id: 0,
-      code: '',
-      name: '',
-      images: [],
-      idParent: null,
-      level: 1,
-    },
-    frontProduct: {
-      id: 0,
-      code: '',
-      name: '',
-      images: [],
-      price: 0,
-      color: { id: 0, name: '', hex: '' },
-      section: {
-        id: 0,
-        name: '',
-      },
-      description: '',
-      showOnMain: false,
-      mainSlider: false,
-    },
+    frontSection: { ...sectionDefault },
+    sectionParent: { ...sectionParentDefault },
+    frontProduct: { ...productDefault },
     errors: {},
     disableBtn: false,
     filterSection: null,
@@ -126,13 +111,15 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setBackSection(value: SectionAdmin) {
       this.backSection = value;
-      if (!this.backSection.idParent) {
-        this.backSection.idParent = 0;
-      }
       this.setSectionId(value.id);
       this.setSectionName(value.name);
-      this.setSectionParent(value.parent ?? { id: 0, name: '' });
-      this.setSectionIdParent(value.parent ?? { id: 0, name: '' });
+      // if (value.parent) {
+      //   this.setSectionParent(value.parent);
+      // }
+      if (value.idParent) {
+        this.setSectionIdParent(value.idParent);
+      }
+
       await convertFile(value.imageObject);
     },
     async setBackProduct(value: ProductAdmin) {
@@ -148,25 +135,9 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async clearForms() {
       this.setIsEdit(false);
-      this.setSectionName('');
-      this.setSectionImages([]);
-      this.setSectionParent({
-        id: 0,
-        name: '',
-      });
-      this.setSearchParentName('');
-      this.setSectionIdParent({ id: 0, name: '' });
-      this.setProductName('');
-      this.setProductImages([]);
-      this.setProductPrice(0);
-      this.setProductColor({ id: 0, name: '', hex: '' });
-      this.setProductDescription('');
-      this.setProductSection({
-        id: 0,
-        name: '',
-      });
-      this.setProductShowOnMain(false);
-      this.setProductMainSlider(false);
+      this.frontSection = { ...sectionDefault };
+      this.frontProduct = { ...productDefault };
+      this.sectionParent = { ...sectionParentDefault };
     },
     setSectionId(value: number) {
       this.frontSection.id = value;
@@ -177,11 +148,11 @@ export const useAdminStore = defineStore('admin-store', {
     setSectionImages(value: File[]) {
       this.frontSection.images = value;
     },
-    setSectionIdParent(value: SelectSection) {
-      this.frontSection.idParent = value.id;
+    setSectionIdParent(value: number) {
+      this.frontSection.idParent = value;
     },
     setSectionParent(value: SelectSection) {
-      this.frontSection.parent = { id: value.id, name: value.name };
+      this.sectionParent = value;
     },
     setConvertImages(value: File[]) {
       if (this.backSection) {
@@ -217,7 +188,7 @@ export const useAdminStore = defineStore('admin-store', {
       this.frontProduct.sectionId = value.id;
     },
     setProductSection(value: SelectSection) {
-      this.frontProduct.section = { id: value.id, name: value.name };
+      this.frontProduct.section = value;
     },
     setProductShowOnMain(value: boolean) {
       this.frontProduct.showOnMain = value;

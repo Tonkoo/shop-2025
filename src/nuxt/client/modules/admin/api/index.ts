@@ -26,7 +26,7 @@ function fillingParam(
   size: string | number,
   searchName: string,
   filterSection?: number,
-  getItem?: boolean
+  getItems?: boolean
 ) {
   const params: ApiParams = {
     type,
@@ -37,8 +37,8 @@ function fillingParam(
   if (filterSection) {
     params.filterSection = filterSection;
   }
-  if (getItem) {
-    params.getItems = getItem;
+  if (getItems) {
+    params.getItems = getItems;
   }
 
   return params;
@@ -144,21 +144,16 @@ export async function addItem() {
   const adminStore = useAdminStore();
   try {
     adminStore.clearError();
-    // TODO: обрабатывать ошибки в validationResult с помощью forReach
-    // TODO: создать один метод в adminStore для заполенения объекта с ошибками.
-    // TODO: Создать две папки Schemas, Validations. В Schema будут храниться схемы для валидации. в Validations будут храниться обработчик ошибок с помощью forReach
-
     adminStore.setSearchName('');
     const formData = new FormData();
     const param: ApiParams = fillingParam(
       adminStore.typeSearch.value,
-      ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
-      adminStore.countColumn.toString(),
+      (adminStore.currentPage - 1) * adminStore.countColumn,
+      adminStore.countColumn,
       removeDots(adminStore.searchName),
       undefined,
       true
     );
-    // validateForm();
     let data;
     if (adminStore.typeItem === 'section') {
       data = adminStore.frontSection;
@@ -168,6 +163,7 @@ export async function addItem() {
       validationProduct(data);
     }
     generateFormData(formData, data, param);
+
     const response = await api.post<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}`,
       formData,
@@ -204,14 +200,15 @@ export async function editItem() {
         'sectionId',
       ]);
       validationProduct(adminStore.frontProduct);
+      if (data.section) {
+        data.sectionId = data.section.id;
+        data.sectionName = data.section.name;
+      }
+      if (data.parent) {
+        data.idParent = data.parent.id;
+      }
     }
-    if (data.section) {
-      data.sectionId = data.section.id;
-      data.sectionName = data.section.name;
-    }
-    if (data.parent) {
-      data.idParent = data.parent.id;
-    }
+    // console.log(data);
 
     const formData = new FormData();
     const param: ApiParams = fillingParam(

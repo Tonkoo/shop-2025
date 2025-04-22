@@ -13,6 +13,7 @@ import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
 import {
+  ParamsAdmin,
   resultItems,
   SectionBase,
   SectionClient,
@@ -25,6 +26,7 @@ import {
 } from '../../utils/removeImages.util';
 import { formatResponse } from '../../utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
+import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 
 @Injectable()
 export class SectionsService {
@@ -340,7 +342,7 @@ export class SectionsService {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      return await formatResponse(data, data.id, this.EsServices);
+      return await formatResponse(data, id, this.EsServices);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.delete : ', err);

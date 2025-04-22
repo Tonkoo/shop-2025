@@ -26,6 +26,7 @@ import {
 import { Colors } from '../../entities/colors.entity';
 import { formatResponse } from '../../utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
+import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 
 @Injectable()
 export class ProductsService {
@@ -288,7 +289,7 @@ export class ProductsService {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      return await formatResponse(data, data.id, this.EsServices);
+      return await formatResponse(data, id, this.EsServices);
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from products.delete: ', err);

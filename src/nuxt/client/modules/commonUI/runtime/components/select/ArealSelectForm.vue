@@ -27,7 +27,7 @@ const props = defineProps({
   model: {
     type: String,
     required: false,
-    default: null,
+    default: undefined,
   },
   label: {
     type: String,

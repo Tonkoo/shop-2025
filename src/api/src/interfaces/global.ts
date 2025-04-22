@@ -210,6 +210,14 @@ type PriceRange = {
   gte?: number;
   lte?: number;
 };
+
+type ParamsAdmin = {
+  type: string;
+  from: number;
+  size: number;
+  searchName: string;
+  getItems: boolean;
+};
 export {
   response,
   elasticsearchResponse,
@@ -236,5 +244,5 @@ export {
   ResultFilterCatalog,
   AggregationsFilter,
   PriceRange,
+  ParamsAdmin,
 };
-// export default class FilterCatalog {}

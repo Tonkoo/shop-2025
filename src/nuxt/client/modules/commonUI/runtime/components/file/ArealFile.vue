@@ -16,7 +16,7 @@
 <script setup lang="ts">
 defineProps({
   modelValue: {
-    type: Array as PropType<File[]>,
+    type: Array as PropType<File[] | undefined>,
     required: false,
     default: null,
   },
