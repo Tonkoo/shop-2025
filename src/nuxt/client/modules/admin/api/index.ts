@@ -56,7 +56,7 @@ export async function reindex() {
       undefined,
       true
     );
-    adminStore.setTypeItem(adminStore.typeSearch.value);
+    // adminStore.setTypeItem(adminStore.typeSearch.value);
     const response = await api.get<{
       data: ResultItemsAdmin | ResultReindex;
     }>('/elastic/reindex', {
@@ -199,7 +199,6 @@ export async function editItem() {
       ]) as ProductAdmin;
       validationProduct(adminStore.frontProduct);
     }
-    console.log(data);
     const formData = new FormData();
     const param: ApiParams = fillingParam(
       adminStore.typeSearch.value,

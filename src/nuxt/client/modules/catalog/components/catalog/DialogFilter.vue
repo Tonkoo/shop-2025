@@ -18,21 +18,21 @@
       </areal-button>
       <div v-if="hasActiveFilters" class="dialog-filter__tags-wrapper">
         <ArealTag
-          v-if="catalogStore.filterCatalog.priceFrom"
+          v-if="filterCatalog.priceFrom"
           class="dialog-filter__tags"
           @click="removeTags('priceFrom')"
         >
-          <span>от {{ catalogStore.filterCatalog.priceFrom }}</span>
+          <span>от {{ filterCatalog.priceFrom }}</span>
         </ArealTag>
         <ArealTag
           v-if="catalogStore.filterCatalog.priceTo"
           class="dialog-filter__tags"
           @click="removeTags('priceTo')"
         >
-          <span>до {{ catalogStore.filterCatalog.priceTo }}</span>
+          <span>до {{ filterCatalog.priceTo }}</span>
         </ArealTag>
         <ArealTag
-          v-for="color in catalogStore.filterCatalog.color"
+          v-for="color in filterCatalog.color"
           :key="color"
           class="dialog-filter__tags"
           @click="removeTags('color', color)"
@@ -51,25 +51,25 @@
           <div class="dialog-filter__block-radio">
             <!---->
             <ArealRadio
-              v-model="catalogStore.filterCatalog.sort"
+              :model-value="filterCatalog.sort"
               name="catalog-sort"
               value="none"
               label="Без сортировки"
             />
             <ArealRadio
-              v-model="catalogStore.filterCatalog.sort"
+              :model-value="filterCatalog.sort"
               name="catalog-sort"
               value="newProduct"
               label="По новизне"
             />
             <ArealRadio
-              v-model="catalogStore.filterCatalog.sort"
+              :model-value="filterCatalog.sort"
               name="catalog-sort"
               value="ascPrice"
               label="По возрастанию цены"
             />
             <ArealRadio
-              v-model="catalogStore.filterCatalog.sort"
+              :model-value="filterCatalog.sort"
               name="catalog-sort"
               value="descPrice"
               label="По убыванию цены"
@@ -79,17 +79,17 @@
         <ArealAccordion label="Цена" class="dialog-filter__accordion-item">
           <div class="dialog-filter__block-price">
             <ArealFilterInput
-              v-model="catalogStore.filterCatalog.priceFrom"
+              :model-value="filterCatalog.priceFrom"
               :placeholder="`от ${catalogStore.filter.price.min}`"
               :debounce="400"
-              :max="catalogStore.filter.price.max"
+              :max="filter.price.max"
               @update:model-value="getOnlyFilter"
             />
             <ArealFilterInput
-              v-model="catalogStore.filterCatalog.priceTo"
+              :model-value="filterCatalog.priceTo"
               :debounce="400"
-              :max="catalogStore.filter.price.max"
-              :placeholder="`до ${catalogStore.filter.price.max}`"
+              :max="filter.price.max"
+              :placeholder="`до ${filter.price.max}`"
               @update:model-value="getOnlyFilter"
             />
           </div>
@@ -97,14 +97,14 @@
         <ArealAccordion label="Цвет" class="dialog-filter__accordion-item">
           <div class="dialog-filter__block-color">
             <div
-              v-for="(color, index) in catalogStore.filter.color"
+              v-for="(color, index) in filter.color"
               :key="index"
               class="dialog-filter__block-color__wrapper"
               :class="{
                 'dialog-filter__block-color__wrapper_checked':
-                  catalogStore.filterCatalog.color.includes(color),
+                  filterCatalog.color.includes(color),
                 'dialog-filter__block-color__wrapper_disabled':
-                  !catalogStore.availableColors.includes(color),
+                  !availableColors.includes(color),
               }"
               @click="setColorFilter(color)"
             >
@@ -141,9 +141,29 @@
 // TODO: прокидывать данные через props
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
 import { useCatalogModule } from '~/modules/catalog/global';
+import type { FilterCatalog, FilterStore } from '~/interfaces/global';
 
 const catalogStore = useCatalogStore();
 const catalogModule = useCatalogModule();
+
+defineProps({
+  filterCatalog: {
+    type: Object as PropType<FilterStore>,
+    required: true,
+  },
+  filter: {
+    type: Object as PropType<FilterCatalog>,
+    required: true,
+  },
+  availableColors: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
+  totalItems: {
+    type: Number,
+    required: true,
+  },
+});
 
 const hasActiveFilters = computed(() => {
   return (

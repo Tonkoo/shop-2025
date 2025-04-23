@@ -13,7 +13,10 @@
         </q-breadcrumbs>
       </div>
       <div class="catalog-filter__swiper">
-        <SwiperChildSection v-if="catalogStore.childSection" />
+        <SwiperChildSection
+          v-if="catalogStore.childSection"
+          :child-section="childSection"
+        />
       </div>
 
       <div class="catalog-filter__right">
@@ -28,9 +31,14 @@
     </div>
   </div>
   <div class="product-list">
-    <CatalogProduct />
+    <CatalogProduct :item-catalog="itemCatalog" />
   </div>
-  <DialogFilter />
+  <DialogFilter
+    :filter-catalog="filterCatalog"
+    :filter="filter"
+    :available-colors="availableColors"
+    :total-items="totalItems"
+  />
 </template>
 
 <script setup lang="ts">
@@ -42,6 +50,15 @@ import CatalogProduct from '~/modules/catalog/components/catalog/CatalogProduct.
 import DialogFilter from '~/modules/catalog/components/catalog/DialogFilter.vue';
 
 const catalogStore = useCatalogStore();
+
+const {
+  childSection,
+  itemCatalog,
+  filterCatalog,
+  filter,
+  availableColors,
+  totalItems,
+} = catalogStore;
 
 const router = useRouter();
 </script>

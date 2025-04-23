@@ -1,6 +1,6 @@
 <template>
   <div class="slider">
-    <ArealSwiper :data-items="catalogStore.childSection">
+    <ArealSwiper :data-items="childSection">
       <template #default="{ item }">
         <ArealSectionCard :section="item" />
       </template>
@@ -9,9 +9,14 @@
 </template>
 
 <script setup lang="ts">
-import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
+import type { SectionMain } from '~/interfaces/global';
 
-const catalogStore = useCatalogStore();
+defineProps({
+  childSection: {
+    type: Array as PropType<SectionMain[]>,
+    required: true,
+  },
+});
 </script>
 
 <style scoped lang="scss">

@@ -17,7 +17,7 @@ import type { ProductMain } from '~/interfaces/global';
 
 defineProps({
   mainGifts: {
-    type: Object as PropType<ProductMain[]>,
+    type: Array as PropType<ProductMain[]>,
     required: true,
   },
 });
