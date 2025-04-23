@@ -160,6 +160,7 @@ export async function addItem() {
       data = adminStore.frontProduct;
       validationProduct(data);
     }
+
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItemsAdmin }>(
@@ -187,7 +188,6 @@ export async function editItem() {
         'level',
         'code',
       ]);
-
       validationSection(adminStore.frontSection);
     } else {
       data = comparisonValues(adminStore.frontProduct, adminStore.backProduct, [
@@ -198,16 +198,8 @@ export async function editItem() {
         'sectionId',
       ]) as ProductAdmin;
       validationProduct(adminStore.frontProduct);
-      // if (data.section) {
-      //   data.sectionId = data.section.id;
-      //   data.sectionName = data.section.name;
-      // }
-      // if (data.parent) {
-      //   data.idParent = data.parent.id;
-      // }
     }
-    // console.log(data);
-
+    console.log(data);
     const formData = new FormData();
     const param: ApiParams = fillingParam(
       adminStore.typeSearch.value,

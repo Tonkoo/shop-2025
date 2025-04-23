@@ -7,6 +7,7 @@ import type {
   SectionAdmin,
   Colors,
   SelectSection,
+  SelectColor,
 } from '~/interfaces/global';
 
 type AdminState = {
@@ -28,8 +29,9 @@ type AdminState = {
   backSection: SectionAdmin | null;
   backProduct: ProductAdmin | null;
   frontSection: SectionAdmin;
-  sectionParent: SelectSection;
+  sectionForm: SelectSection;
   frontProduct: ProductAdmin;
+  colorForm: SelectColor;
   errors: Err;
   disableBtn: boolean;
   filterSection: SectionAdmin | null;

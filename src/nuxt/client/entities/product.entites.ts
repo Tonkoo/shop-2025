@@ -4,12 +4,14 @@ export const productDefault = {
   name: '',
   images: [],
   price: 0,
-  color: { id: 0, name: '', hex: '' },
-  section: {
-    id: 0,
-    name: '',
-  },
+  idColor: 0,
+  idSection: 0,
   description: '',
   showOnMain: false,
   mainSlider: false,
+};
+
+export const colorFormDefault = {
+  id: 0,
+  name: '',
 };

@@ -8,7 +8,6 @@ type Product = {
   name: string;
   price: number;
   color: Colors;
-  // color: string;
   description: string;
   section: parentSection;
   show_on_main: boolean;
@@ -29,7 +28,6 @@ type ProductEntities = Product &
   DateClient & {
     images: imageData[];
     type: string;
-    section: parentSection;
     sectionName?: string;
     hexColor?: string;
     url?: string;
@@ -43,6 +41,8 @@ type ProductClient = Product &
 type ProductBase = Product &
   DateBase & {
     images: number[] | null;
+    idSection?: number;
+    idColor?: number;
     imageObject?: Images[];
   };
 

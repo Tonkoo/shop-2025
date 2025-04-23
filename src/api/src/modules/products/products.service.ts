@@ -26,7 +26,6 @@ import {
 import { Colors } from '../../entities/colors.entity';
 import { formatResponse } from '../../utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
-import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 
 @Injectable()
 export class ProductsService {
@@ -52,14 +51,14 @@ export class ProductsService {
     if (data.price) {
       data.price = Math.round(Number(data.price));
     }
-    if (data.section) {
-      data.section = { id: data.sectionId };
-    }
     if (data.mainSlider == Boolean('true')) {
       data.mainSlider = true;
     }
-    if (data.color) {
-      data.color = { id: data.colorId };
+    if (data.idSection) {
+      data.section = { id: data.idSection };
+    }
+    if (data.idColor) {
+      data.color = { id: data.idColor };
     }
   }
 
@@ -82,6 +81,7 @@ export class ProductsService {
           'sectionId',
           'sectionName',
           'idSection',
+          'idColor',
           'typeForm',
         ]),
       );
@@ -153,6 +153,10 @@ export class ProductsService {
           id: product.section.id,
           name: product.section.name,
         };
+        product.idSection = product.section.id;
+      }
+      if (product.color) {
+        product.idColor = product.color.id;
       }
 
       return camelCaseConverter(product) as ProductBase;
@@ -193,7 +197,7 @@ export class ProductsService {
         this.imagesRepository,
         queryRunner,
       );
-
+      console.log(data);
       const newProduct = await this.productsRepo.update(
         { id: id },
         prepareData(data, [
@@ -204,7 +208,7 @@ export class ProductsService {
           'searchName',
           'sectionId',
           'sectionName',
-          'colorId',
+          'idColor',
           'typeForm',
         ]),
       );

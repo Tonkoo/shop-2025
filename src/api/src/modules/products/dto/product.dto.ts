@@ -1,11 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Products } from '../../../entities/products.entity';
 import {
   IsArray,
   IsBoolean,
   IsDate,
-  IsEmpty,
-  IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
@@ -15,39 +12,45 @@ import { Transform } from 'class-transformer';
 
 export class ProductDto {
   @ApiProperty({ example: 1, description: 'ID продукта' })
-  @IsNumber()
+  @IsNumber({}, { message: 'ID must be a number' })
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   id: number;
 
   @ApiProperty({ example: 'test', description: 'Код продукта' })
-  @IsString()
+  @IsString({ message: 'Code must be a string' })
   @IsOptional()
   code: string;
 
   @ApiProperty({ example: 'Пылесос', description: 'Название продукта' })
-  @IsString()
+  @IsString({ message: 'Name must be a string' })
   @IsOptional()
   name: string;
 
   @ApiProperty({ example: [1, 2, 3], description: 'Список ID изображений' })
-  @IsArray()
+  @IsArray({ message: 'Images must be an array', each: true })
+  @Transform(({ value }) => {
+    if (value === '') {
+      return [];
+    }
+  })
   @IsOptional()
-  images: Awaited<number>[] | null;
+  images?: Awaited<number>[] | null;
 
   @ApiProperty({ example: '123.00', description: 'Цена продукта' })
-  @IsNumber()
+  @IsNumber({}, { message: 'Price must be a number' })
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   price: number;
 
   @ApiProperty({ example: 'Красный', description: 'Цвет продукта' })
-  @IsObject()
+  @IsNumber({}, { message: 'idColor must be a number' })
+  @Transform(({ value }) => Number(value))
   @IsOptional()
-  color: {
-    id: number;
-  };
+  idColor: number;
 
   @ApiProperty({ example: '...', description: 'Описание продукта' })
-  @IsString()
+  @IsString({ message: 'Description must be a string' })
   @IsOptional()
   description: string;
 
@@ -55,7 +58,8 @@ export class ProductDto {
     example: 2,
     description: 'ID раздела',
   })
-  @IsNumber()
+  @IsNumber({}, { message: 'idSection must be a number' })
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   idSection: number;
 
@@ -93,39 +97,36 @@ export class ProductDto {
   @IsOptional()
   updateAt: Date;
 
-  section: {
+  @IsObject()
+  @IsOptional()
+  section?: {
     id: number;
   };
 
-  sectionId: number;
+  @IsObject()
+  @IsOptional()
+  color?: {
+    id: number;
+  };
 
-  colorId: number;
-
+  @IsString({ message: 'Type must be a string' })
   type: string;
 
-  from: string;
+  @IsNumber({}, { message: 'From must be a number' })
+  @Transform(({ value }) => Number(value))
+  from: number;
 
-  size: string;
+  @IsNumber({}, { message: 'Size must be a number' })
+  @Transform(({ value }) => Number(value))
+  size: number;
 
+  @IsString({ message: 'searchName must be a string' })
   searchName: string;
 
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  @IsOptional()
   getItems: boolean;
-
-  constructor(ent: Products) {
-    this.id = ent.id;
-    this.code = ent.code;
-    this.name = ent.name;
-    this.images = ent.images;
-    this.price = ent.price;
-    // this.color = ent.color.id;
-    // this.color = ent.color;
-    this.description = ent.description;
-    this.idSection = ent.section.id;
-    this.showOnMain = ent.show_on_main;
-    this.mainSlider = ent.main_slider;
-    this.createAt = ent.create_at;
-    this.updateAt = ent.update_at;
-  }
 }
 
 export class ColorDto {

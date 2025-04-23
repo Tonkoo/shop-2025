@@ -26,20 +26,20 @@ type Product = {
   code: string;
   name: string;
   price: number;
-  color: Colors;
-  colorId?: number;
+  idColor: number;
   description: string;
   showOnMain: boolean;
   mainSlider: boolean;
   createAt?: string;
   updateAt?: string;
-  section: SelectSection;
-  sectionId?: number;
+  idSection: number;
   imageObject?: ImageObject[];
 };
 
 type ProductAdmin = Product & {
   images?: File[];
+  section?: SelectSection;
+  color?: Colors;
 };
 
 type ProductMain = Product & {
@@ -66,6 +66,11 @@ interface Search {
 }
 
 type SelectSection = {
+  id: number;
+  name: string;
+};
+
+type SelectColor = {
   id: number;
   name: string;
 };
@@ -110,9 +115,9 @@ type ApiParams = {
 type Err = {
   name?: string;
   price?: string;
-  color?: string;
+  idColor?: string;
   description?: string;
-  section?: string;
+  idSection?: string;
 };
 
 type Colors = {
@@ -169,4 +174,5 @@ export type {
   ResultItemsCatalog,
   FilterCatalog,
   FilterStore,
+  SelectColor,
 };

@@ -15,9 +15,11 @@ export class payLoad {
   type?: string;
 
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   from?: number;
 
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   size?: number;
 
   @IsString({

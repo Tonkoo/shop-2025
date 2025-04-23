@@ -22,12 +22,12 @@
       @update:model-value="adminStore.setProductPrice"
     />
     <areal-select-colors
-      v-model="adminStore.frontProduct.color"
+      v-model="adminStore.colorForm"
       :label="$t('admin.label.color')"
       :option="optionsColors"
       option-value="id"
       option-label="name"
-      :errors-message="adminStore.errors.color"
+      :errors-message="adminStore.errors.idColor"
       @focus="getColorsOptions"
       @update:model-value="adminStore.setProductColor"
     />
@@ -40,15 +40,15 @@
     />
     <!--    :value="adminStore.searchSection"-->
     <areal-select-form
-      v-model="adminStore.frontProduct.section"
+      v-model="adminStore.sectionForm"
       :option="autocompleteOptions"
       option-value="id"
       option-label="name"
-      :errors-message="adminStore.errors.section"
+      :errors-message="adminStore.errors.idSection"
       :label="$t('admin.label.section')"
       @input-value="onSearchInput"
       @update:model-value="onSearchInput"
-      @focus="onSearchInput"
+      @focus="onSearchInput(adminStore.sectionForm.name)"
     />
     <areal-checkbox
       v-model="adminStore.frontProduct.showOnMain"

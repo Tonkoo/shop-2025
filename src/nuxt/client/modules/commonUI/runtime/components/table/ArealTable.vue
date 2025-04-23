@@ -50,7 +50,7 @@ defineProps({
 const OpenDialog = (id: number) => {
   adminStore.setIsEdit(true);
   adminStore.setSelectedId(id);
-  adminStore.setTypeItem(adminStore.typeSearch.value);
+  // adminStore.setTypeItem(adminStore.typeSearch.value);
   adminStore.setViewModal(true);
 };
 

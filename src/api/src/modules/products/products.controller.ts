@@ -30,7 +30,6 @@ import { response, resultItems, ProductBase } from '../../interfaces/global';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
 import { Colors } from '../../entities/colors.entity';
-import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 
 class DeleteProductDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })

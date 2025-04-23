@@ -14,14 +14,14 @@ export function validationProduct(data: ProductAdmin) {
     if (formattedErrors.price) {
       errors.price = formattedErrors.price._errors[0];
     }
-    if (formattedErrors.color?.id) {
-      errors.color = formattedErrors.color.id._errors[0];
+    if (formattedErrors.idColor) {
+      errors.idColor = formattedErrors.idColor._errors[0];
     }
     if (formattedErrors.description) {
       errors.description = formattedErrors.description._errors[0];
     }
-    if (formattedErrors.section?.id) {
-      errors.section = formattedErrors.section.id._errors[0];
+    if (formattedErrors.idSection) {
+      errors.idSection = formattedErrors.idSection._errors[0];
     }
     adminStore.setError(errors);
     throw new Error('Validation failed');

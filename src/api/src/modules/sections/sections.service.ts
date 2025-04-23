@@ -185,7 +185,6 @@ export class SectionsService {
       }
 
       await this.populateSectionData(section);
-
       return camelCaseConverter(section);
     } catch (err) {
       console.log('Error for sections.getList: ', err);

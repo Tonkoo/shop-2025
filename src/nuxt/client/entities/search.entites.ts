@@ -9,3 +9,8 @@ export const productParams = {
   from: '',
   size: 10,
 };
+
+export const typeSearchDefault = {
+  label: 'Разделы',
+  value: 'section',
+};

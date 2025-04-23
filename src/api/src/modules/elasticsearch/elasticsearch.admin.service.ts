@@ -130,7 +130,6 @@ export class ElasticsearchAdminService {
   ): Promise<(ProductEntities | SectionEntities)[]> {
     const products: (ProductClient | SectionClient)[] =
       convertTimeArray(dbProduct);
-
     const documentsProduct = await this.generateBlockImages(
       products,
       'product',
@@ -146,57 +145,44 @@ export class ElasticsearchAdminService {
 
     const processedProducts = await Promise.all(
       documentsProduct.map(async (item) => {
-        //Todo: Убрать условие
-        if (item.type === 'product') {
-          const product = item as ProductEntities;
-          let sectionName: string | undefined;
-          let hexColor: string | undefined;
-          if (product.section) {
-            const section = await this.sectionsRepository.findOne({
-              where: { id: Number(product.section) },
-            });
-            sectionName = section?.name;
-          }
-
-          if (product.color) {
-            const color = await this.colorsRepository.findOne({
-              where: { id: Number(product.color) },
-            });
-            hexColor = color?.hex;
-          }
-
-          const url = await generateLinkProduct(
-            product,
-            this.sectionsRepository,
-          );
-
-          return { ...product, sectionName, hexColor, url };
+        const product = item as ProductEntities;
+        let sectionName: string | undefined;
+        let hexColor: string | undefined;
+        if (product.section) {
+          const section = await this.sectionsRepository.findOne({
+            where: { id: Number(product.section) },
+          });
+          sectionName = section?.name;
         }
-        return item;
+
+        if (product.color) {
+          const color = await this.colorsRepository.findOne({
+            where: { id: Number(product.color) },
+          });
+          hexColor = color?.hex;
+        }
+
+        const url = await generateLinkProduct(product, this.sectionsRepository);
+
+        return { ...product, sectionName, hexColor, url };
       }),
     );
 
     const processedSections = await Promise.all(
       documentsSection.map(async (item) => {
-        if (item.type === 'section') {
-          const section = item as SectionEntities;
-          let parentName: string | undefined;
+        const section = item as SectionEntities;
+        let parentName: string | undefined;
 
-          if (section.id_parent) {
-            const parent = await this.sectionsRepository.findOne({
-              where: { id: section.id_parent },
-            });
-            parentName = parent?.name;
-          }
-
-          const url = await generateLinkSection(
-            section,
-            this.sectionsRepository,
-          );
-
-          return { ...section, sectionName: parentName, url };
+        if (section.id_parent) {
+          const parent = await this.sectionsRepository.findOne({
+            where: { id: section.id_parent },
+          });
+          parentName = parent?.name;
         }
-        return item;
+
+        const url = await generateLinkSection(section, this.sectionsRepository);
+
+        return { ...section, sectionName: parentName, url };
       }),
     );
 
@@ -431,7 +417,7 @@ export class ElasticsearchAdminService {
     }
   }
 
-  async getNameShopByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
+  async getNameByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
     const { type, searchName, size, typeForm } = payLoad;
     try {
       if (searchName == undefined) {
@@ -441,6 +427,7 @@ export class ElasticsearchAdminService {
       const result = await searchFromElastic(
         {
           size,
+          source: ['id', 'name', 'level'],
           query: {
             bool: {
               must: [{ match: { type: type } }],
@@ -451,16 +438,14 @@ export class ElasticsearchAdminService {
         },
         this.elasticsearchService,
       );
-      const testResult = result.items as SectionElastic[];
-
-      return testResult
-        .filter((section) => {
-          return typeForm && typeForm === 'section' && section.level === 1;
-        })
-        .map((section) => ({
-          ...section,
-          name: '.'.repeat(section.level) + section.name,
-        }));
+      let testResult = result.items as SectionElastic[];
+      if (typeForm && typeForm === 'section') {
+        testResult = testResult.filter((section) => section.level === 1);
+      }
+      return testResult.map((section) => ({
+        ...section,
+        name: '.'.repeat(section.level) + section.name,
+      }));
     } catch (err) {
       logger.error('Error from elastic.getNameShopByElastic: ', err);
       throw new BadRequestException('Error getting name');

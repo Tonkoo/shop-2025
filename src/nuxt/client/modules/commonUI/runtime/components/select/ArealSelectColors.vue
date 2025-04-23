@@ -12,11 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Colors } from '~/interfaces/global';
+import type { SelectColor } from '~/interfaces/global';
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<Colors | null>,
+    type: Object as PropType<SelectColor | null>,
     required: false,
     default: null,
   },

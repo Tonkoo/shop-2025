@@ -12,6 +12,7 @@ import { Transform } from 'class-transformer';
 export class SectionDto {
   @ApiProperty({ example: 1, description: 'ID раздела' })
   @IsNumber({}, { message: 'ID must be a number' })
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   id: number;
 
@@ -67,6 +68,7 @@ export class SectionDto {
     nullable: true,
   })
   @IsNumber({}, { message: 'Level must be a number' })
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   level: number;
 
@@ -74,15 +76,18 @@ export class SectionDto {
   type: string;
 
   @IsNumber({}, { message: 'From must be a number' })
+  @Transform(({ value }) => Number(value))
   from: number;
 
   @IsNumber({}, { message: 'Size must be a number' })
+  @Transform(({ value }) => Number(value))
   size: number;
 
   @IsString({ message: 'searchName must be a string' })
   searchName: string;
 
   @IsBoolean()
+  @Transform(({ value }) => value === 'true')
   @IsOptional()
   getItems: boolean;
 }

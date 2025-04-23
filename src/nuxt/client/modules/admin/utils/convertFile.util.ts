@@ -1,8 +1,6 @@
 import type { ImageObject } from '~/interfaces/global';
-import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
 export async function convertFile(imageObject: ImageObject[] | undefined) {
-  const adminStore = useAdminStore();
   if (!imageObject) {
     return [];
   }
@@ -10,15 +8,8 @@ export async function convertFile(imageObject: ImageObject[] | undefined) {
     imageObject.map(async (image) => {
       const response = await fetch(image.path);
       const blob = await response.blob();
-      const file = new File([blob], image.name, { type: image.type });
-      return file;
+      return new File([blob], image.name, { type: image.type });
     })
   );
-  if (adminStore.typeItem == 'section') {
-    adminStore.setSectionImages(filesWithId);
-  } else {
-    adminStore.setProductImages(filesWithId);
-  }
-
-  adminStore.setConvertImages(filesWithId);
+  return filesWithId;
 }

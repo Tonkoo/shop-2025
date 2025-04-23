@@ -36,7 +36,7 @@
             :label="$t('admin.label.search')"
             @input-value="onSearchInput"
             @update:model-value="onSearchInput"
-            @focus="onSearchInput"
+            @focus="onSearchInput(adminStore.searchName)"
           />
         </div>
         <div class="col-1">

@@ -8,16 +8,12 @@ export const productSchema = z.object({
   price: z
     .number({ message: 'Цена должна быть числом' })
     .min(10, 'Цена должна быть больше 10'),
-  color: z.object({
-    id: z.number().min(1, 'Пожалуйста, выберите цвет'),
-    name: z.string(),
-  }),
-  section: z
-    .object({
-      id: z.number().min(1, 'Пожалуйста, выберите раздел'),
-      name: z.string(),
-    })
-    .required(),
+  idColor: z
+    .number({ message: 'Идентификатор цвета должна быть числом' })
+    .min(1, 'Выберите цвет продукта'),
+  idSection: z
+    .number({ message: 'Идентификатор раздела должна быть числом' })
+    .min(1, 'Выберите раздел продукта'),
   description: z
     .string()
     .min(3, 'Описание должно содержать минимум 3 символа')

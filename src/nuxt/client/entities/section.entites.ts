@@ -5,7 +5,7 @@ export const sectionDefault = {
   level: 1,
 };
 
-export const sectionParentDefault = {
+export const sectionFormDefault = {
   id: 0,
   name: '',
 };

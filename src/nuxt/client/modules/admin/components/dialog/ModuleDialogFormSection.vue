@@ -13,14 +13,14 @@
     />
     <areal-block-images :images-array="adminStore.frontSection.images" />
     <areal-select-form
-      v-model="adminStore.sectionParent"
+      v-model="adminStore.sectionForm"
       :option="autocompleteOptions"
       option-value="id"
       option-label="name"
       :label="$t('admin.label.parentSection')"
       @input-value="onSearchInput"
       @update:model-value="onSearchInput"
-      @focus="onSearchInput"
+      @focus="onSearchInput(adminStore.sectionForm.name)"
     />
   </areal-form>
 </template>

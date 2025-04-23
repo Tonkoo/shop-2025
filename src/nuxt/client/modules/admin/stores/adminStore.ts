@@ -10,14 +10,13 @@ import type {
   SectionAdmin,
   Colors,
   Err,
+  SelectColor,
 } from '~/interfaces/global';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 import { paramPagination } from '~/entities/table.entites';
-import {
-  sectionDefault,
-  sectionParentDefault,
-} from '~/entities/section.entites';
-import { productDefault } from '~/entities/product.entites';
+import { sectionDefault, sectionFormDefault } from '~/entities/section.entites';
+import { colorFormDefault, productDefault } from '~/entities/product.entites';
+import { typeSearchDefault } from '~/entities/search.entites';
 
 const adminModule = useAdminModule();
 export const useAdminStore = defineStore('admin-store', {
@@ -30,7 +29,7 @@ export const useAdminStore = defineStore('admin-store', {
     countColumn: paramPagination.countColumn,
     currentPage: paramPagination.currentPage,
     allCount: 0,
-    typeSearch: { label: 'Разделы', value: 'section' },
+    typeSearch: { ...typeSearchDefault },
     allName: [],
     searchName: '',
     searchParentName: '',
@@ -39,8 +38,9 @@ export const useAdminStore = defineStore('admin-store', {
     backSection: null,
     backProduct: null,
     frontSection: { ...sectionDefault },
-    sectionParent: { ...sectionParentDefault },
+    sectionForm: { ...sectionFormDefault },
     frontProduct: { ...productDefault },
+    colorForm: { ...colorFormDefault },
     errors: {},
     disableBtn: false,
     filterSection: null,
@@ -54,7 +54,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     async setViewModal(value: boolean) {
       if (!value) {
-        await this.clearForms();
+        this.clearForms();
       }
       this.clearError();
       this.viewModal = value;
@@ -64,6 +64,7 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setTypeItem(value: string) {
       this.typeItem = value;
+      this.clearForms();
       this.clearError();
     },
     async setCountColumn(value: string) {
@@ -109,36 +110,47 @@ export const useAdminStore = defineStore('admin-store', {
     setNameItems(value: Search[]) {
       this.allName = value;
     },
-    async setBackSection(value: SectionAdmin) {
-      this.backSection = value;
-      this.setSectionId(value.id);
-      this.setSectionName(value.name);
-      if (value.idParent && value.parent) {
-        this.setSectionIdParent(value.idParent);
-        this.setSectionParent(value.parent);
+    async setFrontSection(value: SectionAdmin) {
+      this.frontSection = {
+        ...value,
+        images: await convertFile(value.imageObject),
+      };
+      if (value.parent) {
+        this.setSectionForm(value.parent);
       }
-
-      await convertFile(value.imageObject);
+    },
+    async setBackSection(value: SectionAdmin) {
+      this.backSection = {
+        ...value,
+        images: await convertFile(value.imageObject),
+      };
+      await this.setFrontSection(value);
+    },
+    async setFrontProduct(value: ProductAdmin) {
+      this.frontProduct = {
+        ...value,
+        images: await convertFile(value.imageObject),
+      };
     },
     async setBackProduct(value: ProductAdmin) {
-      this.backProduct = value;
-      this.setProductName(value.name);
-      await convertFile(value.imageObject);
-      this.setProductPrice(value.price);
-      this.setProductColor(value.color);
-      this.setProductDescription(value.description);
-      this.setProductSection(value.section ?? { id: 0, name: '' });
-      this.setProductShowOnMain(value.showOnMain);
-      this.setProductMainSlider(value.mainSlider);
+      this.backProduct = {
+        ...value,
+        images: await convertFile(value.imageObject),
+      };
+      await this.setFrontProduct(value);
+      if (value.section) {
+        this.setSectionForm(value.section);
+      }
+      if (value.color) {
+        this.setColorForm(value.color);
+      }
     },
-    async clearForms() {
+    clearForms() {
       this.setIsEdit(false);
       this.frontSection = { ...sectionDefault };
       this.frontProduct = { ...productDefault };
-      this.sectionParent = { ...sectionParentDefault };
-    },
-    setSectionId(value: number) {
-      this.frontSection.id = value;
+      this.sectionForm = { ...sectionFormDefault };
+      this.colorForm = { ...colorFormDefault };
     },
     setSectionName(value: string) {
       this.frontSection.name = value;
@@ -149,16 +161,11 @@ export const useAdminStore = defineStore('admin-store', {
     setSectionIdParent(value: number) {
       this.frontSection.idParent = value;
     },
-    setSectionParent(value: SelectSection) {
-      this.sectionParent = value;
+    setSectionForm(value: SelectSection) {
+      this.sectionForm = value;
     },
-    setConvertImages(value: File[]) {
-      if (this.backSection) {
-        this.backSection.images = value;
-      }
-      if (this.backProduct) {
-        this.backProduct.images = value;
-      }
+    setColorForm(value: SelectColor) {
+      this.colorForm = value;
     },
     setError(value: Err) {
       this.errors = value;
@@ -175,18 +182,14 @@ export const useAdminStore = defineStore('admin-store', {
     setProductPrice(value: number) {
       this.frontProduct.price = Number(value);
     },
-    setProductColor(value: Colors) {
-      this.frontProduct.color = value;
-      this.frontProduct.colorId = value.id;
+    setProductColor(value: SelectColor) {
+      this.frontProduct.idColor = value.id;
     },
     setProductDescription(value: string) {
       this.frontProduct.description = value;
     },
     setProductIdSection(value: SelectSection) {
-      this.frontProduct.sectionId = value.id;
-    },
-    setProductSection(value: SelectSection) {
-      this.frontProduct.section = value;
+      this.frontProduct.idSection = value.id;
     },
     setProductShowOnMain(value: boolean) {
       this.frontProduct.showOnMain = value;
