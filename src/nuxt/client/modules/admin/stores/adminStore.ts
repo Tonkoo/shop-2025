@@ -62,9 +62,11 @@ export const useAdminStore = defineStore('admin-store', {
     setDelDialog(value: boolean) {
       this.delDialog = value;
     },
-    setTypeItem(value: string) {
+    setTypeItem(value: string, clear: boolean) {
       this.typeItem = value;
-      this.clearForms();
+      if (clear) {
+        this.clearForms();
+      }
       this.clearError();
     },
     async setCountColumn(value: string) {

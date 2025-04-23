@@ -197,7 +197,6 @@ export class ProductsService {
         this.imagesRepository,
         queryRunner,
       );
-      console.log(data);
       const newProduct = await this.productsRepo.update(
         { id: id },
         prepareData(data, [

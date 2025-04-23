@@ -1,9 +1,8 @@
 <template>
   <div class="catalog-wrapper">
     <div class="catalog-list">
-      <!--      TODO: вынести в computed-->
       <div
-        v-for="product in mainStores.mainGifts"
+        v-for="product in mainGifts"
         :key="product.id"
         class="catalog-list__cards"
       >
@@ -14,9 +13,14 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStores } from '~/modules/main/stores/mainStores';
+import type { ProductMain } from '~/interfaces/global';
 
-const mainStores = useMainStores();
+defineProps({
+  mainGifts: {
+    type: Object as PropType<ProductMain[]>,
+    required: true,
+  },
+});
 </script>
 
 <style scoped lang="scss">

@@ -22,7 +22,6 @@ export const useLayoutStores = defineStore('layout-store', {
     },
     setTypePage(value: string) {
       this.typePage = value;
-      console.log(this.typePage);
     },
     setPathPage(value: string) {
       this.pathPage = value;

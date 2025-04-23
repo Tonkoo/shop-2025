@@ -14,12 +14,11 @@ export async function getLayout(
       },
       elasticsearchService,
     );
-
     const menu = layout.items as SectionElastic[];
-    // TODO: убрать запрос использовать для формирования меню level
+    // TODO: убрать запрос использовать для формирования меню level ????
     const resultMenu: SectionElastic[] = await Promise.all(
       menu.map(async (item) => {
-        if (!item.id_parent) {
+        if (item.level === 1) {
           const sections = await searchFromElastic(
             {
               query: {

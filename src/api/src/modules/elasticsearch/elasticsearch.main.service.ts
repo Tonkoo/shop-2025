@@ -15,6 +15,16 @@ export class ElasticsearchMainService {
     try {
       const items = await searchFromElastic(
         {
+          source: [
+            'name',
+            'code',
+            'price',
+            'show_on_main',
+            'main_slider',
+            'hexColor',
+            'url',
+            'images',
+          ],
           query: {
             bool: {
               should: [

@@ -1,5 +1,5 @@
 <template>
-  <areal-swiper :data-items="mainStores.mainSlider">
+  <areal-swiper :data-items="mainSlider">
     <template #default="{ item }">
       <ArealProductCard :product="item as ProductMain" />
     </template>
@@ -7,10 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import { useMainStores } from '~/modules/main/stores/mainStores';
 import type { ProductMain } from '~/interfaces/global';
 
-const mainStores = useMainStores();
+defineProps({
+  mainSlider: {
+    type: Array as PropType<ProductMain[]>,
+    required: true,
+  },
+});
 </script>
 
 <style scoped lang="scss"></style>

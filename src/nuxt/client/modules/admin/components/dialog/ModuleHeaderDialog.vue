@@ -14,7 +14,7 @@
     v-model="typeItem"
     :options="options"
     class="q-mb-md"
-    @update:model-value="adminStore.setTypeItem"
+    @update:model-value="adminStore.setTypeItem(typeItem, true)"
   />
 </template>
 
