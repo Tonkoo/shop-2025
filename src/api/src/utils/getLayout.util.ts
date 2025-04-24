@@ -10,6 +10,7 @@ export async function getLayout(
   try {
     const layout = await searchFromElastic(
       {
+        source: ['id', 'name', 'level', 'url'],
         query: { bool: { must: { term: { type: 'section' } } } },
       },
       elasticsearchService,
@@ -21,6 +22,7 @@ export async function getLayout(
         if (item.level === 1) {
           const sections = await searchFromElastic(
             {
+              source: ['id', 'name', 'url'],
               query: {
                 bool: {
                   must: [

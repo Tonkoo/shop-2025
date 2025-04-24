@@ -46,6 +46,7 @@ type ProductMain = Product & {
   images: ImageElastic[];
   hexColor: string;
   url: string;
+  sectionName: string;
 };
 
 type StoreItem = SectionAdmin | ProductAdmin;

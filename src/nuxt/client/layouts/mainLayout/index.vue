@@ -1,15 +1,22 @@
 <template>
   <div class="main-layout">
     <header class="header">
-      <ModuleHeader />
+      <ModuleHeader
+        :sidebar="layoutStore.sidebar"
+        @set-sidebar="layoutStore.setSidebar()"
+      />
     </header>
     <main class="main-layout__container">
       <slot />
     </main>
     <footer class="footer">
-      <ModuleFooter />
+      <ModuleFooter :menu="layoutStore.menu" />
     </footer>
-    <Sidebar />
+    <Sidebar
+      :dialog="layoutStore.sidebar"
+      :menu="layoutStore.menu"
+      @set-sidebar="layoutStore.setSidebar()"
+    />
   </div>
 </template>
 
@@ -17,8 +24,11 @@
 import ModuleHeader from '~/layouts/mainLayout/widgets/ModuleHeader.vue';
 import ModuleFooter from '~/layouts/mainLayout/widgets/ModuleFooter.vue';
 import Sidebar from '~/layouts/mainLayout/components/Sidebar.vue';
+import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 
 defineOptions({ name: 'MainLayout' });
+
+const layoutStore = useLayoutStores();
 </script>
 
 <style lang="scss">

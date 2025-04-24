@@ -94,6 +94,7 @@ export class ElasticsearchCatalogService {
         source: [
           'id',
           'name',
+          'code',
           'images',
           'price',
           'description',

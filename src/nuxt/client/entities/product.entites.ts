@@ -24,6 +24,7 @@ export const productMainDefault = {
   images: [],
   hexColor: '',
   url: '',
+  sectionName: '',
 };
 
 export const colorFormDefault = {

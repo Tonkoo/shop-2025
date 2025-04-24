@@ -24,6 +24,7 @@ type CatalogState = {
 
 type DetailPageState = {
   product: ProductMain;
+  dialog: boolean;
 };
 
 export type { CatalogState, DetailPageState };

@@ -25,7 +25,11 @@
       </div>
       <div class="about-block__content__separation" />
       <div class="about-block__content__links">
-        <span class="about-block__content__links__item">Описание</span>
+        <span
+          class="about-block__content__links__item"
+          @click="emit('open-dialog')"
+          >Описание</span
+        >
       </div>
     </div>
   </div>
@@ -40,6 +44,8 @@ defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(['open-dialog']);
 </script>
 
 <style scoped lang="scss">

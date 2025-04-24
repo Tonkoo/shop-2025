@@ -1,32 +1,36 @@
-<!--TODO: Методология БЭМ-->
 <template>
   <div class="footer">
-    <div class="menu">
-      <!--      TODO-->
+    <div class="footer__menu menu">
       <div
-        v-for="parentSection in getParentSection(layoutStores.menu)"
+        v-for="parentSection in getParentSection(menu)"
         :key="parentSection.id"
-        class="menu__column"
+        class="footer__menu__column"
       >
-        <div class="menu__title">
-          <ArealLink :link="parentSection.url" class="menu__link">
+        <div class="footer__menu__title menu__title">
+          <ArealLink
+            :link="parentSection.url"
+            class="footer__menu__link menu__link"
+          >
             {{ parentSection.name }}
           </ArealLink>
         </div>
-        <ul class="menu__list">
+        <ul class="footer__menu__list menu__list">
           <li
             v-for="childSection in parentSection.items"
             :key="childSection.id"
           >
-            <ArealLink :link="childSection.url" class="menu__link">
+            <ArealLink
+              :link="childSection.url"
+              class="footer__menu__link menu__link"
+            >
               {{ childSection.name }}
             </ArealLink>
           </li>
         </ul>
       </div>
     </div>
-    <div class="copyright">
-      <span class="copyright__text"
+    <div class="footer__copyright">
+      <span class="footer__copyright__text"
         >&copy; {{ getYearCopyright() }} StyleHub</span
       >
     </div>
@@ -34,10 +38,15 @@
 </template>
 
 <script setup lang="ts">
-import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
+import type { SectionMain } from '~/interfaces/global';
 
-const layoutStores = useLayoutStores();
+defineProps({
+  menu: {
+    type: Array as PropType<SectionMain[]>,
+    required: true,
+  },
+});
 
 const getYearCopyright = () => {
   const year = new Date().getFullYear();
@@ -55,12 +64,8 @@ const getYearCopyright = () => {
   justify-content: space-between;
   padding: 40px;
 
-  .menu {
+  &__menu {
     gap: 110px;
-    &__column {
-    }
-    &__title {
-    }
     &__list {
       gap: 16px;
       margin-top: 24px;
@@ -70,7 +75,7 @@ const getYearCopyright = () => {
     }
   }
 
-  .copyright {
+  &__copyright {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;

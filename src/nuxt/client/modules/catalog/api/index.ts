@@ -29,6 +29,9 @@ export async function getItemCatalog() {
     if (response.data.data.content.typeItem) {
       layoutStores.setTypePage(response.data.data.content.typeItem);
     }
+    if (params.layout) {
+      layoutStores.setMenu(response.data.data.layout.menu);
+    }
     if (layoutStores.typePage === 'section') {
       if (params.onlyFilters) {
         if (
@@ -43,9 +46,6 @@ export async function getItemCatalog() {
         catalogStore.setOnlyFilter(false);
         catalogStore.setTotalItems(response.data.data.content.totalItems);
       } else {
-        if (params.layout) {
-          layoutStores.setMenu(response.data.data.layout.menu);
-        }
         catalogStore.setItems(response.data.data);
         if (catalogStore.getFilter) {
           catalogStore.setFilter(response.data.data);

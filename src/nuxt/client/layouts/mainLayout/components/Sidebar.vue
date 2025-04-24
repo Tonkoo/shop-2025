@@ -9,7 +9,7 @@
     <div class="card">
       <nav class="menu">
         <div
-          v-for="parentSection in getParentSection(LayoutStores.menu)"
+          v-for="parentSection in getParentSection(menu)"
           :key="parentSection.id"
           class="menu__column"
         >
@@ -17,7 +17,7 @@
             <ArealLink
               :link="parentSection.url"
               class="menu__link menu__link--title"
-              @click="LayoutStores.setSidebar()"
+              @click="emit('set-sidebar')"
               >{{ parentSection.name }}</ArealLink
             >
           </div>
@@ -29,7 +29,7 @@
               <ArealLink
                 :link="childSection.url"
                 class="menu__link"
-                @click="LayoutStores.setSidebar()"
+                @click="emit('set-sidebar')"
                 >{{ childSection.name }}</ArealLink
               >
             </li>
@@ -41,12 +41,21 @@
 </template>
 
 <script setup lang="ts">
-import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
+import type { SectionMain } from '~/interfaces/global';
 
-const LayoutStores = useLayoutStores();
+defineProps({
+  dialog: {
+    type: Boolean,
+    required: true,
+  },
+  menu: {
+    type: Array as PropType<SectionMain[]>,
+    required: true,
+  },
+});
 
-const dialog = computed(() => LayoutStores.sidebar);
+const emit = defineEmits(['set-sidebar']);
 </script>
 
 <style scoped lang="scss">

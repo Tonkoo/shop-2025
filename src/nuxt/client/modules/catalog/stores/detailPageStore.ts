@@ -8,10 +8,18 @@ export const useDetailPageStore = defineStore('detailPage-store', {
     product: {
       ...productMainDefault,
     },
+    dialog: false,
   }),
   actions: {
     setProduct(value: ProductMain) {
       this.product = value;
+    },
+    setDialog() {
+      if (!this.dialog) {
+        this.dialog = true;
+        return;
+      }
+      this.dialog = false;
     },
   },
 });

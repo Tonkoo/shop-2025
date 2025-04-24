@@ -1,16 +1,8 @@
 <template>
   <div class="header">
     <div class="header__btn">
-      <!--      TODO: Вынести в отдельный компонент-->
-      <!--      TODO: https://gitlab.arealidea.ru/kuch-zl/site-kuchenland/nuxt/-/blob/zl-release/client/modules/commonUi/runtime/components/icons/ArealIconWrapper.vue?ref_type=heads-->
-      <areal-button flat round dense @click="layoutStores.setSidebar()">
-        <!--        <img-->
-        <!--          :src="layoutStores.sidebar ? closeMenu : openMenu"-->
-        <!--          alt="Previous"-->
-        <!--        />-->
-        <areal-svg
-          :icon-name="layoutStores.sidebar ? 'closeMenu' : 'openMenu'"
-        />
+      <areal-button flat round dense @click="emit('set-sidebar')">
+        <areal-svg :icon-name="sidebar ? 'closeMenu' : 'openMenu'" />
       </areal-button>
     </div>
     <div class="header__title">
@@ -20,11 +12,14 @@
 </template>
 
 <script setup lang="ts">
-import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
-// import openMenu from '~/modules/commonUI/assets/icon/menu/openMenu.svg';
-// import closeMenu from '~/modules/commonUI/assets/icon/menu/closeMenu.svg';
+defineProps({
+  sidebar: {
+    type: Boolean,
+    required: true,
+  },
+});
 
-const layoutStores = useLayoutStores();
+const emit = defineEmits(['set-sidebar']);
 </script>
 
 <style scoped lang="scss">
