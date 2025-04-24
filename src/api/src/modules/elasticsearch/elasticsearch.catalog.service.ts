@@ -91,6 +91,15 @@ export class ElasticsearchCatalogService {
   async getItem(url: string) {
     const items = await searchFromElastic(
       {
+        source: [
+          'name',
+          'images',
+          'price',
+          'description',
+          'sectionName',
+          'hexColor',
+          'type',
+        ],
         query: {
           bool: {
             must: [{ term: { 'url.keyword': url } }],
@@ -100,6 +109,7 @@ export class ElasticsearchCatalogService {
       this.elasticsearchService,
     );
 
+    console.log(items.items[0]);
     return items.items[0];
   }
 

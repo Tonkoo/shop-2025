@@ -13,7 +13,13 @@
           </areal-link>
           <div
             class="card__description-circle"
-            :style="{ backgroundColor: product.hexColor }"
+            :style="{
+              backgroundColor: product.hexColor,
+              border:
+                product.hexColor.toLowerCase() === '#ffffff'
+                  ? '1px solid black'
+                  : 'none',
+            }"
           />
         </div>
         <span class="card__description-price">{{ product.price }} ₽</span>
@@ -57,7 +63,7 @@ defineProps({
     &-circle {
       width: 15px;
       height: 15px;
-      border: 1px solid black;
+      //border: 1px solid black;
       border-radius: 50%;
     }
     &-price {

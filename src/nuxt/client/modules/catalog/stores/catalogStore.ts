@@ -77,6 +77,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     clearFilter() {
       this.filterCatalog = { ...filterCatalogDefault, color: [] };
       this.availableColors = this.filter.color;
+      this.setDefaultSort(this.sortingItems);
     },
     setFilterPrice(value: boolean) {
       this.filterPrice = value;

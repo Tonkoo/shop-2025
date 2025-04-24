@@ -23,7 +23,6 @@ export async function getItemCatalog() {
         params,
       }
     );
-    console.log(response.data.data);
     if (!response) {
       throw new Error('Error while receiving data');
     }

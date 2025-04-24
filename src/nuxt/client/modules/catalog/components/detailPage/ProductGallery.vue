@@ -1,7 +1,7 @@
 <template>
   <div class="gallery">
     <div
-      v-for="(image, index) in detailPageStore.product.images"
+      v-for="(image, index) in product.images"
       :key="index"
       class="gallery__item"
     >
@@ -11,9 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import { useDetailPageStore } from '~/modules/catalog/stores/detailPageStore';
+import type { ProductMain } from '~/interfaces/global';
 
-const detailPageStore = useDetailPageStore();
+defineProps({
+  product: {
+    type: Object as PropType<ProductMain>,
+    required: true,
+  },
+});
 </script>
 
 <style scoped lang="scss">

@@ -14,9 +14,11 @@ export default defineNuxtConfig({
   //     },
   //   },
   // },
-
   i18n: {
     vueI18n: './config/i18n.config.ts',
+  },
+  imports: {
+    autoImport: true,
   },
   quasar: {
     plugins: ['Notify', 'Loading'],
