@@ -2,15 +2,7 @@
   <div class="filter-wrapper">
     <div class="catalog-filter">
       <div class="catalog-filter__left">
-        <q-breadcrumbs separator="|" active-color="black" class="breadcrumbs">
-          <q-breadcrumbs-el
-            label="Назад"
-            icon="arrow_back_ios"
-            class="breadcrumbs__link"
-            @click="router.back()"
-          />
-          <q-breadcrumbs-el :label="catalogStore.contentName" />
-        </q-breadcrumbs>
+        <ArealBreadcrumbs :title="catalogStore.contentName" />
       </div>
       <div class="catalog-filter__swiper">
         <SwiperChildSection
@@ -43,7 +35,6 @@
 
 <script setup lang="ts">
 // TODO прописываешь все запросы к бэку здесь
-import { useRouter } from 'vue-router';
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
 import SwiperChildSection from '~/modules/catalog/components/catalog/SwiperChildSection.vue';
 import CatalogProduct from '~/modules/catalog/components/catalog/CatalogProduct.vue';
@@ -59,8 +50,6 @@ const {
   availableColors,
   totalItems,
 } = catalogStore;
-
-const router = useRouter();
 </script>
 
 <style scoped lang="scss">

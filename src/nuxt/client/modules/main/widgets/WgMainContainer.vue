@@ -2,7 +2,7 @@
   <div class="main-slider">
     <div class="slider">
       <span class="slider__title">Новинки</span>
-      <Swiper :main-slider="mainSlider" />
+      <Swiper :main-slider="dataSwiper" />
       <ArealLink class="slider__link" link="catalog/novinki/"
         >Смотреть все</ArealLink
       >
@@ -11,7 +11,7 @@
   <div class="main-list">
     <div class="product-list">
       <span class="product-list__title">Подарки</span>
-      <ProductList :main-gifts="mainGifts" />
+      <ProductList :main-gifts="dataList" />
       <ArealLink class="product-list__link" link="catalog/podarki/"
         >Смотреть все</ArealLink
       >
@@ -23,10 +23,25 @@
 import Swiper from '~/modules/main/components/Swiper.vue';
 import ProductList from '~/modules/main/components/ProductList.vue';
 import { useMainStores } from '~/modules/main/stores/mainStores';
+import { useMainModule } from '~/modules/main/global';
+import { useQuasar } from 'quasar';
+import { notifyNegative } from '~/entities/notify.entites';
 
+const mainModule = useMainModule();
+const quasar = useQuasar();
 const mainStores = useMainStores();
 
-const { mainSlider, mainGifts } = mainStores;
+onMounted(async () => {
+  await mainModule.getItems().catch((err) => {
+    quasar.notify({
+      ...notifyNegative,
+      message: err,
+    });
+  });
+});
+
+const dataSwiper = computed(() => mainStores.mainSlider);
+const dataList = computed(() => mainStores.mainGifts);
 </script>
 
 <style scoped lang="scss">

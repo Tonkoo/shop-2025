@@ -18,7 +18,6 @@ export async function getItems() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-
     mainStores.setItems(response.data.data);
     if (params.layout) {
       layoutStores.setMenu(response.data.data.layout.menu);
