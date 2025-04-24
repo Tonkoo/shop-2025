@@ -7,7 +7,7 @@
       <div class="catalog-filter__swiper">
         <SwiperChildSection
           v-if="catalogStore.childSection"
-          :child-section="childSection"
+          :child-section="catalogStore.childSection"
         />
       </div>
 
@@ -23,33 +23,69 @@
     </div>
   </div>
   <div class="product-list">
-    <CatalogProduct :item-catalog="itemCatalog" />
+    <CatalogProduct :item-catalog="catalogStore.itemCatalog" />
   </div>
   <DialogFilter
-    :filter-catalog="filterCatalog"
-    :filter="filter"
-    :available-colors="availableColors"
-    :total-items="totalItems"
+    :dialog-filter="catalogStore.dialogFilter"
+    :filter-catalog="catalogStore.filterCatalog"
+    :filter="catalogStore.filter"
+    :available-colors="catalogStore.availableColors"
+    :total-items="catalogStore.totalItems"
+    @clear-filter="clearFilter"
+    @filter="getFilteredData"
+    @close-dialog="catalogStore.setDialogFilter()"
+    @update:filter="updateFilter"
   />
 </template>
 
 <script setup lang="ts">
-// TODO прописываешь все запросы к бэку здесь
 import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
+import { useCatalogModule } from '~/modules/catalog/global';
 import SwiperChildSection from '~/modules/catalog/components/catalog/SwiperChildSection.vue';
 import CatalogProduct from '~/modules/catalog/components/catalog/CatalogProduct.vue';
 import DialogFilter from '~/modules/catalog/components/catalog/DialogFilter.vue';
+import type { EmitUpdateFilter } from '~/interfaces/global';
 
 const catalogStore = useCatalogStore();
+const catalogModule = useCatalogModule();
 
-const {
-  childSection,
-  itemCatalog,
-  filterCatalog,
-  filter,
-  availableColors,
-  totalItems,
-} = catalogStore;
+const updateFilter = (params: EmitUpdateFilter) => {
+  switch (params.property) {
+    case 'priceFrom':
+      catalogStore.setFilterPrice(true);
+      catalogStore.setPriceFrom(params.value);
+      getOnlyFilter();
+      break;
+    case 'priceTo':
+      catalogStore.setFilterPrice(true);
+      catalogStore.setPriceTo(params.value);
+      getOnlyFilter();
+      break;
+    case 'color':
+      catalogStore.setColor(params.value);
+      getOnlyFilter();
+      break;
+  }
+};
+
+const getOnlyFilter = () => {
+  catalogStore.setOnlyFilter(true);
+  catalogStore.setGetFilter(true);
+  catalogModule.getItemCatalog();
+};
+
+const getFilteredData = () => {
+  catalogStore.setGetFilter(false);
+  catalogModule.getItemCatalog();
+  catalogStore.setDialogFilter();
+};
+
+const clearFilter = () => {
+  catalogStore.setOnlyFilter(true);
+  catalogStore.setGetFilter(true);
+  catalogStore.clearFilter();
+  catalogModule.getItemCatalog();
+};
 </script>
 
 <style scoped lang="scss">

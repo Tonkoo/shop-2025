@@ -63,5 +63,11 @@ export class ParamsCatalog {
     message: 'onlyFilters',
   })
   @Transform(({ value }) => value === 'true')
+  getFilter: boolean;
+
+  @IsBoolean({
+    message: 'onlyFilters',
+  })
+  @Transform(({ value }) => value === 'true')
   onlyFilters: boolean;
 }

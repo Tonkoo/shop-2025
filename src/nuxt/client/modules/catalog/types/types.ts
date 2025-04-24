@@ -16,6 +16,7 @@ type CatalogState = {
   availableColors: string[];
   filterPrice: boolean;
   contentName: string;
+  getFilter: boolean;
 };
 
 type DetailPageState = {

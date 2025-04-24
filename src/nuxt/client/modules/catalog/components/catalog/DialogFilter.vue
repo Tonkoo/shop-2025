@@ -12,7 +12,7 @@
         round
         dense
         class="dialog-filter__btn-close"
-        @click="catalogStore.setDialogFilter()"
+        @click="emit('close-dialog')"
       >
         <ArealSvg icon-name="closeMenu" />
       </areal-button>
@@ -20,14 +20,14 @@
         <ArealTag
           v-if="filterCatalog.priceFrom"
           class="dialog-filter__tags"
-          @click="removeTags('priceFrom')"
+          @click="emit('update:filter', { property: 'priceFrom', value: '' })"
         >
           <span>от {{ filterCatalog.priceFrom }}</span>
         </ArealTag>
         <ArealTag
-          v-if="catalogStore.filterCatalog.priceTo"
+          v-if="filterCatalog.priceTo"
           class="dialog-filter__tags"
-          @click="removeTags('priceTo')"
+          @click="emit('update:filter', { property: 'priceTo', value: '' })"
         >
           <span>до {{ filterCatalog.priceTo }}</span>
         </ArealTag>
@@ -35,7 +35,7 @@
           v-for="color in filterCatalog.color"
           :key="color"
           class="dialog-filter__tags"
-          @click="removeTags('color', color)"
+          @click="emit('update:filter', { property: 'color', value: color })"
         >
           <div
             class="dialog-filter__tags__circle"
@@ -49,7 +49,6 @@
           class="dialog-filter__accordion-item"
         >
           <div class="dialog-filter__block-radio">
-            <!---->
             <ArealRadio
               :model-value="filterCatalog.sort"
               name="catalog-sort"
@@ -80,17 +79,23 @@
           <div class="dialog-filter__block-price">
             <ArealFilterInput
               :model-value="filterCatalog.priceFrom"
-              :placeholder="`от ${catalogStore.filter.price.min}`"
+              :placeholder="`от ${filter.price.min}`"
               :debounce="400"
               :max="filter.price.max"
-              @update:model-value="getOnlyFilter"
+              @update:model-value="
+                (value) =>
+                  emit('update:filter', { property: 'priceFrom', value: value })
+              "
             />
             <ArealFilterInput
               :model-value="filterCatalog.priceTo"
               :debounce="400"
               :max="filter.price.max"
               :placeholder="`до ${filter.price.max}`"
-              @update:model-value="getOnlyFilter"
+              @update:model-value="
+                (value) =>
+                  emit('update:filter', { property: 'priceTo', value: value })
+              "
             />
           </div>
         </ArealAccordion>
@@ -106,7 +111,9 @@
                 'dialog-filter__block-color__wrapper_disabled':
                   !availableColors.includes(color),
               }"
-              @click="setColorFilter(color)"
+              @click="
+                emit('update:filter', { property: 'color', value: color })
+              "
             >
               <div
                 class="dialog-filter__block-color__circle"
@@ -122,15 +129,15 @@
           flat
           square
           class="dialog-filter__footer__button dialog-filter__footer__button_black"
-          :label="`Показать(${catalogStore.totalItems})`"
-          @click="getFilteredData()"
+          :label="`Показать(${totalItems})`"
+          @click="emit('filter')"
         />
         <ArealButton
           square
           flat
           class="dialog-filter__footer__button dialog-filter__footer__button_white"
           label="Очистить"
-          @click="clearFilter()"
+          @click="emit('clear-filter')"
         />
       </div>
     </div>
@@ -138,15 +145,9 @@
 </template>
 
 <script setup lang="ts">
-// TODO: прокидывать данные через props
-import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
-import { useCatalogModule } from '~/modules/catalog/global';
 import type { FilterCatalog, FilterStore } from '~/interfaces/global';
 
-const catalogStore = useCatalogStore();
-const catalogModule = useCatalogModule();
-
-defineProps({
+const props = defineProps({
   filterCatalog: {
     type: Object as PropType<FilterStore>,
     required: true,
@@ -163,55 +164,28 @@ defineProps({
     type: Number,
     required: true,
   },
+  dialogFilter: {
+    type: Boolean,
+    required: true,
+  },
 });
+
+const emit = defineEmits([
+  'clear-filter',
+  'filter',
+  'close-dialog',
+  'update:filter',
+]);
+
+const dialog = computed(() => props.dialogFilter);
 
 const hasActiveFilters = computed(() => {
   return (
-    catalogStore.filterCatalog.priceFrom ||
-    catalogStore.filterCatalog.priceTo ||
-    catalogStore.filterCatalog.color.length > 0
+    props.filterCatalog.priceFrom ||
+    props.filterCatalog.priceTo ||
+    props.filterCatalog.color.length > 0
   );
 });
-
-const removeTags = (property: string, color?: string) => {
-  if (property === 'priceFrom') {
-    catalogStore.setPriceFrom('');
-    getOnlyFilter();
-  }
-  if (property === 'priceTo') {
-    catalogStore.setPriceTo('');
-    getOnlyFilter();
-  }
-  if (property === 'color' && color) {
-    catalogStore.removeColor(color);
-    getOnlyFilter();
-  }
-};
-
-const getFilteredData = () => {
-  catalogModule.getItemCatalog();
-  catalogStore.setDialogFilter();
-};
-
-const getOnlyFilter = () => {
-  catalogStore.setFilterPrice(true);
-  catalogStore.setOnlyFilter(true);
-  catalogModule.getItemCatalog();
-};
-
-const clearFilter = () => {
-  catalogStore.setOnlyFilter(true);
-  catalogStore.clearFilter();
-  catalogModule.getItemCatalog();
-};
-
-const setColorFilter = (color: string) => {
-  catalogStore.setOnlyFilter(true);
-  catalogStore.setColor(color);
-  catalogModule.getItemCatalog();
-};
-
-const dialog = computed(() => catalogStore.dialogFilter);
 </script>
 
 <style scoped lang="scss">

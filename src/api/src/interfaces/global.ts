@@ -218,6 +218,15 @@ type ParamsAdmin = {
   searchName: string;
   getItems: boolean;
 };
+
+type aggregationsElastic = {
+  price: {
+    stats: { field: string };
+  };
+  color: {
+    terms: { field: string };
+  };
+};
 export {
   response,
   elasticsearchResponse,
@@ -245,4 +254,5 @@ export {
   AggregationsFilter,
   PriceRange,
   ParamsAdmin,
+  aggregationsElastic,
 };

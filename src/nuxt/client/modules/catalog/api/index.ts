@@ -12,6 +12,7 @@ export async function getItemCatalog() {
     url: layoutStores.pathPage,
     filter: JSON.stringify(catalogStore.filterCatalog),
     layout: !layoutStores.menu.length,
+    getFilter: catalogStore.getFilter,
     onlyFilters: catalogStore.onlyFilter,
   };
   try {
@@ -24,12 +25,15 @@ export async function getItemCatalog() {
     if (!response) {
       throw new Error('Error while receiving data');
     }
-    if(response.data.data.content.typeItem){
+    if (response.data.data.content.typeItem) {
       layoutStores.setTypePage(response.data.data.content.typeItem);
     }
     if (layoutStores.typePage === 'section') {
       if (params.onlyFilters) {
-        if (catalogStore.filterPrice) {
+        if (
+          catalogStore.filterPrice &&
+          catalogStore.filter.color.length === 0
+        ) {
           catalogStore.setAvailableColors(
             response.data.data.content.filter.color
           );
@@ -42,9 +46,12 @@ export async function getItemCatalog() {
           layoutStores.setMenu(response.data.data.layout.menu);
         }
         catalogStore.setItems(response.data.data);
-        catalogStore.setAvailableColors(
-          response.data.data.content.filter.color
-        );
+        if (catalogStore.getFilter) {
+          catalogStore.setFilter(response.data.data);
+          catalogStore.setAvailableColors(
+            response.data.data.content.filter.color
+          );
+        }
       }
     }
     if (layoutStores.typePage === 'product') {

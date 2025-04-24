@@ -155,6 +155,11 @@ type FilterStore = {
   color: string[];
 };
 
+type EmitUpdateFilter = {
+  property: string;
+  value: string;
+};
+
 export type {
   SectionMain,
   SectionAdmin,
@@ -175,4 +180,5 @@ export type {
   FilterCatalog,
   FilterStore,
   SelectColor,
+  EmitUpdateFilter,
 };

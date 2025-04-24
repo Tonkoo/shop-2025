@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
 import {
+  aggregationsElastic,
   CatalogContent,
   FilterCatalog,
   PriceRange,
@@ -112,7 +113,7 @@ export class ElasticsearchCatalogService {
   }
 
   async getItemsCatalog(params: ParamsCatalog) {
-    const { url, filter, layout, onlyFilters } = params;
+    const { url, filter, layout, getFilter, onlyFilters } = params;
     const filterConvert: FilterCatalog = JSON.parse(filter) as FilterCatalog;
     try {
       const result: CatalogContent = {
@@ -137,20 +138,26 @@ export class ElasticsearchCatalogService {
         const filterCatalog = this.getFilterCatalog(filterConvert, section);
         const sort = this.createSortOptions(filterConvert.sort);
 
+        let aggregations: aggregationsElastic | undefined;
+        if (getFilter) {
+          aggregations = {
+            price: {
+              stats: { field: 'price' },
+            },
+            color: {
+              terms: { field: 'hexColor.keyword' },
+            },
+          };
+        }
+
         const products = await searchFromElastic(
           {
             query: {
               bool: { must: filterCatalog },
             },
             sort,
-            aggregations: {
-              price: {
-                stats: { field: 'price' },
-              },
-              color: {
-                terms: { field: 'hexColor.keyword' },
-              },
-            },
+
+            aggregations,
           },
           this.elasticsearchService,
         );
@@ -164,6 +171,7 @@ export class ElasticsearchCatalogService {
       return formatCatalogContent(
         result,
         layout ? await getLayout(this.elasticsearchService) : null,
+        getFilter,
         onlyFilters,
       );
     } catch (err) {

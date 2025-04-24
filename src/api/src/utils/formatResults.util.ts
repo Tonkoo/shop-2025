@@ -63,7 +63,7 @@ export function formatMainContent(
 export function formatCatalogContent(
   result: CatalogContent,
   layout: mainLayout | null,
-
+  getFilter: boolean,
   onlyFilters: boolean,
 ) {
   const {

@@ -1,30 +1,24 @@
 import { defineStore } from 'pinia';
 import type { CatalogState } from '~/modules/catalog/types/types';
 import type { ProductMain, ResultItemsCatalog } from '~/interfaces/global';
+import {
+  filterCatalogDefault,
+  filterDefault,
+} from '~/entities/catalog.entites';
 
 export const useCatalogStore = defineStore('catalog-store', {
   state: (): CatalogState => ({
     itemCatalog: [],
     childSection: [],
     totalItems: 0,
-    filter: {
-      color: [],
-      price: {
-        min: 0,
-        max: 0,
-      },
-    },
+    filter: { ...filterDefault },
     dialogFilter: false,
-    filterCatalog: {
-      sort: 'none',
-      priceFrom: '',
-      priceTo: '',
-      color: [],
-    },
+    filterCatalog: { ...filterCatalogDefault },
     onlyFilter: false,
     availableColors: [],
     filterPrice: false,
     contentName: '',
+    getFilter: true,
   }),
   actions: {
     setItems(value: ResultItemsCatalog) {
@@ -32,6 +26,8 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.childSection = value.content.childSection;
       this.totalItems = value.content.totalItems;
       this.contentName = value.content.contentName;
+    },
+    setFilter(value: ResultItemsCatalog) {
       this.filter = value.content.filter;
     },
     setAvailableColors(value: string[]) {
@@ -63,17 +59,8 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.onlyFilter = value;
     },
     clearFilter() {
-      this.filterCatalog = {
-        sort: 'none',
-        priceFrom: '',
-        priceTo: '',
-        color: [],
-      };
-    },
-    removeColor(value: string) {
-      this.filterCatalog.color = this.filterCatalog.color.filter(
-        (item) => item !== value
-      );
+      this.filterCatalog = { ...filterCatalogDefault, color: [] };
+      this.availableColors = this.filter.color;
     },
     setFilterPrice(value: boolean) {
       this.filterPrice = value;
@@ -83,6 +70,9 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     setPriceTo(value: string) {
       this.filterCatalog.priceTo = value;
+    },
+    setGetFilter(value: boolean) {
+      this.getFilter = value;
     },
   },
 });
