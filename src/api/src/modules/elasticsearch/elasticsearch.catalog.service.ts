@@ -66,7 +66,7 @@ export class ElasticsearchCatalogService {
         },
         this.elasticsearchService,
       );
-
+      // console.log(childSection);
       return childSection.items as SectionElastic[];
     }
 
@@ -92,6 +92,7 @@ export class ElasticsearchCatalogService {
     const items = await searchFromElastic(
       {
         source: [
+          'id',
           'name',
           'images',
           'price',
@@ -109,7 +110,6 @@ export class ElasticsearchCatalogService {
       this.elasticsearchService,
     );
 
-    console.log(items.items[0]);
     return items.items[0];
   }
 
