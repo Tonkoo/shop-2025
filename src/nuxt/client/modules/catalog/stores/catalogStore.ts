@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia';
 import type { CatalogState } from '~/modules/catalog/types/types';
-import type { ProductMain, ResultItemsCatalog } from '~/interfaces/global';
+import type {
+  ProductMain,
+  ResultItemsCatalog,
+  SortingItems,
+} from '~/interfaces/global';
 import {
   filterCatalogDefault,
   filterDefault,
@@ -10,6 +14,7 @@ export const useCatalogStore = defineStore('catalog-store', {
   state: (): CatalogState => ({
     itemCatalog: [],
     childSection: [],
+    sortingItems: [],
     totalItems: 0,
     filter: { ...filterDefault },
     dialogFilter: false,
@@ -19,6 +24,7 @@ export const useCatalogStore = defineStore('catalog-store', {
     filterPrice: false,
     contentName: '',
     getFilter: true,
+    getSorting: true,
   }),
   actions: {
     setItems(value: ResultItemsCatalog) {
@@ -26,6 +32,10 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.childSection = value.content.childSection;
       this.totalItems = value.content.totalItems;
       this.contentName = value.content.contentName;
+      if (value.content.sortingItems) {
+        this.sortingItems = value.content.sortingItems;
+        this.setDefaultSort(this.sortingItems);
+      }
     },
     setFilter(value: ResultItemsCatalog) {
       this.filter = value.content.filter;
@@ -45,6 +55,12 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     setSort(value: string) {
       this.filterCatalog.sort = value;
+    },
+    setDefaultSort(value: SortingItems[]) {
+      const defaultSort = value.find((item) => item.default);
+      if (defaultSort) {
+        this.filterCatalog.sort = defaultSort.code;
+      }
     },
     setColor(value: string) {
       if (this.filterCatalog.color.includes(value)) {
@@ -73,6 +89,9 @@ export const useCatalogStore = defineStore('catalog-store', {
     },
     setGetFilter(value: boolean) {
       this.getFilter = value;
+    },
+    setGetSorting(value: boolean) {
+      this.getSorting = value;
     },
   },
 });

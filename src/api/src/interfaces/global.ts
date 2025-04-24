@@ -1,6 +1,7 @@
 import { Sections } from '../entities/sections.entity';
 import { Products } from '../entities/products.entity';
 import { Images } from '../entities/images.entity';
+import { SortingOptions } from '../entities/sortingOptions.entity';
 
 type Product = {
   id: number;
@@ -168,6 +169,7 @@ type CatalogContent = {
   itemCatalog: ProductElastic[] | [] | ProductElastic;
   childSection?: SectionElastic[];
   filter?: ResultFilterCatalog;
+  sortingItems?: SortingOptions[];
 };
 
 type CatalogLayout = CatalogContent & {

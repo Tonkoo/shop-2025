@@ -3,6 +3,7 @@ import type {
   FilterStore,
   ProductMain,
   SectionMain,
+  SortingItems,
 } from '~/interfaces/global';
 
 type CatalogState = {
@@ -17,6 +18,8 @@ type CatalogState = {
   filterPrice: boolean;
   contentName: string;
   getFilter: boolean;
+  getSorting: boolean;
+  sortingItems: SortingItems[];
 };
 
 type DetailPageState = {

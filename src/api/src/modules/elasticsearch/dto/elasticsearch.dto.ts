@@ -60,10 +60,16 @@ export class ParamsCatalog {
   layout: boolean;
 
   @IsBoolean({
-    message: 'onlyFilters',
+    message: 'getFilter',
   })
   @Transform(({ value }) => value === 'true')
   getFilter: boolean;
+
+  @IsBoolean({
+    message: 'getSorting',
+  })
+  @Transform(({ value }) => value === 'true')
+  getSorting: boolean;
 
   @IsBoolean({
     message: 'onlyFilters',

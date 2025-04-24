@@ -12,8 +12,6 @@
       <span>{{ label }}</span>
     </label>
   </div>
-
-  <!--  <q-radio :model-value="modelValue" :val="val" :label="label" />-->
 </template>
 
 <script setup lang="ts">
@@ -25,7 +23,7 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  checked: {
+  defaultChecked: {
     type: Boolean,
     default: false,
   },
@@ -51,8 +49,6 @@ const handleClick = () => {
 const isChecked = computed(() => {
   return props.modelValue === props.value;
 });
-
-// defineEmits(['update:modelValue']);
 </script>
 
 <style scoped lang="scss">

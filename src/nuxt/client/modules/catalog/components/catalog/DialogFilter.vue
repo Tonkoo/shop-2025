@@ -50,28 +50,13 @@
         >
           <div class="dialog-filter__block-radio">
             <ArealRadio
+              v-for="item in sortingItems"
+              :key="item.id"
+              :checked="item.default"
               :model-value="filterCatalog.sort"
               name="catalog-sort"
-              value="none"
-              label="Без сортировки"
-            />
-            <ArealRadio
-              :model-value="filterCatalog.sort"
-              name="catalog-sort"
-              value="newProduct"
-              label="По новизне"
-            />
-            <ArealRadio
-              :model-value="filterCatalog.sort"
-              name="catalog-sort"
-              value="ascPrice"
-              label="По возрастанию цены"
-            />
-            <ArealRadio
-              :model-value="filterCatalog.sort"
-              name="catalog-sort"
-              value="descPrice"
-              label="По убыванию цены"
+              :value="item.code"
+              :label="item.name"
             />
           </div>
         </ArealAccordion>
@@ -145,7 +130,11 @@
 </template>
 
 <script setup lang="ts">
-import type { FilterCatalog, FilterStore } from '~/interfaces/global';
+import type {
+  FilterCatalog,
+  FilterStore,
+  SortingItems,
+} from '~/interfaces/global';
 
 const props = defineProps({
   filterCatalog: {
@@ -158,6 +147,10 @@ const props = defineProps({
   },
   availableColors: {
     type: Array as PropType<string[]>,
+    required: true,
+  },
+  sortingItems: {
+    type: Array as PropType<SortingItems[]>,
     required: true,
   },
   totalItems: {

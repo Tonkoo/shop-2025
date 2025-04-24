@@ -7,7 +7,7 @@ export const filterDefault = {
 };
 
 export const filterCatalogDefault = {
-  sort: 'none',
+  sort: '',
   priceFrom: '',
   priceTo: '',
   color: [],

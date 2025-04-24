@@ -2,7 +2,7 @@
   <div class="slider">
     <ArealSwiper :data-items="childSection">
       <template #default="{ item }">
-        <ArealSectionCard :section="item" />
+        <ArealSectionCard :section="item as SectionMain" />
       </template>
     </ArealSwiper>
   </div>

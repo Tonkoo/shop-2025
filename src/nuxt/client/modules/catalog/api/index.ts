@@ -14,6 +14,7 @@ export async function getItemCatalog() {
     layout: !layoutStores.menu.length,
     getFilter: catalogStore.getFilter,
     onlyFilters: catalogStore.onlyFilter,
+    getSorting: catalogStore.getSorting,
   };
   try {
     const response = await api.get<{ data: ResultItemsCatalog }>(
@@ -22,6 +23,7 @@ export async function getItemCatalog() {
         params,
       }
     );
+    console.log(response.data.data);
     if (!response) {
       throw new Error('Error while receiving data');
     }

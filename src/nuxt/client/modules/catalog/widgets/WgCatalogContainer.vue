@@ -29,6 +29,7 @@
     :dialog-filter="catalogStore.dialogFilter"
     :filter-catalog="catalogStore.filterCatalog"
     :filter="catalogStore.filter"
+    :sorting-items="catalogStore.sortingItems"
     :available-colors="catalogStore.availableColors"
     :total-items="catalogStore.totalItems"
     @clear-filter="clearFilter"
@@ -71,11 +72,13 @@ const updateFilter = (params: EmitUpdateFilter) => {
 const getOnlyFilter = () => {
   catalogStore.setOnlyFilter(true);
   catalogStore.setGetFilter(true);
+  catalogStore.setGetSorting(false);
   catalogModule.getItemCatalog();
 };
 
 const getFilteredData = () => {
   catalogStore.setGetFilter(false);
+  catalogStore.setGetSorting(false);
   catalogModule.getItemCatalog();
   catalogStore.setDialogFilter();
 };
@@ -83,6 +86,7 @@ const getFilteredData = () => {
 const clearFilter = () => {
   catalogStore.setOnlyFilter(true);
   catalogStore.setGetFilter(true);
+  catalogStore.setGetSorting(false);
   catalogStore.clearFilter();
   catalogModule.getItemCatalog();
 };

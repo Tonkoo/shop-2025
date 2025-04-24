@@ -3,7 +3,9 @@
     <div class="card__section">
       <div class="card__img">
         <areal-link :link="section.url">
-          <areal-img :src="section.images[0].src" />
+          <areal-img
+            :src="section.images.length ? section.images[0].src : ''"
+          />
         </areal-link>
       </div>
       <div class="card__description">
@@ -16,11 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ProductMain, SectionMain } from '~/interfaces/global';
+import type { SectionMain } from '~/interfaces/global';
 
 defineProps({
   section: {
-    type: Object as PropType<ProductMain | SectionMain>,
+    type: Object as PropType<SectionMain>,
     required: true,
   },
 });

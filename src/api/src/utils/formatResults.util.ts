@@ -63,7 +63,6 @@ export function formatMainContent(
 export function formatCatalogContent(
   result: CatalogContent,
   layout: mainLayout | null,
-  getFilter: boolean,
   onlyFilters: boolean,
 ) {
   const {
@@ -73,6 +72,7 @@ export function formatCatalogContent(
     itemCatalog,
     childSection,
     filter,
+    sortingItems,
   } = result;
 
   if (onlyFilters) {
@@ -93,6 +93,7 @@ export function formatCatalogContent(
         itemCatalog,
         childSection,
         filter,
+        sortingItems,
       },
       layout,
     };
@@ -105,6 +106,7 @@ export function formatCatalogContent(
       itemCatalog,
       childSection,
       filter,
+      sortingItems,
     },
   };
 }

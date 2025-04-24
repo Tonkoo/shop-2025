@@ -9,6 +9,7 @@ import { Sections } from '../../entities/sections.entity';
 import { Images } from '../../entities/images.entity';
 import { Colors } from '../../entities/colors.entity';
 import { ElasticsearchMainService } from './elasticsearch.main.service';
+import { SortingOptions } from '../../entities/sortingOptions.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,13 @@ import { ElasticsearchMainService } from './elasticsearch.main.service';
         },
       }),
     }),
-    TypeOrmModule.forFeature([Products, Sections, Images, Colors]),
+    TypeOrmModule.forFeature([
+      Products,
+      Sections,
+      Images,
+      Colors,
+      SortingOptions,
+    ]),
   ],
   controllers: [ElasticController],
   providers: [

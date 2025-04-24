@@ -133,6 +133,14 @@ type FilterCatalog = {
   };
   color: string[];
 };
+type SortingItems = {
+  id: number;
+  name: string;
+  order: string;
+  default: boolean;
+  code: string;
+  field: string;
+};
 
 type ResultItemsCatalog = {
   content: {
@@ -142,6 +150,7 @@ type ResultItemsCatalog = {
     itemCatalog: ProductMain[] | ProductMain;
     childSection: SectionMain[];
     filter: FilterCatalog;
+    sortingItems: SortingItems[];
   };
   layout: {
     menu: SectionMain[];
@@ -150,6 +159,7 @@ type ResultItemsCatalog = {
 
 type FilterStore = {
   sort: string;
+  // sort: SortingItems;
   priceFrom: string;
   priceTo: string;
   color: string[];
@@ -181,4 +191,5 @@ export type {
   FilterStore,
   SelectColor,
   EmitUpdateFilter,
+  SortingItems,
 };

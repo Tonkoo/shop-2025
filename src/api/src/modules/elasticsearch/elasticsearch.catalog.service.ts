@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
 import {
@@ -13,10 +17,17 @@ import { ParamsCatalog } from './dto/elasticsearch.dto';
 import { formatCatalogContent } from '../../utils/formatResults.util';
 import { searchFromElastic } from '../../utils/searchFromElastic.util';
 import { getLayout } from '../../utils/getLayout.util';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { SortingOptions } from '../../entities/sortingOptions.entity';
 
 @Injectable()
 export class ElasticsearchCatalogService {
-  constructor(private readonly elasticsearchService: ESClient) {}
+  constructor(
+    private readonly elasticsearchService: ESClient,
+    @InjectRepository(SortingOptions)
+    private readonly sortingRepository: Repository<SortingOptions>,
+  ) {}
 
   getFilterCatalog(data: FilterCatalog, section?: SectionElastic): any[] {
     const result: any[] = [{ term: { 'type.keyword': 'product' } }];
@@ -46,6 +57,7 @@ export class ElasticsearchCatalogService {
     if (!section) {
       const childSection = await searchFromElastic(
         {
+          source: ['name', 'images', 'url'],
           query: {
             bool: {
               must: [{ term: { type: 'section' } }, { term: { level: 1 } }],
@@ -60,6 +72,7 @@ export class ElasticsearchCatalogService {
 
     const childSection = await searchFromElastic(
       {
+        source: ['name', 'images', 'url'],
         query: {
           bool: {
             must: [
@@ -90,30 +103,18 @@ export class ElasticsearchCatalogService {
     return items.items[0];
   }
 
-  createSortOptions(sorting: string) {
-    let sort: any[] = [];
-    switch (sorting) {
-      case 'none':
-        sort = [];
-        break;
-      case 'newProduct':
-        sort = [{ 'create_at.keyword': { order: 'asc' } }];
-        break;
-      case 'ascPrice':
-        sort = [{ price: { order: 'asc' } }];
-        break;
-      case 'descPrice':
-        sort = [{ price: { order: 'desc' } }];
-        break;
-      default:
-        sort = [];
-        break;
+  async createSortOptions(sorting: string) {
+    const srtOptions = await this.sortingRepository.findOne({
+      where: { code: sorting },
+    });
+    if (!srtOptions) {
+      throw new NotFoundException('Option sorting not found');
     }
-    return sort;
+    return [{ [srtOptions.field]: { order: srtOptions.order } }];
   }
 
   async getItemsCatalog(params: ParamsCatalog) {
-    const { url, filter, layout, getFilter, onlyFilters } = params;
+    const { url, filter, layout, getFilter, getSorting, onlyFilters } = params;
     const filterConvert: FilterCatalog = JSON.parse(filter) as FilterCatalog;
     try {
       const result: CatalogContent = {
@@ -136,7 +137,18 @@ export class ElasticsearchCatalogService {
         const section = item as SectionElastic;
         result.childSection = await this.getChildSection(section);
         const filterCatalog = this.getFilterCatalog(filterConvert, section);
-        const sort = this.createSortOptions(filterConvert.sort);
+        if (getSorting) {
+          result.sortingItems = await this.sortingRepository.find();
+          if (!filterConvert.sort) {
+            const defaultSortItem = result.sortingItems.find(
+              (item) => item.default,
+            );
+            if (defaultSortItem) {
+              filterConvert.sort = defaultSortItem.code;
+            }
+          }
+        }
+        const sort = await this.createSortOptions(filterConvert.sort);
 
         let aggregations: aggregationsElastic | undefined;
         if (getFilter) {
@@ -152,11 +164,11 @@ export class ElasticsearchCatalogService {
 
         const products = await searchFromElastic(
           {
+            source: ['name', 'images', 'price', 'hexColor', 'url'],
             query: {
               bool: { must: filterCatalog },
             },
             sort,
-
             aggregations,
           },
           this.elasticsearchService,
@@ -171,7 +183,6 @@ export class ElasticsearchCatalogService {
       return formatCatalogContent(
         result,
         layout ? await getLayout(this.elasticsearchService) : null,
-        getFilter,
         onlyFilters,
       );
     } catch (err) {
