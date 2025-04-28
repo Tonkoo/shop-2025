@@ -1,20 +1,20 @@
 <template>
   <div class="main-slider">
     <div class="slider">
-      <span class="slider__title">Новинки</span>
+      <span class="slider__title">{{ $t('main.title.slider') }}</span>
       <Swiper :main-slider="dataSwiper" />
-      <ArealLink class="slider__link" link="catalog/novinki/"
-        >Смотреть все</ArealLink
-      >
+      <ArealLink class="slider__link" link="catalog/muzhskoy/">{{
+        $t('main.body.link')
+      }}</ArealLink>
     </div>
   </div>
   <div class="main-list">
     <div class="product-list">
       <span class="product-list__title">Подарки</span>
       <ProductList :main-gifts="dataList" />
-      <ArealLink class="product-list__link" link="catalog/podarki/"
-        >Смотреть все</ArealLink
-      >
+      <ArealLink class="product-list__link" link="catalog/zhenskiy/">{{
+        $t('main.body.link')
+      }}</ArealLink>
     </div>
   </div>
 </template>
@@ -57,15 +57,11 @@ const dataList = computed(() => mainStores.mainGifts);
   gap: 24px;
   width: 100%;
   &__title {
-    font-size: 22px;
-    font-weight: 500;
-    text-transform: uppercase;
+    @include font-preset('H2/22/Text');
     color: getColor('black', 1);
   }
   &__link {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 16px;
+    @include font-preset('Text/14px');
     border-bottom: 1px solid getColor('black', 1);
     color: getColor('black', 1);
   }
@@ -80,15 +76,11 @@ const dataList = computed(() => mainStores.mainGifts);
   align-items: center;
   gap: 24px;
   &__title {
-    font-size: 22px;
-    font-weight: 500;
-    text-transform: uppercase;
+    @include font-preset('H2/22/Text');
     color: getColor('black', 1);
   }
   &__link {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 16px;
+    @include font-preset('Text/14px');
     border-bottom: 1px solid getColor('black', 1);
     color: getColor('black', 1);
   }

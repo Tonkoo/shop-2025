@@ -2,7 +2,6 @@ import { camelCaseConverter } from './toCamelCase.util';
 import {
   CatalogContent,
   mainLayout,
-  ParamsAdmin,
   ProductElastic,
   resultItems,
   SectionElastic,

@@ -20,6 +20,7 @@ export default defineNuxtConfig({
   imports: {
     autoImport: true,
   },
+  css: ['~/assets/styles/main.scss'],
   quasar: {
     plugins: ['Notify', 'Loading'],
     config: {
@@ -44,5 +45,19 @@ export default defineNuxtConfig({
     port: 3000,
     host: '0.0.0.0',
   },
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `
+          @import '@/assets/styles/abstracts/variables/index.scss';
+          @import '@/assets/styles/abstracts/mixins/index.scss';
+        `,
+          quietDeps: true,
+        },
+      },
+    },
+  },
+
   compatibilityDate: '2024-11-01',
 });

@@ -2,7 +2,7 @@
   <div class="breadcrumbs">
     <div class="breadcrumbs__link" @click="router.back()">
       <ArealSvg icon-name="goBack" size="S" />
-      <span class="breadcrumbs__text">Назад</span>
+      <span class="breadcrumbs__text">{{ $t('catalog.label.back') }}</span>
     </div>
     <div v-if="title" class="breadcrumbs__border" />
     <span v-if="title" class="breadcrumbs__text">{{ title }}</span>
@@ -38,9 +38,7 @@ defineProps({
     }
   }
   &__text {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 120%;
+    @include font-preset('Text/14px');
   }
   &__border {
     width: 1px;

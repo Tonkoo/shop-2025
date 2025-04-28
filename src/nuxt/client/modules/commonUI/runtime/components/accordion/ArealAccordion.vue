@@ -53,8 +53,8 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 16px;
-    color: getColor('grey', 12);
+    @include font-preset('Text/16pxRegularCapitalized');
+    color: getColor('black', 1);
     padding-top: 24px;
     padding-bottom: 16px;
   }

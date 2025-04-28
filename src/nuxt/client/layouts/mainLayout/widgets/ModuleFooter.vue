@@ -82,9 +82,6 @@ const getYearCopyright = () => {
 
     &__text {
       color: getColor('white', 1);
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 20px;
     }
   }
 }

@@ -1,0 +1,13 @@
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+@import 'base/fonts';
+
+body {
+  margin: 0;
+
+  font-family: $formaDJRDisplay;
+  font-weight: 400;
+
+  -webkit-tap-highlight-color: transparent;
+}

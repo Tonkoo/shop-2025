@@ -36,7 +36,7 @@ const emit = defineEmits(['set-sidebar']);
     text-align: center;
   }
   &__link {
-    font-size: 20px;
+    @include font-preset('Text/22pxMedium');
     color: getColor('grey', 12);
   }
 }

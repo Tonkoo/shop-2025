@@ -11,7 +11,9 @@
         >
       </div>
       <div class="about-block__content__color">
-        <span class="about-block__content__color__text">Цвет</span>
+        <span class="about-block__content__color__text">{{
+          $t('catalog.label.color')
+        }}</span>
         <div
           class="about-block__content__color__circle"
           :style="{
@@ -28,7 +30,7 @@
         <span
           class="about-block__content__links__item"
           @click="emit('open-dialog')"
-          >Описание</span
+          >{{ $t('catalog.label.description') }}</span
         >
       </div>
     </div>
@@ -64,9 +66,7 @@ const emit = defineEmits(['open-dialog']);
       flex-direction: column;
       gap: 12px;
       &__text {
-        font-size: 22px;
-        font-weight: 400;
-        line-height: 26px;
+        @include font-preset('Text/22pxMedium');
         color: getColor('black', 1);
       }
     }
@@ -75,16 +75,13 @@ const emit = defineEmits(['open-dialog']);
       flex-direction: column;
       gap: 6px;
       &__text {
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 16px;
+        @include font-preset('Text/14px');
         letter-spacing: 0;
         color: getColor('grey', 13);
       }
       &__circle {
         width: 26px;
         height: 26px;
-        //border: 1px solid black;
         border-radius: 50%;
       }
     }
@@ -96,10 +93,7 @@ const emit = defineEmits(['open-dialog']);
     &__links {
       &__item {
         cursor: pointer;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 14px;
-        letter-spacing: 0;
+        @include font-preset('Text/14px');
         color: getColor('grey', 12);
         background: linear-gradient(currentColor, currentColor) no-repeat 0 100%;
         background-size: 0 1px;

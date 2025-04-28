@@ -42,8 +42,7 @@ defineProps({
     text-align: center;
     &-link {
       color: getColor('grey', 12);
-      font-size: 14px;
-      line-height: 16px;
+      @include font-preset('Text/14px');
     }
   }
 }

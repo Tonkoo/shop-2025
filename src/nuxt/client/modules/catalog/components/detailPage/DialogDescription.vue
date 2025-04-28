@@ -18,19 +18,25 @@
       </areal-button>
       <div class="dialog-description__list">
         <div class="dialog-description__list__item">
-          <span class="dialog-description__list__item__title">Артикул</span>
+          <span class="dialog-description__list__item__title">{{
+            $t('catalog.label.article')
+          }}</span>
           <span class="dialog-description__list__item__text">{{
             product.code
           }}</span>
         </div>
         <div class="dialog-description__list__item">
-          <span class="dialog-description__list__item__title">Раздел</span>
+          <span class="dialog-description__list__item__title">{{
+            $t('catalog.label.section')
+          }}</span>
           <span class="dialog-description__list__item__text">{{
             product.sectionName
           }}</span>
         </div>
         <div class="dialog-description__list__item">
-          <span class="dialog-description__list__item__title">Описание</span>
+          <span class="dialog-description__list__item__title">{{
+            $t('catalog.label.description')
+          }}</span>
           <span class="dialog-description__list__item__text">{{
             product.description
           }}</span>
@@ -85,18 +91,12 @@ const emit = defineEmits(['close-dialog']);
       flex-direction: column;
       gap: 6px;
       &__title {
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 120%;
-        letter-spacing: 0;
+        @include font-preset('Text/16px');
         color: getColor('grey', 13);
       }
       &__text {
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 120%;
-        letter-spacing: 0;
-        color: getColor('black', 1);
+        @include font-preset('Text/14px');
+        color: getColor('grey', 12);
       }
     }
   }

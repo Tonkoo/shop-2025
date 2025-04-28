@@ -1,7 +1,6 @@
 <template>
   <div class="tag">
     <slot />
-    <!--    <span>от {{ catalogStore.filterCatalog.priceFrom }}</span>-->
     <ArealSvg size="S" icon-name="CloseIcon" />
   </div>
 </template>
@@ -19,10 +18,10 @@ defineProps({
 .tag {
   display: inline-flex;
   align-items: center;
+  color: getColor('white', 1);
+  @include font-preset('Text/12pxRegular');
   padding: 5px;
   background-color: getColor('black', 1);
-  color: getColor('white', 1);
-  font-size: 12px;
   column-gap: 4px;
 }
 </style>

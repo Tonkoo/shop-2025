@@ -1,5 +1,10 @@
 @import '../variables';
-
+/**
+	* @param $fontFamily: string - font family name
+	* @param $filePath: string - font path
+	* @param $fileName: string - font file name
+	* @param $filesList: list - list of font weights and styles
+	*/
 @mixin load-font-family($fontFamily, $filePath, $fileName, $filesList) {
   @each $suffix, $weight, $style in $filesList {
     @font-face {
@@ -8,9 +13,9 @@
       font-style: $style;
       font-display: swap;
       src:
-        local('#{$filePath}-#{$suffix}'),
-        url('#{$filePath}/#{$fileName}-#{$suffix}.woff') format('woff'),
-        url('#{$filePath}/#{$fileName}-#{$suffix}.woff2') format('woff2');
+              local('#{$filePath}-#{$suffix}'),
+              url('#{$filePath}/#{$fileName}-#{$suffix}.woff') format('woff'),
+              url('#{$filePath}/#{$fileName}-#{$suffix}.woff2') format('woff2');
     }
   }
 }
@@ -21,7 +26,6 @@
   font-weight: $weight;
   line-height: $line-height;
 }
-
 
 @mixin font-preset($name) {
   @if $name == 'Text/54px' {
@@ -41,6 +45,9 @@
   @else if $name == 'Text/22pxMedium' {
     @include textFont($formaDJRDisplay, 22px, 26px, 500);
   }
+  @else if $name == 'Text/22pxNumbers' {
+    @include textFont($MADECoachella, 22px, 26px, 250);
+  }
   @else if $name == 'Text/16px' {
     @include textFont($formaDJRDisplay, 16px, 20px, 400);
   }
@@ -55,6 +62,9 @@
     @include textFont($formaDJRDisplay, 16px, 20px, 500);
     text-transform: uppercase;
   }
+  @else if $name == 'Text/16pxNumbers' {
+    @include textFont($MADECoachella, 16px, 20px, 250);
+  }
   @else if $name == 'Text/14px' {
     @include textFont($formaDJRDisplay, 14px, 16px, 400);
   }
@@ -64,6 +74,9 @@
   }
   @else if $name == 'Text/14pxMedium' {
     @include textFont($formaDJRDisplay, 14px, 16px, 500);
+  }
+  @else if $name == 'Text/14pxNumbers' {
+    @include textFont($MADECoachella, 14px, 16px, 250);
   }
   @else if $name == 'Text/12pxRegular' {
     @include textFont($formaDJRDisplay, 12px, 14px, 400);
@@ -76,8 +89,7 @@
   }
 }
 
-@mixin setFont($family: inter, $size: 14, $weight: normal) {
-  font-family: $formaDJRDisplay;
-}
-
-
+//// TODO - инжинерное решение, чтобы не ломались шрифты с либы
+//@mixin setFont($family: inter, $size: 14, $weight: normal) {
+//  font-family: $formaDJRDisplay;
+//}

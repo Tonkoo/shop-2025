@@ -4,6 +4,7 @@
   display: flex;
   &__title {
     text-transform: uppercase;
+    @include font-preset('Text/16px');
   }
   &__list {
     display: flex;
@@ -15,6 +16,7 @@
     background: linear-gradient(currentColor, currentColor) no-repeat 0 100%;
     background-size: 0 1px;
     transition: background-size 0.3s;
+    @include font-preset('Text/16px');
 
     &:hover {
       background-size: 100% 1px;

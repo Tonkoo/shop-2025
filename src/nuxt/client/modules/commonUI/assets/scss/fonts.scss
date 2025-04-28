@@ -1,7 +1,97 @@
-@include load-font-family(
-  'Forma DJR Display',
-  '../fonts/Forma-DJR-Display',
-  'Forma-DJR-Display',
-    (('Regular', 400, normal), ('Medium', 500, normal))
-);
+@mixin setFontByParams($fontSize, $lineHeight, $font, $weight, $additionalFont) {
+  font-size: $fontSize;
+  line-height: $lineHeight;
+  font-family: $font, $additionalFont;
+  font-weight: $weight
+}
+
+@mixin setFont($family: inter, $size: 14, $weight: normal) {
+  @if $family == inter {
+    $font: 'Inter';
+    $fontWeight: 400;
+    $additionalFont: sans-serif;
+
+
+    @if $weight == ulrtaLight{
+      $fontWeight: 200;
+    }
+    @if $weight == light{
+      $fontWeight: 300;
+    }
+    @else if $weight == normal{
+      $fontWeight: 400;
+    }
+    @else if $weight == medium{
+      $fontWeight: 500;
+    }
+    @else if $weight == bold{
+      $fontWeight: 600;
+    }
+
+    @if $size == 10 {
+      @include setFontByParams(10px, 16px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 12 {
+      @include setFontByParams(12px, 16px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 14 {
+      @include setFontByParams(14px, 20px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 16 {
+      @include setFontByParams(16px, 22px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 20  {
+      @include setFontByParams(20px, 24px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 24  {
+      @include setFontByParams(24px, 130%, $font, $fontWeight, $additionalFont)
+    }
+
+    @else if $size == 28 {
+      @include setFontByParams(28px, 34px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 32 {
+      @include setFontByParams(32px, 38px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 36 {
+      @include setFontByParams(36px, 130%, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 48 {
+      @include setFontByParams(48px, 120%, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 54 {
+      @include setFontByParams(54px, 90%, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 80 {
+      @include setFontByParams(80px, 90%, $font, $fontWeight, $additionalFont)
+    }
+  }
+
+
+
+  @else if $family == spectral {
+    $font: 'Spectral';
+    $fontWeight: 300;
+    $additionalFont: serif;
+    @if $size == 22 {
+      @include setFontByParams(22px, 120%, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 24 {
+      @include setFontByParams(24px, 24px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 28 {
+      @include setFontByParams(28px, 28px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 32 {
+      @include setFontByParams(32px, 32px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 36 {
+      @include setFontByParams(36px, 36px, $font, $fontWeight, $additionalFont)
+    }
+    @else if $size == 54 {
+      @include setFontByParams(54px, 54px, $font, $fontWeight, $additionalFont)
+    }
+  }
+}
+
 

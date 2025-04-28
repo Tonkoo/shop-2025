@@ -58,16 +58,16 @@ defineProps({
       justify-content: space-between;
     }
     &-link {
+      @include font-preset('Text/16px');
       color: getColor('grey', 12);
     }
     &-circle {
       width: 15px;
       height: 15px;
-      //border: 1px solid black;
       border-radius: 50%;
     }
     &-price {
-      font-size: 14px;
+      @include font-preset('Text/14px');
       color: getColor('grey', 13);
     }
   }

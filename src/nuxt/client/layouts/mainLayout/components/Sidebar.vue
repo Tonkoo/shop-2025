@@ -16,7 +16,7 @@
           <div class="menu__title">
             <ArealLink
               :link="parentSection.url"
-              class="menu__link menu__link--title"
+              class="menu__link menu__link_title"
               @click="emit('set-sidebar')"
               >{{ parentSection.name }}</ArealLink
             >
@@ -73,18 +73,12 @@ const emit = defineEmits(['set-sidebar']);
     .menu {
       flex-direction: column;
       gap: 20px;
-
-      &__column {
-      }
-      &__title {
-        font-weight: 500;
-      }
       &__list {
         gap: 8px;
       }
       &__link {
         color: getColor('grey', 12);
-        &--title {
+        &_title {
           font-weight: 500;
         }
       }

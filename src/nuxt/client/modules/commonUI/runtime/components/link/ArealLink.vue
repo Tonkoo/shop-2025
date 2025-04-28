@@ -15,9 +15,6 @@ defineProps({
 
 <style scoped lang="scss">
 .link {
-  font-size: 16px;
   text-decoration: none;
-  font-weight: 400;
-  line-height: 20px;
 }
 </style>

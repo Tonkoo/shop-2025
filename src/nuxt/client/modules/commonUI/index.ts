@@ -25,7 +25,6 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.components = true;
 
     nuxt.options.appConfig.commonUi = options;
-    console.log(resolve(runtimeDir, 'assets/icon/**/*.svg'), 'dsfdsfsdfdsfsdf');
     await installModule(
       'nuxt-svg-icon-sprite',
       {
@@ -54,19 +53,38 @@ export default defineNuxtModule<ModuleOptions>({
       resolve('./assets/scss/index.scss'),
       ...nuxt.options.css,
     ];
+
+    const projectSccAdditionalData =
+      nuxt.options.vite?.css?.preprocessorOptions?.scss?.additionalData || '';
+    const currentSccAdditionalData = `
+            @import "${resolve('./assets/scss/colors.scss')}";
+            @import "${resolve('./assets/scss/fonts.scss')}";
+    `;
+
     nuxt.options.vite = {
       ...nuxt.options.vite,
       css: {
         preprocessorOptions: {
           scss: {
-            additionalData: `
-            @import "${resolve('./assets/scss/colors.scss')}";
-        `,
+            additionalData: currentSccAdditionalData + projectSccAdditionalData,
           },
         },
       },
     };
 
+    // nuxt.options.vite = {
+    //   ...nuxt.options.vite,
+    //   css: {
+    //     preprocessorOptions: {
+    //       scss: {
+    //         additionalData: `
+    //         @import "${resolve('./assets/scss/colors.scss')}";
+    //         @import "${resolve('./assets/scss/fonts.scss')}";
+    //     `,
+    //       },
+    //     },
+    //   },
+    // };
     nuxt.options.typescript.typeCheck = true;
 
     console.log('Successfully added module Common Ui');

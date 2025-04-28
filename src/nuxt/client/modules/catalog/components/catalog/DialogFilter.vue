@@ -22,14 +22,19 @@
           class="dialog-filter__tags"
           @click="emit('update:filter', { property: 'priceFrom', value: '' })"
         >
-          <span>от {{ filterCatalog.priceFrom }}</span>
+          <span
+            >{{ $t('catalog.label.priceFrom') }}
+            {{ filterCatalog.priceFrom }}</span
+          >
         </ArealTag>
         <ArealTag
           v-if="filterCatalog.priceTo"
           class="dialog-filter__tags"
           @click="emit('update:filter', { property: 'priceTo', value: '' })"
         >
-          <span>до {{ filterCatalog.priceTo }}</span>
+          <span
+            >{{ $t('catalog.label.priceTo') }}{{ filterCatalog.priceTo }}</span
+          >
         </ArealTag>
         <ArealTag
           v-for="color in filterCatalog.color"
@@ -45,7 +50,7 @@
       </div>
       <div class="dialog-filter__block-filter">
         <ArealAccordion
-          label="Сортировка"
+          :label="$t('catalog.label.sorting')"
           class="dialog-filter__accordion-item"
         >
           <div class="dialog-filter__block-radio">
@@ -60,11 +65,14 @@
             />
           </div>
         </ArealAccordion>
-        <ArealAccordion label="Цена" class="dialog-filter__accordion-item">
+        <ArealAccordion
+          :label="$t('catalog.label.price')"
+          class="dialog-filter__accordion-item"
+        >
           <div class="dialog-filter__block-price">
             <ArealFilterInput
               :model-value="filterCatalog.priceFrom"
-              :placeholder="`от ${filter.price.min}`"
+              :placeholder="`${$t('catalog.label.priceFrom')} ${filter.price.min}`"
               :debounce="400"
               :max="filter.price.max"
               @update:model-value="
@@ -76,7 +84,7 @@
               :model-value="filterCatalog.priceTo"
               :debounce="400"
               :max="filter.price.max"
-              :placeholder="`до ${filter.price.max}`"
+              :placeholder="`${$t('catalog.label.priceTo')} ${filter.price.max}`"
               @update:model-value="
                 (value) =>
                   emit('update:filter', { property: 'priceTo', value: value })
@@ -84,7 +92,10 @@
             />
           </div>
         </ArealAccordion>
-        <ArealAccordion label="Цвет" class="dialog-filter__accordion-item">
+        <ArealAccordion
+          :label="$t('catalog.label.color')"
+          class="dialog-filter__accordion-item"
+        >
           <div class="dialog-filter__block-color">
             <div
               v-for="(color, index) in filter.color"
@@ -114,14 +125,14 @@
           flat
           square
           class="dialog-filter__footer__button dialog-filter__footer__button_black"
-          :label="`Показать(${totalItems})`"
+          :label="`${$t('catalog.label.btnShow')} (${totalItems})`"
           @click="emit('filter')"
         />
         <ArealButton
           square
           flat
           class="dialog-filter__footer__button dialog-filter__footer__button_white"
-          label="Очистить"
+          :label="$t('catalog.label.btnClear')"
           @click="emit('clear-filter')"
         />
       </div>
@@ -212,7 +223,7 @@ const hasActiveFilters = computed(() => {
     flex-grow: 1;
   }
   &__accordion-item {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid getColor('black', 1);
     padding-bottom: 8px;
     &:last-child {
       border-bottom: 0;
