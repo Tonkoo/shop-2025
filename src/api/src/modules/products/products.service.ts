@@ -139,6 +139,11 @@ export class ProductsService {
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from product.create: ', err);
+
+      if (err instanceof BadRequestException) {
+        throw err;
+      }
+
       throw new BadRequestException(
         'An error occurred while creating the product.',
       );
@@ -268,6 +273,11 @@ export class ProductsService {
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from product.update: ', err);
+
+      if (err instanceof BadRequestException) {
+        throw err;
+      }
+
       throw new BadRequestException(
         'An error occurred while updating the product.',
       );

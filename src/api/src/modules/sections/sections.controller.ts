@@ -9,10 +9,8 @@ import {
   Delete,
   UploadedFiles,
   UseInterceptors,
-  BadRequestException,
   Query,
 } from '@nestjs/common';
-
 import {
   ApiTags,
   ApiOperation,
@@ -32,8 +30,6 @@ import { ProductDto } from '../products/dto/product.dto';
 import { SectionBase, response, resultItems } from '../../interfaces/global';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
-import { logger } from '../../utils/logger/logger';
-import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -115,18 +111,11 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
-    try {
-      const result: number | resultItems = await this.services.create(
-        data,
-        files,
-      );
-      return ResponseHelper.createResponse(HttpStatus.CREATED, result);
-    } catch (err) {
-      logger.error('Error from sections.save: ', err);
-      throw new BadRequestException(
-        'An error occurred while saving the partition.',
-      );
-    }
+    const result: number | resultItems = await this.services.create(
+      data,
+      files,
+    );
+    return ResponseHelper.createResponse(HttpStatus.CREATED, result);
   }
 
   @Put(':id')
@@ -156,18 +145,12 @@ export class SectionsController {
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ): Promise<response> {
-    try {
-      const result: resultItems | number = await this.services.updateById(
-        id,
-        data,
-        files,
-      );
-      return ResponseHelper.createResponse(HttpStatus.OK, result);
-    } catch (err) {
-      console.log(err);
-      logger.error('Error from sections.update: ', err);
-      throw err;
-    }
+    const result: resultItems | number = await this.services.updateById(
+      id,
+      data,
+      files,
+    );
+    return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
   @Delete(':id')

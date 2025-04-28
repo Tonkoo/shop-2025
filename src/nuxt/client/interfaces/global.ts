@@ -171,6 +171,15 @@ type EmitUpdateFilter = {
   value: string;
 };
 
+type responseError = {
+  message: string;
+  response: {
+    data: {
+      message: string;
+    };
+  };
+};
+
 export type {
   SectionMain,
   SectionAdmin,
@@ -193,4 +202,5 @@ export type {
   SelectColor,
   EmitUpdateFilter,
   SortingItems,
+  responseError,
 };

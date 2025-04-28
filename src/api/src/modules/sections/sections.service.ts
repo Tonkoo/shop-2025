@@ -186,8 +186,12 @@ export class SectionsService {
 
       return await formatResponse(data, newSection.id, this.EsServices);
     } catch (err) {
+      console.log(err);
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.create: ', err);
+      if (err instanceof BadRequestException) {
+        throw err;
+      }
       throw new BadRequestException(
         'An error occurred while creating the section.',
       );
@@ -327,6 +331,9 @@ export class SectionsService {
     } catch (err) {
       await queryRunner.rollbackTransaction();
       logger.error('Error from sections.update : ', err);
+      if (err instanceof BadRequestException) {
+        throw err;
+      }
       throw new BadRequestException(
         'An error occurred while updating the section.',
       );

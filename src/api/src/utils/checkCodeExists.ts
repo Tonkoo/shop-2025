@@ -1,5 +1,6 @@
 import { searchFromElastic } from './searchFromElastic.util';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch/dist/elasticsearch.service';
+import { BadRequestException } from '@nestjs/common';
 
 /**
  * Проверяет существование записи по code
@@ -18,6 +19,6 @@ export async function checkCodeExists(
   );
 
   if (checkCode.total.value > 0) {
-    throw new Error('This entry already exists');
+    throw new BadRequestException('This entry already exists');
   }
 }

@@ -20,6 +20,7 @@ import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { useQuasar } from 'quasar';
 import { notifyPositive, notifyNegative } from '~/entities/notify.entites';
+import type { responseError } from '~/interfaces/global';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
@@ -35,11 +36,11 @@ async function addItem() {
       quasar.notify(notifyPositive);
       adminStore.setDisableBtn(false);
     })
-    .catch((err) => {
+    .catch((err: responseError) => {
       adminStore.setDisableBtn(false);
       quasar.notify({
         ...notifyNegative,
-        message: 'Ошибка при сохранении данных: ' + err,
+        message: 'Ошибка при сохранении данных: ' + err.response.data.message,
       });
     });
 }
@@ -52,10 +53,10 @@ async function editItem() {
       adminStore.setViewModal(false);
       quasar.notify(notifyPositive);
     })
-    .catch((err) => {
+    .catch((err: responseError) => {
       quasar.notify({
         ...notifyNegative,
-        message: 'Ошибка при сохранении данных: ' + err,
+        message: 'Ошибка при сохранении данных: ' + err.response.data.message,
       });
     });
 }
