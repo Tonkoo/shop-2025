@@ -3,6 +3,11 @@ import { Repository } from 'typeorm';
 import { Sections } from '../entities/sections.entity';
 import { NotFoundException } from '@nestjs/common';
 
+/**
+ * Генерирует ссылку для продукта
+ * @param data
+ * @param sectionsRepository
+ */
 export async function generateLinkProduct(
   data: ProductEntities,
   sectionsRepository: Repository<Sections>,
@@ -25,6 +30,11 @@ export async function generateLinkProduct(
   return `/catalog/${section.code}/${data.code}/`;
 }
 
+/**
+ * Генерирует ссылку для раздела
+ * @param data
+ * @param sectionsRepository
+ */
 export async function generateLinkSection(
   data: SectionEntities,
   sectionsRepository: Repository<Sections>,

@@ -11,6 +11,11 @@ import { SectionDto } from '../modules/sections/dto/section.dto';
 import { ProductDto } from '../modules/products/dto/product.dto';
 import { ElasticsearchAdminService } from '../modules/elasticsearch/elasticsearch.admin.service';
 
+/**
+ * Форматирует данные для отправки на страницу Администратора
+ * @param items
+ * @param total
+ */
 export function formatResults(
   items: (SectionElastic | ProductElastic)[],
   total: { value: number },
@@ -21,6 +26,12 @@ export function formatResults(
   };
 }
 
+/**
+ * Проверяет, какой ответ отправить на фронт после добавления или изменения или удаления записи
+ * @param filters
+ * @param id
+ * @param EsServices
+ */
 export async function formatResponse(
   filters: SectionDto | ProductDto,
   id: number,
@@ -36,6 +47,11 @@ export async function formatResponse(
   return filters.getItems ? await EsServices.getItemsFilter(searchParams) : id;
 }
 
+/**
+ * Форматирует данные для главной страницы
+ * @param data
+ * @param layout
+ */
 export function formatMainContent(
   data: ProductElastic[],
   layout: mainLayout | null,
@@ -58,6 +74,13 @@ export function formatMainContent(
     },
   };
 }
+
+/**
+ * Форматирует данные для страницы Каталог
+ * @param result
+ * @param layout
+ * @param onlyFilters
+ */
 
 export function formatCatalogContent(
   result: CatalogContent,

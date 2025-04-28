@@ -8,6 +8,11 @@ import {
 import { NotFoundException } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 
+/**
+ * Выполняет поиск в ElasticSearch и возвращает форматированный результат
+ * @param payLoad
+ * @param elasticsearchService
+ */
 export async function searchFromElastic(
   payLoad: payLoadTest,
   elasticsearchService: ESClient,

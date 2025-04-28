@@ -66,7 +66,6 @@ type Section = {
 type SectionEntities = Section &
   DateClient & {
     images: imageData[];
-    // parent?: parentSection;
     imageObject?: Images[];
     type: string;
     sectionName?: string;
@@ -158,9 +157,9 @@ type mainContent = {
   };
 };
 
-type mainResponse = mainContent & {
-  layout: mainLayout;
-};
+// type mainResponse = mainContent & {
+//   layout: mainLayout;
+// };
 
 type CatalogContent = {
   typeItem: string;
@@ -172,9 +171,9 @@ type CatalogContent = {
   sortingItems?: SortingOptions[];
 };
 
-type CatalogLayout = CatalogContent & {
-  layout: mainLayout;
-};
+// type CatalogLayout = CatalogContent & {
+//   layout: mainLayout;
+// };
 
 type FilterCatalog = {
   sort: string;
@@ -183,13 +182,13 @@ type FilterCatalog = {
   color: string[];
 };
 
-type ParamsCatalog = {
-  url: string;
-  sorting: string;
-  filter: string;
-  layout: string;
-  onlyFilters: string;
-};
+// type ParamsCatalog = {
+//   url: string;
+//   sorting: string;
+//   filter: string;
+//   layout: string;
+//   onlyFilters: string;
+// };
 
 type AggregationsFilter = {
   price: {
@@ -247,11 +246,11 @@ export {
   ProductElastic,
   mainLayout,
   mainContent,
-  mainResponse,
+  // mainResponse,
   CatalogContent,
-  CatalogLayout,
+  // CatalogLayout,
   FilterCatalog,
-  ParamsCatalog,
+  // ParamsCatalog,
   ResultFilterCatalog,
   AggregationsFilter,
   PriceRange,

@@ -13,7 +13,6 @@ import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
 import {
-  ParamsAdmin,
   resultItems,
   SectionBase,
   SectionClient,
@@ -26,7 +25,9 @@ import {
 } from '../../utils/removeImages.util';
 import { formatResponse } from '../../utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
-import { payLoad } from '../elasticsearch/dto/elasticsearch.dto';
+import { searchFromElastic } from '../../utils/searchFromElastic.util';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { checkCodeExists } from '../../utils/checkCodeExists';
 
 @Injectable()
 export class SectionsService {
@@ -40,6 +41,10 @@ export class SectionsService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
+  /**
+   * Формирует данные перед отправкой
+   * @param data
+   */
   processingData(data: SectionDto) {
     if (data.name) {
       data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
@@ -54,6 +59,10 @@ export class SectionsService {
     }
   }
 
+  /**
+   * Формирует данные перед отпрвкой на фронт
+   * @param section
+   */
   async populateSectionData(section: SectionBase) {
     if (section.images) {
       const imageIds: number[] = section.images;
@@ -79,6 +88,11 @@ export class SectionsService {
     }
   }
 
+  /**
+   * Проыеряет уровень раздела
+   * @param data
+   * @param section
+   */
   async checkSection(data: SectionDto, section: Sections) {
     if (data.idParent) {
       const parentSection = await this.sectionsRepo.findOne({
@@ -90,6 +104,11 @@ export class SectionsService {
     }
   }
 
+  /**
+   * Создает запись в таблице Sections
+   * @param data
+   * @param files
+   */
   async create(
     data: SectionDto,
     files: { files: Express.Multer.File[] },
@@ -120,6 +139,8 @@ export class SectionsService {
         }
         data.level = parentSection.level + 1;
       }
+
+      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
 
       const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, [
@@ -175,6 +196,10 @@ export class SectionsService {
     }
   }
 
+  /**
+   * Получает запись раздела по идентификатору
+   * @param id
+   */
   async getSectionById(id: number): Promise<SectionBase[] | SectionBase> {
     try {
       const section: SectionBase | null = await this.sectionsRepo.findOneBy({
@@ -194,6 +219,10 @@ export class SectionsService {
     }
   }
 
+  /**
+   * Получает запись раздела по наименованию
+   * @param name
+   */
   async getSectionByName(name: string): Promise<SectionBase[] | SectionBase> {
     try {
       const section: SectionBase | null = await this.sectionsRepo.findOneBy({
@@ -214,6 +243,12 @@ export class SectionsService {
     }
   }
 
+  /**
+   * Обновляет данные указанной записи в таблице Sections
+   * @param id
+   * @param data
+   * @param files
+   */
   async updateById(
     id: number,
     data: SectionDto,
@@ -246,6 +281,8 @@ export class SectionsService {
         );
 
         await this.checkSection(data, currentSection);
+
+        await checkCodeExists(data.code, this.EsServices.elasticsearchService);
 
         const newSection = await this.sectionsRepo.update(
           { id: id },
@@ -298,6 +335,11 @@ export class SectionsService {
     }
   }
 
+  /**
+   * Удаляет указанную запись в таблице Sections
+   * @param id
+   * @param data
+   */
   async deleteById(
     id: number,
     data: SectionDto,

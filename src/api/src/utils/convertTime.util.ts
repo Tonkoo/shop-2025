@@ -3,6 +3,10 @@ import { Products } from '../entities/products.entity';
 import { Sections } from '../entities/sections.entity';
 import { ProductClient, SectionClient } from '../interfaces/global';
 
+/**
+ * Конвертирует дату в формат dd.MM.yyyy HH:mm для ElasticSearch
+ * @param data
+ */
 export function convertTimeObject(
   data: Products | Sections,
 ): ProductClient | SectionClient {

@@ -29,6 +29,11 @@ export class ElasticsearchCatalogService {
     private readonly sortingRepository: Repository<SortingOptions>,
   ) {}
 
+  /**
+   *  Формирует массив с фильтрами
+   * @param data
+   * @param section
+   */
   getFilterCatalog(data: FilterCatalog, section?: SectionElastic): any[] {
     const result: any[] = [{ term: { 'type.keyword': 'product' } }];
 
@@ -53,6 +58,10 @@ export class ElasticsearchCatalogService {
     return result;
   }
 
+  /**
+   * Возвращает дочерние разделы для указанного раздела
+   * @param section
+   */
   async getChildSection(section: SectionElastic) {
     if (!section) {
       const childSection = await searchFromElastic(
@@ -88,6 +97,10 @@ export class ElasticsearchCatalogService {
     return childSection.items as SectionElastic[];
   }
 
+  /**
+   * Находит элемент по его URL
+   * @param url
+   */
   async getItem(url: string) {
     const items = await searchFromElastic(
       {
@@ -114,6 +127,10 @@ export class ElasticsearchCatalogService {
     return items.items[0];
   }
 
+  /**
+   * Создает параметры сортировки для ElasticSearch
+   * @param sorting
+   */
   async createSortOptions(sorting: string) {
     const srtOptions = await this.sortingRepository.findOne({
       where: { code: sorting },
@@ -124,6 +141,10 @@ export class ElasticsearchCatalogService {
     return [{ [srtOptions.field]: { order: srtOptions.order } }];
   }
 
+  /**
+   * Получает и обрабатывает данные для страницы каталога
+   * @param params
+   */
   async getItemsCatalog(params: ParamsCatalog) {
     const { url, filter, layout, getFilter, getSorting, onlyFilters } = params;
     const filterConvert: FilterCatalog = JSON.parse(filter) as FilterCatalog;

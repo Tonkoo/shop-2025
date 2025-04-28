@@ -1,9 +1,13 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
+import {
+  ElasticsearchService,
+  ElasticsearchService as ESClient,
+} from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
 import { In, Repository } from 'typeorm';
 import { Products } from '../../entities/products.entity';
@@ -32,8 +36,11 @@ import { searchFromElastic } from '../../utils/searchFromElastic.util';
 
 @Injectable()
 export class ElasticsearchAdminService {
+  public readonly elasticsearchService: ESClient;
   constructor(
-    private readonly elasticsearchService: ESClient,
+    @Inject(ElasticsearchService)
+    private readonly esClient: ESClient,
+    // private readonly elasticsearchService: ESClient,
     @InjectRepository(Products)
     private readonly productRepository: Repository<Products>,
     @InjectRepository(Sections)
@@ -42,10 +49,16 @@ export class ElasticsearchAdminService {
     private readonly imagesRepository: Repository<Images>,
     @InjectRepository(Colors)
     private readonly colorsRepository: Repository<Colors>,
-  ) {}
+  ) {
+    this.elasticsearchService = esClient;
+  }
 
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
+  /**
+   * Подготавливает данные изображений для ElasticSearch
+   * @param data
+   */
   async prepareImageData(data: number[]): Promise<imageData[]> {
     const images: Images[] | null = await this.imagesRepository.findBy({
       id: In(data),
@@ -58,7 +71,12 @@ export class ElasticsearchAdminService {
     );
   }
 
-  async generateBlockImages(
+  /**
+   * Обрабатывает массив элементов добавляя к каждому данные изображений и тип элемента
+   * @param data
+   * @param type
+   */
+  async processItemsWithImages(
     data: (SectionClient | ProductClient)[],
     type: string,
   ): Promise<(SectionEntities | ProductEntities)[]> {
@@ -76,16 +94,7 @@ export class ElasticsearchAdminService {
           }
 
           const imageIds: number[] = item.images;
-          const images: Images[] = await this.imagesRepository.findBy({
-            id: In(imageIds),
-          });
-
-          const imageData: imageData[] = images.map(
-            (image: Images): imageData => ({
-              alt: image.name,
-              src: image.path,
-            }),
-          );
+          const imageData: imageData[] = await this.prepareImageData(imageIds);
 
           return {
             ...item,
@@ -95,27 +104,6 @@ export class ElasticsearchAdminService {
         },
       ),
     );
-  }
-
-  getFilterAdmin(payLoad: payLoad): any[] {
-    const { type, searchName, filterSection } = payLoad;
-    const filter: any[] = [
-      {
-        match: { type: type },
-      },
-    ];
-
-    if (searchName) {
-      filter.push({
-        wildcard: { 'name.keyword': `*${searchName}*` },
-      });
-    }
-    if (filterSection) {
-      filter.push({
-        term: { section: filterSection },
-      });
-    }
-    return filter;
   }
 
   /**
@@ -130,7 +118,7 @@ export class ElasticsearchAdminService {
   ): Promise<(ProductEntities | SectionEntities)[]> {
     const products: (ProductClient | SectionClient)[] =
       convertTimeArray(dbProduct);
-    const documentsProduct = await this.generateBlockImages(
+    const documentsProduct = await this.processItemsWithImages(
       products,
       'product',
     );
@@ -138,7 +126,7 @@ export class ElasticsearchAdminService {
     const sections: (ProductClient | SectionClient)[] =
       convertTimeArray(dbSection);
 
-    const documentsSection = await this.generateBlockImages(
+    const documentsSection = await this.processItemsWithImages(
       sections,
       'section',
     );
@@ -189,6 +177,35 @@ export class ElasticsearchAdminService {
     return [...processedProducts, ...processedSections];
   }
 
+  /**
+   * Строит массив фильтров для ElasticSearch на основе параметров запроса
+   * @param payLoad
+   */
+  getFilterAdmin(payLoad: payLoad): any[] {
+    const { type, searchName, filterSection } = payLoad;
+    const filter: any[] = [
+      {
+        match: { type: type },
+      },
+    ];
+
+    if (searchName) {
+      filter.push({
+        wildcard: { 'name.keyword': `*${searchName}*` },
+      });
+    }
+    if (filterSection) {
+      filter.push({
+        term: { section: filterSection },
+      });
+    }
+    return filter;
+  }
+
+  /**
+   * Создает индекс в ElasticSearch
+   * @param payLoad
+   */
   async createIndex(payLoad: payLoad) {
     try {
       //TODO: Прочитать alias Elastic
@@ -242,6 +259,11 @@ export class ElasticsearchAdminService {
     }
   }
 
+  /**
+   * Добавление документов в ElasticSearch при создании индекса
+   * @param index
+   * @param documents
+   */
   async bulkIndexDocuments(
     index: string,
     documents: (ProductEntities | SectionEntities)[],
@@ -266,6 +288,13 @@ export class ElasticsearchAdminService {
     }
   }
 
+  /**
+   * Добавление документа раздела в ElasticSearch
+   * @param index
+   * @param id
+   * @param document
+   * @param type
+   */
   async addSectionDocument(
     index: string,
     id: string,
@@ -307,6 +336,13 @@ export class ElasticsearchAdminService {
     }
   }
 
+  /**
+   * Добавление документа продукта в ElasticSearch
+   * @param index
+   * @param id
+   * @param document
+   * @param type
+   */
   async addProductDocument(
     index: string,
     id: string,
@@ -355,6 +391,13 @@ export class ElasticsearchAdminService {
     }
   }
 
+  /**
+   * Обновление данных документа в ElasticSearch
+   * @param index
+   * @param id
+   * @param document
+   * @param type
+   */
   async updateDocument(
     index: string,
     id: string,
@@ -384,6 +427,11 @@ export class ElasticsearchAdminService {
     }
   }
 
+  /**
+   * Удаление документа в ElasticSearch
+   * @param index
+   * @param id
+   */
   async deleteDocument(index: string, id: string) {
     try {
       return await this.elasticsearchService.delete({
@@ -396,6 +444,10 @@ export class ElasticsearchAdminService {
     }
   }
 
+  /**
+   * Получение отфильтрованых данных из ElasticSearch
+   * @param payLoad
+   */
   async getItemsFilter(payLoad: payLoad): Promise<resultItems> {
     try {
       const { from, size } = payLoad;
@@ -417,7 +469,11 @@ export class ElasticsearchAdminService {
     }
   }
 
-  async getNameByElastic(payLoad: payLoad): Promise<SectionElastic[]> {
+  /**
+   * Вывод наименование записей из ElasticSearch
+   * @param payLoad
+   */
+  async getName(payLoad: payLoad): Promise<SectionElastic[]> {
     const { type, searchName, size, typeForm } = payLoad;
     try {
       if (searchName == undefined) {

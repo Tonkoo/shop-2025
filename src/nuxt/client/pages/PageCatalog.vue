@@ -9,6 +9,10 @@ import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 import { useQuasar } from 'quasar';
 import { notifyNegative } from '~/entities/notify.entites';
 
+useHead({
+  title: 'Каталог',
+});
+
 const catalogModule = useCatalogModule();
 const layoutStores = useLayoutStores();
 

@@ -11,6 +11,12 @@ interface ImageData {
   mimeType: string;
 }
 
+/**
+ * Создает запись в таблице images
+ * @param queryRunner
+ * @param files
+ */
+
 export async function createImages(
   queryRunner: QueryRunner,
   files: { files: Express.Multer.File[] },

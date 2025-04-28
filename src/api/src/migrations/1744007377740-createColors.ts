@@ -7,6 +7,21 @@ export class CreateColors1744007377740 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE "colors" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "hex" character varying NOT NULL, CONSTRAINT "PK_3a62edc12d29307872ab1777ced" PRIMARY KEY ("id"))`,
     );
+
+    await queryRunner.query(`
+      INSERT INTO "colors" ("name", "hex") VALUES
+        ('Красный', '#FF0000'),
+        ('Зеленый', '#00FF00'),
+        ('Розовый', '#FFC0CB'),
+        ('Оранжевый', '#FFA500'),
+        ('Желтый', '#FFFF00'),
+        ('Синий', '#0000FF'),
+        ('Фиолетовый', '#FFFFFF'),
+        ('Белый', '#FFA500'),
+        ('Черный', '#000000'),
+        ('Серый', '#808080'),
+    `);
+
     await queryRunner.query(`ALTER TABLE "products" DROP COLUMN "color"`);
     await queryRunner.query(
       `ALTER TABLE "products" ADD "id_color" integer NOT NULL `,

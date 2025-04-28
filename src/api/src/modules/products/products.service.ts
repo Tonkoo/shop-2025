@@ -26,6 +26,7 @@ import {
 import { Colors } from '../../entities/colors.entity';
 import { formatResponse } from '../../utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
+import { checkCodeExists } from '../../utils/checkCodeExists';
 
 @Injectable()
 export class ProductsService {
@@ -41,6 +42,10 @@ export class ProductsService {
   ) {}
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
+  /**
+   * Формирует данные перед отправкой
+   * @param data
+   */
   processingData(data: ProductDto) {
     if (data.name) {
       data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
@@ -62,6 +67,11 @@ export class ProductsService {
     }
   }
 
+  /**
+   * Добавляет новую запись в таблице Products
+   * @param data
+   * @param files
+   */
   async create(
     data: ProductDto,
     files: { files: Express.Multer.File[] },
@@ -71,6 +81,8 @@ export class ProductsService {
     await queryRunner.startTransaction();
     try {
       this.processingData(data);
+
+      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
       const newProduct: Products = await this.productsRepo.save(
         prepareData(data, [
           'searchName',
@@ -133,6 +145,11 @@ export class ProductsService {
     }
   }
 
+  /**
+   * Получает запись продукта по идентификатору
+   * @param id
+   */
+
   async getProductById(id: number): Promise<ProductBase> {
     try {
       const product: ProductBase | null = await this.productsRepo.findOne({
@@ -168,6 +185,13 @@ export class ProductsService {
     }
   }
 
+  /**
+   * Обновляет данные указанной записи в таблице Products
+   * @param id
+   * @param data
+   * @param files
+   */
+
   async updateById(
     id: number,
     data: ProductDto,
@@ -190,6 +214,8 @@ export class ProductsService {
       if (files.files) {
         data.images = await createImages(queryRunner, files);
       }
+
+      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
 
       await removeUnusedImages(
         data,
@@ -248,6 +274,11 @@ export class ProductsService {
     }
   }
 
+  /**
+   * Удаляет указанную запись в таблице Products
+   * @param id
+   * @param data
+   */
   async deleteById(
     id: number,
     data: ProductDto,
@@ -301,6 +332,10 @@ export class ProductsService {
       );
     }
   }
+
+  /**
+   * Получает записи из таблицы Colors
+   */
 
   async getColor(): Promise<Colors[]> {
     try {

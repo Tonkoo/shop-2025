@@ -4,6 +4,10 @@ import { logger } from './logger/logger';
 import { BadRequestException } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 
+/**
+ * Возвращает данные для меню(Sidebar, Footer)
+ * @param elasticsearchService
+ */
 export async function getLayout(
   elasticsearchService: ESClient,
 ): Promise<mainLayout> {

@@ -7,6 +7,12 @@ import { Products } from '../entities/products.entity';
 import { SectionDto } from '../modules/sections/dto/section.dto';
 import { ProductDto } from '../modules/products/dto/product.dto';
 
+/**
+ * Удаляет указанные записи в таблице images
+ * @param data
+ * @param imagesRepository
+ * @param queryRunner
+ */
 export async function removeImages(
   data: Sections | Products,
   imagesRepository: Repository<Images>,
@@ -29,6 +35,13 @@ export async function removeImages(
   }
 }
 
+/**
+ * Удаляет неиспользуемые записи в таблице images
+ * @param data
+ * @param currentData
+ * @param imagesRepository
+ * @param queryRunner
+ */
 export async function removeUnusedImages(
   data: SectionDto | ProductDto,
   currentData: Sections | Products,

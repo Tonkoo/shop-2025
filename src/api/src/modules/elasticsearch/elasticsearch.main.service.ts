@@ -11,6 +11,10 @@ import { getLayout } from '../../utils/getLayout.util';
 export class ElasticsearchMainService {
   constructor(private readonly elasticsearchService: ESClient) {}
 
+  /**
+   * Получает данные из ElasticSearch для главной страницы
+   * @param layout
+   */
   async getItemMain(layout: string) {
     try {
       const items = await searchFromElastic(
