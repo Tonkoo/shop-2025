@@ -17,7 +17,7 @@ type RouterMeta = {
   // Особые настройки футера
   footer?: 'gifts' | 'magazines';
   // Мидлварины
-  middleware?: Array<'04-canary' | '06-external' | '08-postpone' | '10-auth'>;
+  middleware?: Array<'02-slash-catalog'>;
   // Флаг тестовой страницы
   test?: boolean;
   // Белый ли хедер вверху

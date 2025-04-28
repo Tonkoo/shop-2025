@@ -27,6 +27,7 @@ export default <RouterConfig & { routes: () => Routes }>{
       path: '/catalog/:catalogPath(.*)*',
       meta: {
         layout: 'main-layout',
+        middleware: ['02-slash-catalog'],
       },
       component: () =>
         import('~/pages/PageCatalog.vue').then((r) => r.default || r),

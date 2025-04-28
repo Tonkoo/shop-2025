@@ -10,7 +10,7 @@
   </div>
   <div class="main-list">
     <div class="product-list">
-      <span class="product-list__title">Подарки</span>
+      <span class="product-list__title">{{ $t('main.title.gifts') }}</span>
       <ProductList :main-gifts="dataList" />
       <ArealLink class="product-list__link" link="catalog/zhenskiy/">{{
         $t('main.body.link')

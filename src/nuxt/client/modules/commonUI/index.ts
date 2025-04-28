@@ -32,12 +32,6 @@ export default defineNuxtModule<ModuleOptions>({
           default: {
             importPatterns: [resolve('assets/icon/**/*.svg')],
           },
-          // special: {
-          //   importPatterns: [resolve(runtimeDir, 'assets/special/**/*.svg')],
-          // },
-          // linning: {
-          //   importPatterns: [resolve(runtimeDir, 'assets/linning/**/*.svg')],
-          // },
         },
       },
       nuxt
@@ -72,19 +66,6 @@ export default defineNuxtModule<ModuleOptions>({
       },
     };
 
-    // nuxt.options.vite = {
-    //   ...nuxt.options.vite,
-    //   css: {
-    //     preprocessorOptions: {
-    //       scss: {
-    //         additionalData: `
-    //         @import "${resolve('./assets/scss/colors.scss')}";
-    //         @import "${resolve('./assets/scss/fonts.scss')}";
-    //     `,
-    //       },
-    //     },
-    //   },
-    // };
     nuxt.options.typescript.typeCheck = true;
 
     console.log('Successfully added module Common Ui');
