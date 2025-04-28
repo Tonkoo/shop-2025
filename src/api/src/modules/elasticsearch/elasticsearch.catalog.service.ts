@@ -75,7 +75,6 @@ export class ElasticsearchCatalogService {
         },
         this.elasticsearchService,
       );
-      // console.log(childSection);
       return childSection.items as SectionElastic[];
     }
 

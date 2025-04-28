@@ -19,7 +19,7 @@ export class CreateColors1744007377740 implements MigrationInterface {
         ('Фиолетовый', '#FFFFFF'),
         ('Белый', '#FFA500'),
         ('Черный', '#000000'),
-        ('Серый', '#808080'),
+        ('Серый', '#808080');
     `);
 
     await queryRunner.query(`ALTER TABLE "products" DROP COLUMN "color"`);
