@@ -33,7 +33,7 @@
           @click="emit('update:filter', { property: 'priceTo', value: '' })"
         >
           <span
-            >{{ $t('catalog.label.priceTo') }}{{ filterCatalog.priceTo }}</span
+            >{{ $t('catalog.label.priceTo') }} {{ filterCatalog.priceTo }}</span
           >
         </ArealTag>
         <ArealTag
@@ -111,6 +111,7 @@
                 emit('update:filter', { property: 'color', value: color })
               "
             >
+              <!--              !availableColors.includes(color),-->
               <div
                 class="dialog-filter__block-color__circle"
                 :style="{ backgroundColor: color }"

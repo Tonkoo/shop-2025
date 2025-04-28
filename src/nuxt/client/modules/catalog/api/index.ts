@@ -34,13 +34,18 @@ export async function getItemCatalog() {
     }
     if (layoutStores.typePage === 'section') {
       if (params.onlyFilters) {
-        if (
-          catalogStore.filterPrice &&
-          catalogStore.filter.color.length === 0
-        ) {
-          catalogStore.setAvailableColors(
-            response.data.data.content.filter.color
-          );
+        if (catalogStore.filterPrice) {
+          if (
+            !catalogStore.filterCatalog.priceFrom &&
+            !catalogStore.filterCatalog.priceTo
+          ) {
+            catalogStore.setAvailableColors(catalogStore.filter.color);
+          } else {
+            catalogStore.setAvailableColors(
+              response.data.data.content.filter.color
+            );
+          }
+
           catalogStore.setFilterPrice(false);
         }
         catalogStore.setOnlyFilter(false);
