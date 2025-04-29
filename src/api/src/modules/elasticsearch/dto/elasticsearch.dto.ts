@@ -12,14 +12,17 @@ export class payLoad {
   @IsString({
     message: 'Параметр type должен быть типа string',
   })
+  @IsNotEmpty()
   type?: string;
 
   @IsNumber()
   @Transform(({ value }) => Number(value))
+  @IsNotEmpty()
   from?: number;
 
   @IsNumber()
   @Transform(({ value }) => Number(value))
+  @IsNotEmpty()
   size?: number;
 
   @IsString({

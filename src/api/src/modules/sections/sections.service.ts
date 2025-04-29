@@ -260,7 +260,7 @@ export class SectionsService {
     await queryRunner.startTransaction();
     try {
       {
-        console.log(data);
+        console.log(data.idParent);
         const currentSection: Sections | null = await this.sectionsRepo.findOne(
           {
             where: { id: id },

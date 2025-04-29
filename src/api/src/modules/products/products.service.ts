@@ -227,6 +227,7 @@ export class ProductsService {
         this.imagesRepository,
         queryRunner,
       );
+
       const newProduct = await this.productsRepo.update(
         { id: id },
         prepareData(data, [
@@ -235,6 +236,7 @@ export class ProductsService {
           'from',
           'size',
           'searchName',
+          'idSection',
           'sectionId',
           'sectionName',
           'idColor',

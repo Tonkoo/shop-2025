@@ -12,7 +12,6 @@ import {
 // TODO: добавить аллиасы для путей в tsconfig.ts
 import { logger } from '../../utils/logger/logger';
 import { Repository } from 'typeorm';
-import { Products } from '../../entities/products.entity';
 import { Sections } from '../../entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
@@ -35,17 +34,15 @@ import {
   generateLinkSection,
 } from '../../utils/generateLink.util';
 import { searchFromElastic } from '../../utils/searchFromElastic.util';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 
-// TODO: убрать все что не используется
 @Injectable()
 export class ElasticsearchAdminService {
   public readonly elasticsearchService: ESClient;
   constructor(
     @Inject(ElasticsearchService)
     private readonly esClient: ESClient,
-    @InjectRepository(Products)
-    private readonly productRepository: Repository<Products>,
-    @InjectRepository(Sections)
+    @InjectRepository(Sections as EntityClassOrSchema)
     private readonly sectionsRepository: Repository<Sections>,
     @InjectRepository(Images)
     private readonly imagesRepository: Repository<Images>,
@@ -76,60 +73,87 @@ export class ElasticsearchAdminService {
       }),
     );
   }
-  // TODO: переименовать метод.
+
   /**
-   * Формирование данных для эластика
-   * @private
-   * @param dbItems
+   * Формирует данные продуктов для эластика
+   * @param data
+   * @param dataImages
    */
-  private async enrichData(
-    dbItems: Sections[],
-  ): Promise<(ProductEntities | SectionEntities)[]> {
-    const dbImages = await this.imagesRepository.find();
-
-    const product: ProductEntities[] = [];
-
+  async prepareDataProduct(data: Sections[], dataImages: Images[]) {
+    const result: ProductEntities[] = [];
     await Promise.all(
-      dbItems
+      data
         .filter((section) => section.products.length > 0)
         .flatMap((section) =>
           section.products.map((item) => {
             const resultProduct = convertTimeObject(item) as ProductClient;
             delete resultProduct.color;
-            product.push({
+            result.push({
               ...resultProduct,
               sectionName: section.name,
               hexColor: item.color.hex,
               type: 'product',
-              images: this.prepareImageData(item.images as number[], dbImages),
-              url: generateLinkProduct(item, section.id, dbItems),
+              images: this.prepareImageData(
+                item.images as number[],
+                dataImages,
+              ),
+              url: generateLinkProduct(item, section.id, data),
             });
           }),
         ),
     );
+    return result;
+  }
 
-    const section: SectionEntities[] = [];
-
+  /**
+   * Формирует данные разделов для эластика
+   * @param data
+   * @param dataImages
+   */
+  async prepareDataSection(data: Sections[], dataImages: Images[]) {
+    const result: SectionEntities[] = [];
     await Promise.all(
-      dbItems.map((item) => {
+      data.map((item) => {
         if (!item.images) {
           item.images = [];
         }
         let parentName: string | undefined;
         if (item.id_parent) {
-          const parent = dbItems.find((parent) => parent.id === item.id_parent);
+          const parent = data.find((parent) => parent.id === item.id_parent);
           parentName = parent?.name;
         }
         const resultSection = convertTimeObject(item) as SectionClient;
         delete resultSection.products;
-        section.push({
+        result.push({
           ...resultSection,
-          images: this.prepareImageData(item.images, dbImages),
+          images: this.prepareImageData(item.images, dataImages),
           type: 'section',
           sectionName: parentName,
-          url: generateLinkSection(item, dbItems),
+          url: generateLinkSection(item, data),
         });
       }),
+    );
+    return result;
+  }
+
+  /**
+   * Формирование данных для эластика
+   * @private
+   * @param dbItems
+   */
+  private async prepareDataElastic(
+    dbItems: Sections[],
+  ): Promise<(ProductEntities | SectionEntities)[]> {
+    const dbImages = await this.imagesRepository.find();
+
+    const product: ProductEntities[] = await this.prepareDataProduct(
+      dbItems,
+      dbImages,
+    );
+
+    const section: SectionEntities[] = await this.prepareDataSection(
+      dbItems,
+      dbImages,
     );
 
     return [...product, ...section];
@@ -200,7 +224,7 @@ export class ElasticsearchAdminService {
         throw new NotFoundException('Section not found');
       }
 
-      const document = await this.enrichData(dbItems);
+      const document = await this.prepareDataElastic(dbItems);
 
       await this.bulkIndexDocuments(this.index || 'shop', document);
       //TODO: придумать как исправить костыль
@@ -227,8 +251,7 @@ export class ElasticsearchAdminService {
     documents: (ProductEntities | SectionEntities)[],
   ): Promise<void> {
     if (!documents.length) {
-      // TODO: написать в лог
-      console.log('No documents to index. Skipping bulk operation.');
+      logger.log('No documents to index. Skipping bulk operation.');
       return;
     }
     try {
@@ -276,7 +299,7 @@ export class ElasticsearchAdminService {
 
       if (resultDocument.id_parent) {
         const parent = sections.find(
-          (item) => item.id_parent === resultDocument.id_parent,
+          (item) => item.id === resultDocument.id_parent,
         );
         resultDocument.sectionName = parent?.name;
       }
@@ -321,14 +344,10 @@ export class ElasticsearchAdminService {
         images: imageData,
       };
 
-      // TODO: вынести запросы в include
       if (resultDocument.section) {
         const section = sections.find(
           (item) => item.id === Number(resultDocument.section),
         );
-        // const parent = await this.sectionsRepository.findOne({
-        //   where: { id: Number(resultDocument.section) },
-        // });
         resultDocument.sectionName = section?.name;
       }
 
@@ -345,7 +364,6 @@ export class ElasticsearchAdminService {
         sections,
       );
 
-      // console.log(resultDocument);
       return await this.elasticsearchService.index({
         index: index,
         id: id,
