@@ -2,7 +2,7 @@
   <div class="footer">
     <div class="footer__menu menu">
       <div
-        v-for="parentSection in getParentSection(menu)"
+        v-for="parentSection in menu"
         :key="parentSection.id"
         class="footer__menu__column"
       >
@@ -38,7 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
 import type { SectionMain } from '~/interfaces/global';
 
 defineProps({

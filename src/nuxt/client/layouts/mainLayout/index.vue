@@ -10,11 +10,11 @@
       <slot />
     </main>
     <footer class="footer">
-      <ModuleFooter :menu="layoutStore.menu" />
+      <ModuleFooter :menu="menu" />
     </footer>
     <Sidebar
       :dialog="layoutStore.sidebar"
-      :menu="layoutStore.menu"
+      :menu="menu"
       @set-sidebar="layoutStore.setSidebar()"
     />
   </div>
@@ -25,10 +25,13 @@ import ModuleHeader from '~/layouts/mainLayout/widgets/ModuleHeader.vue';
 import ModuleFooter from '~/layouts/mainLayout/widgets/ModuleFooter.vue';
 import Sidebar from '~/layouts/mainLayout/components/Sidebar.vue';
 import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
+import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
 
 defineOptions({ name: 'MainLayout' });
 
 const layoutStore = useLayoutStores();
+
+const menu = computed(() => getParentSection(layoutStore.menu));
 </script>
 
 <style lang="scss">

@@ -25,8 +25,6 @@ import {
 } from '../../utils/removeImages.util';
 import { formatResponse } from '../../utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
-import { searchFromElastic } from '../../utils/searchFromElastic.util';
-import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { checkCodeExists } from '../../utils/checkCodeExists';
 
 @Injectable()
@@ -45,9 +43,10 @@ export class SectionsService {
    * Формирует данные перед отправкой
    * @param data
    */
-  processingData(data: SectionDto) {
+  async processingData(data: SectionDto) {
     if (data.name) {
       data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
+      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
     }
 
     if ('images' in data && !data.images) {
@@ -118,8 +117,8 @@ export class SectionsService {
     await queryRunner.startTransaction();
     try {
       // TODO: Попробовать JSON.Parse
-      this.processingData(data);
-
+      await this.processingData(data);
+      // TODO: убрать строки и написать метод для проверки на пустоту
       if (
         String(data.idParent) == 'null' ||
         String(data.idParent) == '0' ||
@@ -139,8 +138,6 @@ export class SectionsService {
         }
         data.level = parentSection.level + 1;
       }
-
-      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
 
       const newSection: Sections = await this.sectionsRepo.save(
         prepareData(data, [
@@ -263,6 +260,7 @@ export class SectionsService {
     await queryRunner.startTransaction();
     try {
       {
+        console.log(data);
         const currentSection: Sections | null = await this.sectionsRepo.findOne(
           {
             where: { id: id },
@@ -276,7 +274,7 @@ export class SectionsService {
         if (files.files) {
           data.images = await createImages(queryRunner, files);
         }
-        this.processingData(data);
+        await this.processingData(data);
         await removeUnusedImages(
           data,
           currentSection,
@@ -285,8 +283,6 @@ export class SectionsService {
         );
 
         await this.checkSection(data, currentSection);
-
-        await checkCodeExists(data.code, this.EsServices.elasticsearchService);
 
         const newSection = await this.sectionsRepo.update(
           { id: id },

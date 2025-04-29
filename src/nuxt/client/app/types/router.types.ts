@@ -1,5 +1,6 @@
 import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 
+// TODO: лишнее убрать
 type RouterScrollPosition = {
   behavior?: ScrollOptions['behavior'];
   el?: string | Element;

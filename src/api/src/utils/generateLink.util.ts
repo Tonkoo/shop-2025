@@ -1,52 +1,55 @@
-import { ProductEntities, SectionEntities } from '../interfaces/global';
-import { Repository } from 'typeorm';
 import { Sections } from '../entities/sections.entity';
 import { NotFoundException } from '@nestjs/common';
+import { Products } from '../entities/products.entity';
+import { ProductEntities, SectionEntities } from '../interfaces/global';
 
+// TODO: реализовать метод вне цикла
+// TODO: сделать ссылки для разделов многоуровневыми
 /**
  * Генерирует ссылку для продукта
  * @param data
- * @param sectionsRepository
+ * @param sectionId
+ * @param sections
+ * @param pathParts
  */
-export async function generateLinkProduct(
-  data: ProductEntities,
-  sectionsRepository: Repository<Sections>,
+export function generateLinkProduct(
+  data: Products | ProductEntities,
+  sectionId: number,
+  sections: Sections[],
+  pathParts: string[] = [],
 ) {
-  const section = await sectionsRepository.findOne({
-    where: { id: data.section.id },
-  });
+  const section = sections.find((item) => item.id === sectionId);
   if (!section) {
     throw new NotFoundException('Section not Found');
   }
+  pathParts.unshift(section.code);
+
   if (section.id_parent) {
-    const sectionParent = await sectionsRepository.findOne({
-      where: { id: section.id_parent },
-    });
-    if (!sectionParent) {
-      throw new NotFoundException('Section not Found');
-    }
-    return `/catalog/${sectionParent.code}/${section.code}/${data.code}/`;
+    return generateLinkProduct(data, section.id_parent, sections, pathParts);
   }
-  return `/catalog/${section.code}/${data.code}/`;
+
+  return `/catalog/${pathParts.join('/')}/${data.code}/`;
 }
 
 /**
  * Генерирует ссылку для раздела
  * @param data
- * @param sectionsRepository
+ * @param sections
+ * @param pathParts
  */
-export async function generateLinkSection(
-  data: SectionEntities,
-  sectionsRepository: Repository<Sections>,
+export function generateLinkSection(
+  data: Sections | SectionEntities,
+  sections: Sections[],
+  pathParts: string[] = [],
 ) {
+  pathParts.unshift(data.code);
   if (data.id_parent) {
-    const sectionParent = await sectionsRepository.findOne({
-      where: { id: data.id_parent },
-    });
+    const sectionParent = sections.find((item) => item.id === data.id_parent);
     if (!sectionParent) {
       throw new NotFoundException('Section not Found');
     }
-    return `/catalog/${sectionParent.code}/${data.code}/`;
+
+    return generateLinkSection(sectionParent, sections, pathParts);
   }
-  return `/catalog/${data.code}/`;
+  return `/catalog/${pathParts.join('/')}`;
 }

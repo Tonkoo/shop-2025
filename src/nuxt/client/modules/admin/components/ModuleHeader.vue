@@ -1,3 +1,4 @@
+<!--TODO наименования вынести в ленги-->
 <template>
   <q-toolbar class="q-pa-md">
     <q-toolbar-title>Администрирование</q-toolbar-title>

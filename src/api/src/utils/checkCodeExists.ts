@@ -13,7 +13,7 @@ export async function checkCodeExists(
 ) {
   const checkCode = await searchFromElastic(
     {
-      query: { bool: { must: [{ match: { code: code } }] } },
+      query: { bool: { must: [{ term: { code: code } }] } },
     },
     elasticsearchService,
   );

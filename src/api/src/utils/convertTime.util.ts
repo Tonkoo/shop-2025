@@ -17,10 +17,14 @@ export function convertTimeObject(
   };
 }
 
-export function convertTimeArray(
+export function preparedData(
   data: (Products | Sections)[],
 ): (SectionClient | ProductClient)[] {
-  return data.map((item): ProductClient | SectionClient =>
-    convertTimeObject(item),
-  );
+  return data.map((item): ProductClient | SectionClient => {
+    if (!item.images) {
+      item.images = [];
+    }
+
+    return convertTimeObject(item);
+  });
 }

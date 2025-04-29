@@ -1,3 +1,4 @@
+// TODO: расскидать по отдельным файлам
 type Section = {
   id: number;
   code: string;

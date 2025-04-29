@@ -9,7 +9,7 @@
     <div class="card">
       <nav class="menu">
         <div
-          v-for="parentSection in getParentSection(menu)"
+          v-for="parentSection in menu"
           :key="parentSection.id"
           class="menu__column"
         >
@@ -30,8 +30,9 @@
                 :link="childSection.url"
                 class="menu__link"
                 @click="emit('set-sidebar')"
-                >{{ childSection.name }}</ArealLink
               >
+                {{ childSection.name }}
+              </ArealLink>
             </li>
           </ul>
         </div>
@@ -41,7 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { getParentSection } from '~/modules/main/utils/menu.helpers.utils';
 import type { SectionMain } from '~/interfaces/global';
 
 defineProps({

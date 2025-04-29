@@ -5,15 +5,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/i18n',
     'nuxt-swiper',
-    // 'nuxt-svg-icon-sprite',
   ],
-  // svgIconSprite: {
-  //   sprites: {
-  //     default: {
-  //       importPatterns: ['./client/modules/commonUI/assets/icon/radioFalseIcon.svg'],
-  //     },
-  //   },
-  // },
   i18n: {
     vueI18n: './config/i18n.config.ts',
   },
@@ -47,6 +39,7 @@ export default defineNuxtConfig({
   },
   srcDir: 'client',
   devServer: {
+    // TODO: env
     port: 3000,
     host: '0.0.0.0',
   },

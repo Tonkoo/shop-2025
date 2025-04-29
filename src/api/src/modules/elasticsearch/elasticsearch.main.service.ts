@@ -42,6 +42,7 @@ export class ElasticsearchMainService {
         this.elasticsearchService,
       );
 
+      // TODO: layout boolean
       return formatMainContent(
         items.items as ProductElastic[],
         layout === 'true' ? await getLayout(this.elasticsearchService) : null,

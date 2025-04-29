@@ -88,8 +88,3 @@
     @include textFont($formaDJRDisplay, 10px, 12px, 400);
   }
 }
-
-//// TODO - инжинерное решение, чтобы не ломались шрифты с либы
-//@mixin setFont($family: inter, $size: 14, $weight: normal) {
-//  font-family: $formaDJRDisplay;
-//}

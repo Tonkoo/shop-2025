@@ -46,9 +46,10 @@ export class ProductsService {
    * Формирует данные перед отправкой
    * @param data
    */
-  processingData(data: ProductDto) {
+  async processingData(data: ProductDto) {
     if (data.name) {
       data.code = tr(data.name.toLowerCase(), { replace: { ' ': '-' } });
+      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
     }
     if ('images' in data && !data.images) {
       data.images = [];
@@ -80,9 +81,8 @@ export class ProductsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      this.processingData(data);
+      await this.processingData(data);
 
-      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
       const newProduct: Products = await this.productsRepo.save(
         prepareData(data, [
           'searchName',
@@ -124,6 +124,7 @@ export class ProductsService {
 
       await queryRunner.commitTransaction();
 
+      // TODO: переименовать перемнную
       const testProduct = convertTimeObject(resultProduct) as ProductClient;
 
       await this.EsServices.addProductDocument(
@@ -214,13 +215,11 @@ export class ProductsService {
         throw new NotFoundException('Product not found');
       }
 
-      this.processingData(data);
+      await this.processingData(data);
 
       if (files.files) {
         data.images = await createImages(queryRunner, files);
       }
-
-      await checkCodeExists(data.code, this.EsServices.elasticsearchService);
 
       await removeUnusedImages(
         data,
@@ -298,10 +297,6 @@ export class ProductsService {
     await queryRunner.startTransaction();
 
     try {
-      if (!id) {
-        throw new NotFoundException('ID is required for deletion.');
-      }
-
       const currentProduct: Products | null = await this.productsRepo.findOne({
         where: { id: id },
       });

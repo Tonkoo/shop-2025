@@ -3,12 +3,13 @@ import { Products } from '../entities/products.entity';
 import { Images } from '../entities/images.entity';
 import { SortingOptions } from '../entities/sortingOptions.entity';
 
+// TODO: разбить по файлам, лишнее убрать
 type Product = {
   id: number;
   code: string;
   name: string;
   price: number;
-  color: Colors;
+  color?: Colors;
   description: string;
   section: parentSection;
   show_on_main: boolean;
@@ -37,6 +38,9 @@ type ProductEntities = Product &
 type ProductClient = Product &
   DateClient & {
     images: number[] | null;
+    idSection?: number;
+    sectionName?: string;
+    hexColor?: string;
   };
 
 type ProductBase = Product &
@@ -52,6 +56,7 @@ type ProductElastic = Product &
     type: string;
     section: number;
     sectionName: string;
+    hexColor?: string;
     url: string;
   };
 
@@ -81,6 +86,7 @@ type SectionBase = Sections &
 type SectionClient = Section &
   DateClient & {
     images: number[] | null;
+    products?: Products[];
   };
 
 type SectionElastic = Section &

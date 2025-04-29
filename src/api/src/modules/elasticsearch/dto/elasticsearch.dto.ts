@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
+// TODO: поставить признак обязательного поля
 export class payLoad {
   @IsString({
     message: 'Параметр type должен быть типа string',

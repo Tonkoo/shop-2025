@@ -131,6 +131,7 @@ export class ElasticsearchCatalogService {
    * @param sorting
    */
   async createSortOptions(sorting: string) {
+    // TODO: убрать лишний запрос
     const srtOptions = await this.sortingRepository.findOne({
       where: { code: sorting },
     });
@@ -162,25 +163,37 @@ export class ElasticsearchCatalogService {
         result.contentName = item.name;
       }
 
+      if (result.typeItem === 'product') {
+        result.itemCatalog = item as ProductElastic;
+        return formatCatalogContent(
+          result,
+          layout ? await getLayout(this.elasticsearchService) : null,
+          onlyFilters,
+        );
+      }
+
       // TODO разделить по методам
       // TODO: прибраться в форматах возвращаемых данных.
       if (result.typeItem === 'section') {
         const section = item as SectionElastic;
         result.childSection = await this.getChildSection(section);
         const filterCatalog = this.getFilterCatalog(filterConvert, section);
+
+        // TODO: вынести в метод.
         if (getSorting) {
+          // TODO: проверить на фронте [] или null
           result.sortingItems = await this.sortingRepository.find();
           if (!filterConvert.sort) {
             const defaultSortItem = result.sortingItems.find(
               (item) => item.default,
             );
-            if (defaultSortItem) {
-              filterConvert.sort = defaultSortItem.code;
-            }
+
+            filterConvert.sort = defaultSortItem?.code || 'default';
           }
         }
         const sort = await this.createSortOptions(filterConvert.sort);
 
+        // TODO: вынести в отдельный метод getFilter -> isFilter
         let aggregations: aggregationsElastic | undefined;
         if (getFilter) {
           aggregations = {
@@ -208,9 +221,7 @@ export class ElasticsearchCatalogService {
         result.itemCatalog = products.items as ProductElastic[];
         result.filter = products.aggregations;
       }
-      if (result.typeItem === 'product') {
-        result.itemCatalog = item as ProductElastic;
-      }
+
       return formatCatalogContent(
         result,
         layout ? await getLayout(this.elasticsearchService) : null,
