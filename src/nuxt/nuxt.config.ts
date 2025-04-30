@@ -1,3 +1,5 @@
+import { process } from 'std-env';
+
 export default defineNuxtConfig({
   modules: [
     'nuxt-quasar-ui',
@@ -40,7 +42,8 @@ export default defineNuxtConfig({
   srcDir: 'client',
   devServer: {
     // TODO: env
-    port: 3000,
+    // port: 3000,
+    port: Number(process.env.NUXT_PUBLIC_PORT) || 3000,
     host: '0.0.0.0',
   },
   vite: {

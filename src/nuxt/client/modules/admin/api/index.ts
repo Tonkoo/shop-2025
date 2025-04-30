@@ -98,6 +98,7 @@ export async function getItems() {
         params,
       }
     );
+    console.log(response);
     if (!response) {
       throw new Error('Error while receiving data');
     }
