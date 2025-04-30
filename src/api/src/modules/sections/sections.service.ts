@@ -34,7 +34,6 @@ export class SectionsService {
     private readonly dataSource: DataSource,
     private readonly EsServices: ElasticsearchAdminService,
   ) {}
-  private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
   /**
    * Формирует данные перед отправкой
@@ -165,7 +164,6 @@ export class SectionsService {
       const section = convertTimeObject(newSection) as SectionClient;
 
       await this.EsServices.addSectionDocument(
-        this.index || 'shop',
         newSection.id.toString(),
         section,
         'section',
@@ -305,7 +303,6 @@ export class SectionsService {
         await queryRunner.commitTransaction();
 
         await this.EsServices.updateDocument(
-          this.index || 'shop',
           id.toString(),
           convertTimeObject(updatedSection),
           'section',
@@ -373,7 +370,7 @@ export class SectionsService {
 
       await queryRunner.commitTransaction();
 
-      await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
+      await this.EsServices.deleteDocument(id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 

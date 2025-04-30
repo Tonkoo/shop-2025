@@ -1,4 +1,3 @@
-// TODO: расскидать по отдельным файлам
 import type { ProductMain, SectionMain } from '~/interfaces/mainGlobal';
 import type { SectionAdmin, ProductAdmin } from '~/interfaces/adminGlobal';
 import type { FilterCatalog, SortingItems } from '~/interfaces/catalogGlobal';

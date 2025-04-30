@@ -53,6 +53,7 @@ export class ElasticsearchAdminService {
   }
 
   private readonly index: string | undefined = process.env.ELASTIC_INDEX;
+  private readonly aliasName: string = `${this.index || 'shop'}_alias`;
 
   /**
    * Подготавливает данные изображений для ElasticSearch
@@ -190,19 +191,15 @@ export class ElasticsearchAdminService {
    */
   async createIndex(payLoad: payLoad) {
     try {
+      const currentDate = new Date()
+        .toISOString()
+        .replace(/[:.-]/g, '')
+        .toLowerCase();
+      const newIndexName = `${this.index || 'shop'}_${currentDate}`;
       //TODO: Прочитать alias Elastic
-      const indexExists = await this.elasticsearchService.indices.exists({
-        index: this.index || 'shop',
-      });
-
-      if (indexExists) {
-        await this.elasticsearchService.indices.delete({
-          index: this.index || 'shop',
-        });
-      }
 
       await this.elasticsearchService.indices.create({
-        index: this.index || 'shop',
+        index: newIndexName,
         body: {
           settings: {
             number_of_shards: 1,
@@ -226,7 +223,35 @@ export class ElasticsearchAdminService {
 
       const document = await this.prepareDataElastic(dbItems);
 
-      await this.bulkIndexDocuments(this.index || 'shop', document);
+      await this.bulkIndexDocuments(newIndexName, document);
+
+      let oldIndices: string[] = [];
+      try {
+        const aliasResponse = await this.elasticsearchService.indices.getAlias({
+          name: this.aliasName,
+        });
+
+        oldIndices = Object.keys(aliasResponse);
+      } catch (err) {
+        console.log(err);
+      }
+
+      await this.elasticsearchService.indices.updateAliases({
+        body: {
+          actions: [
+            ...oldIndices.map((index) => ({
+              remove: { index, alias: this.aliasName },
+            })),
+            { add: { index: newIndexName, alias: this.aliasName } },
+          ],
+        },
+      });
+      for (const oldIndex of oldIndices) {
+        await this.elasticsearchService.indices.delete({
+          index: oldIndex,
+        });
+      }
+
       //TODO: придумать как исправить костыль
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -272,17 +297,11 @@ export class ElasticsearchAdminService {
 
   /**
    * Добавление документа раздела в ElasticSearch
-   * @param index
    * @param id
    * @param document
    * @param type
    */
-  async addSectionDocument(
-    index: string,
-    id: string,
-    document: SectionClient,
-    type: string,
-  ) {
+  async addSectionDocument(id: string, document: SectionClient, type: string) {
     try {
       let imageData: ImageData[] = [];
       if (document.images) {
@@ -307,7 +326,7 @@ export class ElasticsearchAdminService {
       resultDocument.url = generateLinkSection(resultDocument, sections);
 
       return await this.elasticsearchService.index({
-        index: index,
+        index: this.aliasName,
         id: id,
         body: resultDocument,
       });
@@ -319,17 +338,11 @@ export class ElasticsearchAdminService {
 
   /**
    * Добавление документа продукта в ElasticSearch
-   * @param index
    * @param id
    * @param document
    * @param type
    */
-  async addProductDocument(
-    index: string,
-    id: string,
-    document: ProductClient,
-    type: string,
-  ) {
+  async addProductDocument(id: string, document: ProductClient, type: string) {
     try {
       let imageData: ImageData[] = [];
       if (document.images) {
@@ -365,7 +378,7 @@ export class ElasticsearchAdminService {
       );
 
       return await this.elasticsearchService.index({
-        index: index,
+        index: this.aliasName,
         id: id,
         body: resultDocument,
       });
@@ -377,33 +390,25 @@ export class ElasticsearchAdminService {
 
   /**
    * Обновление данных документа в ElasticSearch
-   * @param index
    * @param id
    * @param document
    * @param type
    */
   async updateDocument(
-    index: string,
     id: string,
     document: SectionClient | ProductClient,
     type: string,
   ) {
     try {
-      await this.deleteDocument(index, id);
+      await this.deleteDocument(id);
       if (type === 'section') {
         return await this.addSectionDocument(
-          index,
           id,
           document as SectionClient,
           type,
         );
       }
-      return await this.addProductDocument(
-        index,
-        id,
-        document as ProductClient,
-        type,
-      );
+      return await this.addProductDocument(id, document as ProductClient, type);
     } catch (err) {
       logger.error('Error from elastic.updateDocument: ', err);
       throw new BadRequestException('Error updating document');
@@ -412,13 +417,12 @@ export class ElasticsearchAdminService {
 
   /**
    * Удаление документа в ElasticSearch
-   * @param index
    * @param id
    */
-  async deleteDocument(index: string, id: string) {
+  async deleteDocument(id: string) {
     try {
       return await this.elasticsearchService.delete({
-        index: index,
+        index: this.aliasName,
         id: id,
       });
     } catch (err) {

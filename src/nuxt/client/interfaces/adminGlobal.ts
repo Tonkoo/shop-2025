@@ -1,5 +1,3 @@
-// TODO: расскидать по отдельным файлам
-
 import type { Product, Section } from '~/interfaces/global';
 
 type SectionAdmin = Section & {

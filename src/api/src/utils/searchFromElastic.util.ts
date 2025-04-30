@@ -19,7 +19,7 @@ export async function searchFromElastic(
 ) {
   const { query, from, size, source, sort, aggregations } = payLoad;
   const items = await elasticsearchService.search({
-    index: process.env.ELASTIC_INDEX,
+    index: `${process.env.ELASTIC_INDEX}_alias`,
     body: {
       _source: source,
       query,

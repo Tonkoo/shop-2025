@@ -1,4 +1,3 @@
-// TODO: расскидать по отдельным файлам
 import type { ImageObject } from '~/interfaces/adminGlobal';
 
 type Section = {

@@ -1,5 +1,3 @@
-// TODO: расскидать по отдельным файлам
-
 type FilterCatalog = {
   price: {
     min: number;

@@ -37,7 +37,6 @@ export class ProductsService {
     private readonly EsServices: ElasticsearchAdminService,
     private readonly dataSource: DataSource,
   ) {}
-  private readonly index: string | undefined = process.env.ELASTIC_INDEX;
 
   /**
    * Формирует данные перед отправкой
@@ -124,7 +123,6 @@ export class ProductsService {
       const product = convertTimeObject(resultProduct) as ProductClient;
 
       await this.EsServices.addProductDocument(
-        this.index || 'shop',
         newProduct.id.toString(),
         product,
         'product',
@@ -258,7 +256,6 @@ export class ProductsService {
       await queryRunner.commitTransaction();
 
       await this.EsServices.updateDocument(
-        this.index || 'shop',
         id.toString(),
         convertTimeObject(updatedProduct),
         'product',
@@ -322,7 +319,7 @@ export class ProductsService {
 
       await queryRunner.commitTransaction();
 
-      await this.EsServices.deleteDocument(this.index || 'shop', id.toString());
+      await this.EsServices.deleteDocument(id.toString());
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 

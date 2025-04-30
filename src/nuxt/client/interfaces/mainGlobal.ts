@@ -1,8 +1,6 @@
 import type { Section, Product } from './global';
 import type { ImageElastic } from '~/interfaces/adminGlobal';
 
-// TODO: расскидать по отдельным файлам
-
 type SectionMain = Section & {
   images: ImageElastic[];
   id_parent?: number;
