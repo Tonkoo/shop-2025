@@ -1,4 +1,4 @@
-import type { Err, ProductAdmin } from '~/interfaces/global';
+import type { Err, ProductAdmin } from '~/interfaces/adminGlobal';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { productSchema } from '~/modules/admin/schemas/productSchema';
 

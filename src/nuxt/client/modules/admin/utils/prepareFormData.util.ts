@@ -2,7 +2,7 @@ import type {
   ApiParams,
   ProductAdmin,
   SectionAdmin,
-} from '~/interfaces/global';
+} from '~/interfaces/adminGlobal';
 
 export function generateFormData(
   formData: FormData,

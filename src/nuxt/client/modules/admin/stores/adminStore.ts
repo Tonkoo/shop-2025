@@ -3,7 +3,6 @@ import type { AdminState } from '~/modules/admin/types/types';
 import { useAdminModule } from '~/modules/admin/global';
 import type {
   SelectSection,
-  ResultItemsAdmin,
   Search,
   TypeSearch,
   ProductAdmin,
@@ -11,7 +10,8 @@ import type {
   Colors,
   Err,
   SelectColor,
-} from '~/interfaces/global';
+} from '~/interfaces/adminGlobal';
+import type { ResultItemsAdmin } from '~/interfaces/resultGlobal';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 import { paramPagination } from '~/entities/table.entites';
 import { sectionDefault, sectionFormDefault } from '~/entities/section.entites';

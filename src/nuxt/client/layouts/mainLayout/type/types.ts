@@ -1,4 +1,4 @@
-import type { SectionMain } from '~/interfaces/global';
+import type { SectionMain } from '~/interfaces/mainGlobal';
 
 export type LayoutType = {
   sidebar: boolean;

@@ -29,7 +29,7 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
-import type { SelectSection, Search } from '~/interfaces/global';
+import type { SelectSection, Search } from '~/interfaces/adminGlobal';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();

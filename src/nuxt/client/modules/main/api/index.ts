@@ -1,5 +1,5 @@
 import { api } from '#shared/api/axios';
-import type { ResultItemsMain } from '~/interfaces/global';
+import type { ResultItemsMain } from '~/interfaces/resultGlobal';
 import { useMainStores } from '~/modules/main/stores/mainStores';
 import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
 

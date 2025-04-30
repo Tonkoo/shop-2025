@@ -1,10 +1,10 @@
 import {
-  AggregationsFilter,
-  elasticsearchResponse,
-  payLoadTest,
+  PayLoadTest,
   ProductElastic,
   SectionElastic,
-} from '../interfaces/global';
+} from '../interfaces/adminGlobal';
+import { AggregationsFilter } from '../interfaces/catalogGlobal';
+import { ElasticsearchResponse } from '../interfaces/responseGlobal';
 import { NotFoundException } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 
@@ -14,7 +14,7 @@ import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
  * @param elasticsearchService
  */
 export async function searchFromElastic(
-  payLoad: payLoadTest,
+  payLoad: PayLoadTest,
   elasticsearchService: ESClient,
 ) {
   const { query, from, size, source, sort, aggregations } = payLoad;
@@ -34,7 +34,7 @@ export async function searchFromElastic(
     throw new NotFoundException('Not found items');
   }
 
-  const result: elasticsearchResponse = {
+  const result: ElasticsearchResponse = {
     total: items.hits.total as { value: number },
     items: items.hits.hits.map(
       (item) => item._source as SectionElastic | ProductElastic,

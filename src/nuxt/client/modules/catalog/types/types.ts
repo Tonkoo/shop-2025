@@ -1,10 +1,9 @@
 import type {
   FilterCatalog,
   FilterStore,
-  ProductMain,
-  SectionMain,
   SortingItems,
-} from '~/interfaces/global';
+} from '~/interfaces/catalogGlobal';
+import type { ProductMain, SectionMain } from '~/interfaces/mainGlobal';
 
 type CatalogState = {
   itemCatalog: ProductMain[];

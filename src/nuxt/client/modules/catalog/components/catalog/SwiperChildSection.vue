@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SectionMain } from '~/interfaces/global';
+import type { SectionMain } from '~/interfaces/mainGlobal';
 
 defineProps({
   childSection: {

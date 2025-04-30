@@ -1,4 +1,4 @@
-import type { ProductMain } from '~/interfaces/global';
+import type { ProductMain } from '~/interfaces/mainGlobal';
 
 export type MainType = {
   mainGifts: ProductMain[];

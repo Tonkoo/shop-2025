@@ -1,4 +1,5 @@
-import { mainLayout, SectionElastic } from '../interfaces/global';
+import { SectionElastic } from '../interfaces/adminGlobal';
+import { MainLayout } from '../interfaces/mainGlobal';
 import { searchFromElastic } from './searchFromElastic.util';
 import { logger } from './logger/logger';
 import { BadRequestException } from '@nestjs/common';
@@ -10,7 +11,7 @@ import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
  */
 export async function getLayout(
   elasticsearchService: ESClient,
-): Promise<mainLayout> {
+): Promise<MainLayout> {
   try {
     const layout = await searchFromElastic(
       {

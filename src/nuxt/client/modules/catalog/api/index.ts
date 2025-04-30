@@ -2,8 +2,8 @@ import { useCatalogStore } from '~/modules/catalog/stores/catalogStore';
 import { useDetailPageStore } from '~/modules/catalog/stores/detailPageStore';
 import { api } from '#shared/api/axios';
 import { useLayoutStores } from '~/layouts/mainLayout/stores/layoutStores';
-import type { ProductMain, ResultItemsCatalog } from '~/interfaces/global';
-
+import type { ResultItemsCatalog } from '~/interfaces/resultGlobal';
+import type { ProductMain } from '~/interfaces/mainGlobal';
 export async function getItemCatalog() {
   const catalogStore = useCatalogStore();
   const layoutStores = useLayoutStores();

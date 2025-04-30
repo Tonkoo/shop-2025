@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ProductMain } from '~/interfaces/global';
+import type { ProductMain } from '~/interfaces/mainGlobal';
 
 defineProps({
   mainSlider: {

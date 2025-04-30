@@ -26,7 +26,8 @@ import {
   ResponseHelperApiError,
   ResponseHelperApiOK,
 } from '../../utils/response.util';
-import { response, resultItems, ProductBase } from '../../interfaces/global';
+import { ProductBase } from '../../interfaces/adminGlobal';
+import { Response, ResultItems } from '../../interfaces/responseGlobal';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
 import { Colors } from '../../entities/colors.entity';
@@ -66,8 +67,8 @@ export class ProductsController {
   async create(
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
-  ): Promise<response> {
-    const result: number | resultItems = await this.services.create(
+  ): Promise<Response> {
+    const result: number | ResultItems = await this.services.create(
       data,
       files,
     );
@@ -89,7 +90,7 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async getProduct(@Query('id') id: number): Promise<response> {
+  async getProduct(@Query('id') id: number): Promise<Response> {
     const result: ProductBase | ProductBase[] =
       await this.services.getProductById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
@@ -122,7 +123,7 @@ export class ProductsController {
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
   ) {
-    const result: resultItems | number = await this.services.updateById(
+    const result: ResultItems | number = await this.services.updateById(
       id,
       data,
       files,
@@ -142,7 +143,7 @@ export class ProductsController {
     type: ResponseHelperApiOK,
   })
   async deleteById(@Param('id') id: number, @Query() data: ProductDto) {
-    const result: resultItems | number = await this.services.deleteById(
+    const result: ResultItems | number = await this.services.deleteById(
       id,
       data,
     );
@@ -165,7 +166,7 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
-  async getColors(): Promise<response> {
+  async getColors(): Promise<Response> {
     const result: Colors[] = await this.services.getColor();
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }

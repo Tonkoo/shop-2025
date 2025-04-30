@@ -64,7 +64,7 @@
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
-import type { Search } from '~/interfaces/global';
+import type { Search } from '~/interfaces/adminGlobal';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();

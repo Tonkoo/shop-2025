@@ -17,15 +17,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Images } from '../../entities/images.entity';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import {
-  elasticBody,
-  imageData,
+  ElasticBody,
+  ImageData,
   ProductClient,
   ProductEntities,
-  resultItems,
   SectionClient,
   SectionElastic,
   SectionEntities,
-} from '../../interfaces/global';
+} from '../../interfaces/adminGlobal';
+import { ResultItems } from '../../interfaces/responseGlobal';
 import { payLoad } from './dto/elasticsearch.dto';
 import { formatResults } from '../../utils/formatResults.util';
 import { Colors } from '../../entities/colors.entity';
@@ -59,7 +59,7 @@ export class ElasticsearchAdminService {
    * @param data
    * @param dbImages
    */
-  prepareImageData(data: number[], dbImages: Images[]): imageData[] {
+  prepareImageData(data: number[], dbImages: Images[]): ImageData[] {
     const images = dbImages.filter((item) => data.includes(item.id));
 
     if (!images) {
@@ -67,7 +67,7 @@ export class ElasticsearchAdminService {
     }
 
     return images.flatMap(
-      (image: Images): imageData => ({
+      (image: Images): ImageData => ({
         alt: image.name,
         src: image.path,
       }),
@@ -255,12 +255,12 @@ export class ElasticsearchAdminService {
       return;
     }
     try {
-      const body: elasticBody[] = documents.flatMap(
+      const body: ElasticBody[] = documents.flatMap(
         (doc: SectionEntities | ProductEntities) => [
           { index: { _index: index, _id: doc.id } },
           doc,
         ],
-      ) as elasticBody[];
+      ) as ElasticBody[];
       await this.elasticsearchService.bulk({ body });
     } catch (err) {
       logger.error('Error from elastic.bulkIndexDocuments: ', err);
@@ -284,7 +284,7 @@ export class ElasticsearchAdminService {
     type: string,
   ) {
     try {
-      let imageData: imageData[] = [];
+      let imageData: ImageData[] = [];
       if (document.images) {
         const dbImages = await this.imagesRepository.find();
         imageData = this.prepareImageData(document.images, dbImages);
@@ -331,7 +331,7 @@ export class ElasticsearchAdminService {
     type: string,
   ) {
     try {
-      let imageData: imageData[] = [];
+      let imageData: ImageData[] = [];
       if (document.images) {
         const dbImages = await this.imagesRepository.find();
         imageData = this.prepareImageData(document.images, dbImages);
@@ -431,7 +431,7 @@ export class ElasticsearchAdminService {
    * Получение отфильтрованых данных из ElasticSearch
    * @param payLoad
    */
-  async getItemsFilter(payLoad: payLoad): Promise<resultItems> {
+  async getItemsFilter(payLoad: payLoad): Promise<ResultItems> {
     try {
       const { from, size } = payLoad;
       const filter = this.getFilterAdmin(payLoad);

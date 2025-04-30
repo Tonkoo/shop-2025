@@ -1,7 +1,7 @@
 import { Sections } from '../entities/sections.entity';
 import { NotFoundException } from '@nestjs/common';
 import { Products } from '../entities/products.entity';
-import { ProductEntities, SectionEntities } from '../interfaces/global';
+import { ProductEntities, SectionEntities } from '../interfaces/adminGlobal';
 
 /**
  * Генерирует ссылку для продукта

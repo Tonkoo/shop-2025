@@ -1,4 +1,4 @@
-import type { ProductAdmin, SectionAdmin } from '~/interfaces/global';
+import type { ProductAdmin, SectionAdmin } from '~/interfaces/adminGlobal';
 import { isEqual } from 'lodash';
 
 export function comparisonValues<T extends SectionAdmin | ProductAdmin>(

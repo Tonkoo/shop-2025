@@ -6,14 +6,12 @@ import {
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from '../../utils/logger/logger';
 import {
-  aggregationsElastic,
+  AggregationsElastic,
   CatalogContent,
   FilterCatalog,
   PriceRange,
-  ProductElastic,
-  SectionElastic,
-  SortingResponse,
-} from '../../interfaces/global';
+} from '../../interfaces/catalogGlobal';
+import { SectionElastic, ProductElastic } from '../../interfaces/adminGlobal';
 import { ParamsCatalog } from './dto/elasticsearch.dto';
 import { formatCatalogContent } from '../../utils/formatResults.util';
 import { searchFromElastic } from '../../utils/searchFromElastic.util';
@@ -102,7 +100,6 @@ export class ElasticsearchCatalogService {
    * @param url
    */
   async getItem(url: string) {
-    console.log(url);
     const items = await searchFromElastic(
       {
         source: [
@@ -147,7 +144,7 @@ export class ElasticsearchCatalogService {
    * Формирует агреграцию для запроса
    * @param isFilter
    */
-  getAggregations(isFilter: boolean): aggregationsElastic | undefined {
+  getAggregations(isFilter: boolean): AggregationsElastic | undefined {
     if (isFilter) {
       return {
         price: {
@@ -176,8 +173,7 @@ export class ElasticsearchCatalogService {
 
       let item: SectionElastic | ProductElastic | null = null;
       if (url !== '/catalog/') {
-        item = await this.getItem(url);
-        console.log(item);
+        item = (await this.getItem(url)) as SectionElastic | ProductElastic;
         result.typeItem = item.type;
         result.contentName = item.name;
       }
@@ -208,7 +204,7 @@ export class ElasticsearchCatalogService {
         }
         const sort = await this.createSortOptions(filterConvert.sort);
 
-        const aggregations: aggregationsElastic | undefined =
+        const aggregations: AggregationsElastic | undefined =
           this.getAggregations(isFilter);
 
         const products = await searchFromElastic(

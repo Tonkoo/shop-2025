@@ -1,4 +1,4 @@
-import type { Err, SectionAdmin } from '~/interfaces/global';
+import type { Err, SectionAdmin } from '~/interfaces/adminGlobal';
 import { sectionSchema } from '~/modules/admin/schemas/sectionSchema';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 

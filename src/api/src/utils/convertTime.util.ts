@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { Products } from '../entities/products.entity';
 import { Sections } from '../entities/sections.entity';
-import { ProductClient, SectionClient } from '../interfaces/global';
+import { ProductClient, SectionClient } from '../interfaces/adminGlobal';
 
 /**
  * Конвертирует дату в формат dd.MM.yyyy HH:mm для ElasticSearch

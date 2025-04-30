@@ -8,7 +8,7 @@ import type {
   Colors,
   SelectSection,
   SelectColor,
-} from '~/interfaces/global';
+} from '~/interfaces/adminGlobal';
 
 type AdminState = {
   isEdit: boolean;

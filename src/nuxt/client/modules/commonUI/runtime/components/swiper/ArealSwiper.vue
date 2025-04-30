@@ -23,7 +23,7 @@
 import type { SwiperContainer } from 'swiper/element';
 import swiperPrevIcon from '~/modules/commonUI/assets/icon/swiper/swiperPrev.svg';
 import swiperNextIcon from '~/modules/commonUI/assets/icon/swiper/swiperNext.svg';
-import type { ProductMain, SectionMain } from '~/interfaces/global';
+import type { ProductMain, SectionMain } from '~/interfaces/mainGlobal';
 
 interface Props {
   dataItems: Array<ProductMain | SectionMain>;

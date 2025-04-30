@@ -1,0 +1,146 @@
+import { Sections } from '../entities/sections.entity';
+import { Products } from '../entities/products.entity';
+import { Images } from '../entities/images.entity';
+
+type Product = {
+  id: number;
+  code: string;
+  name: string;
+  price: number;
+  color?: Colors;
+  description: string;
+  section: parentSection;
+  show_on_main: boolean;
+  main_slider: boolean;
+};
+
+type DateBase = {
+  update_at: Date;
+  create_at: Date;
+};
+
+type DateClient = {
+  update_at: string;
+  create_at: string;
+};
+
+type ProductEntities = Product &
+  DateClient & {
+    images: ImageData[];
+    type: string;
+    sectionName?: string;
+    hexColor?: string;
+    url?: string;
+  };
+
+type ProductClient = Product &
+  DateClient & {
+    images: number[] | null;
+    idSection?: number;
+    sectionName?: string;
+    hexColor?: string;
+  };
+
+type ProductBase = Product &
+  DateBase & {
+    images: number[] | null;
+    idSection?: number;
+    idColor?: number;
+    imageObject?: Images[];
+  };
+
+type ProductElastic = Product &
+  DateClient & {
+    type: string;
+    section: number;
+    sectionName: string;
+    hexColor?: string;
+    url: string;
+  };
+
+type Section = {
+  id: number;
+  code: string;
+  name: string;
+  id_parent: number | null;
+  level: number;
+};
+
+type SectionEntities = Section &
+  DateClient & {
+    images: ImageData[];
+    imageObject?: Images[];
+    type: string;
+    sectionName?: string;
+    url?: string;
+  };
+
+type SectionBase = Sections &
+  DateBase & {
+    images: number[] | null;
+    parent?: parentSection;
+    imageObject?: Images[];
+  };
+type SectionClient = Section &
+  DateClient & {
+    images: number[] | null;
+    products?: Products[];
+  };
+
+type SectionElastic = Section &
+  DateClient & {
+    type: string;
+    sectionName: string;
+    url: string;
+    items?: SectionElastic[];
+  };
+
+type Colors = {
+  id: number;
+  name: string;
+  hex: string;
+};
+
+type ImageData = {
+  alt: string;
+  src: string;
+};
+
+type ElasticBody = {
+  index: {
+    _index: string;
+    _id: number;
+  };
+  data: ProductEntities | SectionEntities;
+};
+
+type PayLoadTest = {
+  source?: string[];
+  size?: number;
+  from?: number;
+  query: {
+    bool: any;
+  };
+  aggregations?: any;
+  sort?: any[];
+};
+
+type parentSection = {
+  id: number;
+  name: string;
+};
+
+export {
+  ImageData,
+  SectionBase,
+  ProductEntities,
+  SectionEntities,
+  ElasticBody,
+  PayLoadTest,
+  parentSection,
+  ProductClient,
+  SectionClient,
+  ProductBase,
+  SectionElastic,
+  ProductElastic,
+};

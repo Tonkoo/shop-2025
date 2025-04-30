@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { SectionMain } from '~/interfaces/global';
+import type { SectionMain } from '~/interfaces/mainGlobal';
 import type { LayoutType } from '~/layouts/mainLayout/type/types';
 
 export const useLayoutStores = defineStore('layout-store', {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { MainType } from '~/modules/main/type/types';
-import type { ResultItemsMain } from '~/interfaces/global';
+import type { ResultItemsMain } from '~/interfaces/resultGlobal';
 
 export const useMainStores = defineStore('main-store', {
   state: (): MainType => ({

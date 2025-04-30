@@ -27,7 +27,8 @@ import {
   ResponseHelperApiOK,
 } from '../../utils/response.util';
 import { ProductDto } from '../products/dto/product.dto';
-import { SectionBase, response, resultItems } from '../../interfaces/global';
+import { SectionBase } from '../../interfaces/adminGlobal';
+import { Response, ResultItems } from '../../interfaces/responseGlobal';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '../../config/multer.config';
 
@@ -57,7 +58,7 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   @Get('/id')
-  async getSectionById(@Query('id') id: number): Promise<response> {
+  async getSectionById(@Query('id') id: number): Promise<Response> {
     const result: SectionBase | SectionBase[] =
       await this.services.getSectionById(id);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
@@ -79,7 +80,7 @@ export class SectionsController {
     type: ResponseHelperApiError,
   })
   @Get('/name')
-  async getSectionByName(@Query('name') name: string): Promise<response> {
+  async getSectionByName(@Query('name') name: string): Promise<Response> {
     const result: SectionBase | SectionBase[] =
       await this.services.getSectionByName(name);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
@@ -110,8 +111,8 @@ export class SectionsController {
   async create(
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
-  ): Promise<response> {
-    const result: number | resultItems = await this.services.create(
+  ): Promise<Response> {
+    const result: number | ResultItems = await this.services.create(
       data,
       files,
     );
@@ -144,8 +145,8 @@ export class SectionsController {
     @Param('id') id: number,
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
-  ): Promise<response> {
-    const result: resultItems | number = await this.services.updateById(
+  ): Promise<Response> {
+    const result: ResultItems | number = await this.services.updateById(
       id,
       data,
       files,
@@ -167,8 +168,8 @@ export class SectionsController {
   async deleteById(
     @Param('id') id: number,
     @Query() data: SectionDto,
-  ): Promise<response> {
-    const result: resultItems | number = await this.services.deleteById(
+  ): Promise<Response> {
+    const result: ResultItems | number = await this.services.deleteById(
       id,
       data,
     );

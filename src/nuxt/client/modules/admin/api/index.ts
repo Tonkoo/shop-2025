@@ -1,10 +1,9 @@
 import { api } from '~~/shared/api/axios';
+import type { ApiParams, ProductAdmin } from '~/interfaces/adminGlobal';
 import type {
-  ApiParams,
-  ProductAdmin,
   ResultItemsAdmin,
   ResultReindex,
-} from '~/interfaces/global';
+} from '~/interfaces/resultGlobal';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
 import { headers } from '~/composables/customFetch';

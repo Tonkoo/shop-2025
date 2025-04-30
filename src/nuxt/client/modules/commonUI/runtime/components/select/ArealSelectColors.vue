@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SelectColor } from '~/interfaces/global';
+import type { SelectColor } from '~/interfaces/adminGlobal';
 
 const props = defineProps({
   modelValue: {

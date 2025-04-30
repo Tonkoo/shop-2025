@@ -45,7 +45,7 @@ import { useCatalogModule } from '~/modules/catalog/global';
 import SwiperChildSection from '~/modules/catalog/components/catalog/SwiperChildSection.vue';
 import CatalogProduct from '~/modules/catalog/components/catalog/CatalogProduct.vue';
 import DialogFilter from '~/modules/catalog/components/catalog/DialogFilter.vue';
-import type { EmitUpdateFilter } from '~/interfaces/global';
+import type { EmitUpdateFilter } from '~/interfaces/catalogGlobal';
 
 const catalogStore = useCatalogStore();
 const catalogModule = useCatalogModule();

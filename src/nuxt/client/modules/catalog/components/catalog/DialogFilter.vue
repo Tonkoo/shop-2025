@@ -146,7 +146,7 @@ import type {
   FilterCatalog,
   FilterStore,
   SortingItems,
-} from '~/interfaces/global';
+} from '~/interfaces/catalogGlobal';
 
 const props = defineProps({
   filterCatalog: {

@@ -1,11 +1,8 @@
 import { camelCaseConverter } from './toCamelCase.util';
-import {
-  CatalogContent,
-  mainLayout,
-  ProductElastic,
-  resultItems,
-  SectionElastic,
-} from '../interfaces/global';
+import { ResultItems } from '../interfaces/responseGlobal';
+import { MainLayout } from '../interfaces/mainGlobal';
+import { CatalogContent } from '../interfaces/catalogGlobal';
+import { ProductElastic, SectionElastic } from '../interfaces/adminGlobal';
 import { payLoad } from '../modules/elasticsearch/dto/elasticsearch.dto';
 import { SectionDto } from '../modules/sections/dto/section.dto';
 import { ProductDto } from '../modules/products/dto/product.dto';
@@ -19,7 +16,7 @@ import { ElasticsearchAdminService } from '../modules/elasticsearch/elasticsearc
 export function formatResults(
   items: (SectionElastic | ProductElastic)[],
   total: { value: number },
-): resultItems {
+): ResultItems {
   return {
     items: camelCaseConverter(items) as SectionElastic[] | ProductElastic[],
     total: total.value,
@@ -54,7 +51,7 @@ export async function formatResponse(
  */
 export function formatMainContent(
   data: ProductElastic[],
-  layout: mainLayout | null,
+  layout: MainLayout | null,
 ) {
   const mainSlider = data.filter((item) => item.main_slider);
   const mainGifts = data.filter((item) => item.show_on_main);
@@ -84,7 +81,7 @@ export function formatMainContent(
 
 export function formatCatalogContent(
   result: CatalogContent,
-  layout: mainLayout | null,
+  layout: MainLayout | null,
   onlyFilters: boolean,
 ) {
   const {

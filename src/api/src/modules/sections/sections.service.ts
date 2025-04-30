@@ -12,11 +12,8 @@ import { prepareData } from '../../utils/prepare.util';
 import { convertTimeObject } from '../../utils/convertTime.util';
 import { createImages } from '../../utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
-import {
-  resultItems,
-  SectionBase,
-  SectionClient,
-} from '../../interfaces/global';
+import { SectionBase, SectionClient } from '../../interfaces/adminGlobal';
+import { ResultItems } from '../../interfaces/responseGlobal';
 import { camelCaseConverter } from '../../utils/toCamelCase.util';
 import { Images } from '../../entities/images.entity';
 import {
@@ -111,7 +108,7 @@ export class SectionsService {
   async create(
     data: SectionDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<number | resultItems> {
+  ): Promise<number | ResultItems> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -249,7 +246,7 @@ export class SectionsService {
     id: number,
     data: SectionDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<resultItems | number> {
+  ): Promise<ResultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -340,7 +337,7 @@ export class SectionsService {
   async deleteById(
     id: number,
     data: SectionDto,
-  ): Promise<resultItems | number> {
+  ): Promise<ResultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

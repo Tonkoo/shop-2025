@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { DetailPageState } from '~/modules/catalog/types/types';
-import type { ProductMain } from '~/interfaces/global';
+import type { ProductMain } from '~/interfaces/mainGlobal';
 import { productMainDefault } from '~/entities/product.entites';
 
 export const useDetailPageStore = defineStore('detailPage-store', {

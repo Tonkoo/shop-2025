@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SectionAdmin } from '~/interfaces/global';
+import type { SectionAdmin } from '~/interfaces/adminGlobal';
 
 defineProps({
   modelValue: {

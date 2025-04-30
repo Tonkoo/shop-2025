@@ -1,4 +1,4 @@
-import type { ImageObject } from '~/interfaces/global';
+import type { ImageObject } from '~/interfaces/adminGlobal';
 
 export async function convertFile(imageObject: ImageObject[] | undefined) {
   if (!imageObject) {

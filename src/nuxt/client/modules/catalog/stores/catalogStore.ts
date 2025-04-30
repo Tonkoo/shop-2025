@@ -1,10 +1,8 @@
 import { defineStore } from 'pinia';
 import type { CatalogState } from '~/modules/catalog/types/types';
-import type {
-  ProductMain,
-  ResultItemsCatalog,
-  SortingItems,
-} from '~/interfaces/global';
+import type { SortingItems } from '~/interfaces/catalogGlobal';
+import type { ProductMain } from '~/interfaces/mainGlobal';
+import type { ResultItemsCatalog } from '~/interfaces/resultGlobal';
 import {
   filterCatalogDefault,
   filterDefault,

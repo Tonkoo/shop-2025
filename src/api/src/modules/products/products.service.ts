@@ -9,11 +9,8 @@ import { ProductDto } from './dto/product.dto';
 import { Products } from '../../entities/products.entity';
 import { logger } from '../../utils/logger/logger';
 import { prepareData } from '../../utils/prepare.util';
-import {
-  ProductBase,
-  ProductClient,
-  resultItems,
-} from '../../interfaces/global';
+import { ProductBase, ProductClient } from '../../interfaces/adminGlobal';
+import { ResultItems } from '../../interfaces/responseGlobal';
 import { transliterate as tr } from 'transliteration';
 import { createImages } from '../../utils/createImages.util';
 import { convertTimeObject } from '../../utils/convertTime.util';
@@ -76,7 +73,7 @@ export class ProductsService {
   async create(
     data: ProductDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<number | resultItems> {
+  ): Promise<number | ResultItems> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -201,7 +198,7 @@ export class ProductsService {
     id: number,
     data: ProductDto,
     files: { files: Express.Multer.File[] },
-  ): Promise<resultItems | number> {
+  ): Promise<ResultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -292,7 +289,7 @@ export class ProductsService {
   async deleteById(
     id: number,
     data: ProductDto,
-  ): Promise<resultItems | number> {
+  ): Promise<ResultItems | number> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
