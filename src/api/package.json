@@ -24,10 +24,11 @@
     "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^8.16.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.1",
-    "@nestjs/elasticsearch": "^11.0.0",
+    "@nestjs/elasticsearch": "^11.1.0",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/schedule": "^5.0.1",
     "@nestjs/swagger": "^11.0.3",
@@ -36,7 +37,6 @@
     "class-validator": "^0.14.1",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
-    "elasticsearch": "^16.7.3",
     "nest-winston": "^1.10.2",
     "pg": "^8.13.2",
     "reflect-metadata": "^0.2.2",

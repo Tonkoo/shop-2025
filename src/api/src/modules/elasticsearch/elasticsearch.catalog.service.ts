@@ -12,6 +12,7 @@ import {
   PriceRange,
   ProductElastic,
   SectionElastic,
+  SortingResponse,
 } from '../../interfaces/global';
 import { ParamsCatalog } from './dto/elasticsearch.dto';
 import { formatCatalogContent } from '../../utils/formatResults.util';
@@ -101,6 +102,7 @@ export class ElasticsearchCatalogService {
    * @param url
    */
   async getItem(url: string) {
+    console.log(url);
     const items = await searchFromElastic(
       {
         source: [
@@ -142,11 +144,27 @@ export class ElasticsearchCatalogService {
   }
 
   /**
+   * Формирует агреграцию для запроса
+   * @param isFilter
+   */
+  getAggregations(isFilter: boolean): aggregationsElastic | undefined {
+    if (isFilter) {
+      return {
+        price: {
+          stats: { field: 'price' },
+        },
+        color: {
+          terms: { field: 'hexColor.keyword' },
+        },
+      };
+    }
+  }
+  /**
    * Получает и обрабатывает данные для страницы каталога
    * @param params
    */
   async getItemsCatalog(params: ParamsCatalog) {
-    const { url, filter, layout, getFilter, getSorting, onlyFilters } = params;
+    const { url, filter, layout, isFilter, isSorting, onlyFilters } = params;
     const filterConvert: FilterCatalog = JSON.parse(filter) as FilterCatalog;
     try {
       const result: CatalogContent = {
@@ -159,6 +177,7 @@ export class ElasticsearchCatalogService {
       let item: SectionElastic | ProductElastic | null = null;
       if (url !== '/catalog/') {
         item = await this.getItem(url);
+        console.log(item);
         result.typeItem = item.type;
         result.contentName = item.name;
       }
@@ -171,17 +190,13 @@ export class ElasticsearchCatalogService {
           onlyFilters,
         );
       }
-
-      // TODO разделить по методам
-      // TODO: прибраться в форматах возвращаемых данных.
       if (result.typeItem === 'section') {
         const section = item as SectionElastic;
         result.childSection = await this.getChildSection(section);
         const filterCatalog = this.getFilterCatalog(filterConvert, section);
 
-        // TODO: вынести в метод.
-        if (getSorting) {
-          // TODO: проверить на фронте [] или null
+        // TODO: вынести в метод ?????.
+        if (isSorting) {
           result.sortingItems = await this.sortingRepository.find();
           if (!filterConvert.sort) {
             const defaultSortItem = result.sortingItems.find(
@@ -193,18 +208,8 @@ export class ElasticsearchCatalogService {
         }
         const sort = await this.createSortOptions(filterConvert.sort);
 
-        // TODO: вынести в отдельный метод getFilter -> isFilter
-        let aggregations: aggregationsElastic | undefined;
-        if (getFilter) {
-          aggregations = {
-            price: {
-              stats: { field: 'price' },
-            },
-            color: {
-              terms: { field: 'hexColor.keyword' },
-            },
-          };
-        }
+        const aggregations: aggregationsElastic | undefined =
+          this.getAggregations(isFilter);
 
         const products = await searchFromElastic(
           {

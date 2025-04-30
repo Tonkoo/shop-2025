@@ -15,7 +15,7 @@ export class ElasticsearchMainService {
    * Получает данные из ElasticSearch для главной страницы
    * @param layout
    */
-  async getItemMain(layout: string) {
+  async getItemMain(layout: boolean) {
     try {
       const items = await searchFromElastic(
         {
@@ -42,10 +42,9 @@ export class ElasticsearchMainService {
         this.elasticsearchService,
       );
 
-      // TODO: layout boolean
       return formatMainContent(
         items.items as ProductElastic[],
-        layout === 'true' ? await getLayout(this.elasticsearchService) : null,
+        layout ? await getLayout(this.elasticsearchService) : null,
       );
     } catch (err) {
       logger.error('Error from elastic.getItemMain: ', err);

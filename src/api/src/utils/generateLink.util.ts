@@ -1,10 +1,8 @@
-import { Sections } from '@entities/sections.entity';
+import { Sections } from '../entities/sections.entity';
 import { NotFoundException } from '@nestjs/common';
-import { Products } from '@entities/products.entity';
-import { ProductEntities, SectionEntities } from '@interfaces/global';
+import { Products } from '../entities/products.entity';
+import { ProductEntities, SectionEntities } from '../interfaces/global';
 
-// TODO: реализовать метод вне цикла
-// TODO: сделать ссылки для разделов многоуровневыми
 /**
  * Генерирует ссылку для продукта
  * @param data
@@ -51,5 +49,5 @@ export function generateLinkSection(
 
     return generateLinkSection(sectionParent, sections, pathParts);
   }
-  return `/catalog/${pathParts.join('/')}`;
+  return `/catalog/${pathParts.join('/')}/`;
 }

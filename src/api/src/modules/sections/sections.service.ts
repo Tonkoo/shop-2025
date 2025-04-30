@@ -118,12 +118,7 @@ export class SectionsService {
     try {
       // TODO: Попробовать JSON.Parse
       await this.processingData(data);
-      // TODO: убрать строки и написать метод для проверки на пустоту
-      if (
-        String(data.idParent) == 'null' ||
-        String(data.idParent) == '0' ||
-        String(data.idParent) == 'undefined'
-      ) {
+      if (data.idParent) {
         data.idParent = null;
       }
 
@@ -170,12 +165,12 @@ export class SectionsService {
 
       await queryRunner.commitTransaction();
 
-      const testSection = convertTimeObject(newSection) as SectionClient;
+      const section = convertTimeObject(newSection) as SectionClient;
 
       await this.EsServices.addSectionDocument(
         this.index || 'shop',
         newSection.id.toString(),
-        testSection,
+        section,
         'section',
       );
 
@@ -260,7 +255,6 @@ export class SectionsService {
     await queryRunner.startTransaction();
     try {
       {
-        console.log(data.idParent);
         const currentSection: Sections | null = await this.sectionsRepo.findOne(
           {
             where: { id: id },

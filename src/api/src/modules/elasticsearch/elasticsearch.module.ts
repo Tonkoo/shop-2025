@@ -4,12 +4,12 @@ import { ElasticsearchCatalogService } from './elasticsearch.catalog.service';
 import { ElasticsearchAdminService } from './elasticsearch.admin.service';
 import { ElasticController } from './elasticsearch.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Products } from '@entities/products.entity';
-import { Sections } from '@entities/sections.entity';
-import { Images } from '@entities/images.entity';
-import { Colors } from '@entities/colors.entity';
+import { Products } from '../../entities/products.entity';
+import { Sections } from '../../entities/sections.entity';
+import { Images } from '../../entities/images.entity';
+import { Colors } from '../../entities/colors.entity';
 import { ElasticsearchMainService } from './elasticsearch.main.service';
-import { SortingOptions } from '@entities/sortingOptions.entity';
+import { SortingOptions } from '../../entities/sortingOptions.entity';
 
 @Module({
   imports: [

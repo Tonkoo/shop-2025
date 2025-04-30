@@ -17,8 +17,8 @@ type CatalogState = {
   availableColors: string[];
   filterPrice: boolean;
   contentName: string;
-  getFilter: boolean;
-  getSorting: boolean;
+  isFilter: boolean;
+  isSorting: boolean;
   sortingItems: SortingItems[];
 };
 

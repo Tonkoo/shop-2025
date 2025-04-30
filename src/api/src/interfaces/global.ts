@@ -2,6 +2,7 @@ import { Sections } from '../entities/sections.entity';
 import { Products } from '../entities/products.entity';
 import { Images } from '../entities/images.entity';
 import { SortingOptions } from '../entities/sortingOptions.entity';
+import { estypes } from '@elastic/elasticsearch';
 
 // TODO: разбить по файлам, лишнее убрать
 type Product = {
@@ -234,6 +235,12 @@ type aggregationsElastic = {
     terms: { field: string };
   };
 };
+
+type SortingResponse = {
+  items: SortingOptions[];
+  default: string;
+};
+
 export {
   response,
   elasticsearchResponse,
@@ -262,4 +269,5 @@ export {
   PriceRange,
   ParamsAdmin,
   aggregationsElastic,
+  SortingResponse,
 };

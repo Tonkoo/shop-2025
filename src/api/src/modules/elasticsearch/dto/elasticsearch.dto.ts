@@ -66,13 +66,13 @@ export class ParamsCatalog {
     message: 'getFilter',
   })
   @Transform(({ value }) => value === 'true')
-  getFilter: boolean;
+  isFilter: boolean;
 
   @IsBoolean({
     message: 'getSorting',
   })
   @Transform(({ value }) => value === 'true')
-  getSorting: boolean;
+  isSorting: boolean;
 
   @IsBoolean({
     message: 'onlyFilters',

@@ -14,39 +14,27 @@ export async function getLayout(
   try {
     const layout = await searchFromElastic(
       {
-        source: ['id', 'name', 'level', 'url'],
+        source: ['id', 'name', 'level', 'url', 'id_parent'],
         query: { bool: { must: { term: { type: 'section' } } } },
       },
       elasticsearchService,
     );
     const menu = layout.items as SectionElastic[];
-    // TODO: убрать запрос использовать для формирования меню level ????
+
     const resultMenu: SectionElastic[] = await Promise.all(
-      menu.map(async (item) => {
+      menu.map((item) => {
         if (item.level === 1) {
-          const sections = await searchFromElastic(
-            {
-              source: ['id', 'name', 'url'],
-              query: {
-                bool: {
-                  must: [
-                    { term: { type: 'section' } },
-                    { term: { id_parent: item.id } },
-                  ],
-                },
-              },
-            },
-            elasticsearchService,
+          const childSection = menu.filter(
+            (section) => section.id_parent === item.id,
           );
           return {
             ...item,
-            items: sections.items as SectionElastic[],
+            items: childSection,
           };
         }
         return item;
       }),
     );
-
     return {
       menu: resultMenu,
     };

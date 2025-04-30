@@ -23,8 +23,8 @@ export const useCatalogStore = defineStore('catalog-store', {
     availableColors: [],
     filterPrice: false,
     contentName: '',
-    getFilter: true,
-    getSorting: true,
+    isFilter: true,
+    isSorting: true,
   }),
   actions: {
     setItems(value: ResultItemsCatalog) {
@@ -89,10 +89,10 @@ export const useCatalogStore = defineStore('catalog-store', {
       this.filterCatalog.priceTo = value;
     },
     setGetFilter(value: boolean) {
-      this.getFilter = value;
+      this.isFilter = value;
     },
     setGetSorting(value: boolean) {
-      this.getSorting = value;
+      this.isSorting = value;
     },
   },
 });

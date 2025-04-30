@@ -12,9 +12,9 @@ export async function getItemCatalog() {
     url: layoutStores.pathPage,
     filter: JSON.stringify(catalogStore.filterCatalog),
     layout: !layoutStores.menu.length,
-    getFilter: catalogStore.getFilter,
+    isFilter: catalogStore.isFilter,
     onlyFilters: catalogStore.onlyFilter,
-    getSorting: catalogStore.getSorting,
+    isSorting: catalogStore.isSorting,
   };
   try {
     const response = await api.get<{ data: ResultItemsCatalog }>(
@@ -52,7 +52,7 @@ export async function getItemCatalog() {
         catalogStore.setTotalItems(response.data.data.content.totalItems);
       } else {
         catalogStore.setItems(response.data.data);
-        if (catalogStore.getFilter) {
+        if (catalogStore.isFilter) {
           catalogStore.setFilter(response.data.data);
           catalogStore.setAvailableColors(
             response.data.data.content.filter.color

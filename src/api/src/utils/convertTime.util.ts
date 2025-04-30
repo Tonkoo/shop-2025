@@ -16,15 +16,3 @@ export function convertTimeObject(
     update_at: format(new Date(data.update_at), 'dd.MM.yyyy HH:mm'),
   };
 }
-
-export function preparedData(
-  data: (Products | Sections)[],
-): (SectionClient | ProductClient)[] {
-  return data.map((item): ProductClient | SectionClient => {
-    if (!item.images) {
-      item.images = [];
-    }
-
-    return convertTimeObject(item);
-  });
-}

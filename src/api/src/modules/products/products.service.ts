@@ -124,13 +124,12 @@ export class ProductsService {
 
       await queryRunner.commitTransaction();
 
-      // TODO: переименовать перемнную
-      const testProduct = convertTimeObject(resultProduct) as ProductClient;
+      const product = convertTimeObject(resultProduct) as ProductClient;
 
       await this.EsServices.addProductDocument(
         this.index || 'shop',
         newProduct.id.toString(),
-        testProduct,
+        product,
         'product',
       );
 

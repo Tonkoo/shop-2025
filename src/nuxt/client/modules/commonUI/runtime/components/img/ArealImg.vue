@@ -1,5 +1,4 @@
 <template>
-  <!--  <q-img :src="src" :alt="alt" />-->
   <q-img :src="urlImage" :alt="alt" class="img" />
 </template>
 

@@ -114,7 +114,7 @@ export class ElasticController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
-  async getItemMain(@Query('layout') layout: string) {
+  async getItemMain(@Query('layout') layout: boolean) {
     const result = await this.servicesMain.getItemMain(layout);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
