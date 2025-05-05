@@ -8,6 +8,13 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     'nuxt-swiper',
   ],
+  runtimeConfig: {
+    public: {
+      port: Number(process.env.NUXT_PUBLIC_PORT),
+      baseURL: process.env.NUXT_PUBLIC_BACKEND_URL,
+      host: process.env.NUXT_PUBLIC_HOST,
+    },
+  },
   i18n: {
     vueI18n: './config/i18n.config.ts',
   },
@@ -42,9 +49,8 @@ export default defineNuxtConfig({
   srcDir: 'client',
   devServer: {
     // TODO: env
-    // port: 3000,
-    port: Number(process.env.NUXT_PUBLIC_PORT) || 3000,
-    host: '0.0.0.0',
+    port: Number(process.env.NUXT_PUBLIC_PORT),
+    host: process.env.NUXT_PUBLIC_HOST,
   },
   vite: {
     css: {
