@@ -141,7 +141,7 @@ export class ElasticsearchCatalogService {
   }
 
   /**
-   * Формирует агреграцию для запроса
+   * Формирует агрегацию для запроса
    * @param isFilter
    */
   getAggregations(isFilter: boolean): AggregationsElastic | undefined {

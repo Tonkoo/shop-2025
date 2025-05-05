@@ -65,12 +65,14 @@ type SectionElastic = Section &
     url?: string;
     items?: SectionElastic[];
   };
+
 type SectionBase = Sections &
   DateBase & {
     images: number[] | null;
     parent?: parentSection;
     imageObject?: Images[];
   };
+
 type SectionClient = Section &
   DateClient & {
     images: number[] | null;

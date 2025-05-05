@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { ElasticsearchCatalogService } from '../elasticsearch/elasticsearch.catalog.service';
+import { ElasticsearchAdminService } from '@modules/elasticsearch/elasticsearch.admin.service';
 
 @Injectable()
 export class TaskService {
-  constructor(private readonly EsServices: ElasticsearchCatalogService) {}
+  constructor(private readonly EsServices: ElasticsearchAdminService) {}
   @Cron(CronExpression.EVERY_MINUTE)
   async reindexElastic() {
-    // await this.EsServices.createIndex({ getItems: false });
+    await this.EsServices.createIndex({ getItems: false });
   }
 }

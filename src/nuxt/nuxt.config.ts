@@ -64,6 +64,14 @@ export default defineNuxtConfig({
         },
       },
     },
+    server: {
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 24678,
+        clientPort: 80,
+      },
+    },
   },
 
   compatibilityDate: '2024-11-01',

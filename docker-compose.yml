@@ -26,7 +26,7 @@ services:
   nginx:
     image: nginx:stable
     build: 
-      context: ./containres/nginx
+      context: ./containers/nginx
     env_file:
       - .env
     ports:

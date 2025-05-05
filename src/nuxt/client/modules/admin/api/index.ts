@@ -20,7 +20,6 @@ function removeDots(data: string): string {
   return data.replace(/^\.+/g, '');
 }
 
-// TODO: засунуть все в объект payload
 function fillingParam(payload: ApiParams) {
   const params: ApiParams = {
     type: payload.type,
