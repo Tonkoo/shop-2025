@@ -18,15 +18,15 @@ type ImageElastic = {
   src: string;
 };
 
-interface TypeSearch {
+type TypeSearch = {
   label: string;
   value: string;
-}
+};
 
-interface Search {
+type Search = {
   id: number;
   name: string;
-}
+};
 
 type SelectSection = {
   id: number;

@@ -1,9 +1,9 @@
 import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { ElasticsearchCatalogService } from './elasticsearch.catalog.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ResponseHelper, ResponseHelperApiOK } from '../../utils/response.util';
-import { Response, ResultItems } from '../../interfaces/responseGlobal';
-import { SectionElastic } from '../../interfaces/adminGlobal';
+import { ResponseHelper, ResponseHelperApiOK } from '@utils/response.util';
+import { Response, ResultItems } from '@interfaces/responseGlobal';
+import { SectionElastic } from '@interfaces/adminGlobal';
 import { payLoad, ParamsCatalog } from './dto/elasticsearch.dto';
 import { ElasticsearchAdminService } from './elasticsearch.admin.service';
 import { ElasticsearchMainService } from './elasticsearch.main.service';
@@ -98,7 +98,6 @@ export class ElasticController {
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
-  // TODO: Описать свагер
   @Get('main')
   @ApiOperation({
     summary: 'Получение контента для главной страницы сайта из Elasticsearch',
@@ -120,7 +119,6 @@ export class ElasticController {
     return ResponseHelper.createResponse(HttpStatus.OK, result);
   }
 
-  // TODO: Описать свагер
   @Get('catalog')
   @ApiOperation({
     summary: 'Получение контента для главной страницы сайта из Elasticsearch',

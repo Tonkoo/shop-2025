@@ -1,5 +1,5 @@
 import { QueryRunner } from 'typeorm';
-import { Images } from '../entities/images.entity';
+import { Images } from '@entities/images.entity';
 import { logger } from './logger/logger';
 import { BadRequestException } from '@nestjs/common';
 import { renameSync } from 'fs';

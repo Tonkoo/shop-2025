@@ -6,24 +6,21 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Repository } from 'typeorm';
 import { ProductDto } from './dto/product.dto';
-import { Products } from '../../entities/products.entity';
-import { logger } from '../../utils/logger/logger';
-import { prepareData } from '../../utils/prepare.util';
-import { ProductBase, ProductClient } from '../../interfaces/adminGlobal';
-import { ResultItems } from '../../interfaces/responseGlobal';
+import { Products } from '@entities/products.entity';
+import { logger } from '@utils/logger/logger';
+import { prepareData } from '@utils/prepare.util';
+import { ProductBase, ProductClient } from '@interfaces/adminGlobal';
+import { ResultItems } from '@interfaces/responseGlobal';
 import { transliterate as tr } from 'transliteration';
-import { createImages } from '../../utils/createImages.util';
-import { convertTimeObject } from '../../utils/convertTime.util';
-import { Images } from '../../entities/images.entity';
-import { camelCaseConverter } from '../../utils/toCamelCase.util';
-import {
-  removeImages,
-  removeUnusedImages,
-} from '../../utils/removeImages.util';
-import { Colors } from '../../entities/colors.entity';
-import { formatResponse } from '../../utils/formatResults.util';
+import { createImages } from '@utils/createImages.util';
+import { convertTimeObject } from '@utils/convertTime.util';
+import { Images } from '@entities/images.entity';
+import { camelCaseConverter } from '@utils/toCamelCase.util';
+import { removeImages, removeUnusedImages } from '@utils/removeImages.util';
+import { Colors } from '@entities/colors.entity';
+import { formatResponse } from '@utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
-import { checkCodeExists } from '../../utils/checkCodeExists';
+import { checkCodeExists } from '@utils/checkCodeExists';
 
 @Injectable()
 export class ProductsService {
@@ -53,9 +50,6 @@ export class ProductsService {
     if (data.price) {
       data.price = Math.round(Number(data.price));
     }
-    if (data.mainSlider == Boolean('true')) {
-      data.mainSlider = true;
-    }
     if (data.idSection) {
       data.section = { id: data.idSection };
     }
@@ -78,19 +72,16 @@ export class ProductsService {
     await queryRunner.startTransaction();
     try {
       await this.processingData(data);
-
+      console.log(data);
       const newProduct: Products = await this.productsRepo.save(
         prepareData(data, [
-          'searchName',
           'getItems',
           'from',
           'size',
           'type',
-          'sectionId',
-          'sectionName',
+          'searchName',
           'idSection',
           'idColor',
-          'typeForm',
         ]),
       );
       if (!newProduct) {
@@ -226,15 +217,12 @@ export class ProductsService {
         { id: id },
         prepareData(data, [
           'getItems',
-          'type',
           'from',
           'size',
+          'type',
           'searchName',
           'idSection',
-          'sectionId',
-          'sectionName',
           'idColor',
-          'typeForm',
         ]),
       );
 

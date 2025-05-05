@@ -16,7 +16,6 @@ type SortingItems = {
 
 type FilterStore = {
   sort: string;
-  // sort: SortingItems;
   priceFrom: string;
   priceTo: string;
   color: string[];

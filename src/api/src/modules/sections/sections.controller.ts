@@ -25,12 +25,12 @@ import {
   ResponseHelperApiCreated,
   ResponseHelperApiError,
   ResponseHelperApiOK,
-} from '../../utils/response.util';
+} from '@utils/response.util';
 import { ProductDto } from '../products/dto/product.dto';
-import { SectionBase } from '../../interfaces/adminGlobal';
-import { Response, ResultItems } from '../../interfaces/responseGlobal';
+import { SectionBase } from '@interfaces/adminGlobal';
+import { Response, ResultItems } from '@interfaces/responseGlobal';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { getMulterOptions } from '../../config/multer.config';
+import { getMulterOptions } from '@config/multer.config';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })

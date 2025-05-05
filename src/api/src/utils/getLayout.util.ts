@@ -1,5 +1,5 @@
-import { SectionElastic } from '../interfaces/adminGlobal';
-import { MainLayout } from '../interfaces/mainGlobal';
+import { SectionElastic } from '@interfaces/adminGlobal';
+import { MainLayout } from '@interfaces/mainGlobal';
 import { searchFromElastic } from './searchFromElastic.util';
 import { logger } from './logger/logger';
 import { BadRequestException } from '@nestjs/common';

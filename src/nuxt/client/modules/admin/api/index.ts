@@ -103,13 +103,12 @@ export async function getAllNameColumn(type: string, typeForm?: string) {
   const adminStore = useAdminStore();
   try {
     const typeParams = type === 'section' ? sectionParams : productParams;
-
     const params: ApiParams = {
       ...typeParams,
       searchName:
-        removeDots(adminStore.searchName) ??
-        removeDots(adminStore.searchParentName) ??
-        removeDots(adminStore.searchSection) ??
+        removeDots(adminStore.searchName) ||
+        removeDots(adminStore.searchParentName) ||
+        removeDots(adminStore.searchSection) ||
         '',
     };
     if (typeForm) {
@@ -149,7 +148,6 @@ export async function addItem() {
       data = adminStore.frontProduct;
       validationProduct(data);
     }
-
     generateFormData(formData, data, param);
 
     const response = await api.post<{ data: ResultItemsAdmin }>(

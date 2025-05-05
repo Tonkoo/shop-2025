@@ -8,14 +8,12 @@ import {
   ElasticsearchService,
   ElasticsearchService as ESClient,
 } from '@nestjs/elasticsearch';
-
-// TODO: добавить аллиасы для путей в tsconfig.ts
-import { logger } from '../../utils/logger/logger';
+import { logger } from '@utils/logger/logger';
 import { Repository } from 'typeorm';
-import { Sections } from '../../entities/sections.entity';
+import { Sections } from '@entities/sections.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Images } from '../../entities/images.entity';
-import { convertTimeObject } from '../../utils/convertTime.util';
+import { Images } from '@entities/images.entity';
+import { convertTimeObject } from '@utils/convertTime.util';
 import {
   ElasticBody,
   ImageData,
@@ -23,16 +21,16 @@ import {
   ProductElastic,
   SectionClient,
   SectionElastic,
-} from '../../interfaces/adminGlobal';
-import { ResultItems } from '../../interfaces/responseGlobal';
+} from '@interfaces/adminGlobal';
+import { ResultItems } from '@interfaces/responseGlobal';
 import { payLoad } from './dto/elasticsearch.dto';
-import { formatResults } from '../../utils/formatResults.util';
-import { Colors } from '../../entities/colors.entity';
+import { formatResults } from '@utils/formatResults.util';
+import { Colors } from '@entities/colors.entity';
 import {
   generateLinkProduct,
   generateLinkSection,
-} from '../../utils/generateLink.util';
-import { searchFromElastic } from '../../utils/searchFromElastic.util';
+} from '@utils/generateLink.util';
+import { searchFromElastic } from '@utils/searchFromElastic.util';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 
 @Injectable()

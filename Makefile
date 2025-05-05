@@ -22,3 +22,9 @@ up: ## Сборка и поднятие docker контейнеров при п�
 
 down: ## Удаление docker контейнеров
 	$(docker_compose_bin) down --remove-orphans
+
+migration-up: ## Применить все миграции
+	$(docker_compose_bin) exec api sh -c "npm run migration:run"
+
+migration-revert: ## Применить все миграции
+	$(docker_compose_bin) exec api sh -c "npm run migration:revert"

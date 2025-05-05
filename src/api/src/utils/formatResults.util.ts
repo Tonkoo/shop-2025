@@ -1,12 +1,12 @@
 import { camelCaseConverter } from './toCamelCase.util';
-import { ResultItems } from '../interfaces/responseGlobal';
-import { MainLayout } from '../interfaces/mainGlobal';
-import { CatalogContent } from '../interfaces/catalogGlobal';
-import { ProductElastic, SectionElastic } from '../interfaces/adminGlobal';
-import { payLoad } from '../modules/elasticsearch/dto/elasticsearch.dto';
-import { SectionDto } from '../modules/sections/dto/section.dto';
-import { ProductDto } from '../modules/products/dto/product.dto';
-import { ElasticsearchAdminService } from '../modules/elasticsearch/elasticsearch.admin.service';
+import { ResultItems } from '@interfaces/responseGlobal';
+import { MainLayout } from '@interfaces/mainGlobal';
+import { CatalogContent } from '@interfaces/catalogGlobal';
+import { ProductElastic, SectionElastic } from '@interfaces/adminGlobal';
+import { payLoad } from '@modules/elasticsearch/dto/elasticsearch.dto';
+import { SectionDto } from '@modules/sections/dto/section.dto';
+import { ProductDto } from '@modules/products/dto/product.dto';
+import { ElasticsearchAdminService } from '@modules/elasticsearch/elasticsearch.admin.service';
 
 /**
  * Форматирует данные для отправки на страницу Администратора
@@ -84,15 +84,7 @@ export function formatCatalogContent(
   layout: MainLayout | null,
   onlyFilters: boolean,
 ) {
-  const {
-    typeItem,
-    contentName,
-    totalItems,
-    itemCatalog,
-    childSection,
-    filter,
-    sortingItems,
-  } = result;
+  const { contentName, totalItems, filter } = result;
 
   if (onlyFilters) {
     return {
@@ -106,26 +98,14 @@ export function formatCatalogContent(
   if (layout) {
     return {
       content: {
-        typeItem,
-        contentName,
-        totalItems,
-        itemCatalog,
-        childSection,
-        filter,
-        sortingItems,
+        ...result,
       },
       layout,
     };
   }
   return {
     content: {
-      typeItem,
-      contentName,
-      totalItems,
-      itemCatalog,
-      childSection,
-      filter,
-      sortingItems,
+      ...result,
     },
   };
 }

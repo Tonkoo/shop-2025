@@ -1,4 +1,4 @@
-import { SortingOptions } from '../entities/sortingOptions.entity';
+import { SortingOptions } from '@entities/sortingOptions.entity';
 import { ProductElastic, SectionElastic } from './adminGlobal';
 import { ResultFilterCatalog } from './responseGlobal';
 

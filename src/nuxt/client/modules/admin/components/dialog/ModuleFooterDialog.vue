@@ -38,6 +38,7 @@ async function addItem() {
     })
     .catch((err: ResponseError) => {
       adminStore.setDisableBtn(false);
+      console.log(err);
       quasar.notify({
         ...notifyNegative,
         message: 'Ошибка при сохранении данных: ' + err.response.data.message,
@@ -46,14 +47,17 @@ async function addItem() {
 }
 
 async function editItem() {
+  adminStore.setDisableBtn(true);
   await adminModule
     .editItem()
     .then(() => {
+      adminStore.setDisableBtn(false);
       adminStore.clearForms();
       adminStore.setViewModal(false);
       quasar.notify(notifyPositive);
     })
     .catch((err: ResponseError) => {
+      adminStore.setDisableBtn(false);
       quasar.notify({
         ...notifyNegative,
         message: 'Ошибка при сохранении данных: ' + err.response.data.message,

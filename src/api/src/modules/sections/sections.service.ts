@@ -4,25 +4,22 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Sections } from '../../entities/sections.entity';
+import { Sections } from '@entities/sections.entity';
 import { DataSource, In, Repository } from 'typeorm';
-import { logger } from '../../utils/logger/logger';
+import { logger } from '@utils/logger/logger';
 import { SectionDto } from './dto/section.dto';
-import { prepareData } from '../../utils/prepare.util';
-import { convertTimeObject } from '../../utils/convertTime.util';
-import { createImages } from '../../utils/createImages.util';
+import { prepareData } from '@utils/prepare.util';
+import { convertTimeObject } from '@utils/convertTime.util';
+import { createImages } from '@utils/createImages.util';
 import { transliterate as tr } from 'transliteration';
-import { SectionBase, SectionClient } from '../../interfaces/adminGlobal';
-import { ResultItems } from '../../interfaces/responseGlobal';
-import { camelCaseConverter } from '../../utils/toCamelCase.util';
-import { Images } from '../../entities/images.entity';
-import {
-  removeImages,
-  removeUnusedImages,
-} from '../../utils/removeImages.util';
-import { formatResponse } from '../../utils/formatResults.util';
+import { SectionBase, SectionClient } from '@interfaces/adminGlobal';
+import { ResultItems } from '@interfaces/responseGlobal';
+import { camelCaseConverter } from '@utils/toCamelCase.util';
+import { Images } from '@entities/images.entity';
+import { removeImages, removeUnusedImages } from '@utils/removeImages.util';
+import { formatResponse } from '@utils/formatResults.util';
 import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
-import { checkCodeExists } from '../../utils/checkCodeExists';
+import { checkCodeExists } from '@utils/checkCodeExists';
 
 @Injectable()
 export class SectionsService {
@@ -55,7 +52,7 @@ export class SectionsService {
   }
 
   /**
-   * Формирует данные перед отпрвкой на фронт
+   * Формирует данные перед отправкой на фронт
    * @param section
    */
   async populateSectionData(section: SectionBase) {
@@ -84,7 +81,7 @@ export class SectionsService {
   }
 
   /**
-   * Проыеряет уровень раздела
+   * Проверяет уровень раздела
    * @param data
    * @param section
    */
@@ -112,12 +109,7 @@ export class SectionsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      // TODO: Попробовать JSON.Parse
       await this.processingData(data);
-      if (data.idParent) {
-        data.idParent = null;
-      }
-
       data.level = 1;
 
       if (data.idParent) {
@@ -129,18 +121,8 @@ export class SectionsService {
         }
         data.level = parentSection.level + 1;
       }
-
       const newSection: Sections = await this.sectionsRepo.save(
-        prepareData(data, [
-          'getItems',
-          'search_name',
-          'from',
-          'size',
-          'type',
-          'parent',
-          'images',
-          'typeForm',
-        ]),
+        prepareData(data, ['getItems', 'searchName', 'from', 'size', 'type']),
       );
 
       if (!newSection) {
@@ -272,18 +254,9 @@ export class SectionsService {
         );
 
         await this.checkSection(data, currentSection);
-
         const newSection = await this.sectionsRepo.update(
           { id: id },
-          prepareData(data, [
-            'getItems',
-            'type',
-            'from',
-            'size',
-            'searchName',
-            'parent',
-            'typeForm',
-          ]),
+          prepareData(data, ['getItems', 'type', 'from', 'size', 'searchName']),
         );
 
         if (!newSection) {
