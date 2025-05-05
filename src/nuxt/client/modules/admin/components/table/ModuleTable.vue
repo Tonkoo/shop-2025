@@ -1,6 +1,10 @@
 <template>
   <!--  TODO-->
-  <p>Результатов: {{ rows.length }} из {{ adminStore.countColumn }}</p>
+  <p>
+    {{ $t('admin.label.result') }} {{ rows.length }}
+    {{ $t('admin.label.from') }}
+    {{ adminStore.countColumn }}
+  </p>
   <areal-table :rows="rows" :columns="dynamicColumns" />
 </template>
 

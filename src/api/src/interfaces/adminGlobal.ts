@@ -2,6 +2,16 @@ import { Sections } from '../entities/sections.entity';
 import { Products } from '../entities/products.entity';
 import { Images } from '../entities/images.entity';
 
+type DateBase = {
+  update_at: Date;
+  create_at: Date;
+};
+
+type DateClient = {
+  update_at: string;
+  create_at: string;
+};
+
 type Product = {
   id: number;
   code: string;
@@ -14,17 +24,7 @@ type Product = {
   main_slider: boolean;
 };
 
-type DateBase = {
-  update_at: Date;
-  create_at: Date;
-};
-
-type DateClient = {
-  update_at: string;
-  create_at: string;
-};
-
-type ProductEntities = Product &
+type ProductElastic = Product &
   DateClient & {
     images: ImageData[];
     type: string;
@@ -49,15 +49,6 @@ type ProductBase = Product &
     imageObject?: Images[];
   };
 
-type ProductElastic = Product &
-  DateClient & {
-    type: string;
-    section: number;
-    sectionName: string;
-    hexColor?: string;
-    url: string;
-  };
-
 type Section = {
   id: number;
   code: string;
@@ -66,15 +57,14 @@ type Section = {
   level: number;
 };
 
-type SectionEntities = Section &
+type SectionElastic = Section &
   DateClient & {
     images: ImageData[];
-    imageObject?: Images[];
     type: string;
     sectionName?: string;
     url?: string;
+    items?: SectionElastic[];
   };
-
 type SectionBase = Sections &
   DateBase & {
     images: number[] | null;
@@ -85,14 +75,6 @@ type SectionClient = Section &
   DateClient & {
     images: number[] | null;
     products?: Products[];
-  };
-
-type SectionElastic = Section &
-  DateClient & {
-    type: string;
-    sectionName: string;
-    url: string;
-    items?: SectionElastic[];
   };
 
 type Colors = {
@@ -111,7 +93,7 @@ type ElasticBody = {
     _index: string;
     _id: number;
   };
-  data: ProductEntities | SectionEntities;
+  data: ProductElastic | SectionElastic;
 };
 
 type PayLoadTest = {
@@ -133,11 +115,8 @@ type parentSection = {
 export {
   ImageData,
   SectionBase,
-  ProductEntities,
-  SectionEntities,
   ElasticBody,
   PayLoadTest,
-  parentSection,
   ProductClient,
   SectionClient,
   ProductBase,

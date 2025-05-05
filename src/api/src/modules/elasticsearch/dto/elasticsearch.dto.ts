@@ -7,7 +7,6 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-// TODO: поставить признак обязательного поля
 export class payLoad {
   @IsString({
     message: 'Параметр type должен быть типа string',
@@ -15,12 +14,12 @@ export class payLoad {
   @IsNotEmpty()
   type?: string;
 
-  @IsNumber()
+  @IsNumber({}, { message: 'Параметр from должен быть типа number' })
   @Transform(({ value }) => Number(value))
   @IsNotEmpty()
   from?: number;
 
-  @IsNumber()
+  @IsNumber({}, { message: 'Параметр size должен быть типа number' })
   @Transform(({ value }) => Number(value))
   @IsNotEmpty()
   size?: number;
@@ -30,15 +29,17 @@ export class payLoad {
   })
   searchName?: string;
 
-  @IsNumber()
+  @IsNumber({}, { message: 'Параметр filterSection должен быть типа number' })
   @IsOptional()
   filterSection?: number;
 
-  @IsString()
+  @IsString({
+    message: 'Параметр typeForm должен быть типа string',
+  })
   @IsOptional()
   typeForm?: string;
 
-  @IsBoolean()
+  @IsBoolean({ message: 'Параметр getItems должен быть типа boolean' })
   @Transform(({ value }) => value === 'true')
   @IsOptional()
   getItems?: boolean;
@@ -46,37 +47,34 @@ export class payLoad {
 
 export class ParamsCatalog {
   @IsString({
-    message: 'url',
+    message: 'Параметр url должен быть типа string',
   })
   @IsNotEmpty()
   url: string;
 
   @IsString({
-    message: 'filter',
+    message: 'Параметр url должен быть типа string',
   })
+  @IsNotEmpty()
   filter: string;
 
-  @IsBoolean({
-    message: 'layout',
-  })
+  @IsBoolean({ message: 'Параметр layout должен быть типа boolean' })
   @Transform(({ value }) => value === 'true')
+  @IsNotEmpty()
   layout: boolean;
 
-  @IsBoolean({
-    message: 'getFilter',
-  })
+  @IsBoolean({ message: 'Параметр isFilter должен быть типа boolean' })
   @Transform(({ value }) => value === 'true')
+  @IsNotEmpty()
   isFilter: boolean;
 
-  @IsBoolean({
-    message: 'getSorting',
-  })
+  @IsBoolean({ message: 'Параметр isSorting должен быть типа boolean' })
   @Transform(({ value }) => value === 'true')
+  @IsNotEmpty()
   isSorting: boolean;
 
-  @IsBoolean({
-    message: 'onlyFilters',
-  })
+  @IsBoolean({ message: 'Параметр onlyFilters должен быть типа boolean' })
   @Transform(({ value }) => value === 'true')
+  @IsNotEmpty()
   onlyFilters: boolean;
 }

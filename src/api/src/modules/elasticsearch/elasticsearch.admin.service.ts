@@ -20,10 +20,9 @@ import {
   ElasticBody,
   ImageData,
   ProductClient,
-  ProductEntities,
+  ProductElastic,
   SectionClient,
   SectionElastic,
-  SectionEntities,
 } from '../../interfaces/adminGlobal';
 import { ResultItems } from '../../interfaces/responseGlobal';
 import { payLoad } from './dto/elasticsearch.dto';
@@ -81,7 +80,7 @@ export class ElasticsearchAdminService {
    * @param dataImages
    */
   async prepareDataProduct(data: Sections[], dataImages: Images[]) {
-    const result: ProductEntities[] = [];
+    const result: ProductElastic[] = [];
     await Promise.all(
       data
         .filter((section) => section.products.length > 0)
@@ -112,7 +111,7 @@ export class ElasticsearchAdminService {
    * @param dataImages
    */
   async prepareDataSection(data: Sections[], dataImages: Images[]) {
-    const result: SectionEntities[] = [];
+    const result: SectionElastic[] = [];
     await Promise.all(
       data.map((item) => {
         if (!item.images) {
@@ -144,15 +143,15 @@ export class ElasticsearchAdminService {
    */
   private async prepareDataElastic(
     dbItems: Sections[],
-  ): Promise<(ProductEntities | SectionEntities)[]> {
+  ): Promise<(ProductElastic | SectionElastic)[]> {
     const dbImages = await this.imagesRepository.find();
 
-    const product: ProductEntities[] = await this.prepareDataProduct(
+    const product: ProductElastic[] = await this.prepareDataProduct(
       dbItems,
       dbImages,
     );
 
-    const section: SectionEntities[] = await this.prepareDataSection(
+    const section: SectionElastic[] = await this.prepareDataSection(
       dbItems,
       dbImages,
     );
@@ -196,8 +195,6 @@ export class ElasticsearchAdminService {
         .replace(/[:.-]/g, '')
         .toLowerCase();
       const newIndexName = `${this.index || 'shop'}_${currentDate}`;
-      //TODO: Прочитать alias Elastic
-
       await this.elasticsearchService.indices.create({
         index: newIndexName,
         body: {
@@ -273,7 +270,7 @@ export class ElasticsearchAdminService {
    */
   async bulkIndexDocuments(
     index: string,
-    documents: (ProductEntities | SectionEntities)[],
+    documents: (ProductElastic | SectionElastic)[],
   ): Promise<void> {
     if (!documents.length) {
       logger.log('No documents to index. Skipping bulk operation.');
@@ -281,7 +278,7 @@ export class ElasticsearchAdminService {
     }
     try {
       const body: ElasticBody[] = documents.flatMap(
-        (doc: SectionEntities | ProductEntities) => [
+        (doc: SectionElastic | ProductElastic) => [
           { index: { _index: index, _id: doc.id } },
           doc,
         ],
@@ -310,7 +307,7 @@ export class ElasticsearchAdminService {
       }
       const sections = await this.sectionsRepository.find();
 
-      const resultDocument: SectionEntities = {
+      const resultDocument: SectionElastic = {
         ...document,
         type,
         images: imageData,
@@ -351,7 +348,7 @@ export class ElasticsearchAdminService {
       }
       const sections = await this.sectionsRepository.find();
 
-      const resultDocument: ProductEntities = {
+      const resultDocument: ProductElastic = {
         ...document,
         type,
         images: imageData,
@@ -432,7 +429,7 @@ export class ElasticsearchAdminService {
   }
 
   /**
-   * Получение отфильтрованых данных из ElasticSearch
+   * Получение отфильтрованных данных из ElasticSearch
    * @param payLoad
    */
   async getItemsFilter(payLoad: payLoad): Promise<ResultItems> {

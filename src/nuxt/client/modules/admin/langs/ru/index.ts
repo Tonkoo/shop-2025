@@ -17,10 +17,15 @@ export default {
     type: 'Тип',
     search: 'Поиск',
     clear: 'Очистить',
+    reindex: 'Переиндексировать',
+    add: 'Добавить',
+    result: 'Результатов:',
+    from: 'из',
   },
   title: {
     formEdit: 'Редактирование',
     formAdd: 'Новая запись',
+    header: 'Администрирование',
   },
   hint: {
     price: 'Пример: 123',

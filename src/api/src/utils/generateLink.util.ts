@@ -1,7 +1,7 @@
 import { Sections } from '../entities/sections.entity';
 import { NotFoundException } from '@nestjs/common';
 import { Products } from '../entities/products.entity';
-import { ProductEntities, SectionEntities } from '../interfaces/adminGlobal';
+import { ProductElastic, SectionElastic } from '../interfaces/adminGlobal';
 
 /**
  * Генерирует ссылку для продукта
@@ -11,7 +11,7 @@ import { ProductEntities, SectionEntities } from '../interfaces/adminGlobal';
  * @param pathParts
  */
 export function generateLinkProduct(
-  data: Products | ProductEntities,
+  data: Products | ProductElastic,
   sectionId: number,
   sections: Sections[],
   pathParts: string[] = [],
@@ -36,7 +36,7 @@ export function generateLinkProduct(
  * @param pathParts
  */
 export function generateLinkSection(
-  data: Sections | SectionEntities,
+  data: Sections | SectionElastic,
   sections: Sections[],
   pathParts: string[] = [],
 ) {

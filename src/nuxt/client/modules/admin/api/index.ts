@@ -21,25 +21,18 @@ function removeDots(data: string): string {
 }
 
 // TODO: засунуть все в объект payload
-function fillingParam(
-  type: string,
-  from: string | number,
-  size: string | number,
-  searchName: string,
-  filterSection?: number,
-  getItems?: boolean
-) {
+function fillingParam(payload: ApiParams) {
   const params: ApiParams = {
-    type,
-    from,
-    size,
-    searchName,
+    type: payload.type,
+    from: payload.from,
+    size: payload.size,
+    searchName: payload.searchName,
   };
-  if (filterSection) {
-    params.filterSection = filterSection;
+  if (payload.filterSection) {
+    params.filterSection = payload.filterSection;
   }
-  if (getItems) {
-    params.getItems = getItems;
+  if (payload.getItems) {
+    params.getItems = payload.getItems;
   }
 
   return params;
@@ -48,14 +41,13 @@ function fillingParam(
 export async function reindex() {
   try {
     const adminStore = useAdminStore();
-    const params = fillingParam(
-      adminStore.typeSearch.value,
-      (adminStore.currentPage - 1) * adminStore.countColumn,
-      adminStore.countColumn,
-      adminStore.searchName,
-      undefined,
-      true
-    );
+    const params = fillingParam({
+      type: adminStore.typeSearch.value,
+      from: (adminStore.currentPage - 1) * adminStore.countColumn,
+      size: adminStore.countColumn,
+      searchName: adminStore.searchName,
+      getItems: true,
+    });
     const response = await api.get<{
       data: ResultItemsAdmin | ResultReindex;
     }>('/elastic/reindex', {
@@ -79,26 +71,24 @@ export async function reindex() {
 export async function getItems() {
   const adminStore = useAdminStore();
   try {
-    const params = fillingParam(
-      adminStore.typeSearch.value,
-      (adminStore.currentPage - 1) * adminStore.countColumn,
-      adminStore.countColumn,
-      removeDots(adminStore.searchName),
-      adminStore.filterSection?.id
-    );
+    const params = fillingParam({
+      type: adminStore.typeSearch.value,
+      from: (adminStore.currentPage - 1) * adminStore.countColumn,
+      size: adminStore.countColumn,
+      searchName: removeDots(adminStore.searchName),
+      filterSection: adminStore.filterSection?.id,
+    });
     adminStore.setNameColumnSection(
       adminStore.typeSearch.label === 'Разделы'
         ? 'Родительский раздел'
         : 'Раздел'
     );
-    // adminStore.setTypeItem(adminStore.typeSearch.value);
     const response = await api.get<{ data: ResultItemsAdmin }>(
       '/elastic/admin',
       {
         params,
       }
     );
-    console.log(response);
     if (!response) {
       throw new Error('Error while receiving data');
     }
@@ -144,14 +134,13 @@ export async function addItem() {
     adminStore.clearError();
     adminStore.setSearchName('');
     const formData = new FormData();
-    const param: ApiParams = fillingParam(
-      adminStore.typeSearch.value,
-      (adminStore.currentPage - 1) * adminStore.countColumn,
-      adminStore.countColumn,
-      removeDots(adminStore.searchName),
-      undefined,
-      true
-    );
+    const param: ApiParams = fillingParam({
+      type: adminStore.typeSearch.value,
+      from: (adminStore.currentPage - 1) * adminStore.countColumn,
+      size: adminStore.countColumn,
+      searchName: removeDots(adminStore.searchName),
+      getItems: true,
+    });
     let data;
     if (adminStore.typeItem === 'section') {
       data = adminStore.frontSection;
@@ -200,14 +189,13 @@ export async function editItem() {
     }
 
     const formData = new FormData();
-    const param: ApiParams = fillingParam(
-      adminStore.typeSearch.value,
-      ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
-      adminStore.countColumn.toString(),
-      adminStore.searchName,
-      undefined,
-      true
-    );
+    const param: ApiParams = fillingParam({
+      type: adminStore.typeSearch.value,
+      from: (adminStore.currentPage - 1) * adminStore.countColumn,
+      size: adminStore.countColumn,
+      searchName: adminStore.searchName,
+      getItems: true,
+    });
     generateFormData(formData, data, param);
     adminStore.setSearchName('');
     const response = await api.put<{ data: ResultItemsAdmin }>(
@@ -250,14 +238,13 @@ export async function getItemById() {
 
 export async function delItem() {
   const adminStore = useAdminStore();
-  const params: ApiParams = fillingParam(
-    adminStore.typeSearch.value,
-    ((adminStore.currentPage - 1) * adminStore.countColumn).toString(),
-    adminStore.countColumn.toString(),
-    adminStore.searchName,
-    undefined,
-    true
-  );
+  const params: ApiParams = fillingParam({
+    type: adminStore.typeSearch.value,
+    from: (adminStore.currentPage - 1) * adminStore.countColumn,
+    size: adminStore.countColumn,
+    searchName: adminStore.searchName,
+    getItems: true,
+  });
   try {
     const response = await api.delete<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeSearch.value}/${adminStore.selectedId}`,

@@ -1,17 +1,17 @@
 <!--TODO наименования вынести в ленги-->
 <template>
   <q-toolbar class="q-pa-md">
-    <q-toolbar-title>Администрирование</q-toolbar-title>
+    <q-toolbar-title>{{ $t('admin.title.header') }}</q-toolbar-title>
     <q-space />
     <areal-button
       outline
-      label="Переиндексировать"
+      :label="$t('admin.label.reindex')"
       icon="database"
       @click="reindexDoc"
     />
     <areal-button
       outline
-      label="Добавить"
+      :label="$t('admin.label.add')"
       icon="add"
       @click="adminStore.setViewModal(true)"
     />

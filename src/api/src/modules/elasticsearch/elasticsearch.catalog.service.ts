@@ -173,7 +173,7 @@ export class ElasticsearchCatalogService {
 
       let item: SectionElastic | ProductElastic | null = null;
       if (url !== '/catalog/') {
-        item = (await this.getItem(url)) as SectionElastic | ProductElastic;
+        item = await this.getItem(url);
         result.typeItem = item.type;
         result.contentName = item.name;
       }
