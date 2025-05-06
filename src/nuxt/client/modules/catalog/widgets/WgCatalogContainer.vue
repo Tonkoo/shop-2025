@@ -11,7 +11,10 @@
         />
       </div>
 
-      <div class="catalog-filter__right">
+      <div
+        v-if="catalogStore.itemCatalog.length !== 0"
+        class="catalog-filter__right"
+      >
         <div
           class="catalog-filter__btn"
           @click="catalogStore.setDialogFilter()"
@@ -22,9 +25,23 @@
       </div>
     </div>
   </div>
-  <div class="product-list">
-    <CatalogProduct :item-catalog="catalogStore.itemCatalog" />
+  <div class="wg-container">
+    <div
+      v-if="catalogStore.itemCatalog.length !== 0"
+      class="wg-container__product-list"
+    >
+      <CatalogProduct :item-catalog="catalogStore.itemCatalog" />
+    </div>
+    <div v-else class="wg-container__block-message">
+      <span class="wg-container__block-message__title">{{
+        $t('catalog.error.title')
+      }}</span>
+      <span class="wg-container__block-message__text">{{
+        $t('catalog.error.text')
+      }}</span>
+    </div>
   </div>
+
   <DialogFilter
     :dialog-filter="catalogStore.dialogFilter"
     :filter-catalog="catalogStore.filterCatalog"
@@ -135,6 +152,30 @@ const clearFilter = () => {
     color: getColor('grey', 12);
     &:hover {
       color: getColor('grey', 8);
+    }
+  }
+}
+.wg-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  &__product-list {
+    flex: 1;
+  }
+  &__block-message {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    color: getColor('grey', 12);
+    &__title {
+      @include font-preset('H2/22/Text');
+    }
+    &__text {
+      @include font-preset('Text/14px');
     }
   }
 }

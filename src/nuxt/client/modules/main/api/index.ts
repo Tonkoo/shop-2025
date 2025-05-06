@@ -15,6 +15,7 @@ export async function getItems() {
       '/elastic/main/',
       { params }
     );
+    console.log(response);
     if (!response) {
       throw new Error('Error while receiving data');
     }

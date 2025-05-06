@@ -46,8 +46,11 @@ const emit = defineEmits(['open-dialog']);
 
 <style scoped lang="scss">
 .about-block {
+  height: fit-content;
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 83px;
   width: calc(1 / 3) * 100%;
   padding: 0 40px;
   gap: 110px;
