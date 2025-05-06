@@ -8,11 +8,11 @@ services:
     env_file:
       - .env
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_PORT=${DB_PORT}
+      - DB_HOST=${APP_DB_HOST}
+      - DB_USER=${APP_DB_USER}
+      - DB_PASSWORD=${APP_DB_PASSWORD}
+      - DB_NAME=${APP_DB_NAME}
+      - DB_PORT=${APP_DB_PORT}
       - ELASTIC_URL=${ELASTIC_URL}
       - ELASTIC_USER=${ELASTIC_USER}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
@@ -23,6 +23,7 @@ services:
       - ./src/api/images:/api/images
     expose:
       - "5173"
+
   nginx:
     image: nginx:stable
     build: 
@@ -41,21 +42,62 @@ services:
       - ./logs/nginx/:/var/log/nginx
     extra_hosts:
       - host.docker.internal:host-gateway
-  postgres:
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak_container
+    environment:
+      KC_DB: ${KC_DB}
+      KC_DB_URL: ${KC_DB_URL}
+      KC_DB_USERNAME: ${KC_DB_USER}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+    command:
+      - start-dev
+    ports:
+      - "${KEYCLOAK_PORT}:8080"
+    depends_on:
+      - app-db
+      - keycloak-db
+    networks:
+      - shop-2025
+
+  keycloak-db:
     image: postgres:latest
-    container_name: postgres_container
+    container_name: keycloak-db
     env_file:
       - .env
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${KC_DB_USER}
+      POSTGRES_PASSWORD: ${KC_DB_PASSWORD}
+      POSTGRES_DB: ${KC_DB_NAME}
     ports:
-      - "${DB_PORT}:5432"
+      - "${KC_DB_PORT}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - keycloak_db_data:/var/lib/postgresql/data
     networks:
       - shop-2025
+
+  app-db:
+    image: postgres:latest
+    container_name: app-db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${APP_DB_USER}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+      POSTGRES_DB: ${APP_DB_NAME}
+    ports:
+      - "${APP_DB_PORT}:5432"
+    volumes:
+      - app_db_data:/var/lib/postgresql/data
+    networks:
+      - shop-2025
+
   elasticsearch:
     image: elasticsearch:8.16.4
     container_name: elasticsearch
@@ -74,7 +116,8 @@ services:
       - shop-2025
 
 volumes:
-  postgres_data:
+  app_db_data:
+  keycloak_db_data:
   es-data:
 
 

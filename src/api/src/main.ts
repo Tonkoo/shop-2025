@@ -12,6 +12,8 @@ async function bootstrap() {
   });
   app.setGlobalPrefix('api/v1');
   app.enableCors({
+    // TODO: env
+    origin: 'http://localhost/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type',
     credentials: true,

@@ -16,6 +16,7 @@
       "@interfaces/*": ["src/interfaces/*"],
       "@config/*": ["src/config/*"],
       "@modules/*": ["src/modules/*"],
+      "@auth/*": ["src/auth/*"],
 
     },
     "incremental": true,
