@@ -14,15 +14,9 @@
         <span class="about-block__content__color__text">{{
           $t('catalog.label.color')
         }}</span>
-        <div
+        <ArealCircle
+          :color="product.hexColor"
           class="about-block__content__color__circle"
-          :style="{
-            backgroundColor: product.hexColor,
-            border:
-              product.hexColor.toLowerCase() === '#ffffff'
-                ? '1px solid black'
-                : 'none',
-          }"
         />
       </div>
       <div class="about-block__content__separation" />
@@ -82,7 +76,6 @@ const emit = defineEmits(['open-dialog']);
       &__circle {
         width: 26px;
         height: 26px;
-        border-radius: 50%;
       }
     }
     &__separation {

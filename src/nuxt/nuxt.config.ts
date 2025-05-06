@@ -13,6 +13,7 @@ export default defineNuxtConfig({
       port: Number(process.env.NUXT_PUBLIC_PORT),
       baseURL: process.env.NUXT_PUBLIC_BACKEND_URL,
       host: process.env.NUXT_PUBLIC_HOST,
+      url: process.env.NUXT_PUBLIC_URL,
     },
   },
   i18n: {
@@ -48,7 +49,6 @@ export default defineNuxtConfig({
   },
   srcDir: 'client',
   devServer: {
-    // TODO: env
     port: Number(process.env.NUXT_PUBLIC_PORT),
     host: process.env.NUXT_PUBLIC_HOST,
   },

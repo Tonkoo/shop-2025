@@ -1,6 +1,6 @@
 <template>
   <ArealDialog
-    :model-value="dialog"
+    v-model="dialog"
     position="right"
     :transition-show="'fade'"
     :transition-hide="'fade'"
@@ -111,10 +111,9 @@
                 emit('update:filter', { property: 'color', value: color })
               "
             >
-              <!--              !availableColors.includes(color),-->
-              <div
+              <ArealCircle
+                :color="color"
                 class="dialog-filter__block-color__circle"
-                :style="{ backgroundColor: color }"
               />
             </div>
           </div>
@@ -271,7 +270,6 @@ const hasActiveFilters = computed(() => {
     &__circle {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
     }
   }
   &__footer {

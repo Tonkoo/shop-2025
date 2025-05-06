@@ -7,16 +7,19 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   imagesArray: {
     type: Array as PropType<File[] | undefined>,
     required: false,
     default: null,
   },
 });
+const files = computed(() => props.imagesArray);
+console.log(files.value, 'sadasdasd');
 
 const getUrlFile = (image: File) => {
   if (image instanceof File) {
+    console.log(image);
     return URL.createObjectURL(image);
   }
   return image;

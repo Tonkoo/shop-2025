@@ -192,12 +192,11 @@ export class ElasticsearchCatalogService {
         const filterCatalog = this.getFilterCatalog(filterConvert, section);
 
         // TODO: вынести в метод ?????.
+        let defaultSortItem: SortingOptions | undefined;
         if (isSorting) {
           result.sortingItems = await this.sortingRepository.find();
           if (!filterConvert.sort) {
-            const defaultSortItem = result.sortingItems.find(
-              (item) => item.default,
-            );
+            defaultSortItem = result.sortingItems.find((item) => item.default);
 
             filterConvert.sort = defaultSortItem?.code || 'default';
           }

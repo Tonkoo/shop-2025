@@ -11,15 +11,9 @@
           <areal-link class="card__description-link" :link="product.url">
             {{ product.name }}
           </areal-link>
-          <div
+          <ArealCircle
+            :color="product.hexColor"
             class="card__description-circle"
-            :style="{
-              backgroundColor: product.hexColor,
-              border:
-                product.hexColor.toLowerCase() === '#ffffff'
-                  ? '1px solid black'
-                  : 'none',
-            }"
           />
         </div>
         <span class="card__description-price">{{ product.price }} ₽</span>
@@ -64,7 +58,6 @@ defineProps({
     &-circle {
       width: 15px;
       height: 15px;
-      border-radius: 50%;
     }
     &-price {
       @include font-preset('Text/14px');
