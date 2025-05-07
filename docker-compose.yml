@@ -56,8 +56,11 @@ services:
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HTTP_ENABLED: "true"
+      KC_IMPORT_REALM: "true"
+      KC_IMPORT_FILE: "/opt/keycloak/data/import/realm-export.json"
     command:
       - start-dev
+      - --import-realm
     ports:
       - "${KEYCLOAK_PORT}:8080"
     depends_on:
@@ -65,6 +68,8 @@ services:
       - keycloak-db
     networks:
       - shop-2025
+    volumes:
+      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
 
   keycloak-db:
     image: postgres:latest
