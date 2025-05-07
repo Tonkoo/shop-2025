@@ -119,17 +119,17 @@ const clearFilter = () => {
   align-items: end;
   &__left {
     flex-basis: 50%;
-    .breadcrumbs {
-      color: getColor('grey', 12);
-      &__link {
-        cursor: pointer;
-        color: getColor('grey', 12);
-        transition: color 0.3s ease;
-      }
-      &__link:hover {
-        color: getColor('grey', 8);
-      }
-    }
+    //.breadcrumbs {
+    //  color: getColor('grey', 12);
+    //  &__link {
+    //    cursor: pointer;
+    //    color: getColor('grey', 12);
+    //    transition: color 0.3s ease;
+    //  }
+    //  &__link:hover {
+    //    color: getColor('grey', 8);
+    //  }
+    //}
   }
   &__swiper {
     display: flex;

@@ -9,7 +9,7 @@ export class KeycloakController {
   @Post('login')
   async login(
     @Body() body: { username: string; password: string },
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const token = await this.keycloakService.login(
       body.username,
@@ -20,7 +20,13 @@ export class KeycloakController {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
+      maxAge: token.expires_in * 1000,
     });
-    return res.redirect('/admin');
+    return {
+      success: true,
+      access_token: token.access_token,
+      refresh_token: token.refresh_token,
+      expires_in: token.expires_in,
+    };
   }
 }

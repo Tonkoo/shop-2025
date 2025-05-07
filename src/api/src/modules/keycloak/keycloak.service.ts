@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import axios from 'axios';
 import { keycloakConfig } from '@config/kc.config';
+import { logger } from '@utils/logger/logger';
 
 @Injectable()
 export class KeycloakService {
@@ -12,7 +13,6 @@ export class KeycloakService {
       data.append('grant_type', 'password');
       data.append('username', username);
       data.append('password', password);
-      console.log(data);
       const response = await axios.post(keycloakConfig.url, data.toString(), {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -21,6 +21,7 @@ export class KeycloakService {
 
       return response.data;
     } catch (err) {
+      logger.error('Error from keycloak.login: ', err);
       console.log(err);
       throw new UnauthorizedException('Invalid credentials');
     }

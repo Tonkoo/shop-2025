@@ -32,5 +32,14 @@ export default <RouterConfig & { routes: () => Routes }>{
       component: () =>
         import('~/pages/PageCatalog.vue').then((r) => r.default || r),
     },
+    {
+      name: 'Authorization',
+      path: '/authorization',
+      meta: {
+        layout: 'authorization-layout',
+      },
+      component: () =>
+        import('~/pages/PageAuthorization.vue').then((r) => r.default || r),
+    },
   ],
 };

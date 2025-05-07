@@ -77,6 +77,11 @@ type ResponseError = {
   };
 };
 
+type User = {
+  username: string;
+  password: string;
+};
+
 export type {
   SectionAdmin,
   ProductAdmin,
@@ -91,4 +96,5 @@ export type {
   SelectColor,
   ResponseError,
   ImageElastic,
+  User,
 };
