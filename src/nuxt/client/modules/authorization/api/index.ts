@@ -11,6 +11,7 @@ export async function authorizationUser() {
     body.append('client_id', 'shop-admin-client');
     body.append('username', authorizationStore.user.username);
     body.append('password', authorizationStore.user.password);
+    body.append('scope', 'openid');
 
     const response = await api.post<AuthorizationResponse>(
       'http://localhost/realms/shop-admin/protocol/openid-connect/token',

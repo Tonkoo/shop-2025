@@ -9,6 +9,7 @@ export default <RouterConfig & { routes: () => Routes }>{
       path: '/admin',
       meta: {
         layout: 'admin-layout',
+        middleware: ['11-auth-admin'],
       },
       component: () =>
         import('~/pages/PageAdmin.vue').then((r) => r.default || r),
@@ -37,6 +38,7 @@ export default <RouterConfig & { routes: () => Routes }>{
       path: '/authorization',
       meta: {
         layout: 'authorization-layout',
+        middleware: ['10-auth-login'],
       },
       component: () =>
         import('~/pages/PageAuthorization.vue').then((r) => r.default || r),

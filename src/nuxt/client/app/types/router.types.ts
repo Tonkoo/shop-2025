@@ -12,7 +12,7 @@ type RouterMeta = {
   // Тип шаблона
   layout: 'main-layout' | 'admin-layout';
   // Мидлварины
-  middleware?: Array<'02-slash-catalog'>;
+  middleware?: Array<'02-slash-catalog' | '10-auth-login' | '11-auth-admin'>;
 };
 type Routes = Array<
   Pick<RouteRecordRaw, 'name' | 'path' | 'component'> & {
