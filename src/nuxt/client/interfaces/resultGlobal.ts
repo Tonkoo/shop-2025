@@ -38,10 +38,16 @@ type ResultItemsCatalog = {
   };
 };
 
+type AuthorizationResponse = {
+  access_token: string;
+  expires_in: number;
+};
+
 export type {
   ResultItemsAdmin,
   ResultItemsMain,
   ResultReindex,
   ResultItemsCatalog,
   FilterCatalog,
+  AuthorizationResponse,
 };

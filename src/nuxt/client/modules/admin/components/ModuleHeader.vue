@@ -15,6 +15,7 @@
       icon="add"
       @click="adminStore.setViewModal(true)"
     />
+    <areal-button flat round icon="logout" @click="logout()" />
   </q-toolbar>
 </template>
 
@@ -43,6 +44,12 @@ const reindexDoc = () => {
         message: 'Ошибка при сохранении данных: ' + err,
       });
     });
+};
+
+const logout = () => {
+  adminModule.logout().then((response) => {
+    console.log(response);
+  });
 };
 </script>
 

@@ -270,3 +270,17 @@ export async function getColors() {
     throw err;
   }
 }
+
+export async function logout() {
+  try {
+    const response = await api.post('auth/logout');
+    if (!response) {
+      throw new Error('Error while receiving data');
+    }
+    console.log(response);
+    // return response;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}

@@ -7,7 +7,14 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/i18n',
     'nuxt-swiper',
+    '@sidebase/nuxt-auth',
   ],
+  auth: {
+    provider: {
+      type: 'authjs',
+    },
+    baseURL: 'http://localhost/authorization',
+  },
   runtimeConfig: {
     public: {
       port: Number(process.env.NUXT_PUBLIC_PORT),
@@ -16,6 +23,7 @@ export default defineNuxtConfig({
       url: process.env.NUXT_PUBLIC_URL,
     },
   },
+
   i18n: {
     vueI18n: './config/i18n.config.ts',
   },

@@ -1,6 +1,14 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Response, Request } from 'express';
 import { KeycloakService } from '@modules/keycloak/keycloak.service';
+import { keycloakConfig } from '@config/kc.config';
 
 @Controller('auth')
 export class KeycloakController {
@@ -28,5 +36,14 @@ export class KeycloakController {
       refresh_token: token.refresh_token,
       expires_in: token.expires_in,
     };
+  }
+  @Post('logout')
+  async logout(@Res() res: Response, @Req() request: Request) {
+    const accessToken = request.cookies?.access_token;
+    if (!accessToken) {
+      throw new UnauthorizedException('Refresh token is required');
+    }
+
+    return await this.keycloakService.logout(accessToken);
   }
 }

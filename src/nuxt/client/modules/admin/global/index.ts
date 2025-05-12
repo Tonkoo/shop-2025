@@ -7,6 +7,7 @@ import {
   delItem,
   reindex,
   getColors,
+  logout,
 } from '../api';
 export function useAdminModule() {
   return {
@@ -18,5 +19,6 @@ export function useAdminModule() {
     delItem,
     reindex,
     getColors,
+    logout,
   };
 }

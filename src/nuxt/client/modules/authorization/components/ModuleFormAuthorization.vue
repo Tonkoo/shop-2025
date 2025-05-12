@@ -26,12 +26,15 @@
         label="Войти"
         @click="emits('authorization')"
       />
+      <!--        @click="signIn('keycloak')"-->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { User } from '~/interfaces/adminGlobal';
+
+// const { signIn, signOut, status, data } = useAuth();
 
 const emits = defineEmits<{
   (e: 'update:username' | 'update:password', value: string): void;
