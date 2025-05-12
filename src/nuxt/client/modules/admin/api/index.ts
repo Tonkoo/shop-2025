@@ -273,14 +273,37 @@ export async function getColors() {
 
 export async function logout() {
   try {
-    const response = await api.post('auth/logout');
-    if (!response) {
-      throw new Error('Error while receiving data');
+    const accessToken = useCookie('access_token');
+    const refreshToken = useCookie('refresh_token');
+
+    const body = new URLSearchParams();
+    body.append('client_id', 'shop-admin-client');
+    body.append('client_secret', 'xX8RYq6OqRtwS19X021MT6Y4ZBMnMLSD');
+    if (refreshToken.value) {
+      body.append('refresh_token', refreshToken.value);
     }
-    console.log(response);
+    body.append('redirect_uri', 'http://localhost/authorization/');
+
+    await api.post(
+      'http://localhost/realms/shop-admin/protocol/openid-connect/logout',
+      body,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${accessToken.value}`,
+        },
+      }
+    );
+    accessToken.value = null;
+    if (refreshToken.value) {
+      refreshToken.value = null;
+    }
+
     // return response;
   } catch (err) {
     console.error(err);
+    const accessToken = useCookie('access_token');
+    accessToken.value = null;
     throw err;
   }
 }

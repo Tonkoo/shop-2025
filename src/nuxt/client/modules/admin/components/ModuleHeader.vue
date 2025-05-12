@@ -28,6 +28,7 @@ import { notifyNegative, notifyPositive } from '~/entities/notify.entites';
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
 const quasar = useQuasar();
+const router = useRouter();
 
 const reindexDoc = () => {
   quasar.loading.show();
@@ -47,8 +48,8 @@ const reindexDoc = () => {
 };
 
 const logout = () => {
-  adminModule.logout().then((response) => {
-    console.log(response);
+  adminModule.logout().then(async () => {
+    await router.push('/authorization');
   });
 };
 </script>

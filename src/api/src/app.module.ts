@@ -8,7 +8,6 @@ import { SectionsModule } from '@modules/sections/sections.module';
 import { ProductsModule } from '@modules/products/products.module';
 import { ElasticsearchModule } from '@modules/elasticsearch/elasticsearch.module';
 import { TaskModule } from '@modules/task/task.module';
-import { KeycloakModule } from '@modules/keycloak/keycloak.module';
 
 @Module({
   imports: [
@@ -16,7 +15,6 @@ import { KeycloakModule } from '@modules/keycloak/keycloak.module';
     ProductsModule,
     ElasticsearchModule,
     TaskModule,
-    KeycloakModule,
     TypeOrmModule.forRoot(dataSourceOptions),
     ConfigModule.forRoot({
       isGlobal: true,

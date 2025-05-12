@@ -22,12 +22,18 @@ export async function authorizationUser() {
       }
     );
 
-    const token = useCookie('access_token', {
+    const accessToken = useCookie('access_token', {
       maxAge: response.data.expires_in,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
     });
-    token.value = response.data.access_token;
+    const refreshToken = useCookie('refresh_token', {
+      maxAge: response.data.expires_in,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+    accessToken.value = response.data.access_token;
+    refreshToken.value = response.data.refresh_token;
     return response.data;
   } catch (err) {
     console.error(err);
