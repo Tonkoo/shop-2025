@@ -6,7 +6,7 @@ import type {
 } from '~/interfaces/resultGlobal';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
-import { headers } from '~/composables/customFetch';
+import { headersForm, headersAuth } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 import { productParams, sectionParams } from '~/entities/search.entites';
 
@@ -152,7 +152,7 @@ export async function addItem() {
     const response = await api.post<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}`,
       formData,
-      headers
+      headersForm
     );
     if (!response) {
       throw new Error('Error while receiving data');
@@ -198,7 +198,7 @@ export async function editItem() {
     const response = await api.put<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}/${adminStore.selectedId}`,
       formData,
-      headers
+      headersForm
     );
     if (!response) {
       throw new Error('Error while receiving data');
@@ -273,37 +273,14 @@ export async function getColors() {
 
 export async function logout() {
   try {
-    const accessToken = useCookie('access_token');
-    const refreshToken = useCookie('refresh_token');
-
-    const body = new URLSearchParams();
-    body.append('client_id', 'shop-admin-client');
-    body.append('client_secret', 'xX8RYq6OqRtwS19X021MT6Y4ZBMnMLSD');
-    if (refreshToken.value) {
-      body.append('refresh_token', refreshToken.value);
-    }
-    body.append('redirect_uri', 'http://localhost/authorization/');
-
-    await api.post(
-      'http://localhost/realms/shop-admin/protocol/openid-connect/logout',
-      body,
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${accessToken.value}`,
-        },
-      }
-    );
-    accessToken.value = null;
-    if (refreshToken.value) {
-      refreshToken.value = null;
-    }
-
-    // return response;
+    const response = await api.post(`/auth/logout`, {
+      userId: '87a703d7-8b56-4fd0-8e6d-35353638d26e',
+      // accessToken,
+    });
   } catch (err) {
     console.error(err);
-    const accessToken = useCookie('access_token');
-    accessToken.value = null;
+    // const accessToken = useCookie('access_token');
+    // accessToken.value = null;
     throw err;
   }
 }

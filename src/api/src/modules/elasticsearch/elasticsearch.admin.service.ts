@@ -8,12 +8,12 @@ import {
   ElasticsearchService,
   ElasticsearchService as ESClient,
 } from '@nestjs/elasticsearch';
-import { logger } from '@utils/logger/logger';
+import { logger } from './../../utils/logger/logger.js';
 import { Repository } from 'typeorm';
-import { Sections } from '@entities/sections.entity';
+import { Sections } from './../../entities/sections.entity.js';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Images } from '@entities/images.entity';
-import { convertTimeObject } from '@utils/convertTime.util';
+import { Images } from './../../entities/images.entity.js';
+import { convertTimeObject } from './../../utils/convertTime.util.js';
 import {
   ElasticBody,
   ImageData,
@@ -21,17 +21,17 @@ import {
   ProductElastic,
   SectionClient,
   SectionElastic,
-} from '@interfaces/adminGlobal';
-import { ResultItems } from '@interfaces/responseGlobal';
-import { payLoad } from './dto/elasticsearch.dto';
-import { formatResults } from '@utils/formatResults.util';
-import { Colors } from '@entities/colors.entity';
+} from './../../interfaces/adminGlobal.js';
+import { ResultItems } from './../../interfaces/responseGlobal.js';
+import { payLoad } from './dto/elasticsearch.dto.js';
+import { formatResults } from './../../utils/formatResults.util.js';
+import { Colors } from './../../entities/colors.entity.js';
 import {
   generateLinkProduct,
   generateLinkSection,
-} from '@utils/generateLink.util';
-import { searchFromElastic } from '@utils/searchFromElastic.util';
-import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
+} from './../../utils/generateLink.util.js';
+import { searchFromElastic } from './../../utils/searchFromElastic.util.js';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type.js';
 
 @Injectable()
 export class ElasticsearchAdminService {

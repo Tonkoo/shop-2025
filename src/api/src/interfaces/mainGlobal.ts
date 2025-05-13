@@ -1,4 +1,4 @@
-import { SectionElastic } from './adminGlobal';
+import { SectionElastic } from './adminGlobal.js';
 
 type MainLayout = {
   menu: SectionElastic[];

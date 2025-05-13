@@ -1,12 +1,15 @@
 import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
-import { ElasticsearchCatalogService } from './elasticsearch.catalog.service';
+import { ElasticsearchCatalogService } from './elasticsearch.catalog.service.js';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ResponseHelper, ResponseHelperApiOK } from '@utils/response.util';
-import { Response, ResultItems } from '@interfaces/responseGlobal';
-import { SectionElastic } from '@interfaces/adminGlobal';
-import { payLoad, ParamsCatalog } from './dto/elasticsearch.dto';
-import { ElasticsearchAdminService } from './elasticsearch.admin.service';
-import { ElasticsearchMainService } from './elasticsearch.main.service';
+import {
+  ResponseHelper,
+  ResponseHelperApiOK,
+} from './../../utils/response.util.js';
+import { Response, ResultItems } from './../../interfaces/responseGlobal.js';
+import { SectionElastic } from './../../interfaces/adminGlobal.js';
+import { payLoad, ParamsCatalog } from './dto/elasticsearch.dto.js';
+import { ElasticsearchAdminService } from './elasticsearch.admin.service.js';
+import { ElasticsearchMainService } from './elasticsearch.main.service.js';
 
 @Controller('elastic')
 @ApiTags('elastic')

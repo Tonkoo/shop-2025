@@ -48,8 +48,10 @@ const reindexDoc = () => {
 };
 
 const logout = () => {
+  // const accessToken = useCookie('access_token');
+  // console.log(accessToken);
   adminModule.logout().then(async () => {
-    await router.push('/authorization');
+    // await router.push('/authorization');
   });
 };
 </script>

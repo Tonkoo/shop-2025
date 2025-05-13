@@ -5,22 +5,25 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Repository } from 'typeorm';
-import { ProductDto } from './dto/product.dto';
-import { Products } from '@entities/products.entity';
-import { logger } from '@utils/logger/logger';
-import { prepareData } from '@utils/prepare.util';
-import { ProductBase, ProductClient } from '@interfaces/adminGlobal';
-import { ResultItems } from '@interfaces/responseGlobal';
+import { ProductDto } from './dto/product.dto.js';
+import { Products } from './../../entities/products.entity.js';
+import { logger } from './../../utils/logger/logger.js';
+import { prepareData } from './../../utils/prepare.util.js';
+import { ProductBase, ProductClient } from './../../interfaces/adminGlobal.js';
+import { ResultItems } from './../../interfaces/responseGlobal.js';
 import { transliterate as tr } from 'transliteration';
-import { createImages } from '@utils/createImages.util';
-import { convertTimeObject } from '@utils/convertTime.util';
-import { Images } from '@entities/images.entity';
-import { camelCaseConverter } from '@utils/toCamelCase.util';
-import { removeImages, removeUnusedImages } from '@utils/removeImages.util';
-import { Colors } from '@entities/colors.entity';
-import { formatResponse } from '@utils/formatResults.util';
-import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
-import { checkCodeExists } from '@utils/checkCodeExists';
+import { createImages } from './../../utils/createImages.util.js';
+import { convertTimeObject } from './../../utils/convertTime.util.js';
+import { Images } from './../../entities/images.entity.js';
+import { camelCaseConverter } from './../../utils/toCamelCase.util.js';
+import {
+  removeImages,
+  removeUnusedImages,
+} from './../../utils/removeImages.util.js';
+import { Colors } from './../../entities/colors.entity.js';
+import { formatResponse } from './../../utils/formatResults.util.js';
+import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service.js';
+import { checkCodeExists } from './../../utils/checkCodeExists.js';
 
 @Injectable()
 export class ProductsService {

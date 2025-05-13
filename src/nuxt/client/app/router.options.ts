@@ -1,6 +1,7 @@
 import type { RouterConfig } from '@nuxt/schema';
 import type { Routes } from '~/app/types/router.types';
 
+// @ts-ignore
 export default <RouterConfig & { routes: () => Routes }>{
   // https://router.vuejs.org/api/interfaces/routeroptions.html#routes
   routes: () => [
@@ -9,9 +10,10 @@ export default <RouterConfig & { routes: () => Routes }>{
       path: '/admin',
       meta: {
         layout: 'admin-layout',
-        middleware: ['11-auth-admin'],
+        middleware: ['03-auth-admin'],
       },
       component: () =>
+        // @ts-ignore
         import('~/pages/PageAdmin.vue').then((r) => r.default || r),
     },
     {
@@ -21,6 +23,7 @@ export default <RouterConfig & { routes: () => Routes }>{
         layout: 'main-layout',
       },
       component: () =>
+        // @ts-ignore
         import('~/pages/PageMain.vue').then((r) => r.default || r),
     },
     {
@@ -28,7 +31,7 @@ export default <RouterConfig & { routes: () => Routes }>{
       path: '/catalog/:catalogPath(.*)*',
       meta: {
         layout: 'main-layout',
-        middleware: ['02-slash-catalog'],
+        middleware: ['01-slash-catalog'],
       },
       component: () =>
         import('~/pages/PageCatalog.vue').then((r) => r.default || r),
@@ -38,7 +41,7 @@ export default <RouterConfig & { routes: () => Routes }>{
       path: '/authorization',
       meta: {
         layout: 'authorization-layout',
-        middleware: ['10-auth-login'],
+        middleware: ['02-auth-login'],
       },
       component: () =>
         import('~/pages/PageAuthorization.vue').then((r) => r.default || r),

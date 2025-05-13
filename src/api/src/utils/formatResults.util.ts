@@ -1,12 +1,12 @@
-import { camelCaseConverter } from './toCamelCase.util';
-import { ResultItems } from '@interfaces/responseGlobal';
-import { MainLayout } from '@interfaces/mainGlobal';
-import { CatalogContent } from '@interfaces/catalogGlobal';
-import { ProductElastic, SectionElastic } from '@interfaces/adminGlobal';
-import { payLoad } from '@modules/elasticsearch/dto/elasticsearch.dto';
-import { SectionDto } from '@modules/sections/dto/section.dto';
-import { ProductDto } from '@modules/products/dto/product.dto';
-import { ElasticsearchAdminService } from '@modules/elasticsearch/elasticsearch.admin.service';
+import { camelCaseConverter } from './toCamelCase.util.js';
+import { ResultItems } from './../interfaces/responseGlobal.js';
+import { MainLayout } from './../interfaces/mainGlobal.js';
+import { CatalogContent } from './../interfaces/catalogGlobal.js';
+import { ProductElastic, SectionElastic } from './../interfaces/adminGlobal.js';
+import { payLoad } from './../modules/elasticsearch/dto/elasticsearch.dto.js';
+import { SectionDto } from './../modules/sections/dto/section.dto.js';
+import { ProductDto } from './../modules/products/dto/product.dto.js';
+import { ElasticsearchAdminService } from './../modules/elasticsearch/elasticsearch.admin.service.js';
 
 /**
  * Форматирует данные для отправки на страницу Администратора

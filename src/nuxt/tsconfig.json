@@ -5,6 +5,6 @@
     "types": [
       "vite/client",
       "vue-i18n"
-    ]
+    ],
   },
 }

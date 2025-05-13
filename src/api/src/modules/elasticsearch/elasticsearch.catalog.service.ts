@@ -4,21 +4,24 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
-import { logger } from '@utils/logger/logger';
+import { logger } from './../../utils/logger/logger.js';
 import {
   AggregationsElastic,
   CatalogContent,
   FilterCatalog,
   PriceRange,
-} from '@interfaces/catalogGlobal';
-import { SectionElastic, ProductElastic } from '@interfaces/adminGlobal';
-import { ParamsCatalog } from './dto/elasticsearch.dto';
-import { formatCatalogContent } from '@utils/formatResults.util';
-import { searchFromElastic } from '@utils/searchFromElastic.util';
-import { getLayout } from '@utils/getLayout.util';
+} from './../../interfaces/catalogGlobal.js';
+import {
+  SectionElastic,
+  ProductElastic,
+} from './../../interfaces/adminGlobal.js';
+import { ParamsCatalog } from './dto/elasticsearch.dto.js';
+import { formatCatalogContent } from './../../utils/formatResults.util.js';
+import { searchFromElastic } from './../../utils/searchFromElastic.util.js';
+import { getLayout } from './../../utils/getLayout.util.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SortingOptions } from '@entities/sortingOptions.entity';
+import { SortingOptions } from './../../entities/sortingOptions.entity.js';
 
 @Injectable()
 export class ElasticsearchCatalogService {
@@ -173,7 +176,7 @@ export class ElasticsearchCatalogService {
 
       let item: SectionElastic | ProductElastic | null = null;
       if (url !== '/catalog/') {
-        item = await this.getItem(url);
+        item = (await this.getItem(url)) as SectionElastic | ProductElastic;
         result.typeItem = item.type;
         result.contentName = item.name;
       }

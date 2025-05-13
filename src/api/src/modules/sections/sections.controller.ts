@@ -18,19 +18,19 @@ import {
   ApiBody,
   ApiProperty,
 } from '@nestjs/swagger';
-import { SectionsService } from './sections.service';
-import { SectionDto } from './dto/section.dto';
+import { SectionsService } from './sections.service.js';
+import { SectionDto } from './dto/section.dto.js';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
   ResponseHelperApiError,
   ResponseHelperApiOK,
-} from '@utils/response.util';
-import { ProductDto } from '../products/dto/product.dto';
-import { SectionBase } from '@interfaces/adminGlobal';
-import { Response, ResultItems } from '@interfaces/responseGlobal';
+} from './../../utils/response.util.js';
+import { ProductDto } from '../products/dto/product.dto.js';
+import { SectionBase } from './../../interfaces/adminGlobal.js';
+import { Response, ResultItems } from './../../interfaces/responseGlobal.js';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { getMulterOptions } from '@config/multer.config';
+import { getMulterOptions } from './../../config/multer.config.js';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })

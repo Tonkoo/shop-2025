@@ -4,22 +4,25 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Sections } from '@entities/sections.entity';
+import { Sections } from './../../entities/sections.entity.js';
 import { DataSource, In, Repository } from 'typeorm';
-import { logger } from '@utils/logger/logger';
-import { SectionDto } from './dto/section.dto';
-import { prepareData } from '@utils/prepare.util';
-import { convertTimeObject } from '@utils/convertTime.util';
-import { createImages } from '@utils/createImages.util';
+import { logger } from './../../utils/logger/logger.js';
+import { SectionDto } from './dto/section.dto.js';
+import { prepareData } from './../../utils/prepare.util.js';
+import { convertTimeObject } from './../../utils/convertTime.util.js';
+import { createImages } from './../../utils/createImages.util.js';
 import { transliterate as tr } from 'transliteration';
-import { SectionBase, SectionClient } from '@interfaces/adminGlobal';
-import { ResultItems } from '@interfaces/responseGlobal';
-import { camelCaseConverter } from '@utils/toCamelCase.util';
-import { Images } from '@entities/images.entity';
-import { removeImages, removeUnusedImages } from '@utils/removeImages.util';
-import { formatResponse } from '@utils/formatResults.util';
-import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service';
-import { checkCodeExists } from '@utils/checkCodeExists';
+import { SectionBase, SectionClient } from './../../interfaces/adminGlobal.js';
+import { ResultItems } from './../../interfaces/responseGlobal.js';
+import { camelCaseConverter } from './../../utils/toCamelCase.util.js';
+import { Images } from './../../entities/images.entity.js';
+import {
+  removeImages,
+  removeUnusedImages,
+} from './../../utils/removeImages.util.js';
+import { formatResponse } from './../../utils/formatResults.util.js';
+import { ElasticsearchAdminService } from '../elasticsearch/elasticsearch.admin.service.js';
+import { checkCodeExists } from './../../utils/checkCodeExists.js';
 
 @Injectable()
 export class SectionsService {

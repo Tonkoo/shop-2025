@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
-import { TaskService } from './task.service';
-import { ElasticsearchModule } from '../elasticsearch/elasticsearch.module';
+import { TaskService } from './task.service.js';
+import { ElasticsearchModule } from '../elasticsearch/elasticsearch.module.js';
 
 @Module({
   imports: [ScheduleModule.forRoot(), ElasticsearchModule],

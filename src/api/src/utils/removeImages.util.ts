@@ -1,11 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
 import { QueryRunner, Repository } from 'typeorm';
-import { Images } from '@entities/images.entity';
-import { logger } from './logger/logger';
-import { Sections } from '@entities/sections.entity';
-import { Products } from '@entities/products.entity';
-import { SectionDto } from '@modules/sections/dto/section.dto';
-import { ProductDto } from '@modules/products/dto/product.dto';
+import { Images } from './../entities/images.entity.js';
+import { logger } from './logger/logger.js';
+import { Sections } from './../entities/sections.entity.js';
+import { Products } from './../entities/products.entity.js';
+import { SectionDto } from './../modules/sections/dto/section.dto.js';
+import { ProductDto } from './../modules/products/dto/product.dto.js';
 
 /**
  * Удаляет указанные записи в таблице images

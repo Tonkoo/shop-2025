@@ -1,6 +1,6 @@
-import { ProductElastic, SectionElastic } from './adminGlobal';
-import { Sections } from '@entities/sections.entity';
-import { Products } from '@entities/products.entity';
+import { ProductElastic, SectionElastic } from './adminGlobal.js';
+import { Sections } from './../entities/sections.entity.js';
+import { Products } from './../entities/products.entity.js';
 
 type Response = {
   statusCode: number;

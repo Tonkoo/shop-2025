@@ -5,7 +5,7 @@ import {
   BaseEntity,
   OneToMany,
 } from 'typeorm';
-import { Sections } from './sections.entity';
+import { Sections } from './sections.entity.js';
 
 @Entity()
 export class Images extends BaseEntity {

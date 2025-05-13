@@ -18,19 +18,19 @@ import {
   ApiBody,
   ApiProperty,
 } from '@nestjs/swagger';
-import { ProductsService } from './products.service';
-import { ColorDto, ProductDto } from './dto/product.dto';
+import { ProductsService } from './products.service.js';
+import { ColorDto, ProductDto } from './dto/product.dto.js';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
   ResponseHelperApiError,
   ResponseHelperApiOK,
-} from '@utils/response.util';
-import { ProductBase } from '@interfaces/adminGlobal';
-import { Response, ResultItems } from '@interfaces/responseGlobal';
+} from './../../utils/response.util.js';
+import { ProductBase } from './../../interfaces/adminGlobal.js';
+import { Response, ResultItems } from './../../interfaces/responseGlobal.js';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { getMulterOptions } from '@config/multer.config';
-import { Colors } from '@entities/colors.entity';
+import { getMulterOptions } from './../../config/multer.config.js';
+import { Colors } from './../../entities/colors.entity.js';
 
 class DeleteProductDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })

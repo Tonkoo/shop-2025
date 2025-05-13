@@ -1,6 +1,6 @@
-import { SortingOptions } from '@entities/sortingOptions.entity';
-import { ProductElastic, SectionElastic } from './adminGlobal';
-import { ResultFilterCatalog } from './responseGlobal';
+import { SortingOptions } from './../entities/sortingOptions.entity.js';
+import { ProductElastic, SectionElastic } from './adminGlobal.js';
+import { ResultFilterCatalog } from './responseGlobal.js';
 
 type CatalogContent = {
   typeItem: string;
