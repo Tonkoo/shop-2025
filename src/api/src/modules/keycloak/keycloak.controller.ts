@@ -35,6 +35,18 @@ export class KeycloakController {
     @Res({ passthrough: true }) res: Response,
     @Req() req: Request,
   ) {
-    const test = await this.keycloakService.logout(body.userId);
+    return this.keycloakService.logout(body.userId);
+  }
+
+  @Post('introspect')
+  async introspect(
+    @Res({ passthrough: true }) res: Response,
+    @Req() req: Request,
+  ) {
+    if (!req.cookies?.access_token) {
+      return { active: false };
+    }
+
+    return await this.keycloakService.introspect(req.cookies.access_token);
   }
 }

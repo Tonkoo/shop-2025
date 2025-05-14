@@ -9,6 +9,7 @@ import type {
   SelectSection,
   SelectColor,
 } from '~/interfaces/adminGlobal';
+import type { ResponseIntrospect } from '~/interfaces/resultGlobal';
 
 type AdminState = {
   isEdit: boolean;
@@ -37,6 +38,7 @@ type AdminState = {
   filterSection: SectionAdmin | null;
   itemsFilter: Search[];
   colors: Colors[];
+  admin: ResponseIntrospect;
 };
 
 export type { AdminState };

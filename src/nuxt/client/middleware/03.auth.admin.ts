@@ -1,25 +1,14 @@
-import { api } from '#shared/api/axios';
+import { useAuthorizationModule } from '~/modules/authorization/global';
+import { useAdminStore } from '~/modules/admin/stores/adminStore';
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  // const token = useCookie('access_token');
-  // if (token.value) {
-  //   try {
-  //     const response = await api.get(
-  //       'http://localhost/realms/shop-admin/protocol/openid-connect/userinfo',
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token.value}`,
-  //         },
-  //       }
-  //     );
-  //     if (response.data) {
-  //       if (to.path === '/authorization') {
-  //         return navigateTo('/admin');
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     return navigateTo('/authorization');
-  //   }
-  // }
+  const authorizationModule = useAuthorizationModule();
+  const router = useRouter();
+  const adminStore = useAdminStore();
+  await authorizationModule.introspect().then(async (response) => {
+    if (!response.active) {
+      await router.push('/authorization');
+    }
+    adminStore.setAdmin(response);
+  });
 });

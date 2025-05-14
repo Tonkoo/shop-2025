@@ -1,6 +1,7 @@
-import { authorizationUser } from '../api';
+import { authorizationUser, introspect } from '../api';
 export function useAuthorizationModule() {
   return {
     authorizationUser,
+    introspect,
   };
 }

@@ -44,6 +44,14 @@ type AuthorizationResponse = {
   expires_in: number;
 };
 
+type ResponseIntrospect = {
+  sub?: string;
+  username?: string;
+  given_name?: string;
+  family_name?: string;
+  active: boolean;
+};
+
 export type {
   ResultItemsAdmin,
   ResultItemsMain,
@@ -51,4 +59,5 @@ export type {
   ResultItemsCatalog,
   FilterCatalog,
   AuthorizationResponse,
+  ResponseIntrospect,
 };

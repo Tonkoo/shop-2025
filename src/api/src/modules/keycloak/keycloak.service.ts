@@ -3,6 +3,7 @@ import axios from 'axios';
 import { keycloakConfig } from '@config/kc.config';
 import { logger } from '@utils/logger/logger';
 import { ResponseAdminKeycloak } from '@interfaces/responseGlobal';
+import { introspectToken } from '@utils/introspectToken.util';
 
 @Injectable()
 export class KeycloakService {
@@ -70,5 +71,8 @@ export class KeycloakService {
       logger.error('Error from keycloak.login: ', err);
       throw new UnauthorizedException('Invalid credentials');
     }
+  }
+  async introspect(token: string) {
+    return await introspectToken(token);
   }
 }

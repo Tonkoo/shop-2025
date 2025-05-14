@@ -1,6 +1,6 @@
 import { ProductElastic, SectionElastic } from './adminGlobal.js';
-import { Sections } from './../entities/sections.entity.js';
-import { Products } from './../entities/products.entity.js';
+import { Sections } from '@entities/sections.entity';
+import { Products } from '@entities/products.entity';
 
 type Response = {
   statusCode: number;
@@ -36,10 +36,19 @@ type ResponseAdminKeycloak = {
   expires_in: number;
 };
 
+type ResponseIntrospect = {
+  sub?: string;
+  username?: string;
+  given_name?: string;
+  family_name?: string;
+  active: boolean;
+};
+
 export {
   ResultItems,
   ResultFilterCatalog,
   Response,
   ElasticsearchResponse,
   ResponseAdminKeycloak,
+  ResponseIntrospect,
 };

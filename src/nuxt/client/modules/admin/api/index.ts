@@ -272,9 +272,10 @@ export async function getColors() {
 }
 
 export async function logout() {
+  const adminStore = useAdminStore();
   try {
     const response = await api.post(`/auth/logout`, {
-      userId: '87a703d7-8b56-4fd0-8e6d-35353638d26e',
+      userId: adminStore.admin.sub,
       // accessToken,
     });
   } catch (err) {

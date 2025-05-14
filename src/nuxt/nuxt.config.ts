@@ -21,6 +21,11 @@ export default defineNuxtConfig({
       baseURL: process.env.NUXT_PUBLIC_BACKEND_URL,
       host: process.env.NUXT_PUBLIC_HOST,
       url: process.env.NUXT_PUBLIC_URL,
+      keycloak: {
+        url: 'http://localhost:8080',
+        realm: 'shop-admin',
+        clientId: 'shop-admin-client',
+      },
     },
   },
 

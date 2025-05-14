@@ -11,7 +11,10 @@ import type {
   Err,
   SelectColor,
 } from '~/interfaces/adminGlobal';
-import type { ResultItemsAdmin } from '~/interfaces/resultGlobal';
+import type {
+  ResponseIntrospect,
+  ResultItemsAdmin,
+} from '~/interfaces/resultGlobal';
 import { convertFile } from '~/modules/admin/utils/convertFile.util';
 import { paramPagination } from '~/entities/table.entites';
 import { sectionDefault, sectionFormDefault } from '~/entities/section.entites';
@@ -47,6 +50,9 @@ export const useAdminStore = defineStore('admin-store', {
     itemsFilter: [],
     nameColumnSection: '',
     colors: [],
+    admin: {
+      active: false,
+    },
   }),
   actions: {
     setIsEdit(value: boolean) {
@@ -208,6 +214,9 @@ export const useAdminStore = defineStore('admin-store', {
     },
     setColors(value: Colors[]) {
       this.colors = value;
+    },
+    setAdmin(value: ResponseIntrospect) {
+      this.admin = { ...value };
     },
   },
 });
