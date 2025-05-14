@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { ElasticsearchAdminService } from '@modules/elasticsearch/elasticsearch.admin.service';
+import { ElasticsearchAdminService } from './../elasticsearch/elasticsearch.admin.service.js';
 
 @Injectable()
 export class TaskService {

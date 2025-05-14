@@ -1,7 +1,7 @@
-import { SectionElastic } from '@interfaces/adminGlobal';
-import { MainLayout } from '@interfaces/mainGlobal';
-import { searchFromElastic } from './searchFromElastic.util';
-import { logger } from './logger/logger';
+import { SectionElastic } from './../interfaces/adminGlobal.js';
+import { MainLayout } from './../interfaces/mainGlobal.js';
+import { searchFromElastic } from './searchFromElastic.util.js';
+import { logger } from './logger/logger.js';
 import { BadRequestException } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 

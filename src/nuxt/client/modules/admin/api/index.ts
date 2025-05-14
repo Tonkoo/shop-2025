@@ -6,7 +6,7 @@ import type {
 } from '~/interfaces/resultGlobal';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
-import { headers } from '~/composables/customFetch';
+import { headersForm, headersAuth } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 import { productParams, sectionParams } from '~/entities/search.entites';
 
@@ -152,7 +152,7 @@ export async function addItem() {
     const response = await api.post<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}`,
       formData,
-      headers
+      headersForm
     );
     if (!response) {
       throw new Error('Error while receiving data');
@@ -198,7 +198,7 @@ export async function editItem() {
     const response = await api.put<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}/${adminStore.selectedId}`,
       formData,
-      headers
+      headersForm
     );
     if (!response) {
       throw new Error('Error while receiving data');

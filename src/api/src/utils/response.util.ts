@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Response, ResultItems } from '@interfaces/responseGlobal';
+import { Response, ResultItems } from './../interfaces/responseGlobal.js';
 
 export class ResponseHelper {
   static createResponse(

@@ -45,7 +45,6 @@ export class KeycloakService {
           },
         },
       );
-
       return response.data;
     } catch (err) {
       logger.error('Error from keycloak.login: ', err);

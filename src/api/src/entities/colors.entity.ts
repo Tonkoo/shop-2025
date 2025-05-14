@@ -5,7 +5,7 @@ import {
   OneToMany,
   BaseEntity,
 } from 'typeorm';
-import { Products } from './products.entity';
+import { Products } from './products.entity.js';
 
 @Entity()
 export class Colors extends BaseEntity {

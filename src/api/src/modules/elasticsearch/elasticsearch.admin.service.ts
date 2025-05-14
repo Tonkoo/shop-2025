@@ -23,7 +23,7 @@ import {
   SectionElastic,
 } from '@interfaces/adminGlobal';
 import { ResultItems } from '@interfaces/responseGlobal';
-import { payLoad } from './dto/elasticsearch.dto';
+import { payLoad } from './dto/elasticsearch.dto.js';
 import { formatResults } from '@utils/formatResults.util';
 import { Colors } from '@entities/colors.entity';
 import {
@@ -31,7 +31,7 @@ import {
   generateLinkSection,
 } from '@utils/generateLink.util';
 import { searchFromElastic } from '@utils/searchFromElastic.util';
-import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type.js';
 
 @Injectable()
 export class ElasticsearchAdminService {

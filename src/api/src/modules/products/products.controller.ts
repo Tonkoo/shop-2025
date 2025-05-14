@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -18,8 +19,8 @@ import {
   ApiBody,
   ApiProperty,
 } from '@nestjs/swagger';
-import { ProductsService } from './products.service';
-import { ColorDto, ProductDto } from './dto/product.dto';
+import { ProductsService } from './products.service.js';
+import { ColorDto, ProductDto } from './dto/product.dto.js';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
@@ -31,6 +32,7 @@ import { Response, ResultItems } from '@interfaces/responseGlobal';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '@config/multer.config';
 import { Colors } from '@entities/colors.entity';
+import { KeycloakGuard } from '@auth/keycloak.guard';
 
 class DeleteProductDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -64,6 +66,7 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   async create(
     @Body() data: ProductDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
@@ -90,6 +93,7 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   async getProduct(@Query('id') id: number): Promise<Response> {
     const result: ProductBase | ProductBase[] =
       await this.services.getProductById(id);
@@ -118,6 +122,7 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   async updateById(
     @Param('id') id: number,
     @Body() data: ProductDto,
@@ -142,6 +147,7 @@ export class ProductsController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
+  @UseGuards(KeycloakGuard)
   async deleteById(@Param('id') id: number, @Query() data: ProductDto) {
     const result: ResultItems | number = await this.services.deleteById(
       id,
@@ -166,6 +172,7 @@ export class ProductsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   async getColors(): Promise<Response> {
     const result: Colors[] = await this.services.getColor();
     return ResponseHelper.createResponse(HttpStatus.OK, result);

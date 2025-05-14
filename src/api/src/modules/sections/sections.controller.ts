@@ -10,6 +10,7 @@ import {
   UploadedFiles,
   UseInterceptors,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -18,19 +19,20 @@ import {
   ApiBody,
   ApiProperty,
 } from '@nestjs/swagger';
-import { SectionsService } from './sections.service';
-import { SectionDto } from './dto/section.dto';
+import { SectionsService } from './sections.service.js';
+import { SectionDto } from './dto/section.dto.js';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,
   ResponseHelperApiError,
   ResponseHelperApiOK,
 } from '@utils/response.util';
-import { ProductDto } from '../products/dto/product.dto';
+import { ProductDto } from '../products/dto/product.dto.js';
 import { SectionBase } from '@interfaces/adminGlobal';
 import { Response, ResultItems } from '@interfaces/responseGlobal';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { getMulterOptions } from '@config/multer.config';
+import { KeycloakGuard } from '@auth/keycloak.guard';
 
 class DeleteSectionDto {
   @ApiProperty({ example: true, description: 'Признак обновления данных' })
@@ -57,6 +59,7 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   @Get('/id')
   async getSectionById(@Query('id') id: number): Promise<Response> {
     const result: SectionBase | SectionBase[] =
@@ -79,6 +82,7 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   @Get('/name')
   async getSectionByName(@Query('name') name: string): Promise<Response> {
     const result: SectionBase | SectionBase[] =
@@ -108,6 +112,7 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   async create(
     @Body() data: SectionDto,
     @UploadedFiles() files: { files: Express.Multer.File[] },
@@ -141,6 +146,7 @@ export class SectionsController {
     description: 'Ошибка',
     type: ResponseHelperApiError,
   })
+  @UseGuards(KeycloakGuard)
   async updateById(
     @Param('id') id: number,
     @Body() data: SectionDto,
@@ -165,6 +171,7 @@ export class SectionsController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
+  @UseGuards(KeycloakGuard)
   async deleteById(
     @Param('id') id: number,
     @Query() data: SectionDto,

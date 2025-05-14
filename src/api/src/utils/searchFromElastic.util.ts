@@ -2,9 +2,9 @@ import {
   PayLoadTest,
   ProductElastic,
   SectionElastic,
-} from '@interfaces/adminGlobal';
-import { AggregationsFilter } from '@interfaces/catalogGlobal';
-import { ElasticsearchResponse } from '@interfaces/responseGlobal';
+} from './../interfaces/adminGlobal.js';
+import { AggregationsFilter } from './../interfaces/catalogGlobal.js';
+import { ElasticsearchResponse } from './../interfaces/responseGlobal.js';
 import { NotFoundException } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 

@@ -8,8 +8,8 @@ import {
   JoinColumn,
   BaseEntity,
 } from 'typeorm';
-import { Sections } from './sections.entity';
-import { Colors } from './colors.entity';
+import { Sections } from './sections.entity.js';
+import { Colors } from './colors.entity.js';
 
 @Entity({})
 export class Products extends BaseEntity {

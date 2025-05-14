@@ -1,6 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-// TODO: лишнее убрать
 type RouterScrollPosition = {
   behavior?: ScrollOptions['behavior'];
   el?: string | Element;
@@ -12,7 +11,7 @@ type RouterMeta = {
   // Тип шаблона
   layout: 'main-layout' | 'admin-layout';
   // Мидлварины
-  middleware?: Array<'02-slash-catalog' | '10-auth-login' | '11-auth-admin'>;
+  middleware?: Array<'01-slash-catalog' | '02-auth-login' | '03-auth-admin'>;
 };
 type Routes = Array<
   Pick<RouteRecordRaw, 'name' | 'path' | 'component'> & {

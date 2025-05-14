@@ -1,12 +1,13 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
-import { ElasticsearchCatalogService } from './elasticsearch.catalog.service';
+import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { ElasticsearchCatalogService } from './elasticsearch.catalog.service.js';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseHelper, ResponseHelperApiOK } from '@utils/response.util';
 import { Response, ResultItems } from '@interfaces/responseGlobal';
 import { SectionElastic } from '@interfaces/adminGlobal';
-import { payLoad, ParamsCatalog } from './dto/elasticsearch.dto';
-import { ElasticsearchAdminService } from './elasticsearch.admin.service';
-import { ElasticsearchMainService } from './elasticsearch.main.service';
+import { payLoad, ParamsCatalog } from './dto/elasticsearch.dto.js';
+import { ElasticsearchAdminService } from './elasticsearch.admin.service.js';
+import { ElasticsearchMainService } from './elasticsearch.main.service.js';
+import { KeycloakGuard } from '@auth/keycloak.guard';
 
 @Controller('elastic')
 @ApiTags('elastic')
@@ -27,6 +28,7 @@ export class ElasticController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
+  @UseGuards(KeycloakGuard)
   async createIndex(@Query() payLoad: payLoad): Promise<Response> {
     const result = await this.servicesAdmin.createIndex(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);
@@ -70,6 +72,7 @@ export class ElasticController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
+  @UseGuards(KeycloakGuard)
   async getItems(@Query() payLoad: payLoad): Promise<Response> {
     const result: ResultItems =
       await this.servicesAdmin.getItemsFilter(payLoad);
@@ -93,6 +96,7 @@ export class ElasticController {
     description: 'Успешный ответ',
     type: ResponseHelperApiOK,
   })
+  @UseGuards(KeycloakGuard)
   async getNameItems(@Query() payLoad: payLoad): Promise<Response> {
     const result: SectionElastic[] = await this.servicesAdmin.getName(payLoad);
     return ResponseHelper.createResponse(HttpStatus.OK, result);

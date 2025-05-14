@@ -1,6 +1,5 @@
 import { api } from '#shared/api/axios';
 import { useAuthorizationStore } from '~/modules/authorization/stores/authorizationStore';
-import type { AuthorizationResponse } from '~/interfaces/resultGlobal';
 
 export async function authorizationUser() {
   const authorizationStore = useAuthorizationStore();
