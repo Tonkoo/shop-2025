@@ -31,4 +31,15 @@ type ResultFilterCatalog = {
   color: string[];
 };
 
-export { ResultItems, ResultFilterCatalog, Response, ElasticsearchResponse };
+type ResponseAdminKeycloak = {
+  access_token: string;
+  expires_in: number;
+};
+
+export {
+  ResultItems,
+  ResultFilterCatalog,
+  Response,
+  ElasticsearchResponse,
+  ResponseAdminKeycloak,
+};
