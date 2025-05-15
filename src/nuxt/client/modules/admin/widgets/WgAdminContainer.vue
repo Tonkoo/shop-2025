@@ -26,6 +26,7 @@ import ModuleHeader from '~/modules/admin/components/ModuleHeader.vue';
 import ModuleSearch from '~/modules/admin/components/table/ModuleSearch.vue';
 import ModulePagination from '~/modules/admin/components/table/ModulePagination.vue';
 import ModuleTable from '~/modules/admin/components/table/ModuleTable.vue';
+
 // const { $keycloak, $keycloakReady } = useNuxtApp();
 
 // onMounted(() => {

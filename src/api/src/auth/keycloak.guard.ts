@@ -15,7 +15,6 @@ export class KeycloakGuard implements CanActivate {
       const response: ResponseIntrospect = await introspectToken(
         request.cookies.access_token,
       );
-      console.log(response);
       return response.active;
     } catch (err) {
       return false;

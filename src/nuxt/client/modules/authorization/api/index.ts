@@ -12,6 +12,7 @@ export async function authorizationUser() {
       `/auth/login`,
       authorizationStore.user
     );
+    console.log(response.data);
     return response.data;
   } catch (err) {
     console.error(err);
@@ -22,6 +23,17 @@ export async function authorizationUser() {
 export async function introspect() {
   try {
     const response = await api.post<ResponseIntrospect>(`/auth/introspect`);
+    console.log(response);
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function refreshToken() {
+  try {
+    const response = await api.post<AuthorizationResponse>(`/auth/refresh`);
     console.log(response);
     return response.data;
   } catch (err) {

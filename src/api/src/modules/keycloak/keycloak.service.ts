@@ -46,6 +46,7 @@ export class KeycloakService {
           },
         },
       );
+      console.log(response.data);
       return response.data;
     } catch (err) {
       logger.error('Error from keycloak.login: ', err);
@@ -68,11 +69,36 @@ export class KeycloakService {
 
       return response.data;
     } catch (err) {
-      logger.error('Error from keycloak.login: ', err);
+      logger.error('Error from keycloak.logout: ', err);
       throw new UnauthorizedException('Invalid credentials');
     }
   }
+
   async introspect(token: string) {
     return await introspectToken(token);
+  }
+
+  async refreshToken(token: string) {
+    try {
+      const data = new URLSearchParams();
+      data.append('client_id', keycloakConfig.clientId);
+      data.append('client_secret', keycloakConfig.secret);
+      data.append('grant_type', 'refresh_token');
+      data.append('refresh_token', token);
+      const response = await axios.post(
+        `${keycloakConfig.url}/token`,
+        data.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        },
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      logger.error('Error from keycloak.refreshToken: ', err);
+      throw new UnauthorizedException('Invalid credentials');
+    }
   }
 }

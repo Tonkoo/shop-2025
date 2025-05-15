@@ -56,13 +56,11 @@ services:
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HTTP_ENABLED: "true"
-      KC_IMPORT_REALM: "true"
       KEYCLOAK_LOG_LEVEL: org.keycloak.services:DEBUG
       KC_IMPORT_FILE: "/opt/keycloak/data/import/realm-export.json"
-
     command:
       - start-dev
-      - --import-realm
+      - --verbose
     ports:
       - "${KEYCLOAK_PORT}:8080"
     depends_on:
