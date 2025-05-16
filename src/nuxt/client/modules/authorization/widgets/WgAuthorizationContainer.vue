@@ -1,6 +1,7 @@
 <template>
   <ModuleFormAuthorization
     :user="authorizationStore.user"
+    :error="authorizationStore.error"
     @update:username="(value) => authorizationStore.setUsername(value)"
     @update:password="(value) => authorizationStore.setPassword(value)"
     @authorization="authorizationUser"
@@ -22,15 +23,15 @@ const authorizationUser = async () => {
   await authorizationModule
     .authorizationUser()
     .then(async (response: AuthorizationResponse) => {
-      console.log(21312);
-      // await $keycloak.init({
-      //   token: response.access_token,
-      //   refreshToken: response.refresh_token,
-      //   onLoad: 'check-sso',
-      // });
-      // sessionStorage.setItem('keycloak-token', response.access_token);
-      setInterval(() => {}, 1000);
+      authorizationStore.setError(false);
+      authorizationStore.setUsername('');
+      authorizationStore.setPassword('');
+
       await router.push('/admin');
+    })
+    .catch((err) => {
+      console.log(err);
+      authorizationStore.setError(true);
     });
 };
 </script>

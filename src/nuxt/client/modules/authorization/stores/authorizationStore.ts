@@ -7,6 +7,7 @@ export const useAuthorizationStore = defineStore('authorization-store', {
       username: '',
       password: '',
     },
+    error: false,
   }),
   actions: {
     setUsername(value: string) {
@@ -14,6 +15,9 @@ export const useAuthorizationStore = defineStore('authorization-store', {
     },
     setPassword(value: string) {
       this.user.password = value;
+    },
+    setError(value: boolean) {
+      this.error = value;
     },
   },
 });

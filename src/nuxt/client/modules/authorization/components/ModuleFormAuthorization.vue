@@ -8,26 +8,36 @@
         >Только для зарегистрированых администраторов</span
       >
     </div>
-    <div class="block-authorization__form">
+    <form
+      class="block-authorization__form"
+      @submit.prevent="emits('authorization')"
+    >
       <ArealAuthorizationInput
         :model-value="user.username"
+        autocomplete="username"
         placeholder="Логин"
         @update:model-value="(value) => emits('update:username', value)"
       />
+
       <ArealAuthorizationInput
         :model-value="user.password"
         type="password"
+        autocomplete="current-password"
         placeholder="Пароль"
         @update:model-value="(value) => emits('update:password', value)"
       />
+      <div v-if="error" class="block-authorization__block-error">
+        <span>Невернный логин или пароль</span>
+      </div>
       <ArealButton
+        type="submit"
         class="block-authorization__form__btn"
         square
         label="Войти"
-        @click="emits('authorization')"
       />
+
       <!--        @click="signIn('keycloak')"-->
-    </div>
+    </form>
   </div>
 </template>
 
@@ -42,9 +52,11 @@ const emits = defineEmits<{
 const props = withDefaults(
   defineProps<{
     user: User;
+    error: boolean;
   }>(),
   {}
 );
+// const errorForm = computed();
 </script>
 
 <style scoped lang="scss">
@@ -74,6 +86,11 @@ const props = withDefaults(
       background-color: getColor('grey', 13);
       color: getColor('white', 1);
     }
+  }
+  &__block-error {
+    display: flex;
+    color: red;
+    justify-content: center;
   }
 }
 </style>

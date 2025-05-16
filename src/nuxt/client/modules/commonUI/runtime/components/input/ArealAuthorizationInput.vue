@@ -5,6 +5,7 @@
     :model-value="modelValue"
     :placeholder="placeholder"
     :type="type"
+    :autocomplete="autocomplete"
     @update:model-value="(value) => emit('update:modelValue', value)"
   />
   <!--    :label="label"-->
@@ -23,6 +24,10 @@ const props = defineProps({
   type: {
     type: String as () => 'text' | 'password',
     default: 'text',
+  },
+  autocomplete: {
+    type: String,
+    default: '',
   },
 });
 

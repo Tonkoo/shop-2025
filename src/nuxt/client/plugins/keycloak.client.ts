@@ -6,7 +6,6 @@ import { api } from '#shared/api/axios';
 import type { AuthorizationResponse } from '~/interfaces/resultGlobal';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-  console.log(nuxtApp);
   setInterval(async () => {
     try {
       const response = await $fetch<AuthorizationResponse>(
@@ -15,7 +14,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
           method: 'POST',
         }
       );
-      console.log(response);
+      console.log('testtetstetet');
       return response;
     } catch (err) {
       console.error(err);

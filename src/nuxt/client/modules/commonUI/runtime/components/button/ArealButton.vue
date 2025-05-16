@@ -1,5 +1,5 @@
 <template>
-  <q-btn :label="label" class="button" :disable="disable">
+  <q-btn :type="type" :label="label" class="button" :disable="disable">
     <slot />
   </q-btn>
 </template>
@@ -13,6 +13,10 @@ defineProps({
   disable: {
     type: Boolean,
     default: false,
+  },
+  type: {
+    type: String,
+    default: '',
   },
 });
 
