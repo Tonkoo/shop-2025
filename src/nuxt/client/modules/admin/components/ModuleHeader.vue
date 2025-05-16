@@ -24,6 +24,7 @@ import { useAdminModule } from '~/modules/admin/global';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useQuasar } from 'quasar';
 import { notifyNegative, notifyPositive } from '~/entities/notify.entites';
+import type { AxiosError } from 'axios';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
@@ -38,11 +39,11 @@ const reindexDoc = () => {
       quasar.loading.hide();
       quasar.notify(notifyPositive);
     })
-    .catch((err) => {
+    .catch((err: AxiosError) => {
       quasar.loading.hide();
       quasar.notify({
         ...notifyNegative,
-        message: 'Ошибка при сохранении данных: ' + err,
+        message: 'Ошибка: ' + err.message,
       });
     });
 };

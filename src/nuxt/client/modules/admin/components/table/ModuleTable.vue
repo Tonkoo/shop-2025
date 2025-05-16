@@ -13,6 +13,7 @@ import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useQuasar } from 'quasar';
 import { useAdminModule } from '~/modules/admin/global';
 import { notifyNegative } from '~/entities/notify.entites';
+import type { AxiosError } from 'axios';
 
 const quasar = useQuasar();
 
@@ -77,10 +78,10 @@ const dynamicColumns = computed(() => {
 });
 
 onMounted(async () => {
-  await adminModule.getItems().catch((err) => {
+  await adminModule.getItems().catch((err: AxiosError) => {
     quasar.notify({
       ...notifyNegative,
-      message: err,
+      message: err.message,
     });
   });
 });

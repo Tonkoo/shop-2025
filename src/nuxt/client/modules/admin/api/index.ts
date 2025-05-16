@@ -6,12 +6,12 @@ import type {
 } from '~/interfaces/resultGlobal';
 import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { comparisonValues } from '~/modules/admin/composables/сomparisonValues';
-import { headersForm, headersAuth } from '~/composables/customFetch';
+import { headersAuth, headersForm } from '~/composables/customFetch';
 import { generateFormData } from '~/modules/admin/utils/prepareFormData.util';
 import { productParams, sectionParams } from '~/entities/search.entites';
-
 import { validationSection } from '~/modules/admin/validations/validationSection';
 import { validationProduct } from '~/modules/admin/validations/validationProduct';
+import { checkToken } from '~/modules/admin/utils/checkToken.util';
 
 function removeDots(data: string): string {
   if (!data) {
@@ -39,7 +39,9 @@ function fillingParam(payload: ApiParams) {
 
 export async function reindex() {
   try {
+    const accessToken = await checkToken();
     const adminStore = useAdminStore();
+
     const params = fillingParam({
       type: adminStore.typeSearch.value,
       from: (adminStore.currentPage - 1) * adminStore.countColumn,
@@ -47,10 +49,12 @@ export async function reindex() {
       searchName: adminStore.searchName,
       getItems: true,
     });
+
     const response = await api.get<{
       data: ResultItemsAdmin | ResultReindex;
     }>('/elastic/reindex', {
       params,
+      headers: headersAuth(accessToken),
     });
     if (!response) {
       throw new Error('Indexing error');
@@ -63,13 +67,14 @@ export async function reindex() {
     adminStore.setDataItems(resultData);
   } catch (err) {
     console.error('Indexing error ' + err);
-    throw new Error('Indexing error.');
+    throw err;
   }
 }
 
 export async function getItems() {
   const adminStore = useAdminStore();
   try {
+    const accessToken = await checkToken();
     const params = fillingParam({
       type: adminStore.typeSearch.value,
       from: (adminStore.currentPage - 1) * adminStore.countColumn,
@@ -86,6 +91,7 @@ export async function getItems() {
       '/elastic/admin',
       {
         params,
+        headers: headersAuth(accessToken),
       }
     );
     if (!response) {
@@ -94,13 +100,14 @@ export async function getItems() {
     adminStore.setDataItems(response.data.data);
   } catch (err) {
     console.error('Failed to fetch data from the server ' + err);
-    throw new Error('Error while fetching section data from the server.');
+    throw err;
   }
 }
 
 export async function getAllNameColumn(type: string, typeForm?: string) {
   const adminStore = useAdminStore();
   try {
+    const accessToken = await checkToken();
     const typeParams = type === 'section' ? sectionParams : productParams;
     const params: ApiParams = {
       ...typeParams,
@@ -115,6 +122,7 @@ export async function getAllNameColumn(type: string, typeForm?: string) {
     }
     const response = await api.get('/elastic/admin/name', {
       params,
+      headers: headersAuth(accessToken),
     });
     if (!response) {
       throw new Error('Error while receiving data');
@@ -123,12 +131,14 @@ export async function getAllNameColumn(type: string, typeForm?: string) {
     adminStore.setItemsFilter(response.data.data);
   } catch (err) {
     console.error(err);
+    throw err;
   }
 }
 
 export async function addItem() {
   const adminStore = useAdminStore();
   try {
+    const accessToken = await checkToken();
     adminStore.clearError();
     adminStore.setSearchName('');
     const formData = new FormData();
@@ -152,7 +162,12 @@ export async function addItem() {
     const response = await api.post<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}`,
       formData,
-      headersForm
+      {
+        headers: {
+          ...headersAuth(accessToken),
+          ...headersForm,
+        },
+      }
     );
     if (!response) {
       throw new Error('Error while receiving data');
@@ -167,6 +182,7 @@ export async function addItem() {
 export async function editItem() {
   const adminStore = useAdminStore();
   try {
+    const accessToken = await checkToken();
     let data;
     if (adminStore.typeItem === 'section') {
       data = comparisonValues(adminStore.frontSection, adminStore.backSection, [
@@ -198,7 +214,12 @@ export async function editItem() {
     const response = await api.put<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeItem}/${adminStore.selectedId}`,
       formData,
-      headersForm
+      {
+        headers: {
+          ...headersAuth(accessToken),
+          ...headersForm,
+        },
+      }
     );
     if (!response) {
       throw new Error('Error while receiving data');
@@ -211,6 +232,8 @@ export async function editItem() {
 }
 
 export async function getItemById() {
+  const accessToken = await checkToken();
+
   const adminStore = useAdminStore();
   const params = {
     id: adminStore.selectedId,
@@ -218,6 +241,7 @@ export async function getItemById() {
   try {
     const response = await api.get(`/${adminStore.typeSearch.value}/id`, {
       params: params,
+      headers: headersAuth(accessToken),
     });
     if (!response) {
       throw new Error('Error while receiving data');
@@ -234,6 +258,7 @@ export async function getItemById() {
 }
 
 export async function delItem() {
+  const accessToken = await checkToken();
   const adminStore = useAdminStore();
   const params: ApiParams = fillingParam({
     type: adminStore.typeSearch.value,
@@ -245,7 +270,7 @@ export async function delItem() {
   try {
     const response = await api.delete<{ data: ResultItemsAdmin }>(
       `/${adminStore.typeSearch.value}/${adminStore.selectedId}`,
-      { params }
+      { params, headers: headersAuth(accessToken) }
     );
     if (!response) {
       throw new Error('Error while receiving data');
@@ -259,7 +284,10 @@ export async function delItem() {
 export async function getColors() {
   const adminStore = useAdminStore();
   try {
-    const response = await api.get('product/colors');
+    const accessToken = await checkToken();
+    const response = await api.get('product/colors', {
+      headers: headersAuth(accessToken),
+    });
 
     if (!response) {
       throw new Error('Error while receiving data');
@@ -276,12 +304,10 @@ export async function logout() {
   try {
     const response = await api.post(`/auth/logout`, {
       userId: adminStore.admin.sub,
-      // accessToken,
     });
+    sessionStorage.removeItem('access_token');
   } catch (err) {
     console.error(err);
-    // const accessToken = useCookie('access_token');
-    // accessToken.value = null;
     throw err;
   }
 }

@@ -65,9 +65,13 @@ import { useAdminStore } from '~/modules/admin/stores/adminStore';
 import { useAdminModule } from '~/modules/admin/global';
 import { ref } from 'vue';
 import type { Search } from '~/interfaces/adminGlobal';
+import type { AxiosError } from 'axios';
+import { notifyNegative } from '~/entities/notify.entites';
+import { useQuasar } from 'quasar';
 
 const adminStore = useAdminStore();
 const adminModule = useAdminModule();
+const quasar = useQuasar();
 
 const autocompleteOptions = ref([] as Search[]);
 const filterOptions = ref([] as Search[]);
@@ -76,7 +80,14 @@ const onSearchInput = async (value: string | { name: string }) => {
   const name = typeof value === 'string' ? value : value.name;
 
   adminStore.setSearchName(name);
-  await adminModule.getAllNameColumn(adminStore.typeSearch.value);
+  await adminModule
+    .getAllNameColumn(adminStore.typeSearch.value)
+    .catch((err: AxiosError) => {
+      quasar.notify({
+        ...notifyNegative,
+        message: err.message,
+      });
+    });
   autocompleteOptions.value = adminStore.allName;
 };
 

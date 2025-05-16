@@ -4,6 +4,7 @@ import type {
   AuthorizationResponse,
   ResponseIntrospect,
 } from '~/interfaces/resultGlobal';
+import { headersAuth } from '~/composables/customFetch';
 
 export async function authorizationUser() {
   const authorizationStore = useAuthorizationStore();
@@ -12,7 +13,7 @@ export async function authorizationUser() {
       `/auth/login`,
       authorizationStore.user
     );
-    console.log(response.data);
+    sessionStorage.setItem('access_token', response.data.access_token);
     return response.data;
   } catch (err) {
     console.error(err);
@@ -22,7 +23,17 @@ export async function authorizationUser() {
 
 export async function introspect() {
   try {
-    const response = await api.post<ResponseIntrospect>(`/auth/introspect`);
+    const accessToken = sessionStorage.getItem('access_token');
+    if (!accessToken) {
+      return { active: false };
+    }
+    const response = await api.post<ResponseIntrospect>(
+      `/auth/introspect`,
+      {},
+      {
+        headers: headersAuth(accessToken),
+      }
+    );
     // console.log(response);
     return response.data;
   } catch (err) {

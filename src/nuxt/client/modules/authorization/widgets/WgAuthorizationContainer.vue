@@ -22,15 +22,13 @@ const router = useRouter();
 const authorizationUser = async () => {
   await authorizationModule
     .authorizationUser()
-    .then(async (response: AuthorizationResponse) => {
+    .then(async () => {
       authorizationStore.setError(false);
       authorizationStore.setUsername('');
       authorizationStore.setPassword('');
-
       await router.push('/admin');
     })
     .catch((err) => {
-      console.log(err);
       authorizationStore.setError(true);
     });
 };
