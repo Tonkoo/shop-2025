@@ -4,7 +4,12 @@ import { refreshToken as refreshTokenFn } from '~/modules/authorization/api';
 import { api } from '#shared/api/axios';
 import type { AuthorizationResponse } from '~/interfaces/resultGlobal';
 
+export function test() {
+  console.log(312312);
+}
+
 export default defineNuxtPlugin(async (nuxtApp) => {
+  test();
   // const token = useCookie('access_token');
   //
   // setInterval(async () => {

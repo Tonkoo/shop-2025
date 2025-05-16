@@ -1,25 +1,27 @@
-import { api } from '#shared/api/axios';
-import type { AuthorizationResponse } from '~/interfaces/resultGlobal';
-import type { User } from '~/interfaces/adminGlobal';
-
 export const useAuth = () => {
-  const accessToken = useState<string | null>('access_token', () => null);
+  const isExpired = (token: string): boolean => {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const now = Math.floor(Date.now() / 1000);
+      return payload.exp < now;
+    } catch {
+      return true;
+    }
+  };
+  console.log(2313);
   onMounted(async () => {
-    // const storedToken = sessionStorage.getItem('access_token')
-    //
-    // if (storedToken && !isExpired(storedToken)) {
-    //   accessToken.value = storedToken
-    // } else {
-    //   await refresh()  // <-- здесь вызов, если токена нет или он просрочен
-    // }
-    //
-    // // запуск интервала для периодической проверки
-    // const interval = setInterval(async () => {
-    //   if (accessToken.value && isExpired(accessToken.value)) {
-    //     await refresh()  // <-- здесь периодический вызов, если токен просрочен
+    const accessToken = sessionStorage.getItem('access_token');
+
+    // if (a)
+    //   if (!accessToken && isExpired(accessToken)) {
+    //     await refresh(); // <-- здесь вызов, если токена нет или он просрочен
     //   }
-    // }, 60_000)
+    const interval = setInterval(async () => {
+      // if (accessToken && isExpired(accessToken.value)) {
+      //   await refresh(); // <-- здесь периодический вызов, если токен просрочен
+      // }
+    }, 5_000);
     //
-    // onUnmounted(() => clearInterval(interval))
+    // onUnmounted(() => clearInterval(interval));
   });
 };

@@ -26,9 +26,21 @@ import ModuleHeader from '~/modules/admin/components/ModuleHeader.vue';
 import ModuleSearch from '~/modules/admin/components/table/ModuleSearch.vue';
 import ModulePagination from '~/modules/admin/components/table/ModulePagination.vue';
 import ModuleTable from '~/modules/admin/components/table/ModuleTable.vue';
-
-const headers = useRequestHeaders();
-console.log(headers);
+const accessToken = sessionStorage.getItem('access_token');
+const isExpired = (token: string): boolean => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    console.log(payload.exp, 'payload');
+    const now = Math.floor(Date.now() / 1000);
+    console.log(now, 'now');
+    return payload.exp < now;
+  } catch {
+    return true;
+  }
+};
+if (accessToken) {
+  isExpired(accessToken);
+}
 
 // const { $keycloak, $keycloakReady } = useNuxtApp();
 

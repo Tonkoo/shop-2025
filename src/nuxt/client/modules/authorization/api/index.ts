@@ -24,6 +24,7 @@ export async function authorizationUser() {
 export async function introspect() {
   try {
     const accessToken = sessionStorage.getItem('access_token');
+
     if (!accessToken) {
       return { active: false };
     }
