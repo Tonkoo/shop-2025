@@ -50,7 +50,7 @@ const reindexDoc = () => {
 
 const logout = () => {
   adminModule.logout().then(async () => {
-    await router.push('/authorization');
+    window.location.replace('/authorization');
   });
 };
 </script>

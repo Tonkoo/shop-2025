@@ -7,6 +7,9 @@ import { introspectToken } from '@utils/introspectToken.util';
 
 @Injectable()
 export class KeycloakService {
+  /**
+   * Получает access_token для сервисного аккаунта (client credentials flow)
+   */
   async getToken() {
     try {
       const data = new URLSearchParams();
@@ -29,6 +32,11 @@ export class KeycloakService {
     }
   }
 
+  /**
+   * Авторизует пользователя (password flow)
+   * @param username - Логин пользователя
+   * @param password - Пароль пользователя
+   */
   async login(username: string, password: string) {
     try {
       const data = new URLSearchParams();
@@ -46,7 +54,6 @@ export class KeycloakService {
           },
         },
       );
-      console.log(response.data);
       return response.data;
     } catch (err) {
       logger.error('Error from keycloak.login: ', err);
@@ -54,6 +61,10 @@ export class KeycloakService {
     }
   }
 
+  /**
+   * Разлогинивает пользователя в Keycloak
+   * @param userId - ID пользователя в Keycloak
+   */
   async logout(userId: string) {
     try {
       const token = await this.getToken();
@@ -74,10 +85,18 @@ export class KeycloakService {
     }
   }
 
+  /**
+   * Проверяет валидность токена
+   * @param token - Токен для проверки
+   */
   async introspect(token: string) {
     return await introspectToken(token);
   }
 
+  /**
+   * Обновляет токены авторизации по refresh token
+   * @param token - Refresh token
+   */
   async refreshToken(token: string) {
     try {
       const data = new URLSearchParams();

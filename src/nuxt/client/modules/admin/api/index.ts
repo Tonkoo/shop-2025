@@ -302,7 +302,7 @@ export async function getColors() {
 export async function logout() {
   const adminStore = useAdminStore();
   try {
-    const response = await api.post(`/auth/logout`, {
+    await api.post(`/auth/logout`, {
       userId: adminStore.admin.sub,
     });
     sessionStorage.removeItem('access_token');

@@ -17,24 +17,18 @@ function getTokenRefreshTime(token: string) {
 }
 
 async function refreshToken() {
-  const router = useRouter();
+  const runtimeConfig = useRuntimeConfig();
   try {
     const response = await $fetch<AuthorizationResponse>(
-      'http://localhost/api/v1/auth/refresh',
+      `${runtimeConfig.public.baseURL}  auth/refresh`,
       { method: 'POST' }
     );
     if (!response) {
       throw new Error('No data');
     }
-    // if (!response.success) {
-    //   sessionStorage.removeItem('access_token');
-    //   await router.push('/authorization');
-    // }
-    console.log(response);
     return response;
-    // sessionStorage.setItem('access_token', response.access_token);
   } catch (err) {
-    console.error('Ошибка обновления токена:', err);
+    console.error('Token update error:', err);
     throw err;
   }
 }

@@ -3,6 +3,10 @@ import axios from 'axios';
 import { logger } from '@utils/logger/logger';
 import type { ResponseIntrospect } from '@interfaces/responseGlobal';
 
+/**
+ * Проверяет валидность токена через Keycloak
+ * @param token - Токен для проверки
+ */
 export async function introspectToken(
   token: string,
 ): Promise<ResponseIntrospect> {

@@ -27,7 +27,7 @@ const authorizationUser = async () => {
       authorizationStore.setUsername('');
       authorizationStore.setPassword('');
       // await router.push('/admin');
-      window.location.replace('admin');
+      window.location.replace('/admin');
     })
     .catch((err) => {
       authorizationStore.setError(true);
