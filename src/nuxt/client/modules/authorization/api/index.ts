@@ -26,13 +26,25 @@ export async function introspect() {
     const accessToken = sessionStorage.getItem('access_token');
 
     if (!accessToken) {
+      await refreshToken()
+        .then(async (response: AuthorizationResponse) => {
+          if (!response.success) {
+            console.log(21312);
+            return;
+          }
+          sessionStorage.setItem('access_token', response.access_token);
+          await introspect();
+        })
+        .catch(() => {
+          return { active: false };
+        });
       return { active: false };
     }
     const response = await api.post<ResponseIntrospect>(
       `/auth/introspect`,
       {},
       {
-        headers: headersAuth(accessToken),
+        headers: headersAuth(accessToken as string),
       }
     );
     return response.data;

@@ -39,6 +39,7 @@ type ResultItemsCatalog = {
 };
 
 type AuthorizationResponse = {
+  success: boolean;
   access_token: string;
   expires_in: number;
 };

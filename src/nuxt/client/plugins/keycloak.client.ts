@@ -17,27 +17,38 @@ function getTokenRefreshTime(token: string) {
 }
 
 async function refreshToken() {
+  const router = useRouter();
   try {
     const response = await $fetch<AuthorizationResponse>(
       'http://localhost/api/v1/auth/refresh',
       { method: 'POST' }
     );
-    sessionStorage.setItem('access_token', response.access_token);
-    console.log('Токен успешно обновлён!');
+    if (!response) {
+      throw new Error('No data');
+    }
+    // if (!response.success) {
+    //   sessionStorage.removeItem('access_token');
+    //   await router.push('/authorization');
+    // }
+    console.log(response);
+    return response;
+    // sessionStorage.setItem('access_token', response.access_token);
   } catch (err) {
     console.error('Ошибка обновления токена:', err);
+    throw err;
   }
 }
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   let refreshTimeout: NodeJS.Timeout | null = null;
-
-  const accessToken = sessionStorage.getItem('access_token');
-  if (!accessToken) {
-    return;
-  }
+  const router = useRouter();
 
   const startIntervalRefreshToken = async () => {
+    const accessToken = sessionStorage.getItem('access_token');
+    if (!accessToken) {
+      return;
+    }
+
     if (refreshTimeout) {
       clearTimeout(refreshTimeout);
     }
@@ -45,14 +56,28 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const refreshInMs = getTokenRefreshTime(accessToken);
 
     if (refreshInMs <= 0) {
-      await refreshToken();
-      await startIntervalRefreshToken();
+      await refreshToken().then(async (response: AuthorizationResponse) => {
+        if (!response.success) {
+          sessionStorage.removeItem('access_token');
+          await router.push('/authorization');
+          return;
+        }
+        sessionStorage.setItem('access_token', response.access_token);
+        await startIntervalRefreshToken();
+      });
       return;
     }
     console.log(refreshInMs);
     refreshTimeout = setTimeout(async () => {
-      await refreshToken();
-      await startIntervalRefreshToken();
+      await refreshToken().then(async (response: AuthorizationResponse) => {
+        if (!response.success) {
+          sessionStorage.removeItem('access_token');
+          await router.push('/authorization');
+          return;
+        }
+        sessionStorage.setItem('access_token', response.access_token);
+        await startIntervalRefreshToken();
+      });
     }, refreshInMs);
   };
 

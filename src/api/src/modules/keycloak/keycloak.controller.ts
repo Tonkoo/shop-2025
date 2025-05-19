@@ -60,6 +60,11 @@ export class KeycloakController {
     @Res({ passthrough: true }) res: Response,
     @Req() req: Request,
   ) {
+    if (!req.cookies?.refresh_token) {
+      return {
+        success: false,
+      };
+    }
     const newToken = await this.keycloakService.refreshToken(
       req.cookies?.refresh_token,
     );

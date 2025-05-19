@@ -94,7 +94,6 @@ export class KeycloakService {
           },
         },
       );
-      console.log(response.data);
       return response.data;
     } catch (err) {
       logger.error('Error from keycloak.refreshToken: ', err);
