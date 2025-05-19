@@ -35,7 +35,6 @@ export async function introspect() {
         headers: headersAuth(accessToken),
       }
     );
-    // console.log(response);
     return response.data;
   } catch (err) {
     console.error(err);
@@ -46,7 +45,6 @@ export async function introspect() {
 export async function refreshToken() {
   try {
     const response = await api.post<AuthorizationResponse>(`/auth/refresh`);
-    // console.log(response);
     return response.data;
   } catch (err) {
     console.error(err);

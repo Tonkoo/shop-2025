@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const authorizationModule = useAuthorizationModule();
   const adminStore = useAdminStore();
   const router = useRouter();
-
+  console.log(3213);
   await authorizationModule
     .introspect()
     .then(async (response) => {
