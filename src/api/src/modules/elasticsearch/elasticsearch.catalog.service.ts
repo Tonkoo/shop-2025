@@ -10,11 +10,8 @@ import {
   CatalogContent,
   FilterCatalog,
   PriceRange,
-} from './../../interfaces/catalogGlobal.js';
-import {
-  SectionElastic,
-  ProductElastic,
-} from './../../interfaces/adminGlobal.js';
+} from '@interfaces/catalogGlobal.js';
+import { SectionElastic, ProductElastic } from '@interfaces/adminGlobal.js';
 import { ParamsCatalog } from './dto/elasticsearch.dto.js';
 import { formatCatalogContent } from './../../utils/formatResults.util.js';
 import { searchFromElastic } from './../../utils/searchFromElastic.util.js';
@@ -59,7 +56,6 @@ export class ElasticsearchCatalogService {
     }
     return result;
   }
-
   /**
    * Возвращает дочерние разделы для указанного раздела
    * @param section
@@ -133,7 +129,6 @@ export class ElasticsearchCatalogService {
    * @param sorting
    */
   async createSortOptions(sorting: string) {
-    // TODO: убрать лишний запрос
     const srtOptions = await this.sortingRepository.findOne({
       where: { code: sorting },
     });

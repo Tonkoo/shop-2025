@@ -1,4 +1,4 @@
-import { searchFromElastic } from './searchFromElastic.util.js';
+import { searchFromElastic } from './searchFromElastic.util';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch/dist/elasticsearch.service.js';
 import { BadRequestException } from '@nestjs/common';
 

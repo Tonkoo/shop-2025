@@ -6,6 +6,5 @@ export const keycloakConfig = {
     process.env.KEYCLOAK_URL ||
     'http://keycloak:8080/realms/shop-admin/protocol/openid-connect',
   clientId: process.env.KEYCLOAK_CLIENT_ID || 'shop-admin-client',
-  secret:
-    process.env.KEYCLOAK_CLIENT_SECRET || 'fi2evvvElFiXALB9Pu27JRMRdu0P9gxf',
+  secret: process.env.KEYCLOAK_CLIENT_SECRET || '**********',
 };

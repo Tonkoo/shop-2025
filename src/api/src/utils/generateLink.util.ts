@@ -1,7 +1,7 @@
-import { Sections } from './../entities/sections.entity.js';
+import { Sections } from '@entities/sections.entity';
 import { NotFoundException } from '@nestjs/common';
-import { Products } from './../entities/products.entity.js';
-import { ProductElastic, SectionElastic } from './../interfaces/adminGlobal.js';
+import { Products } from '@entities/products.entity';
+import { ProductElastic, SectionElastic } from '@interfaces/adminGlobal';
 
 /**
  * Генерирует ссылку для продукта

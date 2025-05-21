@@ -20,7 +20,7 @@ async function refreshToken() {
   const runtimeConfig = useRuntimeConfig();
   try {
     const response = await $fetch<AuthorizationResponse>(
-      `${runtimeConfig.public.baseURL}  auth/refresh`,
+      `${runtimeConfig.public.baseURL}auth/refresh`,
       { method: 'POST' }
     );
     if (!response) {

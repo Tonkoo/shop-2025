@@ -469,6 +469,25 @@
   "webAuthnPolicyPasswordlessExtraOrigins": [],
   "users": [
     {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@mail.com",
+      "emailVerified": true,
+      "firstName": "admin",
+      "lastName": "admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [],
+      "clientRoles": {
+        "realm-management": ["default-roles-shop-admin"]
+      }
+    },
+    {
       "id": "43b1c7b8-3df0-4ba9-a1b5-a8d461ce0e56",
       "username": "service-account-shop-admin-client",
       "emailVerified": false,

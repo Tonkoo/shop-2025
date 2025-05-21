@@ -1,4 +1,4 @@
-import { SortingOptions } from './../entities/sortingOptions.entity.js';
+import { SortingOptions } from '@entities/sortingOptions.entity.js';
 import { ProductElastic, SectionElastic } from './adminGlobal.js';
 import { ResultFilterCatalog } from './responseGlobal.js';
 

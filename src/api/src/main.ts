@@ -6,6 +6,7 @@ import { logger } from '@utils/logger/logger';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import * as process from 'node:process';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -13,8 +14,7 @@ async function bootstrap() {
   });
   app.setGlobalPrefix('api/v1');
   app.enableCors({
-    // TODO: env
-    origin: 'http://localhost/',
+    origin: process.env.FRONTEND_ORIGIN,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type',
     credentials: true,

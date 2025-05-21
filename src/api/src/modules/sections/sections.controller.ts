@@ -19,8 +19,8 @@ import {
   ApiBody,
   ApiProperty,
 } from '@nestjs/swagger';
-import { SectionsService } from './sections.service.js';
-import { SectionDto } from './dto/section.dto.js';
+import { SectionsService } from './sections.service';
+import { SectionDto } from './dto/section.dto';
 import {
   ResponseHelper,
   ResponseHelperApiCreated,

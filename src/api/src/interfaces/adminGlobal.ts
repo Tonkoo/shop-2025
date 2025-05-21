@@ -1,6 +1,6 @@
-import { Sections } from './../entities/sections.entity.js';
-import { Products } from './../entities/products.entity.js';
-import { Images } from './../entities/images.entity.js';
+import { Sections } from '@entities/sections.entity.js';
+import { Products } from '@entities/products.entity.js';
+import { Images } from '@entities/images.entity.js';
 
 type DateBase = {
   update_at: Date;

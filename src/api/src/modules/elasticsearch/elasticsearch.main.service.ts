@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ElasticsearchService as ESClient } from '@nestjs/elasticsearch';
 import { logger } from './../../utils/logger/logger.js';
-import { ProductElastic } from './../../interfaces/adminGlobal.js';
+import { ProductElastic } from '@interfaces/adminGlobal.js';
 
 import { formatMainContent } from './../../utils/formatResults.util.js';
 import { searchFromElastic } from './../../utils/searchFromElastic.util.js';
