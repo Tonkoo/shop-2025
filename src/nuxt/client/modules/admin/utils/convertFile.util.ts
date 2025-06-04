@@ -1,7 +1,6 @@
 import type { ImageObject } from '~/interfaces/adminGlobal';
 
 export async function convertFile(imageObject: ImageObject[] | undefined) {
-  const runtimeConfig = useRuntimeConfig();
   if (!imageObject) {
     return [];
   }
@@ -9,7 +8,7 @@ export async function convertFile(imageObject: ImageObject[] | undefined) {
     imageObject.map(async (image) => {
       try {
         const response = await fetch(
-          `${runtimeConfig.public.url}${image.path}`
+          `http://localhost/${image.path}`
         );
         const blob = await response.blob();
         return new File([blob], image.name, { type: image.type });

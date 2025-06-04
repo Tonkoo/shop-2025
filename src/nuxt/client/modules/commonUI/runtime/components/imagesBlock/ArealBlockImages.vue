@@ -14,12 +14,10 @@ const props = defineProps({
     default: null,
   },
 });
-const files = computed(() => props.imagesArray);
-console.log(files.value, 'sadasdasd');
 
 const getUrlFile = (image: File) => {
   if (image instanceof File) {
-    console.log(image);
+    console.log(image, image);
     return URL.createObjectURL(image);
   }
   return image;

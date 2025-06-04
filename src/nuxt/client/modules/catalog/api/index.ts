@@ -8,6 +8,7 @@ export async function getItemCatalog() {
   const catalogStore = useCatalogStore();
   const layoutStores = useLayoutStores();
   const detailPageStore = useDetailPageStore();
+
   const params = {
     url: layoutStores.pathPage,
     filter: JSON.stringify(catalogStore.filterCatalog),

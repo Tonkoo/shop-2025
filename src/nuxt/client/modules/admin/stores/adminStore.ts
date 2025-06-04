@@ -119,7 +119,6 @@ export const useAdminStore = defineStore('admin-store', {
       this.allName = value;
     },
     async setFrontSection(value: SectionAdmin) {
-      console.log(value.imageObject, '3333333333333');
       this.frontSection = {
         ...value,
         images: await convertFile(value.imageObject),

@@ -20,6 +20,7 @@ const urlImage = computed(() => {
   if (!props.src) {
     return defaultSVG;
   }
+  console.log(new URL(props.src, 'http://localhost').toString());
   return new URL(props.src, 'http://localhost').toString();
 });
 </script>

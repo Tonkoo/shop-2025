@@ -1,5 +1,5 @@
 <template>
-  <q-form>
+  <div>
     <div class="q-pa-md example-row-equal-width">
       <div class="row">
         <div
@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-  </q-form>
+  </div>
 </template>
 
 <script setup lang="ts">
